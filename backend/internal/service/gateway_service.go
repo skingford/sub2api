@@ -446,6 +446,18 @@ var allowedHeaders = map[string]bool{
 	"accept-encoding":                           true,
 	"x-claude-code-session-id":                  true,
 	"x-client-request-id":                       true,
+	// Native CLI context/tracing headers are conditional. Forward caller values
+	// without inventing IDs or forwarding account-scoped authentication headers.
+	"x-client-app":                      true,
+	"x-claude-code-agent-id":            true,
+	"x-claude-code-parent-agent-id":     true,
+	"x-claude-code-agent-type":          true,
+	"x-claude-code-request-class":       true,
+	"x-claude-code-prompt-id":           true,
+	"x-claude-code-context-compacted":   true,
+	"x-claude-code-compaction":          true,
+	"x-claude-code-prev-tool-durations": true,
+	"traceparent":                       true,
 }
 
 // ErrStickySessionNotFound is returned by GatewayCache.GetSessionAccountID

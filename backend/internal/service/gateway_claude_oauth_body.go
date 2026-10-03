@@ -260,10 +260,11 @@ func normalizeClaudeOAuthRequestBody(body []byte, modelID string, opts claudeOAu
 		}
 	}
 
-	// temperature：真实 Claude Code CLI 总是发送 temperature（默认 1，客户端可覆盖）。
-	// 之前的实现直接 delete 会导致 payload 缺字段，与真实 CLI 字节级不一致。
-	// 策略：客户端传了什么就透传；没传则补默认 1。
-	if !gjson.GetBytes(out, "temperature").Exists() && !claude.IsOpus55(modelID) {
+	// Native CLI requests omit temperature while thinking is active. Preserve
+	// that omission (including between_tools); keep explicit client values.
+	thinkingType := gjson.GetBytes(out, "thinking.type").String()
+	thinkingActive := thinkingType != "" && thinkingType != "disabled"
+	if !gjson.GetBytes(out, "temperature").Exists() && !thinkingActive && !claude.IsOpus55(modelID) {
 		if next, ok := setJSONValueBytes(out, "temperature", 1); ok {
 			out = next
 			modified = true

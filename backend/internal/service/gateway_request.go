@@ -986,8 +986,8 @@ const anthropicBetaContextManagementToken = "context-management-2025-06-27"
 //   - pi-ai（Harness 使用的 Anthropic provider）会为 opus5 生成形如
 //     `{"role":"system","content":[],"output_config":{"effort":"high"}}` 的控制消息，
 //     并请求 `mid-conversation-output-config-2026-07-01` beta
-//   - 该 output_config 是 **message 级**字段，只有该 beta 保护；顶层 output_config/effort
-//     不受它约束
+//   - 旧格式使用该 beta；原生 CLI 2.1.286 使用 mid-conversation-system 与
+//     per-turn-control 的组合。顶层 output_config/effort 不受该检查约束。
 //   - OAuth mimic 用 FullClaudeCodeMimicryBetas 覆盖客户端 beta；固定列表漏该 beta 时
 //     body 字段与 header 不对称 → 上游报 "output_config: Extra inputs are not permitted"
 //   - 缺 token 时净化消息级 output_config（详见 stripAnthropicMessageOutputConfigUnlessBeta）
@@ -1038,7 +1038,7 @@ func sanitizeAnthropicBodyForBetaTokens(body []byte, anthropicBetaHeader string)
 		body, changed = b, true
 	}
 
-	// messages[].output_config：mid-conversation-output-config beta 专属字段。
+	// messages[].output_config: legacy control beta or the native 2.1.286 pair.
 	// 顶层 output_config / effort 不受该 beta 约束，本分支只净化消息内字段。
 	if b, deleted := stripAnthropicMessageOutputConfigUnlessBeta(body, anthropicBetaHeader); deleted {
 		body, changed = b, true
@@ -1087,17 +1087,21 @@ func anthropicBetaTokensContains(header, token string) bool {
 }
 
 // stripAnthropicMessageOutputConfigUnlessBeta 在 anthropic-beta header 缺
-// mid-conversation-output-config beta 时，净化 **messages[].output_config**：
+// legacy mid-conversation-output-config 或原生 mid-conversation-system +
+// per-turn-control 能力组合时，净化 **messages[].output_config**：
 //   - 仅为携带 message-level output_config 的消息剥该字段；
 //   - 若该消息 role=system 且 content 无正文（缺失 / null / 空 string / 空 array /
 //     仅空 text 块），整条删除（pi-ai 为 opus5 生成的空 system 控制消息即此形态）；
 //   - system 有正文则保留正文与其余字段；user/assistant 只剥字段，绝不整条删除；
 //   - 无任何消息携带该字段时返回原 body（字节 no-op）。
 //
-// header 含该 beta 时完全保留。顶层 output_config / effort 不属于该 beta 保护范围，
+// header 含旧 beta 或完整的新组合时完全保留。顶层 output_config / effort 不属于此保护范围，
 // 本函数不做任何处理。多条删除用「稳健重建」实现，保留其余字段与消息先后顺序。
 func stripAnthropicMessageOutputConfigUnlessBeta(body []byte, anthropicBetaHeader string) ([]byte, bool) {
-	if anthropicBetaTokensContains(anthropicBetaHeader, claude.BetaMidConversationOutputConfig) {
+	legacyControl := anthropicBetaTokensContains(anthropicBetaHeader, claude.BetaMidConversationOutputConfig)
+	nativeControl := anthropicBetaTokensContains(anthropicBetaHeader, claude.BetaMidConversationSystem) &&
+		anthropicBetaTokensContains(anthropicBetaHeader, claude.BetaPerTurnControl)
+	if legacyControl || nativeControl {
 		return body, false
 	}
 	// 快速路径：body 中不含 output_config 字面量时无需解析。

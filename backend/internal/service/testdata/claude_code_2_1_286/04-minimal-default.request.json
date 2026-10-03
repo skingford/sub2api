@@ -1,0 +1,87 @@
+{
+  "method": "POST",
+  "path": "/v1/messages?beta=true",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "claude-cli/2.1.286 (external, sdk-cli)",
+    "X-Claude-Code-Session-Id": "435ea984-1486-4b56-acda-140fc0be4d4c",
+    "X-Stainless-Arch": "x64",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-OS": "MacOS",
+    "X-Stainless-Package-Version": "0.127.0",
+    "X-Stainless-Retry-Count": "0",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v26.3.0",
+    "X-Stainless-Timeout": "10",
+    "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,effort-2025-11-24",
+    "anthropic-dangerous-direct-browser-access": "true",
+    "anthropic-version": "2023-06-01",
+    "x-app": "cli"
+  },
+  "body": {
+    "model": "claude-sonnet-5-5",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Reply with exactly OK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ]
+      },
+      {
+        "role": "system",
+        "content": [],
+        "output_config": {
+          "effort": "medium"
+        }
+      }
+    ],
+    "system": [
+      {
+        "type": "text",
+        "text": "x-anthropic-billing-header: cc_version=2.1.286.a71; cc_entrypoint=sdk-cli;"
+      },
+      {
+        "type": "text",
+        "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      },
+      {
+        "type": "text",
+        "text": "You are a local request-shape test. Use only synthetic fixture data.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "tools": [],
+    "metadata": {
+      "user_id": "{\"device_id\":\"fe56434f93df19a9a5b22e75d0b498b8fdf897a95029ae0c5c4414626b8869b5\",\"account_uuid\":\"\",\"session_id\":\"435ea984-1486-4b56-acda-140fc0be4d4c\"}"
+    },
+    "max_tokens": 128000,
+    "thinking": {
+      "type": "adaptive",
+      "display": "omitted"
+    },
+    "context_management": {
+      "edits": [
+        {
+          "type": "clear_thinking_20251015",
+          "keep": "all"
+        }
+      ]
+    },
+    "output_config": {
+      "effort": "medium"
+    },
+    "stream": true
+  }
+}

@@ -42,6 +42,18 @@ var headerWireCasing = map[string]string{
 	"x-claude-code-session-id": "X-Claude-Code-Session-Id",
 	"x-client-request-id":      "x-client-request-id",
 	"content-length":           "content-length",
+
+	// Conditional native CLI request context; these are forwarded only if supplied.
+	"x-client-app":                      "x-client-app",
+	"x-claude-code-agent-id":            "x-claude-code-agent-id",
+	"x-claude-code-parent-agent-id":     "x-claude-code-parent-agent-id",
+	"x-claude-code-agent-type":          "x-claude-code-agent-type",
+	"x-claude-code-request-class":       "x-claude-code-request-class",
+	"x-claude-code-prompt-id":           "x-claude-code-prompt-id",
+	"x-claude-code-context-compacted":   "x-claude-code-context-compacted",
+	"x-claude-code-compaction":          "x-claude-code-compaction",
+	"x-claude-code-prev-tool-durations": "x-claude-code-prev-tool-durations",
+	"traceparent":                       "traceparent",
 }
 
 // headerWireOrder 定义真实 Claude CLI 发送 header 的顺序（基于抓包）。

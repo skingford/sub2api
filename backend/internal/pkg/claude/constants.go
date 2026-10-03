@@ -30,6 +30,13 @@ const (
 	BetaMidConversationOutputConfig = "mid-conversation-output-config-2026-07-01"
 	BetaExtendedCacheTTL            = "extended-cache-ttl-2025-04-11"
 
+	// Conditional capabilities observed in native Claude Code 2.1.286 requests.
+	// Recognize these on incoming traffic; do not enable them for every model
+	// or manufacture the associated classifier/permission context.
+	BetaMidConversationSystem = "mid-conversation-system-2026-04-07"
+	BetaPerTurnControl        = "per-turn-control-2026-07-01"
+	BetaDangerousToolUse      = "dangerous-tool-use-2026-09-03"
+
 	// server-side refusal fallback beta 字段族（beta Messages API 专有）。
 	// 客户端（Claude Code / SDK / OpenCode 等）会默认透传 body.fallbacks /
 	// body.fallback_credit_token，上游仅在 anthropic-beta 携带对应 token 时接受；

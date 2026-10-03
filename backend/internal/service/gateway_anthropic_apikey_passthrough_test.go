@@ -916,7 +916,7 @@ func TestGatewayService_AnthropicOAuthMimic_RewritesSystemWithBillingBlock(t *te
 			for key, value := range claude.DefaultHeaders() {
 				require.Equal(t, value, getHeaderRaw(upstream.lastReq.Header, key), "mimic fingerprint header %s", key)
 			}
-			require.NotEmpty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"))
+			require.Empty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"), "native requests do not unconditionally generate a client request ID")
 
 			require.Equal(t, tt.wantModel, gjson.GetBytes(upstream.lastBody, "model").String())
 			system := gjson.GetBytes(upstream.lastBody, "system")
