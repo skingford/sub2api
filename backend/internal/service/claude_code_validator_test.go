@@ -415,7 +415,7 @@ func TestClaudeCodeValidator_BillingBlockStillRequiresClaudeCodeUA(t *testing.T)
 	require.False(t, ok)
 }
 
-// 新版 Claude Code CLI 已取消 cch=... 签名字段，billing block 形如
+// 使用自定义 base URL 的 Claude Code CLI 可以不带 cch 字段，billing block 形如
 // `x-anthropic-billing-header: cc_version=...; cc_entrypoint=cli;`（无 cch）。
 // 检测依赖前缀 + cc_entrypoint=cli，不依赖 cch，故无身份 prose 的子请求仍应被识别。
 // 这同时覆盖了本仓 mimicry 注入的新格式 block（见 buildBillingAttributionText）。

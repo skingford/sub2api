@@ -90,7 +90,8 @@ func TestClaudeCode2286CaptureForwarding(t *testing.T) {
 				}
 				require.Empty(t, getHeaderRaw(upstream.lastReq.Header, "cookie"))
 				require.Empty(t, getHeaderRaw(upstream.lastReq.Header, "x-stainless-helper-method"))
-				require.Empty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"))
+				// The fixture uses localhost; forwarding targets the canonical API.
+				require.NotEmpty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"))
 				if kind == AccountTypeOAuth {
 					require.Equal(t, "Bearer upstream-only", getHeaderRaw(upstream.lastReq.Header, "authorization"))
 					require.Empty(t, getHeaderRaw(upstream.lastReq.Header, "x-api-key"))

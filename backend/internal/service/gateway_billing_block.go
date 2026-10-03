@@ -76,10 +76,11 @@ func extractFirstUserText(body []byte) string {
 //
 //	x-anthropic-billing-header: cc_version=2.1.161.{fp}; cc_entrypoint=cli;
 //
-// 注意：新版 Claude Code CLI 已不再发送 cch=... 签名字段（见 issue #3358）。我们
-// 随之去掉了 cch 段——继续注入它反而会让伪装请求偏离真实 CLI 流量。cc_version +
-// cc_entrypoint=cli 仍保留：它们是客户端识别（claude_code_validator）与 Anthropic
-// 第一方判定都依赖的稳定信号。
+// This compatibility block omits cch. That is not a universal native-CLI rule:
+// 2.1.286's attribution builder includes a placeholder on its first-party and
+// Vertex branches, but omits it for a custom base URL. A localhost capture
+// cannot establish the final direct-origin value or server validation rules.
+// See docs/claude-code-request-parity.md for the evidence boundary.
 //
 // 此 block 不带 cache_control（与真实 CLI 一致；cache breakpoint 由后续的
 // Claude Code prompt block 承担）。

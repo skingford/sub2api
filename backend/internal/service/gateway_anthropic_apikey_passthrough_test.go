@@ -916,7 +916,7 @@ func TestGatewayService_AnthropicOAuthMimic_RewritesSystemWithBillingBlock(t *te
 			for key, value := range claude.DefaultHeaders() {
 				require.Equal(t, value, getHeaderRaw(upstream.lastReq.Header, key), "mimic fingerprint header %s", key)
 			}
-			require.Empty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"), "native requests do not unconditionally generate a client request ID")
+			require.NotEmpty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"), "canonical API requests receive a correlation ID")
 
 			require.Equal(t, tt.wantModel, gjson.GetBytes(upstream.lastBody, "model").String())
 			system := gjson.GetBytes(upstream.lastBody, "system")
@@ -1008,7 +1008,7 @@ func TestGatewayService_AnthropicOAuthRealClaudeCodeHaiku_PreservesClientHeaders
 	require.Equal(t, c.Request.Header.Get("User-Agent"), getHeaderRaw(upstream.lastReq.Header, "User-Agent"))
 	require.Equal(t, "real-client-package", getHeaderRaw(upstream.lastReq.Header, "X-Stainless-Package-Version"))
 	require.Equal(t, clientBeta, getHeaderRaw(upstream.lastReq.Header, "anthropic-beta"))
-	require.Empty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"), "真实 CC 不应被强制写入 mimic request id")
+	require.NotEmpty(t, getHeaderRaw(upstream.lastReq.Header, "x-client-request-id"), "canonical API requests receive a correlation ID")
 	require.Equal(t, gjson.GetBytes(body, "system").Raw, gjson.GetBytes(upstream.lastBody, "system").Raw)
 	require.Equal(t, gjson.GetBytes(body, "messages").Raw, gjson.GetBytes(upstream.lastBody, "messages").Raw)
 	require.Equal(t, metadataUserID, gjson.GetBytes(upstream.lastBody, "metadata.user_id").String())

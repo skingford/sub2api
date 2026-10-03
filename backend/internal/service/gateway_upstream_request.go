@@ -200,6 +200,8 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 		}
 	}
 
+	ensureAnthropicClientRequestID(req)
+
 	// 账号级请求头覆写（仅 anthropic/openai api_key 账号启用时生效；OAuth 路径 no-op）。
 	// 放在所有 header 逻辑之后，确保配置值对同名头拥有最终决定权。
 	account.ApplyHeaderOverrides(req.Header)
@@ -940,9 +942,9 @@ func applyClaudeCodeMimicHeaders(req *http.Request, _ bool, mimicUserAgent strin
 	// Real Claude CLI uses Accept: application/json (even for streaming).
 	setHeaderRaw(req.Header, "Accept", "application/json")
 	// Native 2.1.286 uses messages.create({stream:true}), not the SDK .stream
-	// helper, and only adds x-client-request-id in conditional tracing paths.
-	// Streaming alone is not evidence that either optional header is present.
-	// Preserve an existing value; do not synthesize one for an absent header.
+	// helper. Streaming alone does not justify adding its helper-method header.
+	// Request correlation is origin-dependent and handled separately by
+	// ensureAnthropicClientRequestID after these compatibility defaults.
 }
 
 func truncateForLog(b []byte, maxBytes int) string {
