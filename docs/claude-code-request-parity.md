@@ -59,3 +59,23 @@ golangci-lint run --timeout=30m ./...
 
 单元测试使用本地 recorder / mock，不调用真实 Anthropic 服务。
 集成测试需要 Docker，使用项目测试容器；CI 使用 Go 1.27.0 和 golangci-lint 2.13。
+
+### 2026-10-03 验证结果
+
+- 六份报文分别经过 API Key 和 OAuth 转发，共 12 个完整正文对比用例通过。
+- thinking 缺省 / 显式温度、条件请求头、beta 过滤、幂等和 safeguards 拒绝路径通过。
+- `go test -tags=unit ./...`：全部通过。
+- `go test -tags=integration ./...`：全部通过，包含 Redis 与 PostgreSQL 容器测试。
+- golangci-lint 2.13.0（由 Go 1.27.0 构建）：0 issues。
+
+本机首次集成检查曾卡在 `docker-credential-desktop`，使用独立的临时匿名配置拉取
+公开测试镜像后通过；没有修改默认 Docker 配置。复现该处理方式：
+
+```bash
+test_docker_config=$(mktemp -d)
+printf '%s\n' '{"auths":{"https://index.docker.io/v1/":{}}}' > "$test_docker_config/config.json"
+DOCKER_CONFIG="$test_docker_config" CI=true GOTOOLCHAIN=go1.27.0 \
+  go test -tags=integration ./...
+```
+
+上述命令仍在 `backend` 目录执行。本次没有进行生产部署或真实 Anthropic 请求。
