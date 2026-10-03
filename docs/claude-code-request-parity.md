@@ -112,10 +112,12 @@ golangci-lint run --timeout=30m ./...
 - 六份报文分别经过 API Key 和 OAuth 转发，共 12 个完整正文对比用例通过。
 - thinking 缺省 / 显式温度、条件请求头、beta 过滤、幂等和 safeguards 拒绝路径通过。
 - 第一方 origin 分支补充：11 个原始函数隔离用例通过；请求 ID 回归覆盖官方地址、
-  自定义地址、域名混淆、已有值、空值、唯一性及四个构建器。最终执行结果见 PR。
+  自定义地址、域名混淆、已有值、空值、唯一性及四个构建器，全部通过。
 - `go test -tags=unit ./...`：全部通过。
 - `go test -tags=integration ./...`：全部通过，包含 Redis 与 PostgreSQL 容器测试。
 - golangci-lint 2.13.0（由 Go 1.27.0 构建）：0 issues。
+
+上述全量检查已在本轮 origin 修正后重新执行并通过。
 
 本机首次集成检查曾卡在 `docker-credential-desktop`，使用独立的临时匿名配置拉取
 公开测试镜像后通过；没有修改默认 Docker 配置。复现该处理方式：
