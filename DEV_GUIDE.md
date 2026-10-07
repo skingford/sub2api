@@ -373,18 +373,34 @@ sub2api-bmai/
 
 ### main 定时同步与 release 人工更新
 
-2026-10-07 创建 Codex 会话定时任务 `sync-sub2api-main-from-upstream`，
-每天 **09:00（Asia/Shanghai）** 执行。任务在维护者本机运行，需要电脑开机、应用运行、
-本地仓库可访问且 GitHub 推送凭证有效；计划在 Codex 的 Scheduled 页面管理。
-运行条件见 [官方定时任务文档](https://learn.chatgpt.com/docs/automations?surface=app)。
+2026-10-07 改为 [GitHub Actions：Sync upstream main](https://github.com/skingford/sub2api/actions/workflows/sync-upstream.yml)，
+每天 **09:00（Asia/Shanghai，UTC 01:00）** 在 GitHub 托管 runner 执行，支持手动 **Run workflow**。
+原 Codex 任务 `sync-sub2api-main-from-upstream` 已暂停，避免重复执行；不再依赖本地电脑或 Codex。
+
+工作流 [.github/workflows/sync-upstream.yml](.github/workflows/sync-upstream.yml) 放在默认分支 `release`，
+仅在本 fork 的 `release` 上运行。同步脚本和本地 Git 回归测试也随 `release` 维护。
+`main` 保持上游原始提交，不添加 fork 自定义的工作流或记录提交。
 
 每次执行：
 
-1. 核对 `origin=skingford/sub2api`、`upstream=Wei-Shaw/sub2api`，仅获取双方 `main` 的提交。
+1. 在临时裸仓库中获取 `skingford/sub2api:main` 与 `Wei-Shaw/sub2api:main`，不检出或执行上游代码。
 2. 提交相同则结束。仅当 fork 的 `main` 是上游 `main` 的祖先时，普通推送已检查的上游提交到远端 `main`，随后复查远端提交。
 3. 分叉、fork 独有提交、推送被拒绝或验证失败时停止并报告；不强推、不重置、不自动制造合并提交。
-4. 保留当前分支、索引、本地分支和工作区。同步成功后在维护会话中记录前后提交、提交数及 Claude 路径变动，保留上游原始提交作为追溯依据。
+4. 在 Actions 日志及运行摘要记录前后提交、提交数和变动文件，供人工合并时复核 Claude 路径；保留上游原始提交作为追溯依据。
 5. 自动任务不修改 `release`，不创建或合并面向它的 PR，也不发布版本或部署。
+
+默认使用工作流自身的 `GITHUB_TOKEN`，仅为同步 job 声明 `contents: write`，无需先配置个人令牌。
+如果 GitHub 因上游工作流文件的变更拒绝该令牌推送，可配置仓库 Actions secret `UPSTREAM_SYNC_TOKEN`：
+使用仅授权本 fork、具有 Contents 和 Workflows 写权限的细粒度令牌。脚本会停止并保留原始错误，不会绕过权限或改用强推。
+
+GitHub 定时执行可能延迟；公开仓库连续 60 天无活动时，定时工作流可能被自动停用，
+需要在 Actions 页面重新启用。见 [GitHub schedule 说明](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。
+手动验证命令：
+
+```bash
+gh workflow run sync-upstream.yml --repo skingford/sub2api --ref release
+gh run list --repo skingford/sub2api --workflow sync-upstream.yml --limit 5
+```
 
 GitHub 的 “This branch is not behind … No new commits to fetch” 表示当前没有需要拉取的上游提交。
 `main` 随上游前进后，README 的已验证基线和 `release` 代码仍以最近一次人工合并为准。

@@ -1,0 +1,40 @@
+name: Sync upstream main
+
+on:
+  schedule:
+    # 01:00 UTC = 09:00 Asia/Shanghai.
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: sync-upstream-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'skingford/sub2api' && github.ref == 'refs/heads/release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out maintenance scripts
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Test synchronization safeguards
+        run: |
+          bash -n .github/sync-tools/sync-upstream-main.sh
+          python3 -m unittest discover -s .github/sync-tools -p 'test_sync_upstream.py' -v
+      - name: Fast-forward fork main from upstream
+        env:
+          GH_TOKEN: ${{ secrets.UPSTREAM_SYNC_TOKEN || github.token }}
+          GH_HOST: github.com
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          gh auth setup-git --hostname github.com
+          bash .github/sync-tools/sync-upstream-main.sh \
+            https://github.com/skingford/sub2api.git \
+            https://github.com/Wei-Shaw/sub2api.git
