@@ -26,7 +26,12 @@ const capturedCacheDiagnosisBeta = "cache-diagnosis-2026-04-07"
 
 func loadClaude2291Capture(t *testing.T, name string) claudeCapturedRequest {
 	t.Helper()
-	dir := filepath.Join("testdata", "claude_code_2_1_291")
+	return loadNativeClaudeCapture(t, "2_1_291", name)
+}
+
+func loadNativeClaudeCapture(t *testing.T, version, name string) claudeCapturedRequest {
+	t.Helper()
+	dir := filepath.Join("testdata", "claude_code_"+version)
 	data, err := os.ReadFile(filepath.Join(dir, name+".request.json"))
 	require.NoError(t, err)
 	var capture claudeCapturedRequest
@@ -39,11 +44,20 @@ func loadClaude2291Capture(t *testing.T, name string) claudeCapturedRequest {
 }
 
 func TestClaudeCode2291CaptureForwarding(t *testing.T) {
+	testNativeClaudeCaptureForwarding(t, "2_1_291")
+}
+
+func TestClaudeCode2292CaptureForwarding(t *testing.T) {
+	testNativeClaudeCaptureForwarding(t, "2_1_292")
+}
+
+func testNativeClaudeCaptureForwarding(t *testing.T, version string) {
+	t.Helper()
 	gin.SetMode(gin.TestMode)
 	for _, fixture := range []string{"linux-firstparty", "macos-loopback"} {
 		for _, kind := range []string{AccountTypeAPIKey, AccountTypeOAuth} {
 			t.Run(fixture+"/"+kind, func(t *testing.T) {
-				capture := loadClaude2291Capture(t, fixture)
+				capture := loadNativeClaudeCapture(t, version, fixture)
 				c, _ := gin.CreateTestContext(httptest.NewRecorder())
 				c.Request = httptest.NewRequest(capture.Method, capture.Path, bytes.NewReader(capture.Body))
 				for key, value := range capture.Headers {

@@ -1,0 +1,23 @@
+{
+  "cli_version": "2.1.292",
+  "official_latest_at_check": "2.1.292",
+  "synthetic_credentials": true,
+  "source_binary_sha256": {
+    "linux-x64": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "darwin-x64": "a9739a215728ce72435885fedb19d1317ee1ccec61e246fbfb3acaf01689c473"
+  },
+  "cases": [
+    {
+      "name": "linux-firstparty",
+      "body_bytes": 1083,
+      "body_sha256": "44f67205af25c6feee9e73da6823e764a0c980d13f9e9ec7cd3aedec05a0e42d",
+      "source_archive": "raw/逆向工程/ClaudeCode-2.1.292升级对照-2026-10-07/linux/baseline/requests.json"
+    },
+    {
+      "name": "macos-loopback",
+      "body_bytes": 928,
+      "body_sha256": "77024b33effcaa50a836b40f43293b8a3e9da5f04087bee0d50719c7a6a2eb92",
+      "source_archive": "raw/逆向工程/ClaudeCode-2.1.292升级对照-2026-10-07/macos/baseline/requests.json"
+    }
+  ]
+}
