@@ -10,19 +10,19 @@ import (
 
 // fingerprintSalt 是计算 cc_version 后缀指纹的盐值。
 //
-// 来源：与 Parrot src/transform/cc_mimicry.py 的 FINGERPRINT_SALT 完全一致；
-// 这是真实 Claude Code CLI 抓包推导出的常量，改动会导致 fp 与 CLI 不一致，
-// 进一步触发 Anthropic 的第三方检测。
+// Legacy compatibility value inherited from Parrot's FINGERPRINT_SALT.
+// Client-side matching does not establish any server-side detection rule.
 const fingerprintSalt = "59cf53e54c78"
 
-// computeClaudeCodeFingerprint 复刻真实 Claude Code CLI 的 cc_version 指纹算法：
+// computeClaudeCodeFingerprint builds the legacy compatibility cc_version suffix:
 //
 //  1. 取 messages 中第一条 role=user 的纯文本（首块 text）
 //  2. 取该文本的第 4、7、20 字符（不足以 '0' 补齐）
 //  3. SHA256(SALT + chars + cc_version) 取 hex 前 3 字符
 //
-// 算法来自 Parrot src/transform/cc_mimicry.py:compute_fingerprint，与官方 CLI 字节对齐。
-// 任何偏差都会导致 cc_version=X.Y.Z.{fp} 在上游侧与真实 CLI 不一致。
+// This byte-indexed helper differs from native CLI behavior for Unicode and
+// requests with inserted system reminders. Do not use it to refresh an already
+// matching native attribution block. It is not a verified server credential.
 func computeClaudeCodeFingerprint(body []byte, version string) string {
 	firstText := extractFirstUserText(body)
 	indices := []int{4, 7, 20}

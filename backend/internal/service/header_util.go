@@ -45,6 +45,7 @@ var headerWireCasing = map[string]string{
 
 	// Conditional native CLI request context; these are forwarded only if supplied.
 	"x-client-app":                      "x-client-app",
+	"anthropic-dispatch-id":             "anthropic-dispatch-id",
 	"x-claude-code-agent-id":            "x-claude-code-agent-id",
 	"x-claude-code-parent-agent-id":     "x-claude-code-parent-agent-id",
 	"x-claude-code-agent-type":          "x-claude-code-agent-type",

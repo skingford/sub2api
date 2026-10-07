@@ -98,3 +98,15 @@
 - 提交关联：`Claude-Change-ID: CC-20261007-006`；本条不修改 Claude 运行时代码或现有抓包结论。
 - 云端验证补记：实现提交 `2d925595` 已推送到 `release`；[GitHub Actions 运行 37646923456](https://github.com/skingford/sub2api/actions/runs/37646923456) 成功，5 个测试全部通过。实际同步步骤确认双方 `main` 均为 `3f1a2ea0`，执行无更新分支，没有写入任何分支。
 - 调度状态补记：GitHub 工作流 ID `377584102` 为 active；本机 Codex 任务配置已核对为 PAUSED。实际有新提交时的 GitHub 推送及首次定时触发尚未发生；临时 Git 仓库已验证快进推送和失败保护。
+
+## CC-20261008-001：实际身份服务、工具与重试报文验证
+
+- 基线：上游 `3f1a2ea0`；从 `release / f6b76203` 建立 `codex/claude-2292-validation`，没有自动合并上游到 release。
+- 版本：官方 Linux x64 CLI 2.1.292，SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`；SDK 头 0.128.0。Docker 断网、假 API Key / OAuth 环境变量、本地 TLS 模拟器。
+- 样本：12 条原生模型或计数请求，覆盖 Read 回填、503 重试、两轮对话、假 OAuth、Unicode 与 `/context`；全部正文与正式 PCAP 解密字节核对一致，正式捕获无内核丢包。
+- 复现：2 个转发组合丢弃 `anthropic-dispatch-id`；18 个身份配置组合在 CLI 版本未变时仍重算原生归因后缀，破坏 Unicode 和带自动插入提示块的请求。
+- 修复：白名单透传原生重试关联头；billing 版本已经相同时不再重算归因。纠正仍宣称“新版取消 cch”或全面字节对齐的旧注释；不补造 cch，不扩大真实订阅验证结论。
+- 范围：请求头白名单、header casing、billing 版本同步、抓包回归、身份服务矩阵、隔离采集与传输对照脚本、请求报告。
+- 验证：24 个原生转发组合、180 个身份配置组合（每组重复两次）通过；完整后端 unit / integration 均通过，golangci-lint 0 issues。token 计数样本替换为无丢包捕获后，新增报文与身份矩阵再次通过。
+- 发现的边界：默认 OAuth metadata 重写和同版本账号缓存仍会产生明确差异；两种 Go 传输与原生 CLI 的 TLS 握手、HTTP 头顺序不同。未调整生产设置、旧兼容身份模板或 TLS 模板，未访问真实官方模型服务。
+- 提交关联：`Claude-Change-ID: CC-20261008-001`；详细结果见 [请求对齐报告](claude-code-request-parity.md#2026-10-08启用身份服务及扩展场景验证)。

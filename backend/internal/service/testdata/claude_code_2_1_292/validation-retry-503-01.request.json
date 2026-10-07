@@ -1,0 +1,86 @@
+{
+  "method": "POST",
+  "path": "/v1/messages?beta=true",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "claude-cli/2.1.292 (external, sdk-cli)",
+    "X-Claude-Code-Session-Id": "83c07920-abb8-4c5c-b8f9-8a9de1cbc2e1",
+    "X-Stainless-Arch": "x64",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-OS": "Linux",
+    "X-Stainless-Package-Version": "0.128.0",
+    "X-Stainless-Retry-Count": "0",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v26.3.0",
+    "X-Stainless-Timeout": "5",
+    "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+    "anthropic-dangerous-direct-browser-access": "true",
+    "anthropic-version": "2023-06-01",
+    "x-app": "cli",
+    "x-claude-code-prompt-id": "745e49e0-557d-4887-b4d1-23fa961c7e64",
+    "x-claude-code-request-class": "main",
+    "x-client-request-id": "9ac855ba-d8ea-422c-908f-a9ab6f4e809d"
+  },
+  "body": {
+    "model": "claude-sonnet-4-6",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "LOCAL_CLI_VALIDATION_20261008 Reply OK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ]
+      }
+    ],
+    "system": [
+      {
+        "type": "text",
+        "text": "x-anthropic-billing-header: cc_version=2.1.292.357; cc_entrypoint=sdk-cli; cch=3d27d; cc_prompt_id=745e49e0-557d-4887-b4d1-23fa961c7e64; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+      },
+      {
+        "type": "text",
+        "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      },
+      {
+        "type": "text",
+        "text": "Local synthetic protocol test. Reply with OK.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "tools": [],
+    "metadata": {
+      "user_id": "{\"device_id\":\"dddee319ef09e0e54dc6eb98862cd5469082ea5ac95ea57cb031f32e2c661bc6\",\"account_uuid\":\"\",\"session_id\":\"83c07920-abb8-4c5c-b8f9-8a9de1cbc2e1\"}"
+    },
+    "max_tokens": 32000,
+    "thinking": {
+      "type": "adaptive",
+      "display": "omitted"
+    },
+    "context_management": {
+      "edits": [
+        {
+          "type": "clear_thinking_20251015",
+          "keep": "all"
+        }
+      ]
+    },
+    "output_config": {
+      "effort": "high"
+    },
+    "diagnostics": {
+      "previous_message_id": null
+    },
+    "stream": true
+  }
+}

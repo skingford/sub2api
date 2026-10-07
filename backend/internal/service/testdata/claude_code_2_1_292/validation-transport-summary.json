@@ -1,0 +1,691 @@
+[
+  {
+    "case": "results/baseline",
+    "request_count": 1,
+    "decrypted_count": 1,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "2",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "results/retry-503",
+    "request_count": 2,
+    "decrypted_count": 2,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "2",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ],
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-dispatch-id",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      },
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "results/multi-turn",
+    "request_count": 2,
+    "decrypted_count": 2,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "2",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ],
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      },
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "results/oauth-synthetic",
+    "request_count": 1,
+    "decrypted_count": 1,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "2",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Accept",
+        "Authorization",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "results-additional/read-tool",
+    "request_count": 2,
+    "decrypted_count": 2,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "2",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ],
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prev-tool-durations",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      },
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "results-additional/unicode",
+    "request_count": 1,
+    "decrypted_count": 1,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "2",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "results-count-verified/count-context",
+    "request_count": 3,
+    "decrypted_count": 3,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "2",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      },
+      {
+        "tcp.stream": "3",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      },
+      {
+        "tcp.stream": "4",
+        "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ],
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ],
+      [
+        "Accept",
+        "Content-Type",
+        "User-Agent",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-request-class",
+        "x-client-request-id",
+        "Connection",
+        "Host",
+        "Accept-Encoding",
+        "Content-Length"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      },
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      },
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "transport-results/default",
+    "request_count": 1,
+    "decrypted_count": 1,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "0",
+        "tls.handshake.ja3": "9b7dcdf3f997f1fb7b4409c94cb7ef36",
+        "tls.handshake.ja3_full": "771,49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-4865-4866-4867,0-11-65281-23-18-5-10-13-50-43-51,4588-4587-4589-29-23-24-25,0",
+        "tls.handshake.extensions_alpn_str": "",
+        "tls.handshake.ciphersuite": "0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x1301,0x1302,0x1303",
+        "tls.handshake.extension.type": "0,11,65281,23,18,5,10,13,50,43,51"
+      }
+    ],
+    "header_order": [
+      [
+        "Host",
+        "User-Agent",
+        "Content-Length",
+        "Accept",
+        "Accept-Encoding",
+        "Content-Type",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": null,
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "case": "transport-results/fingerprint",
+    "request_count": 1,
+    "decrypted_count": 1,
+    "all_bodies_match": true,
+    "kernel_dropped_packets": 0,
+    "client_hellos": [
+      {
+        "tcp.stream": "0",
+        "tls.handshake.ja3": "44f88fca027f27bab4bb08d4af15f23e",
+        "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-65037-23-65281-10-11-35-16-5-13-18-51-45-43,29-23-24,0",
+        "tls.handshake.extensions_alpn_str": "http/1.1",
+        "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+        "tls.handshake.extension.type": "0,65037,23,65281,10,11,35,16,5,13,18,51,45,43"
+      }
+    ],
+    "header_order": [
+      [
+        "Host",
+        "User-Agent",
+        "Content-Length",
+        "Accept",
+        "Accept-Encoding",
+        "Content-Type",
+        "X-Claude-Code-Session-Id",
+        "X-Stainless-Arch",
+        "X-Stainless-Lang",
+        "X-Stainless-OS",
+        "X-Stainless-Package-Version",
+        "X-Stainless-Retry-Count",
+        "X-Stainless-Runtime",
+        "X-Stainless-Runtime-Version",
+        "X-Stainless-Timeout",
+        "anthropic-beta",
+        "anthropic-dangerous-direct-browser-access",
+        "anthropic-version",
+        "x-api-key",
+        "x-app",
+        "x-claude-code-prompt-id",
+        "x-claude-code-request-class",
+        "x-client-request-id"
+      ]
+    ],
+    "negotiated": [
+      {
+        "tls": "TLSv1.3",
+        "alpn": "http/1.1",
+        "cipher": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLSv1.3",
+          256
+        ]
+      }
+    ]
+  }
+]

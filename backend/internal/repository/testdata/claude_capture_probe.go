@@ -1,0 +1,63 @@
+package main
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint"
+	"github.com/Wei-Shaw/sub2api/internal/repository"
+)
+
+func main() {
+	routes, err := os.ReadFile("/proc/net/route")
+	must(err)
+	if len(strings.Split(strings.TrimSpace(string(routes)), "\n")) != 1 {
+		panic("Capture probe requires an isolated Linux network namespace without routes")
+	}
+	if len(os.Args) != 3 {
+		panic("usage: probe request.json default|fingerprint")
+	}
+	input, err := os.ReadFile(os.Args[1])
+	must(err)
+	var captured struct {
+		Method  string            `json:"method"`
+		Path    string            `json:"path"`
+		Headers map[string]string `json:"headers"`
+		Body    string            `json:"raw_body_utf8"`
+	}
+	must(json.Unmarshal(input, &captured))
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, captured.Method, "https://api.anthropic.com"+captured.Path, bytes.NewBufferString(captured.Body))
+	must(err)
+	for key, value := range captured.Headers {
+		switch strings.ToLower(key) {
+		case "authorization", "x-api-key", "cookie", "host", "content-length", "connection":
+			continue
+		}
+		req.Header[key] = []string{value}
+	}
+	req.Header["x-api-key"] = []string{"local-container-key-not-a-real-credential"}
+	var profile *tlsfingerprint.Profile
+	if os.Args[2] == "fingerprint" {
+		profile = &tlsfingerprint.Profile{Name: "builtin-default"}
+	}
+	response, err := repository.NewHTTPUpstream(nil).DoWithTLS(req, "", 292, 1, profile)
+	must(err)
+	defer response.Body.Close()
+	_, err = io.Copy(io.Discard, response.Body)
+	must(err)
+	fmt.Printf("mode=%s status=%d protocol=%s\n", os.Args[2], response.StatusCode, response.Proto)
+}
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
