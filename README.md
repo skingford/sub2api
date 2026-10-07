@@ -12,9 +12,14 @@
 
 | 分支 | 用途 |
 |---|---|
-| `main` | 跟踪上游 `Wei-Shaw/sub2api`，保留同步基线 |
-| `release` | 本 fork 的维护主分支，包含已验证的自定义改动 |
+| `main` | 每天检查并快进同步 `Wei-Shaw/sub2api:main`，保留上游提交 |
+| `release` | 本 fork 的维护主分支，包含已验证的自定义改动；人工决定何时合并 `main` |
 | 主题分支 | 从 `release` 开始开发，后续 PR 提交到 `release` |
+
+定时同步由维护者本机的 Codex 任务执行，时间为每天 **09:00（Asia/Shanghai）**，
+需要电脑开机、应用运行及本地仓库可访问。两边相同时不操作；遇到分叉或推送失败时停止并提示。
+自动任务只更新远端 `main`，保留当前工作区，不自动合并到 `release`。
+任务标识和人工合并流程见 [开发指南](DEV_GUIDE.md#main-定时同步与-release-人工更新)。
 
 `release` 已启用[分支保护](https://github.com/skingford/sub2api/rules/24660893)：禁止强推和删除。
 当前仍允许普通快进推送，尚未要求必需 CI 状态检查。

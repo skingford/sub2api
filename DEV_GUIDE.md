@@ -364,12 +364,43 @@ sub2api-bmai/
 
 ## 九、Fork 分支约定
 
-- `main`：跟踪 `Wei-Shaw/sub2api` 上游主分支，保持可快进同步。
-- `release`：skingford/sub2api 的默认维护分支，包含已验证的 fork 改动。
+- `main`：定时跟踪 `Wei-Shaw/sub2api` 上游主分支，仅允许快进同步。
+- `release`：skingford/sub2api 的默认维护分支，包含已验证的 fork 改动，人工决定何时同步 `main`。
 - `codex/*` 或其他主题分支：从 `release` 开始开发，后续常规 PR 以 `release` 为目标。
 
 首次建立 `release` 时保留此前已验证的提交历史。历史 PR #1 保留为相对上游 `main`
 的草稿差异记录；维护版本以 `release` 为准，不通过该历史 PR 把 fork 改动写入上游跟踪分支。
+
+### main 定时同步与 release 人工更新
+
+2026-10-07 创建 Codex 会话定时任务 `sync-sub2api-main-from-upstream`，
+每天 **09:00（Asia/Shanghai）** 执行。任务在维护者本机运行，需要电脑开机、应用运行、
+本地仓库可访问且 GitHub 推送凭证有效；计划在 Codex 的 Scheduled 页面管理。
+运行条件见 [官方定时任务文档](https://learn.chatgpt.com/docs/automations?surface=app)。
+
+每次执行：
+
+1. 核对 `origin=skingford/sub2api`、`upstream=Wei-Shaw/sub2api`，仅获取双方 `main` 的提交。
+2. 提交相同则结束。仅当 fork 的 `main` 是上游 `main` 的祖先时，普通推送已检查的上游提交到远端 `main`，随后复查远端提交。
+3. 分叉、fork 独有提交、推送被拒绝或验证失败时停止并报告；不强推、不重置、不自动制造合并提交。
+4. 保留当前分支、索引、本地分支和工作区。同步成功后在维护会话中记录前后提交、提交数及 Claude 路径变动，保留上游原始提交作为追溯依据。
+5. 自动任务不修改 `release`，不创建或合并面向它的 PR，也不发布版本或部署。
+
+GitHub 的 “This branch is not behind … No new commits to fetch” 表示当前没有需要拉取的上游提交。
+`main` 随上游前进后，README 的已验证基线和 `release` 代码仍以最近一次人工合并为准。
+
+维护者决定更新 `release` 时，在干净工作区从最新 `origin/release` 创建独立分支：
+
+```bash
+git fetch --no-tags origin main release
+# Replace YYYYMMDD with the actual date, adding a suffix if the branch already exists.
+git switch -c codex/sync-upstream-YYYYMMDD origin/release
+git merge --no-ff origin/main
+```
+
+检查合并差异，处理冲突并完成相关验证后，再通过以 `release` 为目标的 PR 合并。
+更新 `docs/claude-change-log.md` 中的上游基线；涉及 Claude 路径时逐项说明与 fork 改动的交互、
+验证结果和提交引用。没有新提交时无需创建同步 PR。
 
 ### release 分支保护
 
