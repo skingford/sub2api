@@ -134,6 +134,7 @@ deploy/docker-compose.override.yml
 vite.config.js
 docs/*
 !docs/claude-code-request-parity.md
+!docs/claude-change-log.md
 !docs/PAYMENT.md
 !docs/PAYMENT_CN.md
 !docs/ADMIN_PAYMENT_INTEGRATION_API.md

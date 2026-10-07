@@ -7,7 +7,7 @@
 | 项目 | 说明 |
 |------|------|
 | **上游仓库** | Wei-Shaw/sub2api |
-| **Fork 仓库** | bayma888/sub2api-bmai |
+| **Fork 仓库** | skingford/sub2api |
 | **技术栈** | Go 后端 (Ent ORM + Gin) + Vue3 前端 (pnpm) |
 | **数据库** | PostgreSQL 16 + Redis |
 | **包管理** | 后端: go modules, 前端: **pnpm**（不是 npm） |
@@ -344,3 +344,29 @@ sub2api-bmai/
 - [Ent 文档](https://entgo.io/docs/getting-started)
 - [Vue3 文档](https://vuejs.org/)
 - [pnpm 文档](https://pnpm.io/)
+
+## 八、Claude 相关改动必须留痕
+
+本 fork 的 Claude 请求构建、认证转发、beta 能力、模型参数、流式处理、身份字段、
+测试样本和对应文档，每次改动都要更新 [Claude 改动记录](docs/claude-change-log.md)。
+
+每条记录使用稳定编号，并写清：
+
+1. 上游基线提交、被测 CLI / SDK 版本，以及适用的认证和运行模式。
+2. 修改原因、代码或抓包依据；合成实验、源码推断和真实上游验证分别注明。
+3. 涉及文件、行为变化、兼容范围与已知限制。
+4. 验证命令和实际结果；未执行的检查标为未验证。
+5. 对应提交和 PR。代码提交使用 `Claude-Change-ID` trailer 关联记录；提交后补充哈希。
+
+在同一个 PR 中维护代码、回归样本和记录。保留已发布提交及记录；结论需要纠正时，
+新增条目并引用原编号。不要把模拟响应写成官方服务接受、订阅资格或计费验证。
+同步上游时记录基线变化；若上游也修改了 Claude 路径，逐项复核并记录合并处理。
+
+## 九、Fork 分支约定
+
+- `main`：跟踪 `Wei-Shaw/sub2api` 上游主分支，保持可快进同步。
+- `release`：skingford/sub2api 的默认维护分支，包含已验证的 fork 改动。
+- `codex/*` 或其他主题分支：从 `release` 开始开发，后续常规 PR 以 `release` 为目标。
+
+首次建立 `release` 时保留此前已验证的提交历史。历史 PR #1 保留为相对上游 `main`
+的草稿差异记录；维护版本以 `release` 为准，不通过该历史 PR 把 fork 改动写入上游跟踪分支。

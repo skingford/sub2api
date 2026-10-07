@@ -1,4 +1,9 @@
-# Claude Code 2.1.286 请求对齐
+# Claude Code 原生请求对齐
+
+Updated: 2026-10-07
+
+本 fork 的上游基线已同步至 v0.2.14 / `3f1a2ea0`。Claude 相关改动编号、提交和验证记录
+统一维护在 [Claude 改动记录](claude-change-log.md)。
 
 ## 基线
 
@@ -15,6 +20,50 @@
 
 样本位于 `backend/internal/service/testdata/claude_code_2_1_286/`。
 这些报文验证客户端序列化，不代表服务端接受所有内部 beta，亦不构成订阅、额度或账号资格的证明。
+
+### 2.1.291 新增基线
+
+新增 Linux x64 与 macOS x64 两份官方原生 CLI 报文，版本与 manifest 哈希均已核对。
+两份二进制内嵌 Bun 1.4.3（`eecfd55de`）；请求头中的 SDK 版本为 0.128.0。
+
+| 样本 | 隔离与目标 | 正文 |
+|---|---|---|
+| linux-firstparty | Docker `--network none`，官方域名在容器内映射到 127.0.0.1 | 1083 字节 |
+| macos-loopback | 进程沙箱仅允许指定回环 HTTPS 端口 | 928 字节 |
+
+Linux 请求从 PCAP 使用模拟服务器会话密钥解密，24 个头及正文 SHA-256 均与接收端记录一致。
+macOS 样本来自 HTTPS 接收端，没有特权网卡抓包。均使用假 Key、空工具、合成系统提示、
+`--bare` 和显式 default 权限模式，属于非交互 `sdk-cli` 场景。
+
+样本位于 `backend/internal/service/testdata/claude_code_2_1_291/`。
+`.body.json` 保留原始正文；回归检查经过 API Key / OAuth 构建分支后的正文逐字节一致，
+以及入站凭证不会泄漏到上游。OAuth 分支的合成凭证测试不代表真实订阅接受情况。
+
+### TLS 密钥日志验证
+
+Linux 与 macOS 原生版均未通过 `SSLKEYLOGFILE` 或 `NODE_OPTIONS=--tls-keylog=…` 导出客户端密钥；
+直接传 `--tls-keylog` 均被 CLI 拒绝。Linux 的服务器密钥成功解密原 PCAP；macOS 的 Node.js
+对照在同一沙箱导出 5 条与服务器一致的密钥，因此不能把结果归因于日志目录不可写。
+这些结论只覆盖所测运行模式和 TLS 1.3 路径，没有连接真实官方 API。
+
+Linux 在关闭非必要流量的设置下仍向模拟器请求了 settings、policy_limits 和 messages。
+本次没有外网连接，依靠的是 Docker / 进程沙箱，而非单个环境变量。
+
+### latest 2.1.292 升级对照
+
+2026-10-07 核对官方指针：latest 为 2.1.292，stable 为 2.1.285。本机 CLI 检测时已指向
+2.1.292，文件哈希与 manifest 相符；Linux 同版本文件也已下载校验。两者仍内嵌 Bun 1.4.3。
+
+沿用相同模型、提示、权限模式和假 Key，分别在断网容器与 macOS 沙箱完成验证：
+
+- 请求头集合与顺序、beta 列表、正文业务字段没有发现变化；SDK 头仍为 0.128.0。
+- 原始报文的版本归因、cch 取值和随机标识会变化，macOS 的临时端口也不同；不能称原始报文字节相同。
+- 对比只归一化上述已列明的字段，没有忽略其他业务差异；两种平台均得到相等结果。
+- Linux 模型请求仍为 2182 字节完整 HTTP、1083 字节正文；macOS 正文仍为 928 字节。
+- 密钥日志实验结果没有变化。首次 Linux 抓包因缓冲未完整采集模型流，校验失败；启用即时采集后重跑并通过对照。
+
+新增样本位于 `testdata/claude_code_2_1_292/`。原生透传沿用客户端自己的版本信息；本次新增
+版本回归，不把单个场景的归因字段或默认身份模板推广给其他请求。
 
 ## 对齐原则
 
@@ -35,6 +84,7 @@ tool_use/tool_result、metadata 和条件 safeguards 应按最终 beta 能力保
 | helper-method | 本次 .create(stream:true) 未携带 | 兼容路径将 streaming 等同于 SDK .stream helper | 不无条件生成 |
 | x-client-request-id | 本地模拟请求未携带；源码在第一方路径生成 | 旧兼容路径无条件生成，首轮修改又将缺省生成一并删除 | 按出站 origin 处理：官方 HTTPS 地址缺失时生成，已有值保留，自定义地址不补造 |
 | 请求关联头 | 按 tracing / Agent / 压缩场景出现 | 部分官方条件头不在白名单 | 白名单透传已知非认证头，不主动制造值 |
+| diagnostics（2.1.291） | 与 cache-diagnosis beta 同时出现，previous_message_id 可为 null | 过滤 beta 后正文仍残留；兼容路径不保留调用方显式诊断 beta | 按最终 beta 保留或清理诊断，兼容路径支持显式请求，不生成缺失字段 |
 
 ## 继续追踪源码：能否确认“识别 Sub2API”
 
@@ -65,6 +115,10 @@ tool_use/tool_result、metadata 和条件 safeguards 应按最终 beta 能力保
 这里只确认 `cch` 在构造阶段的条件，不能把占位内容当成直连最终报文或服务端认可的凭据。
 本 fork 修正相关注释，没有补造该字段或改变其现有处理。
 
+2026-10-07 补证：2.1.291 的 Linux 隔离测试保留官方 origin，解密后的实际出站归因文本中
+出现了非占位的 cch 字段。它仍是合成请求的原生输出，不能推断生产服务端如何校验。
+回归样本将其作为不透明正文保留；本轮没有实现归因字段的生成或重算。
+
 本轮将请求 ID 补全放在四个 Anthropic messages / count_tokens 请求构建入口，
 与 SDK helper-method 分开。网关限定为 HTTPS、无 URL userinfo、默认 443 端口的
 `api.anthropic.com`；这一范围比 CLI 内部 host 判断更严格。内部环境覆盖和 AWS
@@ -83,6 +137,10 @@ tool_use/tool_result、metadata 和条件 safeguards 应按最终 beta 能力保
 这些差异不证明具体的封号、额度或客户端识别规则。本次修复限于可验证的请求兼容问题；
 账号权限、订阅资格和服务端策略仍由上游决定。
 
+2.1.291 的新样本进一步确认原生转发应保留客户端携带的 SDK / 运行时信息。现有兼容模式的
+默认身份模板不等于这两份样本，不能把单个版本的 Linux 或 macOS 默认值套到所有请求上。
+本轮的“对齐”以原生报文保真和诊断能力联动为验收范围。
+
 ## 配置与边界
 
 - Anthropic API Key 账号可使用已有 `anthropic_passthrough` 路径。
@@ -98,7 +156,7 @@ tool_use/tool_result、metadata 和条件 safeguards 应按最终 beta 能力保
 
 ```bash
 cd backend
-GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service -run 'TestClaudeCode2286|TestAnthropicClientRequestID' -count=1
+GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service -run 'TestClaudeCode2286|TestClaudeCode229[12]|TestAnthropicClientRequestID' -count=1
 GOTOOLCHAIN=go1.27.0 go test -tags=unit ./...
 GOTOOLCHAIN=go1.27.0 go test -tags=integration ./...
 golangci-lint run --timeout=30m ./...
@@ -130,3 +188,11 @@ DOCKER_CONFIG="$test_docker_config" CI=true GOTOOLCHAIN=go1.27.0 \
 ```
 
 上述命令仍在 `backend` 目录执行。本次没有进行生产部署或真实 Anthropic 请求。
+
+### 2026-10-07 验证结果
+
+- 新增两份 2.1.291 样本的 4 个转发组合，原始正文逐字节对比通过。
+- 修复前复现诊断 beta 被丢弃及诊断字段残留；修复后针对性回归通过。
+- 诊断字段显式 null、缺省不生成、策略过滤、账号覆盖和清理幂等性通过。
+- 合并 v0.2.14 后，缓存诊断修复的全量 unit / integration 已通过，lint 0 issues。
+- 2.1.292 新增 4 个逐字节转发组合，针对性回归通过；包含最新样本的最终全量 unit / integration 全部通过，lint 0 issues。
