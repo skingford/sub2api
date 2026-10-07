@@ -110,3 +110,5 @@
 - 验证：24 个原生转发组合、180 个身份配置组合（每组重复两次）通过；完整后端 unit / integration 均通过，golangci-lint 0 issues。token 计数样本替换为无丢包捕获后，新增报文与身份矩阵再次通过。
 - 发现的边界：默认 OAuth metadata 重写和同版本账号缓存仍会产生明确差异；两种 Go 传输与原生 CLI 的 TLS 握手、HTTP 头顺序不同。未调整生产设置、旧兼容身份模板或 TLS 模板，未访问真实官方模型服务。
 - 提交关联：`Claude-Change-ID: CC-20261008-001`；详细结果见 [请求对齐报告](claude-code-request-parity.md#2026-10-08启用身份服务及扩展场景验证)。
+- 实现提交：`9535cf86`；[PR #2](https://github.com/skingford/sub2api/pull/2)，目标为 `release`，保留为待审阅草稿。
+- 复现补记：已用仓库 Dockerfile 构建镜像并完整复跑 7 个 CLI 场景，12 条请求的原始字节再次通过 PCAP 校验。完整 unit 为 57 个包，integration 为 51 个包，lint 0 issues。原始证据保存在维护者本机 `claude-capture/validation-2.1.292-20261008/`，仓库保存合成报文、来源哈希、核对摘要和复现代码。
