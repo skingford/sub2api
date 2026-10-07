@@ -1008,6 +1008,15 @@ func sanitizeAnthropicBodyForBetaTokens(body []byte, anthropicBetaHeader string)
 
 	changed := false
 
+	// Native 2.1.291 emits diagnostics only while cache-diagnosis is enabled.
+	// Follow the effective header after policy filtering and account overrides;
+	// preserving the beta never creates a missing diagnostics object.
+	if b, deleted := stripAnthropicBodyFieldUnlessBeta(
+		body, "diagnostics", anthropicBetaHeader, claude.BetaCacheDiagnosis,
+	); deleted {
+		body, changed = b, true
+	}
+
 	// context_management：需要 context-management beta。
 	if b, deleted := stripAnthropicBodyFieldUnlessBeta(
 		body, "context_management", anthropicBetaHeader, anthropicBetaContextManagementToken,

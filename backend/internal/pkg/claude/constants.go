@@ -35,6 +35,9 @@ const (
 	BetaPerTurnControl        = "per-turn-control-2026-07-01"
 	BetaDangerousToolUse      = "dangerous-tool-use-2026-09-03"
 
+	// Optional cache diagnostics observed on the native 2.1.291 first-party path.
+	BetaCacheDiagnosis = "cache-diagnosis-2026-04-07"
+
 	// server-side refusal fallback beta 字段族（beta Messages API 专有）。
 	// 客户端（Claude Code / SDK / OpenCode 等）会默认透传 body.fallbacks /
 	// body.fallback_credit_token，上游仅在 anthropic-beta 携带对应 token 时接受；

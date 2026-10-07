@@ -1,0 +1,86 @@
+{
+  "method": "POST",
+  "path": "/v1/messages?beta=true",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "claude-cli/2.1.291 (external, sdk-cli)",
+    "X-Claude-Code-Session-Id": "b9ff0360-cd68-4116-be19-d520ebd4eec8",
+    "X-Stainless-Arch": "x64",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-OS": "Linux",
+    "X-Stainless-Package-Version": "0.128.0",
+    "X-Stainless-Retry-Count": "0",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v26.3.0",
+    "X-Stainless-Timeout": "5",
+    "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+    "anthropic-dangerous-direct-browser-access": "true",
+    "anthropic-version": "2023-06-01",
+    "x-app": "cli",
+    "x-claude-code-prompt-id": "5eb4610e-7f22-474b-ae36-edf5054330fb",
+    "x-claude-code-request-class": "main",
+    "x-client-request-id": "12a2c26f-6a9b-4c7c-86d8-361edb3f0c0e"
+  },
+  "body": {
+    "model": "claude-sonnet-4-6",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "LOCAL_TLS_KEYLOG_PROBE_20261007: Reply with exactly OK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ]
+      }
+    ],
+    "system": [
+      {
+        "type": "text",
+        "text": "x-anthropic-billing-header: cc_version=2.1.291.819; cc_entrypoint=sdk-cli; cch=60495; cc_prompt_id=5eb4610e-7f22-474b-ae36-edf5054330fb; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+      },
+      {
+        "type": "text",
+        "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      },
+      {
+        "type": "text",
+        "text": "Local TLS diagnostics. Reply with OK.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "tools": [],
+    "metadata": {
+      "user_id": "{\"device_id\":\"669c6b5e2d7c69c2261b3ae19d969a74deaf98e856775d881f047948c387792b\",\"account_uuid\":\"\",\"session_id\":\"b9ff0360-cd68-4116-be19-d520ebd4eec8\"}"
+    },
+    "max_tokens": 32000,
+    "thinking": {
+      "type": "adaptive",
+      "display": "omitted"
+    },
+    "context_management": {
+      "edits": [
+        {
+          "type": "clear_thinking_20251015",
+          "keep": "all"
+        }
+      ]
+    },
+    "output_config": {
+      "effort": "high"
+    },
+    "diagnostics": {
+      "previous_message_id": null
+    },
+    "stream": true
+  }
+}

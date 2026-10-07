@@ -1,0 +1,22 @@
+{
+  "cli_version": "2.1.291",
+  "synthetic_credentials": true,
+  "source_binary_sha256": {
+    "linux-x64": "078fad28d0297c9a25d306b635b2d8816c6839347520f29eb54ffea5d56142fb",
+    "darwin-x64": "223bf4de0e8f38cb254fc38f82fda09f9fcfd4e2aac62b59ef7e7f1960a45ddd"
+  },
+  "cases": [
+    {
+      "name": "linux-firstparty",
+      "body_sha256": "56c9e6f7153a5df136568d452289d403363f015fa442eb40c5054f9701b6e885",
+      "body_bytes": 1083,
+      "source_archive": "raw/逆向工程/ClaudeCode-2.1.291隔离抓包-2026-10-07/docker/baseline/requests.json"
+    },
+    {
+      "name": "macos-loopback",
+      "body_sha256": "a4f44fa94a5a90667a9cf338557099ae299f9ed73d14ee5d39589129872b11c6",
+      "body_bytes": 928,
+      "source_archive": "raw/逆向工程/ClaudeCode-2.1.291隔离抓包-2026-10-07/macos/baseline/requests.json"
+    }
+  ]
+}
