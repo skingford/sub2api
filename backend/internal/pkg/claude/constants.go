@@ -5,11 +5,9 @@ package claude
 
 // Beta header 常量
 //
-// 这里的常量对齐真实 Claude Code CLI 的最新流量（截至 2026-04）。
-// 选型参考：与 Parrot (src/transform/cc_mimicry.py) 的 BETAS 保持一致，
-// 原因：Anthropic 上游会基于 anthropic-beta 的完整集合判定请求来源；
-// 缺少任何"官方 Claude Code 请求才会带"的 beta，都会被降级到第三方额度，
-// 对应报错：`Third-party apps now draw from your extra usage, not your plan limits.`
+// Compatibility defaults originally referenced Parrot's cc_mimicry.py.
+// Native CLI beta lists depend on the version, provider, model and features;
+// these constants are not evidence of server billing or client classification.
 const (
 	BetaOAuth                    = "oauth-2025-04-20"
 	BetaClaudeCode               = "claude-code-20250219"
@@ -29,6 +27,13 @@ const (
 	BetaThinkingBindingControls     = "thinking-binding-controls-2026-08-01"
 	BetaMidConversationOutputConfig = "mid-conversation-output-config-2026-07-01"
 	BetaExtendedCacheTTL            = "extended-cache-ttl-2025-04-11"
+
+	// Conditional capabilities observed in native Claude Code 2.1.286 requests.
+	// Recognize these on incoming traffic; do not enable them for every model
+	// or manufacture the associated classifier/permission context.
+	BetaMidConversationSystem = "mid-conversation-system-2026-04-07"
+	BetaPerTurnControl        = "per-turn-control-2026-07-01"
+	BetaDangerousToolUse      = "dangerous-tool-use-2026-09-03"
 
 	// server-side refusal fallback beta 字段族（beta Messages API 专有）。
 	// 客户端（Claude Code / SDK / OpenCode 等）会默认透传 body.fallbacks /

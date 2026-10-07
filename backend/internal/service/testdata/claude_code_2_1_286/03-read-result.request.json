@@ -1,0 +1,140 @@
+{
+  "method": "POST",
+  "path": "/v1/messages?beta=true",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "claude-cli/2.1.286 (external, sdk-cli)",
+    "X-Claude-Code-Session-Id": "654fc45a-66be-4285-b7b8-a080a5b5172b",
+    "X-Stainless-Arch": "x64",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-OS": "MacOS",
+    "X-Stainless-Package-Version": "0.127.0",
+    "X-Stainless-Retry-Count": "0",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v26.3.0",
+    "X-Stainless-Timeout": "10",
+    "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,effort-2025-11-24,dangerous-tool-use-2026-09-03,afk-mode-2026-01-31",
+    "anthropic-dangerous-direct-browser-access": "true",
+    "anthropic-version": "2023-06-01",
+    "x-app": "cli"
+  },
+  "body": {
+    "model": "claude-sonnet-5-5",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Read sample.txt with the Read tool, then reply OK."
+      },
+      {
+        "role": "system",
+        "content": [],
+        "output_config": {
+          "effort": "medium"
+        }
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool_use",
+            "id": "toolu_local_mock_read",
+            "name": "Read",
+            "input": {
+              "file_path": "${CAPTURE_DIR}/read-tool/sample.txt"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "tool_use_id": "toolu_local_mock_read",
+            "type": "tool_result",
+            "content": "1\tLOCAL_REQUEST_AUDIT_SENTINEL_20261003\n2\t",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ]
+      }
+    ],
+    "system": [
+      {
+        "type": "text",
+        "text": "x-anthropic-billing-header: cc_version=2.1.286.c25; cc_entrypoint=sdk-cli;"
+      },
+      {
+        "type": "text",
+        "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      },
+      {
+        "type": "text",
+        "text": "You are a local request-shape test. Use only synthetic fixture data.",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "tools": [
+      {
+        "name": "Read",
+        "description": "read files, images, PDFs, notebooks",
+        "input_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "file_path": {
+              "description": "The absolute path to the file to read",
+              "type": "string"
+            },
+            "offset": {
+              "description": "The line number to start reading from. Only provide if the file is too large to read at once",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "limit": {
+              "description": "The number of lines to read. Only provide if the file is too large to read at once.",
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "pages": {
+              "description": "Page range for PDF files (e.g., \"1-5\", \"3\", \"10-20\"). Only applicable to PDF files. Maximum 20 pages per request.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "file_path"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "metadata": {
+      "user_id": "{\"device_id\":\"70ce3a178fff0e046e4f82cf7d83074371a2c16ca3aa7ac01a14576dca6eb59b\",\"account_uuid\":\"\",\"session_id\":\"654fc45a-66be-4285-b7b8-a080a5b5172b\"}"
+    },
+    "max_tokens": 128000,
+    "thinking": {
+      "type": "adaptive",
+      "display": "omitted"
+    },
+    "context_management": {
+      "edits": [
+        {
+          "type": "clear_thinking_20251015",
+          "keep": "all"
+        }
+      ]
+    },
+    "output_config": {
+      "effort": "medium"
+    },
+    "stream": true
+  }
+}

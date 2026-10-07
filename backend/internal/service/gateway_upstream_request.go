@@ -12,7 +12,6 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/logger"
 	"github.com/Wei-Shaw/sub2api/internal/util/urlvalidator"
-	"github.com/google/uuid"
 	"github.com/tidwall/gjson"
 
 	"github.com/gin-gonic/gin"
@@ -117,6 +116,9 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 		finalBetaHeader, finalBetaShouldSet = beta, true
 	}
 	finalBetaHeader = filterSonnet55ToolsetBeta(finalBetaHeader, body, modelID)
+	if err := validateAnthropicSafeguardsCapability(c, body, finalBetaHeader); err != nil {
+		return nil, nil, err
+	}
 
 	// 能力维度 body sanitize：与最终 anthropic-beta header 对称
 	if sanitized, changed := sanitizeAnthropicBodyForBetaTokens(body, finalBetaHeader); changed {
@@ -176,7 +178,7 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	}
 
 	// OAuth + mimic Claude Code：强制注入 CLI 指纹相关 header
-	// （user-agent/x-stainless-*/x-app/Accept/x-stainless-helper-method/x-client-request-id）
+	// （user-agent/x-stainless-*/x-app/Accept）
 	if tokenType == "oauth" && mimicClaudeCode {
 		applyClaudeCodeMimicHeaders(req, reqStream, mimicUserAgent)
 	}
@@ -197,6 +199,8 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 			}
 		}
 	}
+
+	ensureAnthropicClientRequestID(req)
 
 	// 账号级请求头覆写（仅 anthropic/openai api_key 账号启用时生效；OAuth 路径 no-op）。
 	// 放在所有 header 逻辑之后，确保配置值对同名头拥有最终决定权。
@@ -898,12 +902,26 @@ func buildBetaTokenSet(tokens []string) map[string]struct{} {
 
 var defaultDroppedBetasSet = buildBetaTokenSet(claude.DroppedBetas)
 
+// Do not silently remove a caller's safety-classifier context when an account
+// override or policy removes its capability. The client must see a refusal,
+// rather than receiving an ordinary model response without its safeguards.
+func validateAnthropicSafeguardsCapability(c *gin.Context, body []byte, beta string) error {
+	if !gjson.GetBytes(body, "safeguards").Exists() || anthropicBetaTokensContains(beta, claude.BetaDangerousToolUse) {
+		return nil
+	}
+	err := fmt.Errorf("safeguards requires anthropic-beta %s; the effective upstream beta header does not enable it", claude.BetaDangerousToolUse)
+	if c != nil && c.Writer != nil && !c.Writer.Written() {
+		c.JSON(http.StatusBadRequest, gin.H{"type": "error", "error": gin.H{"type": "invalid_request_error", "message": err.Error()}})
+	}
+	return err
+}
+
 // applyClaudeCodeMimicHeaders forces "Claude Code-like" request headers.
 // This mirrors opencode-anthropic-auth behavior: do not trust downstream
 // headers when using Claude Code-scoped OAuth credentials.
 // mimicUserAgent 由调用方在同一请求内取一次传入，保证出站 User-Agent 头与
 // 请求体 billing attribution 的 cc_version 版本号严格一致。
-func applyClaudeCodeMimicHeaders(req *http.Request, isStream bool, mimicUserAgent string) {
+func applyClaudeCodeMimicHeaders(req *http.Request, _ bool, mimicUserAgent string) {
 	if req == nil {
 		return
 	}
@@ -923,14 +941,10 @@ func applyClaudeCodeMimicHeaders(req *http.Request, isStream bool, mimicUserAgen
 	}
 	// Real Claude CLI uses Accept: application/json (even for streaming).
 	setHeaderRaw(req.Header, "Accept", "application/json")
-	if isStream {
-		setHeaderRaw(req.Header, "x-stainless-helper-method", "stream")
-	}
-	// Real Claude CLI 每个请求都会生成一个新的 UUID 放在 x-client-request-id。
-	// 上游会以此作为会话/请求指纹的一部分，缺失或重复都可能触发第三方判定。
-	if getHeaderRaw(req.Header, "x-client-request-id") == "" {
-		setHeaderRaw(req.Header, "x-client-request-id", uuid.NewString())
-	}
+	// Native 2.1.286 uses messages.create({stream:true}), not the SDK .stream
+	// helper. Streaming alone does not justify adding its helper-method header.
+	// Request correlation is origin-dependent and handled separately by
+	// ensureAnthropicClientRequestID after these compatibility defaults.
 }
 
 func truncateForLog(b []byte, maxBytes int) string {
