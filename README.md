@@ -16,6 +16,9 @@
 | `release` | 本 fork 的维护主分支，包含已验证的自定义改动 |
 | 主题分支 | 从 `release` 开始开发，后续 PR 提交到 `release` |
 
+`release` 已启用[分支保护](https://github.com/skingford/sub2api/rules/24660893)：禁止强推和删除。
+当前仍允许普通快进推送，尚未要求必需 CI 状态检查。
+
 每次 Claude 相关改动都记录来源版本、修改原因、证据、涉及文件、验证结果和提交引用。
 代码提交通过 `Claude-Change-ID` 与记录关联，已发布记录的纠正通过后续条目保留历史。
 具体规则见 [开发指南](DEV_GUIDE.md)。

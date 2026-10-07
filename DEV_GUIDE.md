@@ -370,3 +370,13 @@ sub2api-bmai/
 
 首次建立 `release` 时保留此前已验证的提交历史。历史 PR #1 保留为相对上游 `main`
 的草稿差异记录；维护版本以 `release` 为准，不通过该历史 PR 把 fork 改动写入上游跟踪分支。
+
+### release 分支保护
+
+GitHub 已启用 [release-maintenance-protection](https://github.com/skingford/sub2api/rules/24660893)，
+仅匹配 `refs/heads/release`：禁止删除和非快进强推，不设绕过名单。普通快进推送仍允许，
+常规开发继续按上述约定通过面向 `release` 的 PR 维护。
+
+规则快照保存在 [.github/rulesets/release-protection.json](.github/rulesets/release-protection.json)。
+该文件不会自动修改 GitHub 设置；变更保护策略时，应更新已有规则并核对服务端的生效规则。
+2026-10-07 配置时尚无 release 分支的 CI 运行记录，因此未配置必需状态检查。
