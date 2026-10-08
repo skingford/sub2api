@@ -25,6 +25,7 @@ const (
 	BetaRedactThinking              = "redact-thinking-2026-02-12"
 	BetaContextManagement           = "context-management-2025-06-27"
 	BetaThinkingBindingControls     = "thinking-binding-controls-2026-08-01"
+	BetaThinkingTokenCount          = "thinking-token-count-2026-05-13"
 	BetaMidConversationOutputConfig = "mid-conversation-output-config-2026-07-01"
 	BetaExtendedCacheTTL            = "extended-cache-ttl-2025-04-11"
 
@@ -88,33 +89,19 @@ const DefaultCacheControlTTL = "5m"
 
 // CLICurrentVersion 是内置的 Claude Code CLI 伪装版本号基线（三段 semver）。
 // 用于 billing attribution block 中的 cc_version=X.Y.Z.{fp} 前缀以及 fingerprint 计算。
-// 必须与 DefaultHeaders["User-Agent"] 中的版本号严格一致；不一致会被 Anthropic 判第三方。
+// Keep it consistent with the selected header/body profile. Client consistency
+// alone does not establish provider acceptance or account eligibility.
 //
 // ⚠️ 读取实际生效的版本号请用 CLIVersion()，它会叠加 SUB2API_CLAUDE_CLI_VERSION 覆盖。
 // 直接引用本常量只在"表达内置基线"时才正确（例如覆盖值的下限校验）。
-const CLICurrentVersion = "2.1.258"
+const CLICurrentVersion = "2.1.292"
 
-// FullClaudeCodeMimicryBetas 返回最"像"真实 Claude Code CLI 的完整 beta 列表，
-// 用于 OAuth 账号伪装成 Claude Code 时使用。
-// 顺序与真实 CLI 抓包一致。
-//
-// 使用建议：
-//   - OAuth mimic：所有模型（包括 Haiku）都使用这整份列表。
-//   - OAuth 真实客户端透传：保留客户端 beta；未提供时使用模型对应默认值。
-//   - API-key 账号：不要使用本函数，参见 APIKeyBetaHeader。
-//   - 不默认加入 redact-thinking，避免上游抹除 thinking 内容；客户端显式传入时由合并逻辑保留。
+// FullClaudeCodeMimicryBetas returns the measured 2.1.292 default message beta
+// set. Model-specific ordering and optional caller state are handled by the
+// gateway; count_tokens has its own smaller set.
 func FullClaudeCodeMimicryBetas() []string {
-	return []string{
-		BetaClaudeCode,
-		BetaOAuth,
-		BetaInterleavedThinking,
-		BetaPromptCachingScope,
-		BetaEffort,
-		BetaContextManagement,
-		BetaThinkingBindingControls,
-		BetaMidConversationOutputConfig,
-		BetaExtendedCacheTTL,
-	}
+	return []string{BetaClaudeCode, BetaOAuth, BetaInterleavedThinking, BetaThinkingTokenCount,
+		BetaContextManagement, BetaPromptCachingScope, BetaEffort, BetaThinkingBindingControls, BetaExtendedCacheTTL}
 }
 
 // DefaultHeaders 是 Claude Code 客户端默认请求头。
@@ -125,14 +112,14 @@ func DefaultHeaders() map[string]string {
 	return map[string]string{
 		// Keep these in sync with recent Claude CLI traffic to reduce the chance
 		// that Claude Code-scoped OAuth credentials are rejected as "non-CLI" usage.
-		// 版本参考：对齐 Parrot (src/transform/cc_mimicry.py:49) 的 CLI_USER_AGENT。
+		// Measured 2.1.292 Linux x64 headers; see model/capture fixtures.
 		"User-Agent":                                DefaultUserAgent(),
 		"X-Stainless-Lang":                          "js",
-		"X-Stainless-Package-Version":               "0.94.0",
+		"X-Stainless-Package-Version":               "0.128.0",
 		"X-Stainless-OS":                            "Linux",
-		"X-Stainless-Arch":                          "arm64",
+		"X-Stainless-Arch":                          "x64",
 		"X-Stainless-Runtime":                       "node",
-		"X-Stainless-Runtime-Version":               "v24.3.0",
+		"X-Stainless-Runtime-Version":               "v26.3.0",
 		"X-Stainless-Retry-Count":                   "0",
 		"X-Stainless-Timeout":                       "600",
 		"X-App":                                     "cli",

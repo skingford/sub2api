@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 
@@ -76,12 +77,18 @@ func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context,
 		}
 	}
 
-	isClaudeCodeCT := IsClaudeCodeClient(ctx) || isClaudeCodeClient(c.GetHeader("User-Agent"), parsed.MetadataUserID)
+	isClaudeCodeCT := isNativeClaudeInput(ctx, c, body)
 	shouldMimicClaudeCode := account.IsOAuth() && !isClaudeCodeCT
 
 	if shouldMimicClaudeCode {
+		var prepareErr error
+		ctx, prepareErr = prepareClaudeCompatibility(ctx, c, body, parsed)
+		if prepareErr != nil {
+			return prepareErr
+		}
+		parsed.ClaudeSessionID = claudeCompatibilityFromContext(ctx).SessionID
 		var normalizedBody []byte
-		normalizedBody, reqModel = normalizeClaudeOAuthRequestBody(body, reqModel, claudeOAuthNormalizeOptions{})
+		normalizedBody, reqModel = normalizeClaudeOAuthRequestBody(body, reqModel, claudeOAuthNormalizeOptions{countTokens: true})
 		if err := replaceBody(normalizedBody); err != nil {
 			return err
 		}
@@ -154,7 +161,9 @@ func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context,
 	// 构建上游请求
 	upstreamReq, wireBody, err := s.buildCountTokensRequest(ctx, c, account, body, token, tokenType, reqModel, shouldMimicClaudeCode)
 	if err != nil {
-		s.countTokensError(c, http.StatusInternalServerError, "api_error", "Failed to build request")
+		if !c.Writer.Written() {
+			s.countTokensError(c, http.StatusInternalServerError, "api_error", "Failed to build request")
+		}
 		return err
 	}
 	// 先记录首发 wire body；如果后面进入 400 retry，retry 会基于未签名的逻辑 body 重新构建。
@@ -189,8 +198,14 @@ func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context,
 		return err
 	}
 
+	if resp.StatusCode >= 400 && claudeCallerOwnsRetries(ctx, c, account, body) {
+		resp.Body = io.NopCloser(bytes.NewReader(respBody))
+		defer func() { _ = resp.Body.Close() }()
+		return s.returnClaudeUpstreamError(ctx, c, account, resp, reqModel)
+	}
+
 	// 检测 thinking block 签名错误（400）并重试一次（过滤 thinking blocks）
-	if !preserveNative && resp.StatusCode == 400 && s.shouldRectifySignatureError(ctx, account, respBody, reqModel) {
+	if !preserveNative && claudeCompatibilityFromContext(ctx) == nil && resp.StatusCode == 400 && s.shouldRectifySignatureError(ctx, account, respBody, reqModel) {
 		logger.LegacyPrintf("service.gateway", "Account %d: detected thinking block signature error on count_tokens, retrying with filtered thinking blocks", account.ID)
 
 		filteredBody := FilterThinkingBlocksForRetry(body, reqModel)
@@ -284,7 +299,9 @@ func (s *GatewayService) forwardCountTokensAnthropicAPIKeyPassthrough(ctx contex
 
 	upstreamReq, err := s.buildCountTokensRequestAnthropicAPIKeyPassthrough(ctx, c, account, body, token)
 	if err != nil {
-		s.countTokensError(c, http.StatusInternalServerError, "api_error", "Failed to build request")
+		if !c.Writer.Written() {
+			s.countTokensError(c, http.StatusInternalServerError, "api_error", "Failed to build request")
+		}
 		return err
 	}
 
@@ -467,6 +484,9 @@ func (s *GatewayService) buildCountTokensRequestAnthropicAPIKeyPassthrough(
 	if err != nil {
 		return nil, err
 	}
+	if err := s.bindClaudeConversation(req.Context(), c, account); err != nil {
+		return nil, err
+	}
 	prepareNativeClaudeTransport(req, c, account, body)
 
 	return req, nil
@@ -474,6 +494,13 @@ func (s *GatewayService) buildCountTokensRequestAnthropicAPIKeyPassthrough(
 
 // buildCountTokensRequest 构建 count_tokens 上游请求
 func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Context, account *Account, body []byte, token, tokenType, modelID string, mimicClaudeCode bool) (*http.Request, []byte, error) {
+	if mimicClaudeCode {
+		var prepareErr error
+		ctx, prepareErr = prepareClaudeCompatibility(ctx, c, body)
+		if prepareErr != nil {
+			return nil, nil, prepareErr
+		}
+	}
 	ctx = withNativeClaudeBodyIntegrity(ctx, c, account, body)
 	preserveNative := !mimicClaudeCode && preserveNativeClaudeRequest(ctx, c, account, body)
 	if !preserveNativeClaudeRequest(ctx, c, account, body) {
@@ -518,7 +545,7 @@ func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Con
 		fp, err := s.identityService.GetOrCreateFingerprint(ctx, account.ID, clientHeaders)
 		if err == nil {
 			ctFingerprint = fp
-			if !ctEnableMPT {
+			if !ctEnableMPT && claudeCompatibilityFromContext(ctx) == nil {
 				accountUUID := account.GetExtraString("account_uuid")
 				if accountUUID != "" && fp.ClientID != "" {
 					if newBody, err := s.identityService.RewriteUserIDWithMasking(ctx, body, account, accountUUID, fp.ClientID, fp.UserAgent); err == nil && len(newBody) > 0 {
@@ -537,6 +564,9 @@ func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Con
 	// 一致性铁律：同一次请求内只取一次 mimic UA，billing cc_version 与出站
 	// User-Agent 头共用这一个字符串（同 buildUpstreamRequest）。
 	ctMimicUserAgent := claude.DefaultUserAgent()
+	if state := claudeCompatibilityFromContext(ctx); state != nil {
+		ctMimicUserAgent = "claude-cli/" + state.Version + " (external, cli)"
+	}
 	if billingUA := effectiveBillingUserAgent(ctMimicUserAgent, tokenType, mimicClaudeCode, billingFingerprint); billingUA != "" {
 		body = syncBillingHeaderVersion(body, billingUA)
 	}
@@ -598,7 +628,7 @@ func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Con
 	if getHeaderRaw(req.Header, "anthropic-version") == "" {
 		setHeaderRaw(req.Header, "anthropic-version", "2023-06-01")
 	}
-	if tokenType == "oauth" {
+	if tokenType == "oauth" && !preserveNative {
 		applyClaudeOAuthHeaderDefaults(req)
 	}
 
@@ -622,6 +652,7 @@ func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Con
 		}
 	}
 
+	applyClaudeCompatibilityContext(req, true)
 	ensureAnthropicClientRequestID(req)
 
 	// 账号级请求头覆写（仅 anthropic/openai api_key 账号启用时生效；OAuth 路径 no-op）
@@ -629,6 +660,9 @@ func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Con
 	filterSonnet55ToolsetBetaHeader(req.Header, body, modelID)
 	body, err = finalizeNativeClaudeRequest(req, c, account, body)
 	if err != nil {
+		return nil, nil, err
+	}
+	if err := s.bindClaudeConversation(req.Context(), c, account); err != nil {
 		return nil, nil, err
 	}
 	prepareNativeClaudeTransport(req, c, account, body)

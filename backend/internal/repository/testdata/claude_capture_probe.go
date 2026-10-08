@@ -13,6 +13,7 @@ import (
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint"
 	"github.com/Wei-Shaw/sub2api/internal/repository"
+	"github.com/Wei-Shaw/sub2api/internal/service"
 )
 
 func main() {
@@ -31,10 +32,18 @@ func main() {
 		Path    string            `json:"path"`
 		Headers map[string]string `json:"headers"`
 		Body    string            `json:"raw_body_utf8"`
+		Profile string            `json:"upstream_profile"`
+		Auth    string            `json:"synthetic_auth"`
 	}
 	must(json.Unmarshal(input, &captured))
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
+	if strings.HasPrefix(os.Args[2], "auto") {
+		if captured.Profile != string(service.HTTPUpstreamProfileClaude2292) {
+			panic("auto mode requires a profile selected by the service capture")
+		}
+		ctx = service.WithHTTPUpstreamProfile(ctx, service.HTTPUpstreamProfileClaude2292)
+	}
 	req, err := http.NewRequestWithContext(ctx, captured.Method, "https://api.anthropic.com"+captured.Path, bytes.NewBufferString(captured.Body))
 	must(err)
 	for key, value := range captured.Headers {
@@ -44,7 +53,11 @@ func main() {
 		}
 		req.Header[key] = []string{value}
 	}
-	req.Header["x-api-key"] = []string{"local-container-key-not-a-real-credential"}
+	if captured.Auth == "oauth" {
+		req.Header["authorization"] = []string{"Bearer local-only-oauth-token-not-a-real-credential"}
+	} else {
+		req.Header["x-api-key"] = []string{"local-container-key-not-a-real-credential"}
+	}
 	var profile *tlsfingerprint.Profile
 	if strings.HasPrefix(os.Args[2], "native") {
 		profile = tlsfingerprint.ClaudeCode2292()

@@ -166,15 +166,13 @@ func TestComputeFinalAnthropicBeta_OAuthMimic_NonHaiku_IncludesContextManagement
 		"OAuth mimic 必须注入 thinking block binding 所需的 beta")
 }
 
-func TestComputeFinalAnthropicBeta_OAuthMimic_Haiku_IncludesFullClaudeCodeBetas(t *testing.T) {
+func TestComputeFinalAnthropicBeta_OAuthMimic_HaikuUsesMeasuredBetas(t *testing.T) {
 	s := newTestGatewayServiceForBeta(false)
 	final, ok := s.computeFinalAnthropicBeta("oauth", true, "claude-haiku-4-5", http.Header{}, []byte(`{}`), nil)
 	require.True(t, ok)
-	require.Equal(t, strings.Join(claude.FullClaudeCodeMimicryBetas(), ","), final)
-	for _, beta := range claude.FullClaudeCodeMimicryBetas() {
-		require.Truef(t, anthropicBetaTokensContains(final, beta),
-			"OAuth mimic Haiku 必须包含完整 Claude Code beta 集合，缺少 %s", beta)
-	}
+	require.True(t, anthropicBetaTokensContains(final, claude.BetaThinkingTokenCount))
+	require.True(t, anthropicBetaTokensContains(final, claude.BetaThinkingBindingControls))
+	require.False(t, anthropicBetaTokensContains(final, claude.BetaEffort))
 }
 
 func TestComputeFinalAnthropicBeta_OAuthMimic_IgnoresClientBeta(t *testing.T) {
@@ -186,8 +184,8 @@ func TestComputeFinalAnthropicBeta_OAuthMimic_IgnoresClientBeta(t *testing.T) {
 	require.True(t, ok)
 	require.False(t, strings.Contains(final, "custom-experimental-beta"),
 		"mimic 路径必须忽略客户端 anthropic-beta header")
-	require.True(t, anthropicBetaTokensContains(final, claude.BetaMidConversationOutputConfig),
-		"mimic 必须注入 mid-conversation output_config 控制所需的 beta")
+	require.False(t, anthropicBetaTokensContains(final, claude.BetaMidConversationOutputConfig),
+		"unused conditional capabilities are not injected")
 
 	// 显式 dropSet 仍能移除 mimic 注入的该 beta，且不会因此放行客户端未知 beta。
 	dropped, ok := s.computeFinalAnthropicBeta("oauth", true, "claude-sonnet-4-6", hdr, []byte(`{}`),
@@ -358,8 +356,8 @@ func TestNormalizeClaudeOAuthRequestBody_PreservesClientContextManagement(t *tes
 		"客户端透传的 context_management 内容必须原样保留")
 }
 
-func TestNormalizeClaudeOAuthRequestBody_NoThinking_NoInject(t *testing.T) {
-	body := []byte(`{"model":"claude-sonnet-4-6","messages":[]}`)
+func TestNormalizeClaudeOAuthRequestBody_ThinkingDisabled_NoInject(t *testing.T) {
+	body := []byte(`{"model":"claude-sonnet-4-6","thinking":{"type":"disabled"},"messages":[]}`)
 	out, _ := normalizeClaudeOAuthRequestBody(body, "claude-sonnet-4-6", claudeOAuthNormalizeOptions{})
 	require.False(t, gjson.GetBytes(out, "context_management").Exists())
 }

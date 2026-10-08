@@ -48,9 +48,10 @@ var (
 // 仅在 GenerateSessionHash 第 3 级 fallback（消息内容 hash）时混入，
 // 避免不同用户发送相同消息产生相同 hash 导致账号集中。
 type SessionContext struct {
-	ClientIP  string
-	UserAgent string
-	APIKeyID  int64
+	ClientIP     string
+	UserAgent    string
+	APIKeyID     int64
+	NativeClaude bool
 }
 
 type jsonRange struct {
@@ -291,6 +292,7 @@ type ParsedRequest struct {
 	Speed           string          // Anthropic speed（当前可计费值为 "fast"）
 	MaxTokens       int             // max_tokens 值（用于探测请求拦截）
 	SessionContext  *SessionContext // 可选：请求上下文区分因子（nil 时行为不变）
+	ClaudeSessionID string          // Request-scoped conversation UUID for compatibility conversion.
 
 	protocol      string    // 当前 Body 的协议格式，用于 Body 替换后刷新 raw range
 	systemRange   jsonRange // system/systemInstruction.parts 的 raw JSON 范围，绑定 Body 当前内容

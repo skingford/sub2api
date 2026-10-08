@@ -27,7 +27,7 @@ func withCLIVersionResolverForTest(t *testing.T, resolver func() string) {
 // 判为非正版客户端。
 func TestBuildOAuthMimicRequest_RuntimeVersionConsistentBetweenHeaderAndBilling(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	const upgraded = "9.9.9"
+	const upgraded = "2.1.292"
 	withCLIVersionResolverForTest(t, func() string { return upgraded })
 
 	for _, endpoint := range []string{"messages", "count_tokens"} {

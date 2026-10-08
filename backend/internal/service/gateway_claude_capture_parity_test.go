@@ -204,7 +204,7 @@ func TestClaudeCode2286NormalizationPreservesExplicitTemperature(t *testing.T) {
 	for _, thinking := range []string{``, `,"thinking":{"type":"disabled"}`} {
 		body := []byte(`{"model":"claude-sonnet-4-6"` + thinking + `}`)
 		out, _ := normalizeClaudeOAuthRequestBody(body, "claude-sonnet-4-6", claudeOAuthNormalizeOptions{})
-		require.Equal(t, float64(1), gjson.GetBytes(out, "temperature").Float())
+		require.False(t, gjson.GetBytes(out, "temperature").Exists(), "verified defaults do not invent temperature")
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"compress/zlib"
 	"io"
 	"log/slog"
 	"net/http"
@@ -187,4 +188,45 @@ func compressDeflate(t *testing.T, payload []byte) []byte {
 	require.NoError(t, err)
 	require.NoError(t, zw.Close())
 	return buf.Bytes()
+}
+
+func compressZlib(t *testing.T, payload []byte) []byte {
+	t.Helper()
+	var out bytes.Buffer
+	writer := zlib.NewWriter(&out)
+	_, err := writer.Write(payload)
+	require.NoError(t, err)
+	require.NoError(t, writer.Close())
+	return out.Bytes()
+}
+
+func TestDecompressResponseBodyDeflateVariants(t *testing.T) {
+	for _, format := range []struct {
+		name     string
+		compress func(*testing.T, []byte) []byte
+	}{{"raw", compressDeflate}, {"zlib", compressZlib}} {
+		for _, payload := range []string{`{"input_tokens":128}`, `{"type":"error","error":{"message":"local refusal"}}`, "event: message_delta\ndata: {\"type\":\"message_delta\"}\n\n"} {
+			t.Run(format.name+payload[:5], func(t *testing.T) {
+				original := &responseTestBody{Reader: bytes.NewReader(format.compress(t, []byte(payload)))}
+				resp := &http.Response{Header: http.Header{"Content-Encoding": {"deflate"}, "Content-Length": {"99"}}, Body: original}
+				decompressResponseBody(resp)
+				got, err := io.ReadAll(resp.Body)
+				require.NoError(t, err)
+				require.Equal(t, payload, string(got))
+				require.Empty(t, resp.Header.Get("Content-Encoding"))
+				require.Equal(t, int64(-1), resp.ContentLength)
+				require.NoError(t, resp.Body.Close())
+			})
+		}
+	}
+}
+
+func TestDecompressResponseBodyBrokenZlibReturnsError(t *testing.T) {
+	for _, data := range [][]byte{{0x78, 0x9c}, {0x78, 0xbb, 0, 0, 0, 1}} {
+		resp := newEncodedResponse("deflate", data)
+		decompressResponseBody(resp)
+		_, err := io.ReadAll(resp.Body)
+		require.Error(t, err)
+		require.NoError(t, resp.Body.Close())
+	}
 }

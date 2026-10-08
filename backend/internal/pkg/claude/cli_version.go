@@ -17,6 +17,11 @@ import (
 // 而改动本身只是一个常量。xai 包的 XAI_GROK_CLI_VERSION 已经是同样的做法。
 const CLIVersionEnv = "SUB2API_CLAUDE_CLI_VERSION"
 
+// Configuration compatibility is independent of the current default profile.
+// Older saved settings remain visible; the gateway separately validates whether
+// a complete measured conversion profile exists for the selected version.
+const minimumConfigurableCLIVersion = "2.1.258"
+
 // resolvedCLIVersion 在包初始化时解析一次。
 //
 // ⚠️ 故意不做成"每次调用读一次环境变量"：伪装身份必须在一个进程的生命周期内保持恒定。
@@ -40,8 +45,8 @@ func CLIVersion() string {
 //     identity_service 的 fingerprintUserAgentPattern 拒绝，一旦漏进去，该账号的
 //     持久指纹会被写成一个不存在的客户端版本，此后所有上游请求都声称这个版本，
 //     被判非正版并持续 429——而系统内没有指纹重置入口。
-//  2. 不低于内置基线 CLICurrentVersion。向下覆盖没有任何使用场景，
-//     却会让 identity_service 的主版本超前检查基准跟着一起降。
+//  2. At least the historical configuration floor. The gateway separately
+//     validates that a complete measured profile exists before conversion.
 func IsSupportedCLIVersion(version string) bool {
 	version = strings.TrimSpace(version)
 	if version == "" {
@@ -56,7 +61,7 @@ func IsSupportedCLIVersion(version string) bool {
 	if semver.Prerelease(canonical) != "" || semver.Build(canonical) != "" {
 		return false
 	}
-	return semver.Compare(canonical, "v"+CLICurrentVersion) >= 0
+	return semver.Compare(canonical, "v"+minimumConfigurableCLIVersion) >= 0
 }
 
 // resolveCLIVersion 把环境变量的原始值解析成可用的版本号。
@@ -72,7 +77,7 @@ func resolveCLIVersion(raw string) string {
 			"env", CLIVersionEnv,
 			"value", version,
 			"builtin", CLICurrentVersion,
-			"requirement", "strict three-part semver, not older than the built-in pin")
+			"requirement", "strict three-part semver, not below the supported configuration floor")
 		return CLICurrentVersion
 	}
 	return version

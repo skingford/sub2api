@@ -1,5 +1,9 @@
 # Claude Code 原生请求对齐
 
+> 后续修复与调用约定见 [剩余差异修复](claude-code-gap-fixes.md)。下文审查 / 实验内容保留对应基线，
+> 不能把历史差异直接当作修复后的当前行为。
+
+
 > 后续完整性复核发现原生计数头、响应解压、普通 API 配置、身份与重试等剩余差异，
 > 详见 [release 剩余差异报告](claude-code-remaining-differences.md)。已有特定样本验证不代表所有路径等价。
 

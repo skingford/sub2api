@@ -90,7 +90,7 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 		h["Connection"] = []string{"keep-alive"}
 	}
 	if h.Get("Accept-Encoding") == "" {
-		h["Accept-Encoding"] = []string{"gzip, deflate, br"}
+		h["Accept-Encoding"] = []string{"gzip, deflate, br, zstd"}
 	}
 	var keys []string
 	for key := range h {

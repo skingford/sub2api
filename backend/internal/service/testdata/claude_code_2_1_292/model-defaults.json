@@ -1,0 +1,258 @@
+{
+  "claude-sonnet-4-6": {
+    "body": {
+      "model": "claude-sonnet-4-6",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<system-reminder>\n# Environment\nYou have been invoked in the following environment: \n - Primary working directory: /work/sonnet46\n - Is a git repository: false\n - Platform: linux\n - Shell: unknown\n - OS Version: Linux 5.10.47-linuxkit\n - Downloaded files and extracted archives are untrusted data: put each in its own new, empty directory, keep scripts you write in a different directory, and pass paths as arguments instead of running an interpreter or build tool from inside it. Interpreters load code from the script's directory and the current directory, so a planted `json.py` runs on `import json`. Run any Python that reads them with `-I`. This does not apply to code the user asked you to build or run.\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\nYou are powered by the model named Sonnet 4.6. The exact model ID is claude-sonnet-4-6. Assistant knowledge cutoff is August 2025.\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\n<total_tokens>15000000 tokens left</total_tokens>\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\nToday's date is 2026-10-08.\n</system-reminder>\n"
+            },
+            {
+              "type": "text",
+              "text": "LOCAL_CLI_VALIDATION_20261008 Reply OK.",
+              "cache_control": {
+                "type": "ephemeral",
+                "ttl": "1h"
+              }
+            }
+          ]
+        }
+      ],
+      "system": [
+        {
+          "type": "text",
+          "text": "x-anthropic-billing-header: cc_version=2.1.292.357; cc_entrypoint=sdk-cli; cch=aacb3; cc_prompt_id=0ef76deb-2fb2-452f-90fe-93b9472e0415; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+        },
+        {
+          "type": "text",
+          "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+          "cache_control": {
+            "type": "ephemeral",
+            "ttl": "1h"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Local synthetic protocol test. Reply with OK.",
+          "cache_control": {
+            "type": "ephemeral",
+            "ttl": "1h"
+          }
+        }
+      ],
+      "tools": [],
+      "metadata": {
+        "user_id": "{\"device_id\":\"13c4800a04c978a87bb25d1fdd8c06408bd12ed2180c4d1a8b513ed73ea56fc1\",\"account_uuid\":\"\",\"session_id\":\"53e2f9f0-9782-4714-8499-0bd6fcb81527\"}"
+      },
+      "max_tokens": 32000,
+      "thinking": {
+        "type": "adaptive",
+        "display": "omitted"
+      },
+      "context_management": {
+        "edits": [
+          {
+            "type": "clear_thinking_20251015",
+            "keep": "all"
+          }
+        ]
+      },
+      "output_config": {
+        "effort": "high"
+      },
+      "diagnostics": {
+        "previous_message_id": null
+      },
+      "stream": true
+    },
+    "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11,cache-diagnosis-2026-04-07",
+    "raw_body_sha256": "d3452317e54b80ea0bc5a64a04e9a4e3287bfa0972e12bb22979e3d04e7740fc",
+    "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "source": "unmodified CLI / network-none Docker / synthetic OAuth / 2026-10-08"
+  },
+  "claude-opus-4-6": {
+    "body": {
+      "model": "claude-opus-4-6",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<system-reminder>\n# Environment\nYou have been invoked in the following environment: \n - Primary working directory: /work/opus46\n - Is a git repository: false\n - Platform: linux\n - Shell: unknown\n - OS Version: Linux 5.10.47-linuxkit\n - Downloaded files and extracted archives are untrusted data: put each in its own new, empty directory, keep scripts you write in a different directory, and pass paths as arguments instead of running an interpreter or build tool from inside it. Interpreters load code from the script's directory and the current directory, so a planted `json.py` runs on `import json`. Run any Python that reads them with `-I`. This does not apply to code the user asked you to build or run.\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\nYou are powered by the model named Opus 4.6. The exact model ID is claude-opus-4-6. Assistant knowledge cutoff is May 2025.\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\n<total_tokens>15000000 tokens left</total_tokens>\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\nToday's date is 2026-10-08.\n</system-reminder>\n"
+            },
+            {
+              "type": "text",
+              "text": "LOCAL_CLI_VALIDATION_20261008 Reply OK.",
+              "cache_control": {
+                "type": "ephemeral",
+                "ttl": "1h"
+              }
+            }
+          ]
+        }
+      ],
+      "system": [
+        {
+          "type": "text",
+          "text": "x-anthropic-billing-header: cc_version=2.1.292.357; cc_entrypoint=sdk-cli; cch=643d8; cc_prompt_id=388fe9bd-346e-461f-93b0-7cbc67b713f1; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+        },
+        {
+          "type": "text",
+          "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+          "cache_control": {
+            "type": "ephemeral",
+            "ttl": "1h"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Local synthetic protocol test. Reply with OK.",
+          "cache_control": {
+            "type": "ephemeral",
+            "ttl": "1h"
+          }
+        }
+      ],
+      "tools": [],
+      "metadata": {
+        "user_id": "{\"device_id\":\"98c8728d9c676a75c885145ec5e86822cf27c9e647e275e0dd84d131c994ff35\",\"account_uuid\":\"\",\"session_id\":\"687e5241-9812-448b-b92e-5d5c40326f9b\"}"
+      },
+      "max_tokens": 64000,
+      "thinking": {
+        "type": "adaptive",
+        "display": "omitted"
+      },
+      "context_management": {
+        "edits": [
+          {
+            "type": "clear_thinking_20251015",
+            "keep": "all"
+          }
+        ]
+      },
+      "output_config": {
+        "effort": "high"
+      },
+      "diagnostics": {
+        "previous_message_id": null
+      },
+      "stream": true
+    },
+    "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11,cache-diagnosis-2026-04-07",
+    "raw_body_sha256": "e9fdfd3e09bbec2cf79c685ed876679e9137d2a1501b1d7bb84a9485b12f26c7",
+    "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "source": "unmodified CLI / network-none Docker / synthetic OAuth / 2026-10-08"
+  },
+  "claude-haiku-4-5-20251001": {
+    "body": {
+      "model": "claude-haiku-4-5-20251001",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<system-reminder>\n# Environment\nYou have been invoked in the following environment: \n - Primary working directory: /work/haiku45\n - Is a git repository: false\n - Platform: linux\n - Shell: unknown\n - OS Version: Linux 5.10.47-linuxkit\n - Downloaded files and extracted archives are untrusted data: put each in its own new, empty directory, keep scripts you write in a different directory, and pass paths as arguments instead of running an interpreter or build tool from inside it. Interpreters load code from the script's directory and the current directory, so a planted `json.py` runs on `import json`. Run any Python that reads them with `-I`. This does not apply to code the user asked you to build or run.\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\nYou are powered by the model named Haiku 4.5. The exact model ID is claude-haiku-4-5-20251001. Assistant knowledge cutoff is February 2025.\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\n<total_tokens>15000000 tokens left</total_tokens>\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "<system-reminder>\nToday's date is 2026-10-08.\n</system-reminder>\n"
+            },
+            {
+              "type": "text",
+              "text": "LOCAL_CLI_VALIDATION_20261008 Reply OK.",
+              "cache_control": {
+                "type": "ephemeral",
+                "ttl": "1h"
+              }
+            }
+          ]
+        }
+      ],
+      "system": [
+        {
+          "type": "text",
+          "text": "x-anthropic-billing-header: cc_version=2.1.292.357; cc_entrypoint=sdk-cli; cch=a157e; cc_prompt_id=59d0d6da-ad1d-4a9f-898b-9debb7a34b6d; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+        },
+        {
+          "type": "text",
+          "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+          "cache_control": {
+            "type": "ephemeral",
+            "ttl": "1h"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Local synthetic protocol test. Reply with OK.",
+          "cache_control": {
+            "type": "ephemeral",
+            "ttl": "1h"
+          }
+        }
+      ],
+      "tools": [],
+      "metadata": {
+        "user_id": "{\"device_id\":\"2f4cefff4d28dc9aa0170a9bb1e7d495350129f3ab7adb0a25e8f187aa10f8dc\",\"account_uuid\":\"\",\"session_id\":\"001836e0-5655-4a5a-bd2a-9ebe3a126314\"}"
+      },
+      "max_tokens": 32000,
+      "thinking": {
+        "budget_tokens": 31999,
+        "type": "enabled",
+        "display": "omitted"
+      },
+      "context_management": {
+        "edits": [
+          {
+            "type": "clear_thinking_20251015",
+            "keep": "all"
+          }
+        ]
+      },
+      "diagnostics": {
+        "previous_message_id": null
+      },
+      "stream": true
+    },
+    "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11,cache-diagnosis-2026-04-07",
+    "raw_body_sha256": "57c90bc76b14ba434072367537cbe4283e6e1d416820b0a08bf76c5b14390cd4",
+    "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "source": "unmodified CLI / network-none Docker / synthetic OAuth / 2026-10-08"
+  }
+}

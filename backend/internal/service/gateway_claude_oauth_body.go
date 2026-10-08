@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/anthropicfp"
@@ -42,8 +41,10 @@ func (s *GatewayService) replaceModelInBody(body []byte, newModel string) []byte
 }
 
 type claudeOAuthNormalizeOptions struct {
-	injectMetadata bool
-	metadataUserID string
+	injectMetadata        bool
+	metadataUserID        string
+	countTokens           bool
+	replaceOpaqueMetadata bool
 }
 
 // sanitizeSystemText rewrites only the fixed OpenCode identity sentence (if present).
@@ -254,9 +255,25 @@ func normalizeClaudeOAuthRequestBody(body []byte, modelID string, opts claudeOAu
 	}
 
 	if opts.injectMetadata && opts.metadataUserID != "" {
-		if next, changed := ensureClaudeOAuthMetadataUserID(out, opts.metadataUserID); changed {
+		var next []byte
+		var changed bool
+		existing := gjson.GetBytes(out, "metadata.user_id").String()
+		if opts.replaceOpaqueMetadata && existing != "" && ParseMetadataUserID(existing) == nil {
+			next, changed = setJSONValueBytes(out, "metadata.user_id", opts.metadataUserID)
+		} else {
+			next, changed = ensureClaudeOAuthMetadataUserID(out, opts.metadataUserID)
+		}
+		if changed {
 			out = next
 			modified = true
+		}
+	}
+
+	verifiedModel := modelID == "claude-sonnet-4-6" || modelID == "claude-opus-4-6" || modelID == "claude-haiku-4-5-20251001"
+	if verifiedModel && !opts.countTokens {
+		defaults := claude2292ModelDefaults(out, modelID)
+		if !bytes.Equal(defaults, out) {
+			out, modified = defaults, true
 		}
 	}
 
@@ -264,15 +281,16 @@ func normalizeClaudeOAuthRequestBody(body []byte, modelID string, opts claudeOAu
 	// that omission (including between_tools); keep explicit client values.
 	thinkingType := gjson.GetBytes(out, "thinking.type").String()
 	thinkingActive := thinkingType != "" && thinkingType != "disabled"
-	if !gjson.GetBytes(out, "temperature").Exists() && !thinkingActive && !claude.IsOpus55(modelID) {
+	if !verifiedModel && !gjson.GetBytes(out, "temperature").Exists() && !thinkingActive && !claude.IsOpus55(modelID) {
 		if next, ok := setJSONValueBytes(out, "temperature", 1); ok {
 			out = next
 			modified = true
 		}
 	}
 
-	// max_tokens：真实 CLI 的默认值是 128000。缺失时补齐以对齐指纹。
-	if !gjson.GetBytes(out, "max_tokens").Exists() {
+	// Preserve the legacy fallback for unmeasured models. The verified model
+	// defaults above are not a universal CLI output-token limit.
+	if !opts.countTokens && !gjson.GetBytes(out, "max_tokens").Exists() {
 		if next, ok := setJSONValueBytes(out, "max_tokens", 128000); ok {
 			out = next
 			modified = true
@@ -288,7 +306,7 @@ func normalizeClaudeOAuthRequestBody(body []byte, modelID string, opts claudeOAu
 	// 对称约束由 sanitizeAnthropicBodyForBetaTokens 在 buildUpstreamRequest /
 	// buildCountTokensRequest 层统一执行，与 Bedrock 路径的
 	// sanitizeBedrockFieldsForBetaTokens 对称。
-	if !gjson.GetBytes(out, "context_management").Exists() {
+	if !opts.countTokens && !gjson.GetBytes(out, "context_management").Exists() {
 		thinkingType := gjson.GetBytes(out, "thinking.type").String()
 		if thinkingType == "enabled" || thinkingType == "adaptive" {
 			const cmDefault = `{"edits":[{"type":"clear_thinking_20251015","keep":"all"}]}`
@@ -324,7 +342,7 @@ func (s *GatewayService) buildOAuthMetadataUserID(parsed *ParsedRequest, account
 	if parsed == nil || account == nil {
 		return ""
 	}
-	if parsed.MetadataUserID != "" {
+	if ParseMetadataUserID(parsed.MetadataUserID) != nil {
 		return ""
 	}
 
@@ -338,15 +356,10 @@ func (s *GatewayService) buildOAuthMetadataUserID(parsed *ParsedRequest, account
 		userID = generateClientID()
 	}
 
-	// session_id 用"会话级稳定种子"派生（账号 + 客户端区分因子 + 首条 user 文本）：
-	// 随对话在尾部追加 messages 时保持不变，贴近真实 CC 进程级稳定的 session_id。
-	// 不复用 GenerateSessionHash —— 后者是粘性路由键、按设计逐轮变化（见其测试）。
-	var firstUserText string
-	if parsed.Body != nil {
-		firstUserText = extractFirstUserText(parsed.Body.Bytes())
+	if parsed.ClaudeSessionID == "" {
+		parsed.ClaudeSessionID = uuid.NewString()
 	}
-	seed := buildStableSessionSeed(account.ID, sessionContextDiscriminator(parsed.SessionContext), firstUserText)
-	sessionID := generateSessionUUID(seed)
+	sessionID := parsed.ClaudeSessionID
 
 	// 根据指纹 UA 版本选择输出格式
 	var uaVersion string
@@ -394,7 +407,7 @@ func (s *GatewayService) applyClaudeCodeOAuthMimicryToBody(
 		body = rewriteSystemForNonClaudeCodeWithPromptBlocks(body, normalizeSystemParam(systemRaw), systemPrompt, systemPromptBlocks)
 	}
 
-	normalizeOpts := claudeOAuthNormalizeOptions{}
+	normalizeOpts := claudeOAuthNormalizeOptions{replaceOpaqueMetadata: claudeCompatibilityFromContext(ctx) != nil}
 
 	if s.identityService != nil && c != nil && c.Request != nil {
 		if fp, err := s.identityService.GetOrCreateFingerprint(ctx, account.ID, c.Request.Header); err == nil && fp != nil {
@@ -449,7 +462,7 @@ func (s *GatewayService) buildOAuthMetadataUserIDFromBody(
 	if account == nil {
 		return ""
 	}
-	if existing := gjson.GetBytes(body, "metadata.user_id").String(); existing != "" {
+	if existing := gjson.GetBytes(body, "metadata.user_id").String(); ParseMetadataUserID(existing) != nil {
 		return ""
 	}
 
@@ -461,14 +474,10 @@ func (s *GatewayService) buildOAuthMetadataUserIDFromBody(
 		userID = generateClientID()
 	}
 
-	// 与 buildOAuthMetadataUserID 一致：用会话级稳定种子，避免整 body 哈希导致
-	// 每轮（甚至每个 token 变化）都重算出不同的 session_id。
-	var clientDiscriminator string
-	if fp != nil {
-		clientDiscriminator = fp.ClientID
+	sessionID := uuid.NewString()
+	if state := claudeCompatibilityFromContext(ctx); state != nil {
+		sessionID = state.SessionID
 	}
-	seed := buildStableSessionSeed(account.ID, clientDiscriminator, extractFirstUserText(body))
-	sessionID := generateSessionUUID(seed)
 
 	var uaVersion string
 	if fp != nil {
@@ -476,33 +485,6 @@ func (s *GatewayService) buildOAuthMetadataUserIDFromBody(
 	}
 	accountUUID := strings.TrimSpace(account.GetExtraString("account_uuid"))
 	return FormatMetadataUserID(userID, accountUUID, sessionID, uaVersion)
-}
-
-// buildStableSessionSeed 为伪装路径合成的 metadata.user_id session_id 生成"会话级稳定"种子。
-//
-// 真实 Claude Code 的 session_id 是进程级随机 UUID，在一段会话内跨请求保持不变。无状态代理
-// 无法恢复该值，这里用"会话内不变的锚点"近似：账号 ID + 客户端区分因子 + 首条 user 消息文本。
-// 对话在尾部追加 messages 时这三者都不变，因此 generateSessionUUID(seed) 跨轮稳定。
-//
-// 注意：粘性路由键 GenerateSessionHash 按设计逐轮变化（见其测试），本函数与之独立、互不影响。
-// accountID 恒存在，故 seed 永不为空 —— 输出始终是确定性 UUID，而非随机值。
-func buildStableSessionSeed(accountID int64, clientDiscriminator, firstUserText string) string {
-	var b strings.Builder
-	_, _ = b.WriteString(strconv.FormatInt(accountID, 10))
-	_, _ = b.WriteString("::")
-	_, _ = b.WriteString(clientDiscriminator)
-	_, _ = b.WriteString("::")
-	_, _ = b.WriteString(firstUserText)
-	return b.String()
-}
-
-// sessionContextDiscriminator 把请求上下文（客户端 IP / 归一化 UA / API Key ID）拼成
-// 一个跨客户端的区分因子，避免不同用户的相同首条消息派生出相同 session_id。
-func sessionContextDiscriminator(sc *SessionContext) string {
-	if sc == nil {
-		return ""
-	}
-	return sc.ClientIP + ":" + NormalizeSessionUserAgent(sc.UserAgent) + ":" + strconv.FormatInt(sc.APIKeyID, 10)
 }
 
 // GenerateSessionUUID creates a deterministic UUID4 from a seed string.
@@ -770,7 +752,7 @@ func expandClaudeOAuthSystemPromptTextTemplate(body []byte, text string, expansi
 	expansionPrompt = defaultClaudeOAuthExpansionPrompt(expansionPrompt)
 	// 同一次展开内只取一次版本号，billing attribution / 指纹 / 占位符三处共用，
 	// 避免运行期版本翻转瞬间取到不同值。
-	cliVersion := claude.EffectiveCLIVersion()
+	cliVersion := claudeCompatibilityVersion
 	billingText, err := buildBillingAttributionText(body, cliVersion)
 	if err != nil {
 		return "", err

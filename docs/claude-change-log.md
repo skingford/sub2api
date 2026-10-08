@@ -167,3 +167,20 @@
 - 验证：service / repository 审查采集通过；原生 OAuth count 和 403 的 PCAP 正文逐字节一致、丢包 0；文档链接与 JSON 校验。没有为文档变更重复运行全量测试。
 - 证据：[剩余差异报告](claude-code-remaining-differences.md)、[机器可读摘要](claude-2292-gap-audit.json)；本机 `claude-capture/remaining-gaps-20261008/` 保存测试源码、输出与原生抓包。
 - 提交关联：`Claude-Change-ID: CC-20261008-005`，审查文档 PR 目标为 release，保持待后续修复评审。
+
+## CC-20261008-006：同步修复审查发现的差异
+
+- 基线：release `ee2f9fea`，接续审查提交 `fe6c5a85` / CC-20261008-005；在 PR #4 中继续，保留审查历史。
+- 版本：固定 2.1.292；官方 Linux x64 二进制 SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`。补跑 Sonnet 4.6、Opus 4.6、Haiku 4.5 的假 OAuth 场景。
+- 请求：升级完整默认头组合，转换前固定来源、请求内固定版本；按三种已测模型补默认值，保留显式控制；原生请求不补可选缺省头，计数请求完整头集合回归。
+- 身份：随机会话 UUID 与显式续聊头，独立账号绑定与租户隔离路由键；已知账号 UUID 冲突本地拒绝。生成后的 metadata 不会反过来变成原生输入判据。
+- 错误：原生和新转换路径采用单次上游发送，调用方管理重试；保持拒绝状态和重试信号、用量、账号状态记录及错误脱敏。
+- 传输：缺省压缩声明补 zstd；修复 zlib / raw deflate 解码，新增错误体、SSE、损坏流和连接复用检查。
+- 配置：普通转换只接受有完整实测配置的版本；历史版本设置可读取。没有共享缓存的独立组件不能保证跨请求账号绑定。
+- 文件：网关请求与协议适配入口、会话路由、响应解码、模型与头配置、回归和样本、维护文档。没有新增依赖或执行真实模型请求。
+- 验证进度：专项回归及三模型 PCAP 校验通过；全量测试、lint 和最终传输对照完成后补记。旧断言按新原生证据与单次发送约定更新，不删除历史原始记录。
+- 关联：[修复与调用约定](claude-code-gap-fixes.md)，`Claude-Change-ID: CC-20261008-006`，继续 [PR #4](https://github.com/skingford/sub2api/pull/4)。
+
+- 最终验证：完整 unit 57 个包、integration 51 个包通过；golangci-lint 0 issues。生产代码最后修改时间早于本轮全量检查启动时间；没有以旧检查冒充修改后的结果。
+- 发送复验：从生产请求构建器导出三个模型的普通 API → OAuth 报文，交给原生 Bun 运行时重算 cch，三份最终正文逐字节一致。自动传输选择下，直连、HTTP / HTTPS CONNECT、SOCKS5 四条路径的正文、完整头值、头序和 ClientHello 非随机部分均与对应原生运行时结果一致，PCAP 校验通过且丢包为 0。
+- 证据：[最终传输对照](../backend/internal/service/testdata/claude_code_2_1_292/gap-fix-wire-verification.json)、[模型 / 计数来源](../backend/internal/service/testdata/claude_code_2_1_292/gap-fix-provenance.json)；本机 `claude-capture/gap-fixes-20261008/` 保存构建器导出、原生运行时探针、PCAP 与检查日志。运行时探针修改 JS 入口，未冒充完整 CLI 产品流程。
