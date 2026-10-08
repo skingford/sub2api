@@ -196,3 +196,18 @@
 - 验证：完整 unit 57 个包、integration 51 个包通过；全量 lint 0 issues。最后追加绑定竞争失败的槽位清理后，会话 / 身份设置 / 请求契约专项再次通过；SQL 最终版本的 32 路并发及持久性检查再次通过。最终受影响包 lint 复验 0 issues；[结构化验证记录](claude-session-validation.json) 保存命令对应日志摘要与最终源码 SHA-256。
 - 回归说明：旧身份改写中改变 session ID 的组合改为验证本地拒绝；计数接口检查会话头，不强制添加原生不存在的 metadata。首次全量集成检查出现本地 Redis 测试容器启动失败，后续完整重跑通过；测试夹具补上持久会话存储模拟，并修正作用域以同时支持 unit / integration / lint。全部验证使用本地模拟服务 / 数据库，不执行真实模型请求。
 - 关联：[调用与部署约定](claude-code-gap-fixes.md#账号绑定)，[PR #4](https://github.com/skingford/sub2api/pull/4)，提交使用 `Claude-Change-ID: CC-20261008-007`。
+
+## CC-20261008-008：托管恢复、双层会话与隔离
+
+- 授权：维护者要求完整实现检查点与受控迁移，强调不同 session_id 的内容、身份和状态不能串传。
+- 基线：release `b4430850844263e3fd3d2d180f514099bffad04e`；上游 `3f1a2ea0`。新分支 `codex/claude-managed-recovery`，目标 release。
+- 版本：默认严格模式不变；托管模式仅接受已验证的 CLI 2.1.292 与三个已覆盖模型。
+- 实现：认证用户 / 分组 / 客户端 UUID 隔离逻辑对话，独立上游 UUID 永久绑定账号；数据库处理权、代次和发送前状态转换阻止串传与不确定重放。固定恢复前缀，核对真实响应、消息边界及 thinking 来源。
+- 检查点：AES-GCM 绑定身份和用途；后台持久队列、增量摘要、原文引用校验、用户指令与内联附件保留；过期删除内容，保留归属 / 操作墓碑。摘要费用与未知用量独立记录并设日调用上限。
+- 协议：Messages、Chat Completions、Responses 和计数入口接入；恢复后对同一账号 / session 的实际正文计数；身份、归因与最终 cch 一起更新。未验证层次、无法匹配历史、未闭合工具回合及不确定响应均停止自动迁移。
+- 文件：配置、迁移 243、事务仓储、恢复服务、协议入口 / 请求构建、响应记录、摘要客户端、测试与文档。
+- 验证：完整 unit 57 个包、integration 51 个包通过；完整 / 受影响包 lint 0 issues。最后的保留清理启动、幂等键哈希及审计入口调整后，会话与审计专项再次通过。
+- 原生实验：未修改的 Linux x64 2.1.292，Docker --network none；API Key / OAuth 各两条独立 CLI 对话，合计 8 次生成、4 次计数。客户端 ID 保持，上游 ID 分别更新，跨会话标记混入为 0；实验使用测试存储端口，PostgreSQL 行为单独在真实容器验证。
+- 修正记录：首次原生 OAuth 实验的模拟上游用 Header.Get 读取原始小写头，导致断言错误，改用大小写兼容访问后通过；入口包装导致既有静态审计测试找不到原函数，改为原入口 defer 完成处理并增加恢复准备的审计顺序断言。没有修改旧测试以跳过保护。
+- 证据：[验证摘要](claude-managed-recovery-validation.json)，本机 claude-capture/managed-recovery-20261008/ 保存日志和原生实验。没有真实模型请求、没有启用生产配置。
+- 说明：[托管恢复配置与边界](claude-managed-recovery.md)。提交使用 `Claude-Change-ID: CC-20261008-008`，不代表已部署或真实服务端接受。

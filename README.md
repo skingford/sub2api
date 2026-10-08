@@ -8,6 +8,8 @@
 - **Claude 改动记录**：[docs/claude-change-log.md](docs/claude-change-log.md)
 - **请求验证报告**：[docs/claude-code-request-parity.md](docs/claude-code-request-parity.md)
 
+新增可选的 [Claude 托管会话恢复](docs/claude-managed-recovery.md)：不同用户、分组和 session 隔离，账号不可用时在明确边界创建新上游会话；默认关闭，需配置摘要服务和加密密钥。
+
 ## 分支与维护方式
 
 | 分支 | 用途 |

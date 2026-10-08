@@ -979,6 +979,7 @@ const (
 
 // GatewayConfig API网关相关配置
 type GatewayConfig struct {
+	ClaudeRecovery ClaudeRecoveryConfig `mapstructure:"claude_recovery"`
 	// 等待上游响应头的超时时间（秒），0表示无超时
 	// 注意：这不影响流式数据传输，只控制等待响应头的时间
 	ResponseHeaderTimeout int `mapstructure:"response_header_timeout"`
@@ -2416,6 +2417,21 @@ func setDefaults() {
 	viper.SetDefault("idempotency.cleanup_batch_size", 500)
 
 	// Gateway
+	viper.SetDefault("gateway.claude_recovery.enabled", false)
+	viper.SetDefault("gateway.claude_recovery.group_ids", []int64{})
+	viper.SetDefault("gateway.claude_recovery.encryption_key", "")
+	viper.SetDefault("gateway.claude_recovery.summary_url", "https://api.anthropic.com/v1/messages")
+	viper.SetDefault("gateway.claude_recovery.summary_api_key", "")
+	viper.SetDefault("gateway.claude_recovery.summary_model", "")
+	viper.SetDefault("gateway.claude_recovery.max_history_bytes", 8*1024*1024)
+	viper.SetDefault("gateway.claude_recovery.max_summary_input_bytes", 256*1024)
+	viper.SetDefault("gateway.claude_recovery.checkpoint_every_turns", 3)
+	viper.SetDefault("gateway.claude_recovery.context_window_tokens", 200000)
+	viper.SetDefault("gateway.claude_recovery.max_summary_tokens", 4096)
+	viper.SetDefault("gateway.claude_recovery.max_summary_calls_per_user_day", 20)
+	viper.SetDefault("gateway.claude_recovery.retention_hours", 168)
+	viper.SetDefault("gateway.claude_recovery.lease_seconds", 120)
+	viper.SetDefault("gateway.claude_recovery.summary_timeout_seconds", 45)
 	viper.SetDefault("gateway.response_header_timeout", 600) // 600秒(10分钟)等待上游响应头，LLM高负载时可能排队较久
 	viper.SetDefault("gateway.openai_response_header_timeout", 0)
 	viper.SetDefault("gateway.grok_response_header_timeout", 120)
@@ -2703,6 +2719,9 @@ func setEnvReachableDefaults() {
 }
 
 func (c *Config) Validate() error {
+	if err := c.Gateway.ClaudeRecovery.Validate(); err != nil {
+		return err
+	}
 	forwardedClientIPHeaders, err := NormalizeForwardedClientIPHeaders(c.Security.ForwardedClientIPHeaders)
 	if err != nil {
 		return fmt.Errorf("security.forwarded_client_ip_headers: %w", err)

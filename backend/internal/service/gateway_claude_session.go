@@ -144,6 +144,22 @@ func (s *GatewayService) bindClaudeConversation(ctx context.Context, c *gin.Cont
 		return nil
 	}
 	session, err := claudeRequestSession(ctx, c, body, headers...)
+	if err == nil {
+		if p := ClaudeRecoveryFromContext(ctx); p != nil {
+			if session != p.Row.Session {
+				return claudeCompatibilityError(c, "managed upstream session identity conflict")
+			}
+			if gjson.GetBytes(body, "model").String() != p.History.Model {
+				return claudeCompatibilityError(c, "managed conversation model mapping conflict")
+			}
+
+		} else if s.claudeRecovery != nil && session != "" && s.claudeRecovery.store != nil {
+			managed, e := s.claudeRecovery.store.IsRecoveryUpstreamSession(ctx, session)
+			if e != nil || managed {
+				return claudeCompatibilityStatusError(c, 503, "managed upstream session cannot be used as a client conversation")
+			}
+		}
+	}
 	if err != nil {
 		return claudeCompatibilityError(c, err.Error())
 	}
@@ -200,5 +216,21 @@ func (s *GatewayService) reserveClaudeSelectedAccount(ctx context.Context, sessi
 	if owner <= 0 || owner != accountID {
 		return fmt.Errorf("%w: Claude conversation cannot change accounts", ErrNoAvailableAccounts)
 	}
+	if p := ClaudeRecoveryFromContext(ctx); p != nil {
+		a, e := s.accountRepo.GetByID(ctx, accountID)
+		if e != nil {
+			return e
+		}
+		if !recoveryAccountSupported(a) || !recoveryAccountInScope(a, p.Row.Scope) {
+			return ErrRecoveryConflict
+		}
+		if e = p.manager.store.BindRecoveryAccount(ctx, p.Row, accountID, recoveryAccountPrincipal(a), p.ReadOnly); e != nil {
+			return e
+		}
+	}
 	return nil
+}
+
+func ResolveClaudeRecoveryClientID(ctx context.Context, c *gin.Context, body []byte) (string, error) {
+	return claudeRequestSession(ctx, c, body)
 }

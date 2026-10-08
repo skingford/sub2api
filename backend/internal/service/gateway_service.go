@@ -776,6 +776,7 @@ func (s *GatewayService) TempUnscheduleRetryableError(ctx context.Context, accou
 
 // GatewayService handles API gateway operations
 type GatewayService struct {
+	claudeRecovery        *ClaudeRecoveryService
 	claudeSessionStore    ClaudeSessionStore
 	accountRepo           AccountRepository
 	groupRepo             GroupRepository
@@ -885,6 +886,13 @@ func NewGatewayService(
 		userPlatformQuotaRepo: userPlatformQuotaRepo,
 	}
 	svc.claudeSessionStore, _ = accountRepo.(ClaudeSessionStore)
+	if cfg != nil {
+		if store, ok := accountRepo.(ClaudeRecoveryStore); ok {
+			svc.claudeRecovery = NewClaudeRecoveryService(cfg.Gateway.ClaudeRecovery, store)
+		} else if cfg.Gateway.ClaudeRecovery.Enabled {
+			svc.claudeRecovery = NewClaudeRecoveryService(cfg.Gateway.ClaudeRecovery, nil)
+		}
+	}
 	if compositeResolver != nil {
 		compositeResolver.SetModelOwnershipResolver(svc.resolveCompositeModelOwnership)
 	}

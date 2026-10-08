@@ -156,7 +156,7 @@ func applyClaudeCompatibilityContext(req *http.Request, countTokens bool) {
 // they may explicitly retry using the returned conversation identifier.
 func claudeCallerOwnsRetries(ctx context.Context, c *gin.Context, account *Account, body []byte) bool {
 	return account != nil && account.Platform == PlatformAnthropic &&
-		(preserveNativeClaudeRequest(ctx, c, account, body) || claudeCompatibilityFromContext(ctx) != nil)
+		(preserveNativeClaudeRequest(ctx, c, account, body) || claudeCompatibilityFromContext(ctx) != nil || ClaudeRecoveryFromContext(ctx) != nil)
 }
 
 func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.Context, account *Account, resp *http.Response, model string) error {

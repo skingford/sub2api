@@ -1044,7 +1044,18 @@ func (s *GatewayService) resolvePlatform(ctx context.Context, groupID *int64, gr
 }
 
 func (s *GatewayService) listSchedulableAccounts(ctx context.Context, groupID *int64, platform string, hasForcePlatform bool) (result []Account, mixed bool, resultErr error) {
-	defer func() { result = filterClaudeSessionOwner(ctx, result) }()
+	defer func() {
+		result = filterClaudeSessionOwner(ctx, result)
+		if ClaudeRecoveryFromContext(ctx) != nil {
+			filtered := make([]Account, 0, len(result))
+			for _, a := range result {
+				if recoveryAccountSupported(&a) && recoveryAccountInScope(&a, ClaudeRecoveryFromContext(ctx).Row.Scope) && recoveryAccountModelCompatible(&a, ClaudeRecoveryFromContext(ctx).History.Model) {
+					filtered = append(filtered, a)
+				}
+			}
+			result = filtered
+		}
+	}()
 	if s.schedulerSnapshot != nil {
 		accounts, useMixed, err := s.schedulerSnapshot.ListSchedulableAccounts(ctx, groupID, platform, hasForcePlatform)
 		if err == nil {
@@ -1559,6 +1570,9 @@ func (s *GatewayService) getSchedulableAccount(ctx context.Context, accountID in
 	}
 	if err != nil || account == nil {
 		return account, err
+	}
+	if p := ClaudeRecoveryFromContext(ctx); p != nil && (!recoveryAccountSupported(account) || !recoveryAccountInScope(account, p.Row.Scope) || !recoveryAccountModelCompatible(account, p.History.Model)) {
+		return nil, ErrNoAvailableAccounts
 	}
 	if s.isAccountBlockedBySchedulingThreshold(ctx, account) {
 		return nil, nil
