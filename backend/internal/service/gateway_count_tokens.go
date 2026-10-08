@@ -484,7 +484,7 @@ func (s *GatewayService) buildCountTokensRequestAnthropicAPIKeyPassthrough(
 	if err != nil {
 		return nil, err
 	}
-	if err := s.bindClaudeConversation(req.Context(), c, account); err != nil {
+	if err := s.bindClaudeConversation(req.Context(), c, account, body, req.Header); err != nil {
 		return nil, err
 	}
 	prepareNativeClaudeTransport(req, c, account, body)
@@ -662,7 +662,7 @@ func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Con
 	if err != nil {
 		return nil, nil, err
 	}
-	if err := s.bindClaudeConversation(req.Context(), c, account); err != nil {
+	if err := s.bindClaudeConversation(req.Context(), c, account, body, req.Header); err != nil {
 		return nil, nil, err
 	}
 	prepareNativeClaudeTransport(req, c, account, body)

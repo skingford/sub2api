@@ -232,7 +232,7 @@ func TestBuildUpstreamRequestOAuthMimic_MidConversationOutputConfig(t *testing.T
 				`{"role":"system","content":[],"output_config":{"effort":"high"}},` +
 				`{"role":"user","content":"hello"}]}`)
 
-			svc := &GatewayService{cfg: &config.Config{}}
+			svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 			req, _, err := svc.buildUpstreamRequest(
 				context.Background(), c, account, body,
 				"oauth-tok", "oauth", "claude-opus-5", false, true, // mimicClaudeCode=true
@@ -298,7 +298,7 @@ func TestBuildUpstreamRequestAnthropicAPIKeyPassthrough_MidConversationOutputCon
 				`{"role":"system","content":[],"output_config":{"effort":"high"}},` +
 				`{"role":"user","content":"hello"}]}`)
 
-			svc := &GatewayService{cfg: &config.Config{}}
+			svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 			req, _, err := svc.buildUpstreamRequestAnthropicAPIKeyPassthrough(
 				context.Background(), c, newAnthropicAPIKeyPassthroughAccountForBetaTest(), body, "token",
 			)

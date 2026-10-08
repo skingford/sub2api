@@ -33,6 +33,9 @@ func (s *GatewayService) ForwardAsChatCompletions(
 	body []byte,
 	parsed *ParsedRequest,
 ) (*ForwardResult, error) {
+	if metadata := ParseMetadataUserID(gjson.GetBytes(body, "metadata.user_id").String()); metadata != nil {
+		ctx = context.WithValue(ctx, claudeOriginalSessionKey{}, metadata.SessionID)
+	}
 	startTime := time.Now()
 
 	// 1. Parse Chat Completions request
@@ -109,7 +112,7 @@ func (s *GatewayService) ForwardAsChatCompletions(
 		if !gjson.GetBytes(body, "max_tokens").Exists() && !gjson.GetBytes(body, "max_completion_tokens").Exists() && !gjson.GetBytes(body, "max_output_tokens").Exists() {
 			anthropicBody, _ = deleteJSONPathBytes(anthropicBody, "max_tokens")
 		}
-		ctx, err = prepareClaudeCompatibility(ctx, c, anthropicBody, parsed)
+		ctx, err = prepareClaudeCompatibility(ctx, c, body, parsed)
 		if err != nil {
 			return nil, err
 		}

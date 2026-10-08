@@ -32,6 +32,9 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	}
 	if account.Platform == PlatformAnthropic && account.Type == AccountTypeServiceAccount {
 		req, err := s.buildUpstreamRequestAnthropicVertex(ctx, c, account, body, token, modelID, reqStream)
+		if err == nil {
+			err = s.bindClaudeConversation(ctx, c, account, body, req.Header)
+		}
 		return req, body, err
 	}
 
@@ -224,7 +227,7 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	if err != nil {
 		return nil, nil, err
 	}
-	if err := s.bindClaudeConversation(req.Context(), c, account); err != nil {
+	if err := s.bindClaudeConversation(req.Context(), c, account, body, req.Header); err != nil {
 		return nil, nil, err
 	}
 	prepareNativeClaudeTransport(req, c, account, body)

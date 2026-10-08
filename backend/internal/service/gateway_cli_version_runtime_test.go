@@ -41,7 +41,7 @@ func TestBuildOAuthMimicRequest_RuntimeVersionConsistentBetweenHeaderAndBilling(
 			body, err = sjson.SetBytes(body, "system.0.text", billing)
 			require.NoError(t, err)
 
-			svc := &GatewayService{cfg: &config.Config{}}
+			svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 			account := &Account{ID: 1, Platform: PlatformAnthropic, Type: AccountTypeOAuth}
 
 			var req *http.Request

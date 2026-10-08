@@ -47,6 +47,13 @@ func withNativeClaudeBodyIntegrity(ctx context.Context, c *gin.Context, account 
 	if ctx == nil {
 		ctx = context.Background()
 	}
+	if _, frozen := ctx.Value(claudeOriginalSessionKey{}).(string); !frozen {
+		original := ""
+		if metadata := ParseMetadataUserID(gjson.GetBytes(body, "metadata.user_id").String()); metadata != nil {
+			original = metadata.SessionID
+		}
+		ctx = context.WithValue(ctx, claudeOriginalSessionKey{}, original)
+	}
 	if _, frozen := ctx.Value(nativeClaudeOriginKey{}).(bool); !frozen {
 		ctx = context.WithValue(ctx, nativeClaudeOriginKey{}, isNativeClaudeInput(ctx, c, body))
 	}

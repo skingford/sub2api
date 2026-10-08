@@ -184,3 +184,15 @@
 - 最终验证：完整 unit 57 个包、integration 51 个包通过；golangci-lint 0 issues。生产代码最后修改时间早于本轮全量检查启动时间；没有以旧检查冒充修改后的结果。
 - 发送复验：从生产请求构建器导出三个模型的普通 API → OAuth 报文，交给原生 Bun 运行时重算 cch，三份最终正文逐字节一致。自动传输选择下，直连、HTTP / HTTPS CONNECT、SOCKS5 四条路径的正文、完整头值、头序和 ClientHello 非随机部分均与对应原生运行时结果一致，PCAP 校验通过且丢包为 0。
 - 证据：[最终传输对照](../backend/internal/service/testdata/claude_code_2_1_292/gap-fix-wire-verification.json)、[模型 / 计数来源](../backend/internal/service/testdata/claude_code_2_1_292/gap-fix-provenance.json)；本机 `claude-capture/gap-fixes-20261008/` 保存构建器导出、原生运行时探针、PCAP 与检查日志。运行时探针修改 JS 入口，未冒充完整 CLI 产品流程。
+
+## CC-20261008-007：会话账号归属改为持久、原子且不可迁移
+
+- 基线：PR #4 已发布提交 `3d7d660b`，release `ee2f9fea`；上游仍为 `3f1a2ea0`。接续 CC-20261008-006 的缓存绑定实现，保留原记录。
+- 原因：维护者要求同一 session 只能由同一账号处理。原来的 Get/Set 与一小时 TTL 无法防止并发首次绑定和缓存失效后改绑，原生透传也缺少同等保护。
+- 版本 / 范围：Claude Code 2.1.292；Anthropic OAuth、API Key 和已带 session 的原生请求，覆盖消息、计数及两种 API 适配入口。此约束是网关会话策略，不冒充官方服务端机制。
+- 实现：PostgreSQL UUID 唯一约束原子登记账号，永久保留归属；调度只接受原账号，发送前再次校验。无数据库时拒绝发送；缓存删除、API Key / 分组变化、账号删除或冷却均不授权改绑。原始 metadata 与出站会话头冲突时拒绝请求。两种协议适配器在转换前保存原始 ID，网关续聊头也传递到实际出站会话头。原子绑定竞争失败时释放并发和活跃会话槽。
+- 文件：迁移 `242_claude_session_ownership.sql`、账号仓储会话实现、服务会话守卫、调度过滤、请求构建器及单元 / PostgreSQL 并发回归。
+- 边界：没有 session 标识不能推断跨轮关系；升级前过期的 Redis 记录无法补回历史，数据库丢失 / 回滚也需要恢复原记录。部署时统一切换版本并新建会话。
+- 验证：完整 unit 57 个包、integration 51 个包通过；全量 lint 0 issues。最后追加绑定竞争失败的槽位清理后，会话 / 身份设置 / 请求契约专项再次通过；SQL 最终版本的 32 路并发及持久性检查再次通过。最终受影响包 lint 复验 0 issues；[结构化验证记录](claude-session-validation.json) 保存命令对应日志摘要与最终源码 SHA-256。
+- 回归说明：旧身份改写中改变 session ID 的组合改为验证本地拒绝；计数接口检查会话头，不强制添加原生不存在的 metadata。首次全量集成检查出现本地 Redis 测试容器启动失败，后续完整重跑通过；测试夹具补上持久会话存储模拟，并修正作用域以同时支持 unit / integration / lint。全部验证使用本地模拟服务 / 数据库，不执行真实模型请求。
+- 关联：[调用与部署约定](claude-code-gap-fixes.md#账号绑定)，[PR #4](https://github.com/skingford/sub2api/pull/4)，提交使用 `Claude-Change-ID: CC-20261008-007`。

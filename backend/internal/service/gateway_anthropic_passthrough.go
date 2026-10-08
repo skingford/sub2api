@@ -387,7 +387,7 @@ func (s *GatewayService) buildUpstreamRequestAnthropicAPIKeyPassthrough(
 	if err != nil {
 		return nil, nil, err
 	}
-	if err := s.bindClaudeConversation(req.Context(), c, account); err != nil {
+	if err := s.bindClaudeConversation(req.Context(), c, account, body, req.Header); err != nil {
 		return nil, nil, err
 	}
 	prepareNativeClaudeTransport(req, c, account, body)

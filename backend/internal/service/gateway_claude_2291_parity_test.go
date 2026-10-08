@@ -76,7 +76,7 @@ func testNativeClaudeCaptureForwarding(t *testing.T, version string) {
 						"data: {\"type\":\"message_stop\"}\n\n")),
 				}}
 				cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-				svc := &GatewayService{cfg: cfg, httpUpstream: upstream,
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: cfg, httpUpstream: upstream,
 					responseHeaderFilter: compileResponseHeaderFilter(cfg),
 					rateLimitService:     &RateLimitService{}, deferredService: &DeferredService{}}
 				account := &Account{ID: 291, Platform: PlatformAnthropic, Type: kind,
@@ -158,7 +158,7 @@ func TestClaudeCode2291DiagnosticsFinalBeta(t *testing.T) {
 					account.Credentials[credKeyHeaderOverrides] = map[string]any{"anthropic-beta": claude.BetaClaudeCode}
 				}
 				body := []byte(`{"model":"claude-sonnet-4-6","messages":[{"role":"user","content":"hello"}],"diagnostics":{"previous_message_id":"msg_synthetic_previous"}}`)
-				svc := &GatewayService{cfg: &config.Config{}}
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 				var req *http.Request
 				var out []byte
 				var err error

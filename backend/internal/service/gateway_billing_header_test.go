@@ -112,7 +112,7 @@ func TestBuildOAuthRequest_BillingMatchesWireUserAgent(t *testing.T) {
 				require.NoError(t, err)
 
 				cfg := &config.Config{}
-				svc := &GatewayService{cfg: cfg}
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: cfg}
 				cachedUA := "claude-cli/2.9.0 (external, cli)"
 				if tc.identity {
 					svc.identityService = NewIdentityService(&stubIdentityCache{fingerprint: &Fingerprint{

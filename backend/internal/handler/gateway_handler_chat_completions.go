@@ -174,6 +174,9 @@ func (h *GatewayHandler) ChatCompletions(c *gin.Context) {
 		UserAgent: c.GetHeader("User-Agent"),
 		APIKeyID:  apiKey.ID,
 	}
+	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
+		return
+	}
 	parsedReq.ClaudeSessionID = c.GetHeader("X-Sub2API-Session-Id")
 	if parsedReq.ClaudeSessionID == "" {
 		parsedReq.ClaudeSessionID = c.GetHeader("X-Claude-Code-Session-Id")

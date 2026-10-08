@@ -31,7 +31,21 @@ func (s *GatewayService) SelectAccountForModel(ctx context.Context, groupID *int
 }
 
 // SelectAccountForModelWithExclusions selects an account supporting the requested model while excluding specified accounts.
-func (s *GatewayService) SelectAccountForModelWithExclusions(ctx context.Context, groupID *int64, sessionHash string, requestedModel string, excludedIDs map[int64]struct{}) (*Account, error) {
+func (s *GatewayService) SelectAccountForModelWithExclusions(ctx context.Context, groupID *int64, sessionHash string, requestedModel string, excludedIDs map[int64]struct{}) (selected *Account, selectErr error) {
+	defer func() {
+		if selectErr == nil && selected != nil {
+			if err := s.reserveClaudeSelectedAccount(ctx, sessionHash, selected.ID); err != nil {
+				selected, selectErr = nil, err
+			}
+		}
+	}()
+
+	var ownershipErr error
+	ctx, ownershipErr = s.withClaudeSessionOwner(ctx, sessionHash)
+	if ownershipErr != nil {
+		return nil, ownershipErr
+	}
+
 	// 优先检查 context 中的强制平台（/antigravity 路由）
 	var platform string
 	forcePlatform, hasForcePlatform := ctx.Value(ctxkey.ForcePlatform).(string)
@@ -97,7 +111,25 @@ func (s *GatewayService) SelectAccountForModelWithExclusions(ctx context.Context
 // SelectAccountWithLoadAwareness selects account with load-awareness and wait plan.
 // metadataUserID: 用于客户端亲和调度，从中提取客户端 ID
 // sub2apiUserID: 系统用户 ID，用于二维亲和调度
-func (s *GatewayService) SelectAccountWithLoadAwareness(ctx context.Context, groupID *int64, sessionHash string, requestedModel string, excludedIDs map[int64]struct{}, metadataUserID string, sub2apiUserID int64) (*AccountSelectionResult, error) {
+func (s *GatewayService) SelectAccountWithLoadAwareness(ctx context.Context, groupID *int64, sessionHash string, requestedModel string, excludedIDs map[int64]struct{}, metadataUserID string, sub2apiUserID int64) (selected *AccountSelectionResult, selectErr error) {
+	defer func() {
+		if selectErr == nil && selected != nil && selected.Account != nil {
+			if err := s.reserveClaudeSelectedAccount(ctx, sessionHash, selected.Account.ID); err != nil {
+				s.ReleaseAccountSession(context.WithoutCancel(ctx), selected.Account, sessionHash)
+				if selected.ReleaseFunc != nil {
+					selected.ReleaseFunc()
+				}
+				selected, selectErr = nil, err
+			}
+		}
+	}()
+
+	var ownershipErr error
+	ctx, ownershipErr = s.withClaudeSessionOwner(ctx, sessionHash)
+	if ownershipErr != nil {
+		return nil, ownershipErr
+	}
+
 	// 调试日志：记录调度入口参数
 	excludedIDsList := make([]int64, 0, len(excludedIDs))
 	for id := range excludedIDs {
@@ -1011,7 +1043,8 @@ func (s *GatewayService) resolvePlatform(ctx context.Context, groupID *int64, gr
 	return PlatformAnthropic, false, nil
 }
 
-func (s *GatewayService) listSchedulableAccounts(ctx context.Context, groupID *int64, platform string, hasForcePlatform bool) ([]Account, bool, error) {
+func (s *GatewayService) listSchedulableAccounts(ctx context.Context, groupID *int64, platform string, hasForcePlatform bool) (result []Account, mixed bool, resultErr error) {
+	defer func() { result = filterClaudeSessionOwner(ctx, result) }()
 	if s.schedulerSnapshot != nil {
 		accounts, useMixed, err := s.schedulerSnapshot.ListSchedulableAccounts(ctx, groupID, platform, hasForcePlatform)
 		if err == nil {
@@ -1512,6 +1545,9 @@ func (s *GatewayService) ReleaseAccountSession(ctx context.Context, account *Acc
 }
 
 func (s *GatewayService) getSchedulableAccount(ctx context.Context, accountID int64) (*Account, error) {
+	if owner := claudeSessionOwner(ctx); owner > 0 && owner != accountID {
+		return nil, ErrNoAvailableAccounts
+	}
 	var (
 		account *Account
 		err     error

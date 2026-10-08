@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -117,34 +116,6 @@ func prepareClaudeCompatibility(ctx context.Context, c *gin.Context, body []byte
 
 func claudeConversationRoutingKey(apiKeyID int64, session string) string {
 	return "claude-conversation:" + strconv.FormatInt(apiKeyID, 10) + ":" + session
-}
-
-// The immutable identity key is separate from the scheduler's mutable sticky
-// key. If selection replaces an unavailable sticky account, the second key
-// stops the conversation from silently moving to that different identity.
-func (s *GatewayService) bindClaudeConversation(ctx context.Context, c *gin.Context, account *Account) error {
-	state := claudeCompatibilityFromContext(ctx)
-	if state == nil || s.cache == nil {
-		return nil
-	}
-	key := claudeConversationRoutingKey(state.APIKeyID, state.SessionID)
-	bound, err := s.cache.GetSessionAccountID(ctx, state.GroupID, key+":identity")
-	if err != nil && !errors.Is(err, ErrStickySessionNotFound) {
-		return claudeCompatibilityStatusError(c, http.StatusServiceUnavailable, "Claude conversation state is unavailable; retry later")
-	}
-	if bound > 0 && bound != account.ID {
-		return claudeCompatibilityStatusError(c, http.StatusServiceUnavailable, "Claude conversation's bound account is unavailable; retry later or start a new conversation")
-	}
-	if bound == 0 && state.Resumed {
-		return claudeCompatibilityError(c, "Claude conversation has expired or is unknown; start a new conversation")
-	}
-	if err := s.cache.SetSessionAccountID(ctx, state.GroupID, key+":identity", account.ID, stickySessionTTL); err != nil {
-		return claudeCompatibilityStatusError(c, http.StatusServiceUnavailable, "Claude conversation state is unavailable; retry later")
-	}
-	if err := s.cache.SetSessionAccountID(ctx, state.GroupID, key, account.ID, stickySessionTTL); err != nil {
-		return claudeCompatibilityStatusError(c, http.StatusServiceUnavailable, "Claude conversation state is unavailable; retry later")
-	}
-	return nil
 }
 
 func claudeCompatibilityError(c *gin.Context, message string) error {

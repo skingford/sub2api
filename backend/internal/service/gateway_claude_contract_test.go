@@ -307,7 +307,7 @@ func TestClaude2292ContractSessionBindingCannotRotateAccounts(t *testing.T) {
 	require.NoError(t, err)
 	sid := first.Header().Get(claudeConversationHeader)
 	key := claudeConversationRoutingKey(0, sid)
-	bound, err := cache.GetSessionAccountID(context.Background(), 0, key)
+	bound, err := svc.claudeSessionStore.GetClaudeSessionAccountID(context.Background(), sid)
 	require.NoError(t, err)
 	require.Equal(t, account.ID, bound)
 	_, _, err = callClaudeContract(t, svc, account, input, map[string]string{claudeConversationHeader: sid}, "/v1/messages")
@@ -321,15 +321,16 @@ func TestClaude2292ContractSessionBindingCannotRotateAccounts(t *testing.T) {
 	require.Error(t, err)
 	require.Equal(t, 503, rec.Code)
 	require.Equal(t, before, up.calls)
-	delete(cache.bindings, "0:"+key+":identity")
+	// Expiring or clearing the scheduler cache cannot remove database ownership.
+	cache.bindings = map[string]int64{}
 	_, rec, err = callClaudeContract(t, svc, account, input, map[string]string{claudeConversationHeader: sid}, "/v1/messages")
-	require.Error(t, err)
-	require.Contains(t, rec.Body.String(), "expired or is unknown")
-	require.Equal(t, before, up.calls)
+	require.NoError(t, err)
+	require.Equal(t, before+1, up.calls)
+
 }
 
 func TestClaude2292ContractSessionRoutingUsesCallerScope(t *testing.T) {
-	svc := &GatewayService{}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}}
 	parsed := &ParsedRequest{ClaudeSessionID: "11111111-1111-4111-8111-111111111111", SessionContext: &SessionContext{APIKeyID: 7}}
 	first := svc.GenerateSessionHash(parsed)
 	require.Equal(t, claudeConversationRoutingKey(7, parsed.ClaudeSessionID), first)
@@ -354,14 +355,14 @@ func TestClaude2292ContractCallerSuppliedConversationAndPrompt(t *testing.T) {
 
 func TestClaude2292ContractNativeCountUsesMessageAffinity(t *testing.T) {
 	sid := uuid.NewString()
-	svc := &GatewayService{}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}}
 	messages := &ParsedRequest{MetadataUserID: FormatMetadataUserID(strings.Repeat("d", 64), "", sid, "2.1.292")}
 	count := &ParsedRequest{ClaudeSessionID: sid, SessionContext: &SessionContext{APIKeyID: 7, NativeClaude: true}}
 	require.Equal(t, svc.GenerateSessionHash(messages), svc.GenerateSessionHash(count))
 }
 
 func TestClaude2292ContractMetadataCannotAddressBindingNamespace(t *testing.T) {
-	svc := &GatewayService{}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}}
 	parsed := &ParsedRequest{MetadataUserID: `{"device_id":"local","account_uuid":"","session_id":"claude-conversation:7:11111111-1111-4111-8111-111111111111:identity"}`}
 	require.Empty(t, svc.GenerateSessionHash(parsed))
 }

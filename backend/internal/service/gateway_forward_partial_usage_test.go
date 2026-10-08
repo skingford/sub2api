@@ -55,7 +55,7 @@ func newForwardPartialUsageServiceForTest(upstream *anthropicHTTPUpstreamRecorde
 			MaxLineSize: defaultMaxLineSize,
 		},
 	}
-	return &GatewayService{
+	return &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -233,7 +233,7 @@ func TestGatewayService_Forward_PreOutputSSEOverloadedErrorUsesSemantic529(t *te
 	}}
 	repo := &gatewayForwardErrorPolicyRepoStub{}
 	cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -282,7 +282,7 @@ func TestGatewayService_Forward_PostOutputSSEOverloadedErrorKeepsExistingStatus(
 	}}
 	repo := &gatewayForwardErrorPolicyRepoStub{}
 	cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,

@@ -63,7 +63,7 @@ func TestClaudeCode2286CaptureForwarding(t *testing.T) {
 						"data: {\"type\":\"message_stop\"}\n\n")),
 				}}
 				cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-				svc := &GatewayService{
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 					cfg: cfg, responseHeaderFilter: compileResponseHeaderFilter(cfg),
 					httpUpstream: upstream, rateLimitService: &RateLimitService{}, deferredService: &DeferredService{},
 				}
@@ -185,7 +185,7 @@ func TestClaudeCode2286ConditionalHeadersForwarded(t *testing.T) {
 		c.Request.Header.Set(key, value)
 	}
 	c.Request.Header.Set("x-unlisted-private-header", "must-not-leak")
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	account := newAnthropicAPIKeyAccountForTest()
 	req, _, err := svc.buildUpstreamRequestAnthropicAPIKeyPassthrough(context.Background(), c, account, capture.Body, "upstream-only")
 	require.NoError(t, err)
@@ -233,7 +233,7 @@ func TestClaudeCode2286SafeguardsRejectMissingCapability(t *testing.T) {
 					account.Credentials[credKeyHeaderOverrideEnabled] = true
 					account.Credentials[credKeyHeaderOverrides] = map[string]any{"anthropic-beta": filtered}
 				}
-				svc := &GatewayService{cfg: &config.Config{}}
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 				var req *http.Request
 				var err error
 				if route == "apikey_passthrough" {
