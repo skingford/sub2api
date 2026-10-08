@@ -184,5 +184,7 @@
     "lint": "GOTOOLCHAIN=go1.27.0 /Users/kingford/claude-capture/tools/golangci-lint run ./...",
     "lint_version": "2.13.0 built with go1.27.0",
     "native": "Docker --network none /opt/run_alignment_lab.py; TestClaudeAlignmentNativeCLILab"
-  }
+  },
+  "implementation_commit": "719ceb3522dfcab8035d2552a6ff620554eeb94b",
+  "commit_recorded_date": "2026-10-09"
 }
