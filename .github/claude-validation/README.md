@@ -16,7 +16,7 @@ OAuth 订阅资格、额度、计费或官方服务接受情况。
 ```bash
 capture_build_dir=$(mktemp -d)
 capture_results_dir=$(mktemp -d)
-cp .github/claude-validation/* "$capture_build_dir/"
+cp .github/claude-validation/Dockerfile .github/claude-validation/*.py "$capture_build_dir/"
 curl -fsSL https://downloads.claude.ai/claude-code-releases/2.1.292/linux-x64/claude \
   -o "$capture_build_dir/claude"
 docker build -t sub2api-claude-validation:2.1.292 "$capture_build_dir"
@@ -46,8 +46,9 @@ Dockerfile 校验二进制 SHA-256：
 
 ## Sub2API 真实传输组件对照
 
-辅助程序调用生产代码 `repository.NewHTTPUpstream(nil).DoWithTLS`，分别测试默认传输
-和内置 TLS profile。它重放原始请求，隔离观察传输组件的握手和头部序列化行为；
+辅助程序调用生产代码 `repository.NewHTTPUpstream(nil).DoWithTLS`，测试默认传输、旧内置
+TLS profile、新原生配置，以及新配置的 HTTP / HTTPS CONNECT / SOCKS5 代理路径。
+它重放原始请求，观察传输组件的握手和头部序列化行为；
 身份重写和请求构建由 Go 回归测试另行覆盖。没有启动完整部署或访问真实账号。
 
 ```bash
@@ -76,11 +77,18 @@ mkdir -p "$transport_results_dir/analysis"
 docker run --rm --network none \
   --mount "type=bind,src=$transport_results_dir,dst=/evidence,readonly" \
   --mount "type=bind,src=$transport_results_dir/analysis,dst=/analysis" \
-  --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/analyze.py default fingerprint
+  --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/analyze.py \
+  default fingerprint native native-http-proxy native-https-proxy native-socks5-proxy
 ```
 
 本次模拟服务仅提供 HTTP/1.1，因此结果不覆盖 HTTP/2、真实出口 IP、真实代理链路或所有平台。
 握手特征有差异不等于已证明服务端检测、拒绝或封禁规则。
+
+新配置在 2026-10-08 的四条路径上通过了原生样本的正文、头部值和顺序对比。
+ClientHello 排除随机数、session ID 和临时公钥后，其余 1499 字节握手结构一致；
+对应 SHA-256 已写入 `TestClaudeNativeClientHelloGolden`，在本地 TCP 接收端自动验证，
+无需外部服务。macOS x64 通过仅允许指定回环端口的进程沙箱与本地 CONNECT 模拟器补充验证，
+messages 和三条 count_tokens 的握手也匹配此摘要。
 
 ## 自动回归
 

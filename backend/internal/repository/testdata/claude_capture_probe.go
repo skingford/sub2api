@@ -21,8 +21,8 @@ func main() {
 	if len(strings.Split(strings.TrimSpace(string(routes)), "\n")) != 1 {
 		panic("Capture probe requires an isolated Linux network namespace without routes")
 	}
-	if len(os.Args) != 3 {
-		panic("usage: probe request.json default|fingerprint")
+	if len(os.Args) < 3 || len(os.Args) > 4 {
+		panic("usage: probe request.json default|fingerprint|native")
 	}
 	input, err := os.ReadFile(os.Args[1])
 	must(err)
@@ -46,10 +46,17 @@ func main() {
 	}
 	req.Header["x-api-key"] = []string{"local-container-key-not-a-real-credential"}
 	var profile *tlsfingerprint.Profile
+	if strings.HasPrefix(os.Args[2], "native") {
+		profile = tlsfingerprint.ClaudeCode2292()
+	}
 	if os.Args[2] == "fingerprint" {
 		profile = &tlsfingerprint.Profile{Name: "builtin-default"}
 	}
-	response, err := repository.NewHTTPUpstream(nil).DoWithTLS(req, "", 292, 1, profile)
+	proxyURL := ""
+	if len(os.Args) == 4 {
+		proxyURL = os.Args[3]
+	}
+	response, err := repository.NewHTTPUpstream(nil).DoWithTLS(req, proxyURL, 292, 1, profile)
 	must(err)
 	defer response.Body.Close()
 	_, err = io.Copy(io.Discard, response.Body)

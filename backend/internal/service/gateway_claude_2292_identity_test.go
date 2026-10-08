@@ -173,6 +173,7 @@ func TestClaudeCode2292OAuthIdentitySettings(t *testing.T) {
 					svc.settingService = NewSettingService(&gatewayTTLSettingRepo{data: values}, svc.cfg)
 					svc.identityService = NewIdentityService(cache)
 					account := newClaude2292Account(AccountTypeOAuth)
+					account.Extra["claude_native_passthrough"] = false // Exercise the explicitly retained legacy policy.
 					account.Extra["session_id_masking_enabled"] = policy.mask
 					var lastMetadata string
 					for attempt := 0; attempt < 2; attempt++ {

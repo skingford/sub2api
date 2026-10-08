@@ -112,3 +112,17 @@
 - 提交关联：`Claude-Change-ID: CC-20261008-001`；详细结果见 [请求对齐报告](claude-code-request-parity.md#2026-10-08启用身份服务及扩展场景验证)。
 - 实现提交：`9535cf86`；[PR #2](https://github.com/skingford/sub2api/pull/2)，目标为 `release`，保留为待审阅草稿。
 - 复现补记：已用仓库 Dockerfile 构建镜像并完整复跑 7 个 CLI 场景，12 条请求的原始字节再次通过 PCAP 校验。完整 unit 为 57 个包，integration 为 51 个包，lint 0 issues。原始证据保存在维护者本机 `claude-capture/validation-2.1.292-20261008/`，仓库保存合成报文、来源哈希、核对摘要和复现代码。
+
+## CC-20261008-002：原生保真、UTF-16 归因与传输配置
+
+- 基线：在 PR #2 的 `36f380d7` 上继续；上游仍为 `3f1a2ea0`，release 未自动合并。
+- 版本与证据：CLI 2.1.292 / SDK 0.128.0；Linux x64 断网容器与 macOS x64 沙箱、本地 CONNECT 模拟器。只读提取 bundle 中的 Rk / dne，保留文件和函数哈希及 10 个原函数向量。
+- 行为：原生请求默认跳过账号身份缓存、metadata / 会话重写和旧正文整流，提供单账号回退开关；带 cch 的原生正文若被模型或 beta 策略修改则本地返回 400。凭证、计费和能力策略继续由原有路径处理。
+- 算法：修复 UTF-8 字节索引与 JavaScript UTF-16 索引差异；原生归因和上游 thinking 签名不重算。cch 最终算法尚未恢复，不生成猜测值。
+- 传输：新增严格限定版本 / 平台的 TLS 配置和 HTTP/1.1 头序；直连、HTTP / HTTPS CONNECT、SOCKS5 均保持代理路径。TLS 模板内容进入客户端缓存键，并冻结模板副本，防止复用旧配置。
+- 验证：四条传输路径的正文、头值、头序及归一化 ClientHello 与原生样本一致；macOS 模型和计数请求补证一致；永久回归覆盖原生身份、模板缓存、连接复用、取消、代理证书校验、算法向量和握手摘要。最终全量结果在完成后补记。
+- 范围：请求构建与正文策略、传输适配器、TLS dialer/profile、fhttp 依赖、测试、抓包脚本与文档。非原生兼容构造、未知版本和真实账号风控不在等价结论内。
+- 提交关联：`Claude-Change-ID: CC-20261008-002`，继续更新 [PR #2](https://github.com/skingford/sub2api/pull/2)；证据与边界见 [请求报告](claude-code-request-parity.md#2026-10-08原生保真归因算法与传输修复)。
+- 安全依赖：govulncheck 发现 fhttp 的传递依赖 CIRCL 1.6.2 命中 GO-2026-4550；升级为 1.6.5 后，无当前代码可达漏洞，相关回归再次通过。
+- 全量验证补记：unit 57 个包、integration 51 个包通过。原始提取、macOS 沙箱、传输与扫描记录保存在维护者本机 `claude-capture/native-parity-20261008/`；仓库保留来源哈希、原函数向量、传输核对摘要和自动回归。
+- 最终检查：golangci-lint 0 issues；CIRCL 1.6.5 的相关服务、传输与握手回归通过，govulncheck 无当前代码可达漏洞。保留扫描发现和修复记录，不将其写成全依赖树不存在任何已知问题。

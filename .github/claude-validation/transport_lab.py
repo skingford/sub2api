@@ -4,6 +4,7 @@ from pathlib import Path
 import signal
 import ssl
 import subprocess
+from proxy_lab import start_proxy
 import threading
 import lab
 import validation
@@ -18,7 +19,7 @@ subprocess.run(['openssl','req','-x509','-newkey','rsa:2048','-sha256','-nodes',
                 '-subj','/CN=api.anthropic.com','-addext','subjectAltName=DNS:api.anthropic.com,IP:127.0.0.1'],
                check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 summary = []
-for mode in ['default','fingerprint']:
+for mode in ['default','fingerprint','native','native-http-proxy','native-https-proxy','native-socks5-proxy']:
     folder = ROOT / mode
     folder.mkdir()
     validation.STATE.update(name='transport-'+mode,folder=folder,records=[],messages=0)
@@ -32,12 +33,20 @@ for mode in ['default','fingerprint']:
     worker = threading.Thread(target=server.serve_forever,daemon=True)
     worker.start()
     capture, capture_log = lab.start_capture(folder)
+    proxy = None
+    command = ['/opt/transport-probe','/opt/input.json',mode]
+    if mode.endswith('-proxy'):
+        proxy, proxy_url = start_proxy(ROOT/'server.pem',ROOT/'server.key',mode.split('-')[1])
+        command.append(proxy_url)
     try:
-        result = subprocess.run(['/opt/transport-probe','/opt/input.json',mode],capture_output=True,text=True,timeout=25,
+        result = subprocess.run(command,capture_output=True,text=True,timeout=25,
                                 env={'PATH':os.environ['PATH'],'SSL_CERT_FILE':str(ROOT/'server.pem')})
         (folder/'stdout.txt').write_text(result.stdout)
         (folder/'stderr.txt').write_text(result.stderr)
     finally:
+        if proxy is not None:
+            proxy.shutdown()
+            proxy.server_close()
         server.shutdown()
         server.server_close()
         worker.join(timeout=2)

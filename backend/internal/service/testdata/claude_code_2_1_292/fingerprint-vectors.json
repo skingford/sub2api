@@ -1,0 +1,63 @@
+{
+  "source": {
+    "version": "2.1.292",
+    "file": "chunk-pnzxacn4.js",
+    "file_sha256": "d515f29007157c764ce6cca947f6df3ff212c3cde404db575f1a4a771e01f050",
+    "function": "Rk",
+    "function_sha256": "3e2f93f54dce9578a6f154b58869f9abfbd9e9703c1ef4eca7634910be55fa63",
+    "logical_selector": "dne skips isMeta before serialization",
+    "cch": "Only placeholder construction found in extracted JavaScript; runtime generation not established."
+  },
+  "vectors": [
+    {
+      "text": "",
+      "version": "2.1.292",
+      "expected": "428"
+    },
+    {
+      "text": "abc",
+      "version": "2.1.292",
+      "expected": "428"
+    },
+    {
+      "text": "hello world",
+      "version": "2.1.292",
+      "expected": "fbb"
+    },
+    {
+      "text": "你好世界，这是一次本地协议测试。😀🧪 LOCAL_CLI_VALIDATION_20261008",
+      "version": "2.1.292",
+      "expected": "f98"
+    },
+    {
+      "text": "0123😀67🧪890abcdef012345",
+      "version": "2.1.292",
+      "expected": "195"
+    },
+    {
+      "text": "😀😀😀😀😀😀😀😀😀😀😀",
+      "version": "2.1.292",
+      "expected": "132"
+    },
+    {
+      "text": "abc\u0000defghijklmnopqrstuv",
+      "version": "2.1.292",
+      "expected": "8cf"
+    },
+    {
+      "text": "áb́ćd́éf́ǵh́íj́ḱ",
+      "version": "2.1.292",
+      "expected": "dab"
+    },
+    {
+      "text": "abc😀x🧪Yabcdefghijklmnop",
+      "version": "2.1.292",
+      "expected": "aaf"
+    },
+    {
+      "text": "LOCAL_CLI_VALIDATION_20261008 Reply OK.",
+      "version": "2.1.292",
+      "expected": "357"
+    }
+  ]
+}

@@ -5,12 +5,14 @@ package tlsfingerprint
 import (
 	"bufio"
 	"context"
+	"crypto/tls"
 	"encoding/base64"
 	"fmt"
 	"log/slog"
 	"net"
 	"net/http"
 	"net/url"
+	"time"
 
 	utls "github.com/refraction-networking/utls"
 	"golang.org/x/net/proxy"
@@ -20,6 +22,7 @@ import (
 // All slice fields use built-in defaults when empty.
 type Profile struct {
 	Name                string // Profile name for identification
+	NativeHTTP1         bool   // Use the verified native CLI HTTP/1.1 serialization policy.
 	CipherSuites        []uint16
 	Curves              []uint16
 	PointFormats        []uint16
@@ -141,6 +144,8 @@ func NewSOCKS5ProxyDialer(profile *Profile, proxyURL *url.URL) *SOCKS5ProxyDiale
 // DialTLSContext establishes a TLS connection through SOCKS5 proxy with the configured fingerprint.
 // Flow: SOCKS5 CONNECT to target -> TLS handshake with utls on the tunnel
 func (d *SOCKS5ProxyDialer) DialTLSContext(ctx context.Context, network, addr string) (net.Conn, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	slog.Debug("tls_fingerprint_socks5_connecting", "proxy", d.proxyURL.Host, "target", addr)
 
 	// Step 1: Create SOCKS5 dialer
@@ -168,7 +173,11 @@ func (d *SOCKS5ProxyDialer) DialTLSContext(ctx context.Context, network, addr st
 
 	// Step 2: Establish SOCKS5 tunnel to target
 	slog.Debug("tls_fingerprint_socks5_establishing_tunnel", "target", addr)
-	conn, err := socksDialer.Dial("tcp", addr)
+	contextDialer, ok := socksDialer.(proxy.ContextDialer)
+	if !ok {
+		return nil, fmt.Errorf("SOCKS5 dialer does not support cancellation")
+	}
+	conn, err := contextDialer.DialContext(ctx, "tcp", addr)
 	if err != nil {
 		slog.Debug("tls_fingerprint_socks5_connect_failed", "error", err)
 		return nil, fmt.Errorf("SOCKS5 connect: %w", err)
@@ -182,6 +191,8 @@ func (d *SOCKS5ProxyDialer) DialTLSContext(ctx context.Context, network, addr st
 // DialTLSContext establishes a TLS connection through HTTP proxy with the configured fingerprint.
 // Flow: TCP connect to proxy -> CONNECT tunnel -> TLS handshake with utls
 func (d *HTTPProxyDialer) DialTLSContext(ctx context.Context, network, addr string) (net.Conn, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	slog.Debug("tls_fingerprint_http_proxy_connecting", "proxy", d.proxyURL.Host, "target", addr)
 
 	// Step 1: TCP connect to proxy server
@@ -202,6 +213,17 @@ func (d *HTTPProxyDialer) DialTLSContext(ctx context.Context, network, addr stri
 	if err != nil {
 		slog.Debug("tls_fingerprint_http_proxy_connect_failed", "error", err)
 		return nil, fmt.Errorf("connect to proxy: %w", err)
+	}
+	rawConn := conn
+	stopCancel := context.AfterFunc(ctx, func() { _ = rawConn.Close() })
+	defer stopCancel()
+	if d.proxyURL.Scheme == "https" {
+		outer := tls.Client(conn, &tls.Config{ServerName: d.proxyURL.Hostname(), MinVersion: tls.VersionTLS12})
+		if err := outer.HandshakeContext(ctx); err != nil {
+			_ = conn.Close()
+			return nil, fmt.Errorf("TLS handshake with HTTPS proxy: %w", err)
+		}
+		conn = outer
 	}
 	slog.Debug("tls_fingerprint_http_proxy_connected", "proxy_addr", proxyAddr)
 
@@ -253,6 +275,8 @@ func (d *HTTPProxyDialer) DialTLSContext(ctx context.Context, network, addr stri
 // DialTLSContext establishes a TLS connection with the configured fingerprint.
 // This method is designed to be used as http.Transport.DialTLSContext.
 func (d *Dialer) DialTLSContext(ctx context.Context, network, addr string) (net.Conn, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	// Establish TCP connection using base dialer (supports proxy)
 	slog.Debug("tls_fingerprint_dialing_tcp", "addr", addr)
 	conn, err := d.baseDialer(ctx, network, addr)
@@ -447,12 +471,16 @@ func buildClientHelloSpecFromProfile(profile *Profile) *utls.ClientHelloSpec {
 		extensions = append(extensions, &utls.UtlsGREASEExtension{})
 	}
 
+	minVersion := uint16(utls.VersionTLS10)
+	if profile != nil && profile.NativeHTTP1 {
+		minVersion = utls.VersionTLS12
+	}
 	return &utls.ClientHelloSpec{
 		CipherSuites:       cipherSuites,
 		CompressionMethods: []uint8{0}, // null compression only (standard)
 		Extensions:         extensions,
 		TLSVersMax:         utls.VersionTLS13,
-		TLSVersMin:         utls.VersionTLS10,
+		TLSVersMin:         minVersion,
 	}
 }
 

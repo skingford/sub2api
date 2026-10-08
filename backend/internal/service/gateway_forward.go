@@ -94,6 +94,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 		return nil, fmt.Errorf("parse request: empty request")
 	}
 	// API-key mappings and OAuth native IDs are resolved before mimicry.
+	ctx = withNativeClaudeBodyIntegrity(ctx, c, account, parsed.Body.Bytes())
 	validationModel := parsed.Model
 	if account != nil {
 		if account.IsBedrock() {
@@ -211,6 +212,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 	}
 
 	shouldMimicClaudeCode := account.IsOAuth() && !isClaudeCode
+	preserveNative := !shouldMimicClaudeCode && preserveNativeClaudeRequest(ctx, c, account, body)
 
 	if shouldMimicClaudeCode {
 		// 与 Parrot 对齐：OAuth 账号无条件重写 system（即使客户端已发了 Claude Code
@@ -267,19 +269,21 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 		}
 	}
 
-	// 客户端 dateline 归一化：仅对 Anthropic OAuth/SetupToken 账号生效。
-	// 抹除 "Today's date is …" 语句里可能被注入的隐写指纹（4 种撇号 × 2 种日期
-	// 分隔符），还原为 ASCII 撇号 + "-" 分隔符。运行在 mimicry 分支之外，
-	// 保证真实 Claude Code 客户端注入的指纹同样被清洗。
-	if next, ok := s.normalizeClientDatelineIfEnabled(ctx, account, body); ok {
-		if err := replaceBody(next); err != nil {
-			return nil, err
+	// Dateline normalization belongs to the legacy conversion policy. Native
+	// content may participate in opaque attribution and must remain untouched.
+	if !preserveNative {
+		if next, ok := s.normalizeClientDatelineIfEnabled(ctx, account, body); ok {
+			if err := replaceBody(next); err != nil {
+				return nil, err
+			}
 		}
 	}
 
 	// 强制执行 cache_control 块数量限制（最多 4 个）
-	if err := replaceBody(enforceCacheControlLimit(body)); err != nil {
-		return nil, err
+	if !preserveNative {
+		if err := replaceBody(enforceCacheControlLimit(body)); err != nil {
+			return nil, err
+		}
 	}
 
 	// 应用模型映射：
@@ -322,7 +326,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 		logger.LegacyPrintf("service.gateway", "Model mapping applied: %s -> %s (account: %s, source=%s)", originalModel, mappedModel, account.Name, mappingSource)
 	}
 
-	if s.shouldInjectAnthropicCacheTTL1h(ctx, account) {
+	if !preserveNative && s.shouldInjectAnthropicCacheTTL1h(ctx, account) {
 		if err := replaceBody(injectAnthropicCacheControlTTL1h(body)); err != nil {
 			return nil, err
 		}
@@ -349,15 +353,19 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 	logger.LegacyPrintf("service.gateway", "[Forward] Using account: ID=%d Name=%s Platform=%s Type=%s TLSFingerprint=%v Proxy=%s",
 		account.ID, account.Name, account.Platform, account.Type, tlsProfile, proxyURL)
 	// Pre-filter: strip empty text blocks (including nested in tool_result) to prevent upstream 400.
-	if err := replaceBody(StripEmptyTextBlocks(body)); err != nil {
-		return nil, err
+	if !preserveNative {
+		if err := replaceBody(StripEmptyTextBlocks(body)); err != nil {
+			return nil, err
+		}
 	}
 	// Pre-filter: strip web-search history blocks the upstream cannot accept
 	// (emulation-synthesized server_tool_use / web_search_tool_result always;
 	// genuine ones additionally for passback-required upstreams). See
 	// FilterWebSearchHistoryBlocks. reqModel 此时已是映射后的模型 ID。
-	if err := replaceBody(FilterWebSearchHistoryBlocks(body, reqModel)); err != nil {
-		return nil, err
+	if !preserveNative {
+		if err := replaceBody(FilterWebSearchHistoryBlocks(body, reqModel)); err != nil {
+			return nil, err
+		}
 	}
 	// Pre-filter: remove thinking blocks with missing/invalid signatures before forwarding.
 	// Clients (e.g. Claude Code) sometimes send multi-turn conversations where a historical
@@ -369,8 +377,10 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 	//
 	// 仅 anthropic-strict 模型族执行此过滤；passback-required 上游 (DeepSeek/Kimi/GLM 等)
 	// 要求历史 thinking block 原样回传，过滤反而制造 400。reqModel 此时已是映射后的模型 ID。
-	if err := replaceBody(FilterThinkingBlocks(body, reqModel)); err != nil {
-		return nil, err
+	if !preserveNative {
+		if err := replaceBody(FilterThinkingBlocks(body, reqModel)); err != nil {
+			return nil, err
+		}
 	}
 	// Chinese LLM thinking.type 协议差异补正（如 MiniMax 只接受 adaptive；Anthropic-SDK
 	// 客户端默认发 enabled）。仅对 passback-required 上游生效（claude-* 不会进来）。
@@ -415,7 +425,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 			if readErr == nil {
 				_ = resp.Body.Close()
 
-				if s.shouldRectifySignatureError(ctx, account, respBody, reqModel) {
+				if !preserveNative && s.shouldRectifySignatureError(ctx, account, respBody, reqModel) {
 					appendOpsUpstreamError(c, OpsUpstreamErrorEvent{
 						ProxyID:            opsUpstreamProxyID(account),
 						ProxyName:          opsUpstreamProxyName(account),
@@ -561,7 +571,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 				}
 				// 不是签名错误（或整流器已关闭），继续检查 budget 约束
 				errMsg := extractUpstreamErrorMessage(respBody)
-				if isThinkingBudgetConstraintError(errMsg) && s.settingService.IsBudgetRectifierEnabled(ctx) {
+				if !preserveNative && isThinkingBudgetConstraintError(errMsg) && s.settingService.IsBudgetRectifierEnabled(ctx) {
 					appendOpsUpstreamError(c, OpsUpstreamErrorEvent{
 						ProxyID:            opsUpstreamProxyID(account),
 						ProxyName:          opsUpstreamProxyName(account),
