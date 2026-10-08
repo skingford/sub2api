@@ -44,6 +44,9 @@
 - 对已验证的 CLI 2.1.292 / Linux、macOS x64，自动选择匹配的 TLS 与 HTTP/1.1 头序；支持直连及 HTTP、HTTPS、SOCKS5 代理。
 - 使用官方原生 CLI 的合成抓包验证转发，检查正文、请求头和凭证隔离。
 
+2026-10-08 已通过 [PR #2](https://github.com/skingford/sub2api/pull/2) 合入 `release`，合并提交
+[`81b7e5ce`](https://github.com/skingford/sub2api/commit/81b7e5cec78e38c3bbca282cbc82822d54c76005)。
+
 目前包含 2.1.286、2.1.291、2.1.292 的回归样本。2.1.291 与 2.1.292 在相同测试场景下，
 排除版本归因和随机标识后，没有发现新的业务字段或 beta 差异。
 
