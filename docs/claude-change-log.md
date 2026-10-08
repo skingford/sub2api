@@ -143,3 +143,4 @@
 - 隔离复现补记：使用仓库脚本重新生成探针并复跑 81 条向量，接收端、PCAP 与已提交预期全部一致，丢包 0。macOS 第一方原生样本复算为 `0b0ea`，与接收记录一致。
 - 集成验证补记：首次全量运行的 repository 包因 Redis 测试容器启动超时失败；其余 50 个包通过。该包单独重跑通过（144.551 秒），合计 51 个包通过。golangci-lint 0 issues。
 - 最终单元验证：完整 unit 57 个包通过，service 包 206.919 秒；六个实际构建组合和所有原生 / 旧兼容回归均通过。实验与检查日志保存在本机 `claude-capture/cch-investigation-20261008/analysis/`。
+- 实现提交：[efcfbc3b](https://github.com/skingford/sub2api/commit/efcfbc3b753ce391ee11d29a001bfc1be586e7d7)，已推送至 PR #2；release 保持待人工合并。
