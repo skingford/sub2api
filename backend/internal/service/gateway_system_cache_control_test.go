@@ -99,7 +99,7 @@ func TestForwardCountTokens_EnforcesCacheControlLimitOnMimicPath(t *testing.T) {
 			Body:       io.NopCloser(strings.NewReader(`{"input_tokens":42}`)),
 		},
 	}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:              &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}},
 		httpUpstream:     upstream,
 		rateLimitService: &RateLimitService{},

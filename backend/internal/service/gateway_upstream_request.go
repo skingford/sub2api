@@ -18,6 +18,13 @@ import (
 )
 
 func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Context, account *Account, body []byte, token, tokenType, modelID string, reqStream bool, mimicClaudeCode bool) (*http.Request, []byte, error) {
+	if mimicClaudeCode {
+		var prepareErr error
+		ctx, prepareErr = prepareClaudeCompatibility(ctx, c, body)
+		if prepareErr != nil {
+			return nil, nil, prepareErr
+		}
+	}
 	ctx = withNativeClaudeBodyIntegrity(ctx, c, account, body)
 	preserveNative := !mimicClaudeCode && preserveNativeClaudeRequest(ctx, c, account, body)
 	if !preserveNativeClaudeRequest(ctx, c, account, body) {
@@ -25,6 +32,9 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	}
 	if account.Platform == PlatformAnthropic && account.Type == AccountTypeServiceAccount {
 		req, err := s.buildUpstreamRequestAnthropicVertex(ctx, c, account, body, token, modelID, reqStream)
+		if err == nil {
+			err = s.bindClaudeConversation(ctx, c, account, body, req.Header)
+		}
 		return req, body, err
 	}
 
@@ -76,7 +86,7 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 			// 2. 重写metadata.user_id（需要指纹中的ClientID和账号的account_uuid）
 			// 如果启用了会话ID伪装，会在重写后替换 session 部分为固定值
 			// 当 metadata 透传开启时跳过重写
-			if !enableMPT {
+			if !enableMPT && claudeCompatibilityFromContext(ctx) == nil {
 				accountUUID := account.GetExtraString("account_uuid")
 				if accountUUID != "" && fp.ClientID != "" {
 					if newBody, err := s.identityService.RewriteUserIDWithMasking(ctx, body, account, accountUUID, fp.ClientID, fp.UserAgent); err == nil && len(newBody) > 0 {
@@ -91,6 +101,9 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	// 请求体 x-anthropic-billing-header 的 cc_version 都源自这一个字符串，
 	// Keep the advertised version consistent during legacy conversion.
 	mimicUserAgent := claude.DefaultUserAgent()
+	if state := claudeCompatibilityFromContext(ctx); state != nil {
+		mimicUserAgent = "claude-cli/" + state.Version + " (external, cli)"
+	}
 
 	// Mimicry may override the cached User-Agent later, even without a fingerprint.
 	if billingUA := effectiveBillingUserAgent(mimicUserAgent, tokenType, mimicClaudeCode, fingerprint); billingUA != "" {
@@ -176,7 +189,7 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	if getHeaderRaw(req.Header, "anthropic-version") == "" {
 		setHeaderRaw(req.Header, "anthropic-version", "2023-06-01")
 	}
-	if tokenType == "oauth" {
+	if tokenType == "oauth" && !preserveNative {
 		applyClaudeOAuthHeaderDefaults(req)
 	}
 
@@ -203,6 +216,7 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 		}
 	}
 
+	applyClaudeCompatibilityContext(req, false)
 	ensureAnthropicClientRequestID(req)
 
 	// 账号级请求头覆写（仅 anthropic/openai api_key 账号启用时生效；OAuth 路径 no-op）。
@@ -211,6 +225,9 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	filterSonnet55ToolsetBetaHeader(req.Header, body, modelID)
 	body, err = finalizeNativeClaudeRequest(req, c, account, body)
 	if err != nil {
+		return nil, nil, err
+	}
+	if err := s.bindClaudeConversation(req.Context(), c, account, body, req.Header); err != nil {
 		return nil, nil, err
 	}
 	prepareNativeClaudeTransport(req, c, account, body)
@@ -561,12 +578,12 @@ func (s *GatewayService) computeFinalAnthropicBeta(
 			// supports. Do not enable diagnostics on callers' behalf. Unknown
 			// client betas remain excluded, and policy drops still take precedence.
 			incomingBetas := make([]string, 0, 2)
-			for _, token := range []string{claude.BetaStructuredOutputs, claude.BetaCacheDiagnosis} {
+			for _, token := range []string{claude.BetaStructuredOutputs, claude.BetaCacheDiagnosis, claude.BetaMidConversationOutputConfig, claude.BetaMidConversationSystem, claude.BetaPerTurnControl, claude.BetaDangerousToolUse} {
 				if containsBetaToken(clientBeta, token) {
 					incomingBetas = append(incomingBetas, token)
 				}
 			}
-			return mergeAnthropicBetaDropping(claude.FullClaudeCodeMimicryBetas(), strings.Join(incomingBetas, ","), effectiveDropSet), true
+			return mergeAnthropicBetaDropping(claude2292CompatibilityBetas(modelID, body, false), strings.Join(incomingBetas, ","), effectiveDropSet), true
 		}
 		// 真 Claude Code 客户端透传路径
 		return stripBetaTokensWithSet(s.getBetaHeader(modelID, clientBeta), effectiveDropSet), true
@@ -616,7 +633,7 @@ func (s *GatewayService) computeFinalCountTokensAnthropicBeta(
 			// 分支上**不**会跳过白名单透传（与 messages mimic 路径不同），所以
 			// incomingBeta = req.Header[anthropic-beta] = 客户端透传过来的 client beta。
 			// 重构后直接从 clientHeaders 拿同一个值，保持行为一致。
-			requiredBetas := append(claude.FullClaudeCodeMimicryBetas(), claude.BetaTokenCounting)
+			requiredBetas := claude2292CompatibilityBetas(modelID, body, true)
 			return mergeAnthropicBetaDropping(requiredBetas, clientBeta, effectiveDropSet), true
 		}
 		if clientBeta == "" {

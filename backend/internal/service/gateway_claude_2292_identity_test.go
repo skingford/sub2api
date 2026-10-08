@@ -44,7 +44,7 @@ func (c *claude2292IdentityCache) SetMaskedSessionID(_ context.Context, _ int64,
 	return nil
 }
 
-func forwardClaude2292Capture(t *testing.T, svc *GatewayService, account *Account, capture claudeCapturedRequest) (*http.Request, []byte) {
+func forwardClaude2292Capture(t *testing.T, svc *GatewayService, account *Account, capture claudeCapturedRequest, rejectSessionRewrite ...bool) (*http.Request, []byte) {
 	t.Helper()
 	c, _ := gin.CreateTestContext(httptest.NewRecorder())
 	c.Request = httptest.NewRequest(capture.Method, capture.Path, bytes.NewReader(capture.Body))
@@ -83,6 +83,11 @@ func forwardClaude2292Capture(t *testing.T, svc *GatewayService, account *Accoun
 	} else {
 		_, err = svc.Forward(c.Request.Context(), c, account, parsed)
 	}
+	if len(rejectSessionRewrite) > 0 && rejectSessionRewrite[0] {
+		require.ErrorContains(t, err, "conflicting Claude conversation identifiers")
+		require.Nil(t, upstream.lastReq, "legacy identity policy must not change the upstream conversation")
+		return nil, nil
+	}
 	require.NoError(t, err)
 	require.NotNil(t, upstream.lastReq)
 	require.Equal(t, c.Request.URL.Path, upstream.lastReq.URL.Path)
@@ -100,7 +105,7 @@ func forwardClaude2292Capture(t *testing.T, svc *GatewayService, account *Accoun
 
 func newClaude2292Gateway() *GatewayService {
 	cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-	return &GatewayService{cfg: cfg, responseHeaderFilter: compileResponseHeaderFilter(cfg),
+	return &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: cfg, responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		rateLimitService: &RateLimitService{}, deferredService: &DeferredService{}}
 }
 
@@ -177,6 +182,13 @@ func TestClaudeCode2292OAuthIdentitySettings(t *testing.T) {
 					account.Extra["session_id_masking_enabled"] = policy.mask
 					var lastMetadata string
 					for attempt := 0; attempt < 2; attempt++ {
+						original := ParseMetadataUserID(gjson.GetBytes(capture.Body, "metadata.user_id").String())
+						if !policy.metadataPass && original != nil {
+							// The explicit legacy opt-out cannot bypass immutable
+							// session identity, including its deterministic rewrite.
+							forwardClaude2292Capture(t, svc, account, capture, true)
+							continue
+						}
 						req, body := forwardClaude2292Capture(t, svc, account, capture)
 						wantBody := []byte(capture.Body)
 						originalUID := gjson.GetBytes(capture.Body, "metadata.user_id").String()

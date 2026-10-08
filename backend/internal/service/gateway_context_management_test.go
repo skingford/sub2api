@@ -151,7 +151,7 @@ func TestSanitizeAnthropicBodyForBetaTokens_HaikuRealCCClientPreservesField(t *t
 func newTestGatewayServiceForBeta(injectBetaForAPIKey bool) *GatewayService {
 	cfg := &config.Config{}
 	cfg.Gateway.InjectBetaForAPIKey = injectBetaForAPIKey
-	return &GatewayService{cfg: cfg}
+	return &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: cfg}
 }
 
 func TestComputeFinalAnthropicBeta_OAuthMimic_NonHaiku_IncludesContextManagement(t *testing.T) {
@@ -166,15 +166,13 @@ func TestComputeFinalAnthropicBeta_OAuthMimic_NonHaiku_IncludesContextManagement
 		"OAuth mimic 必须注入 thinking block binding 所需的 beta")
 }
 
-func TestComputeFinalAnthropicBeta_OAuthMimic_Haiku_IncludesFullClaudeCodeBetas(t *testing.T) {
+func TestComputeFinalAnthropicBeta_OAuthMimic_HaikuUsesMeasuredBetas(t *testing.T) {
 	s := newTestGatewayServiceForBeta(false)
 	final, ok := s.computeFinalAnthropicBeta("oauth", true, "claude-haiku-4-5", http.Header{}, []byte(`{}`), nil)
 	require.True(t, ok)
-	require.Equal(t, strings.Join(claude.FullClaudeCodeMimicryBetas(), ","), final)
-	for _, beta := range claude.FullClaudeCodeMimicryBetas() {
-		require.Truef(t, anthropicBetaTokensContains(final, beta),
-			"OAuth mimic Haiku 必须包含完整 Claude Code beta 集合，缺少 %s", beta)
-	}
+	require.True(t, anthropicBetaTokensContains(final, claude.BetaThinkingTokenCount))
+	require.True(t, anthropicBetaTokensContains(final, claude.BetaThinkingBindingControls))
+	require.False(t, anthropicBetaTokensContains(final, claude.BetaEffort))
 }
 
 func TestComputeFinalAnthropicBeta_OAuthMimic_IgnoresClientBeta(t *testing.T) {
@@ -186,8 +184,8 @@ func TestComputeFinalAnthropicBeta_OAuthMimic_IgnoresClientBeta(t *testing.T) {
 	require.True(t, ok)
 	require.False(t, strings.Contains(final, "custom-experimental-beta"),
 		"mimic 路径必须忽略客户端 anthropic-beta header")
-	require.True(t, anthropicBetaTokensContains(final, claude.BetaMidConversationOutputConfig),
-		"mimic 必须注入 mid-conversation output_config 控制所需的 beta")
+	require.False(t, anthropicBetaTokensContains(final, claude.BetaMidConversationOutputConfig),
+		"unused conditional capabilities are not injected")
 
 	// 显式 dropSet 仍能移除 mimic 注入的该 beta，且不会因此放行客户端未知 beta。
 	dropped, ok := s.computeFinalAnthropicBeta("oauth", true, "claude-sonnet-4-6", hdr, []byte(`{}`),
@@ -358,8 +356,8 @@ func TestNormalizeClaudeOAuthRequestBody_PreservesClientContextManagement(t *tes
 		"客户端透传的 context_management 内容必须原样保留")
 }
 
-func TestNormalizeClaudeOAuthRequestBody_NoThinking_NoInject(t *testing.T) {
-	body := []byte(`{"model":"claude-sonnet-4-6","messages":[]}`)
+func TestNormalizeClaudeOAuthRequestBody_ThinkingDisabled_NoInject(t *testing.T) {
+	body := []byte(`{"model":"claude-sonnet-4-6","thinking":{"type":"disabled"},"messages":[]}`)
 	out, _ := normalizeClaudeOAuthRequestBody(body, "claude-sonnet-4-6", claudeOAuthNormalizeOptions{})
 	require.False(t, gjson.GetBytes(out, "context_management").Exists())
 }
@@ -374,7 +372,7 @@ func TestNormalizeClaudeOAuthRequestBody_HaikuShortModelStillNormalizesToDatedID
 func TestApplyClaudeCodeOAuthMimicryToBody_HaikuRewritesSystem(t *testing.T) {
 	account := &Account{ID: 405, Platform: PlatformAnthropic, Type: AccountTypeOAuth}
 	body := []byte(`{"model":"claude-haiku-4-5","system":"Pi project instructions","messages":[{"role":"user","content":"hello"}]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 
 	out := svc.applyClaudeCodeOAuthMimicryToBody(
 		context.Background(), nil, account, body, "Pi project instructions", "claude-haiku-4-5",
@@ -391,7 +389,7 @@ func TestApplyClaudeCodeOAuthMimicryToBody_HaikuRewritesSystem(t *testing.T) {
 func TestApplyClaudeCodeOAuthMimicryToBody_FableOmitsRefusedExpansion(t *testing.T) {
 	account := &Account{ID: 406, Platform: PlatformAnthropic, Type: AccountTypeOAuth}
 	body := []byte(`{"model":"claude-fable-5","system":"Project instructions","messages":[{"role":"user","content":"hello"}]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 
 	out := svc.applyClaudeCodeOAuthMimicryToBody(
 		context.Background(), nil, account, body, "Project instructions", "claude-fable-5",
@@ -447,7 +445,7 @@ func TestBuildUpstreamRequestAnthropicAPIKeyPassthrough_StripsContextManagementW
 	c.Request.Header.Set("Anthropic-Beta", "oauth-2025-04-20")
 
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[{"type":"clear_thinking_20251015"}]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildUpstreamRequestAnthropicAPIKeyPassthrough(
 		context.Background(), c, newAnthropicAPIKeyPassthroughAccountForBetaTest(), body, "token",
 	)
@@ -464,7 +462,7 @@ func TestBuildUpstreamRequestAnthropicAPIKeyPassthrough_PreservesContextManageme
 	c.Request.Header.Set("Anthropic-Beta", "oauth-2025-04-20,context-management-2025-06-27")
 
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[{"type":"clear_thinking_20251015"}]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildUpstreamRequestAnthropicAPIKeyPassthrough(
 		context.Background(), c, newAnthropicAPIKeyPassthroughAccountForBetaTest(), body, "token",
 	)
@@ -481,7 +479,7 @@ func TestBuildCountTokensRequestAnthropicAPIKeyPassthrough_StripsContextManageme
 	c.Request.Header.Set("Anthropic-Beta", "oauth-2025-04-20,token-counting-2024-11-01")
 
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, err := svc.buildCountTokensRequestAnthropicAPIKeyPassthrough(
 		context.Background(), c, newAnthropicAPIKeyPassthroughAccountForBetaTest(), body, "token",
 	)
@@ -509,7 +507,7 @@ func TestBuildUpstreamRequest_OAuthMimicHaiku_PreservesContextManagementEndToEnd
 	}
 	// Haiku + mimic CC 使用完整 beta，其中包含 context-management；body 必须对称保留。
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[{"type":"clear_thinking_20251015"}]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildUpstreamRequest(
 		context.Background(), c, account, body,
 		"oauth-tok", "oauth", "claude-haiku-4-5", false, true, // mimicClaudeCode=true
@@ -567,7 +565,7 @@ func TestBuildUpstreamRequest_OAuthMimicNonHaiku_PreservesContextManagementEndTo
 	// sonnet + mimic CC → final beta = FullClaudeCodeMimicryBetas（含 context-management）→
 	// body 保留。
 	body := []byte(`{"model":"claude-sonnet-4-6","context_management":{"edits":[{"type":"clear_thinking_20251015"}]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildUpstreamRequest(
 		context.Background(), c, account, body,
 		"oauth-tok", "oauth", "claude-sonnet-4-6", false, true,
@@ -598,7 +596,7 @@ func TestBuildUpstreamRequest_OAuthTransparentHaikuWithRealCCBeta_PreservesField
 		Status:      StatusActive, Schedulable: true,
 	}
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[{"type":"clear_thinking_20251015","keep":"all"}]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildUpstreamRequest(
 		context.Background(), c, account, body,
 		"oauth-tok", "oauth", "claude-haiku-4-5", false, false, // mimicClaudeCode=false（真 CC）
@@ -628,7 +626,7 @@ func TestBuildCountTokensRequest_OAuthMimicHaiku_PreservesContextManagementEndTo
 		Status:      StatusActive, Schedulable: true,
 	}
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[{"type":"clear_thinking_20251015"}]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildCountTokensRequest(
 		context.Background(), c, account, body,
 		"oauth-tok", "oauth", "claude-haiku-4-5", true, // mimicClaudeCode=true
@@ -665,7 +663,7 @@ func TestBuildCountTokensRequest_OAuthMimic_DropsInjectedMaxTokens(t *testing.T)
 	require.Equal(t, int64(128000), gjson.GetBytes(normalized, "max_tokens").Int(),
 		"precondition: OAuth mimicry injects the Claude Code default")
 
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildCountTokensRequest(
 		context.Background(), c, account, normalized,
 		"oauth-tok", "oauth", "claude-sonnet-4-5", true,
@@ -688,7 +686,7 @@ func TestBuildCountTokensRequest_APIKeyHaiku_StripsContextManagementEndToEnd(t *
 		Status:      StatusActive, Schedulable: true,
 	}
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildCountTokensRequest(
 		context.Background(), c, account, body,
 		"sk-ant-xxx", "apikey", "claude-haiku-4-5", false,
@@ -729,7 +727,7 @@ func TestBuildCountTokensRequest_StripsCacheControlOnlyFromLiteralDeferredTools(
 			rec := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(rec)
 			c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages/count_tokens", nil)
-			svc := &GatewayService{cfg: &config.Config{}}
+			svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 
 			req, wireBody, err := svc.buildCountTokensRequest(
 				context.Background(), c, tt.account, body,
@@ -754,7 +752,7 @@ func TestBuildCountTokensRequestAnthropicAPIKeyPassthrough_PreservesContextManag
 	c.Request.Header.Set("Anthropic-Beta", "oauth-2025-04-20,context-management-2025-06-27,token-counting-2024-11-01")
 
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[{"type":"clear_thinking_20251015"}]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, err := svc.buildCountTokensRequestAnthropicAPIKeyPassthrough(
 		context.Background(), c, newAnthropicAPIKeyPassthroughAccountForBetaTest(), body, "token",
 	)
@@ -777,7 +775,7 @@ func TestBuildUpstreamRequest_APIKeyHaikuWithContextManagement_StripsField(t *te
 		Status:      StatusActive, Schedulable: true,
 	}
 	body := []byte(`{"model":"claude-haiku-4-5","context_management":{"edits":[]},"messages":[]}`)
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	req, _, err := svc.buildUpstreamRequest(
 		context.Background(), c, account, body,
 		"sk-ant-xxx", "apikey", "claude-haiku-4-5", false, false,

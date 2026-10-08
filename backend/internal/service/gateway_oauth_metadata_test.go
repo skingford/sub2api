@@ -87,6 +87,9 @@ func TestBuildOAuthMetadataUserID_SessionIDStableAcrossTurns(t *testing.T) {
 		`{"role":"assistant","content":"answer 2"},` +
 		`{"role":"user","content":"third question"}]}`)
 
+	round1.ClaudeSessionID = "11111111-1111-4111-8111-111111111111"
+	round2.ClaudeSessionID = round1.ClaudeSessionID
+	round3.ClaudeSessionID = round1.ClaudeSessionID
 	id1 := svc.buildOAuthMetadataUserID(round1, account, fp)
 	id2 := svc.buildOAuthMetadataUserID(round2, account, fp)
 	id3 := svc.buildOAuthMetadataUserID(round3, account, fp)

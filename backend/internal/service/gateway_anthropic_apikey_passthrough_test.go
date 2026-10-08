@@ -142,7 +142,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ForwardStreamPreservesBodyAnd
 			MaxLineSize: defaultMaxLineSize,
 		},
 	}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -224,7 +224,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ForwardCountTokensPreservesBo
 			MaxLineSize: defaultMaxLineSize,
 		},
 	}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -271,7 +271,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_BearerAuthScheme(t *testing.T
 	c.Request.Header.Set("X-Api-Key", "inbound-api-key")
 	c.Request.Header.Set("Cookie", "secret=1")
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Security: config.SecurityConfig{
 				URLAllowlist: config.URLAllowlistConfig{Enabled: false},
@@ -430,7 +430,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ModelMappingEdgeCases(t *test
 						Body:       io.NopCloser(strings.NewReader(upstreamJSON)),
 					},
 				}
-				svc := &GatewayService{
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 					cfg:              &config.Config{},
 					httpUpstream:     upstream,
 					rateLimitService: &RateLimitService{},
@@ -452,7 +452,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ModelMappingEdgeCases(t *test
 						Body:       io.NopCloser(strings.NewReader(upstreamRespBody)),
 					},
 				}
-				svc := &GatewayService{
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 					cfg:              &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}},
 					httpUpstream:     upstream,
 					rateLimitService: &RateLimitService{},
@@ -492,7 +492,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ModelMappingPreservesOtherFie
 		},
 	}
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:              &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}},
 		httpUpstream:     upstream,
 		rateLimitService: &RateLimitService{},
@@ -549,7 +549,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_CountTokensFiltersGenerationF
 		},
 	}
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:              &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}},
 		httpUpstream:     upstream,
 		rateLimitService: &RateLimitService{},
@@ -612,7 +612,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_EmptyModelSkipsMapping(t *tes
 		},
 	}
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:              &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}},
 		httpUpstream:     upstream,
 		rateLimitService: &RateLimitService{},
@@ -698,7 +698,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_CountTokens404PassthroughNotE
 				},
 			}
 
-			svc := &GatewayService{
+			svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 				cfg: &config.Config{
 					Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize},
 				},
@@ -747,7 +747,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_BuildRequestRejectsInvalidBas
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Security: config.SecurityConfig{
 				URLAllowlist: config.URLAllowlistConfig{
@@ -774,7 +774,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StripsDeferredToolCacheContro
 	rec := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
-	svc := &GatewayService{cfg: &config.Config{Security: config.SecurityConfig{URLAllowlist: config.URLAllowlistConfig{Enabled: false}}}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{Security: config.SecurityConfig{URLAllowlist: config.URLAllowlistConfig{Enabled: false}}}}
 	account := &Account{Platform: PlatformAnthropic, Type: AccountTypeAPIKey}
 	body := []byte(`{"tools":[{"name":"deferred","custom":{"defer_loading":true},"cache_control":{"type":"ephemeral"}},{"name":"top-level-deferred","defer_loading":true,"cache_control":{"type":"ephemeral"}},{"name":"ordinary","defer_loading":false,"cache_control":{"type":"ephemeral"}},{"name":"malformed","defer_loading":"true","cache_control":{"type":"ephemeral"}}]}`)
 
@@ -801,7 +801,7 @@ func TestGatewayService_AnthropicOAuth_NotAffectedByAPIKeyPassthroughToggle(t *t
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize},
 		},
@@ -882,7 +882,7 @@ func TestGatewayService_AnthropicOAuthMimic_RewritesSystemWithBillingBlock(t *te
 					MaxLineSize: defaultMaxLineSize,
 				},
 			}
-			svc := &GatewayService{
+			svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 				cfg:                  cfg,
 				responseHeaderFilter: compileResponseHeaderFilter(cfg),
 				httpUpstream:         upstream,
@@ -910,6 +910,10 @@ func TestGatewayService_AnthropicOAuthMimic_RewritesSystemWithBillingBlock(t *te
 			require.Equal(t, "Bearer oauth-token", getHeaderRaw(upstream.lastReq.Header, "authorization"))
 			finalBeta := getHeaderRaw(upstream.lastReq.Header, "anthropic-beta")
 			for _, beta := range claude.FullClaudeCodeMimicryBetas() {
+				if beta == claude.BetaEffort && strings.Contains(gjson.GetBytes(upstream.lastBody, "model").String(), "haiku-4-5") {
+					require.False(t, anthropicBetaTokensContains(finalBeta, beta))
+					continue
+				}
 				require.Truef(t, anthropicBetaTokensContains(finalBeta, beta), "missing mimic beta %s", beta)
 			}
 			require.False(t, anthropicBetaTokensContains(finalBeta, "client-only-beta"))
@@ -989,7 +993,7 @@ func TestGatewayService_AnthropicOAuthRealClaudeCodeHaiku_PreservesClientHeaders
 		Body:       io.NopCloser(strings.NewReader(`{"id":"msg_real_cc","type":"message","role":"assistant","model":"claude-haiku-4-5-20251001","content":[{"type":"text","text":"ok"}],"usage":{"input_tokens":12,"output_tokens":7}}`)),
 	}}
 	cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -1047,7 +1051,7 @@ func TestGatewayService_AnthropicOAuth_SystemPromptInjectionCanBeDisabled(t *tes
 	settingService := NewSettingService(&gatewayTTLSettingRepo{data: map[string]string{
 		SettingKeyEnableClaudeOAuthSystemPromptInjection: "false",
 	}}, cfg)
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -1093,7 +1097,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingStillCollectsUsageAf
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = req
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				MaxLineSize: defaultMaxLineSize,
@@ -1130,7 +1134,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_MissingTerminalEventReturnsEr
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				MaxLineSize: defaultMaxLineSize,
@@ -1174,7 +1178,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ForwardDirect_NonStreamingSuc
 			Body: io.NopCloser(strings.NewReader(upstreamJSON)),
 		},
 	}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:              &config.Config{},
 		httpUpstream:     upstream,
 		rateLimitService: &RateLimitService{},
@@ -1205,7 +1209,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ForwardDirect_InvalidTokenTyp
 			"access_token": "oauth-token",
 		},
 	}
-	svc := &GatewayService{}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}}
 
 	result, err := svc.forwardAnthropicAPIKeyPassthrough(context.Background(), c, account, []byte(`{}`), "claude-3-5-sonnet-latest", "claude-3-5-sonnet-latest", false, time.Now())
 	require.Nil(t, result)
@@ -1222,7 +1226,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ForwardDirect_UpstreamRequest
 	upstream := &anthropicHTTPUpstreamRecorder{
 		err: errors.New("dial tcp timeout"),
 	}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Security: config.SecurityConfig{
 				URLAllowlist: config.URLAllowlistConfig{Enabled: false},
@@ -1256,7 +1260,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ForwardDirect_EmptyResponseBo
 			Body:       nil,
 		},
 	}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Security: config.SecurityConfig{
 				URLAllowlist: config.URLAllowlistConfig{Enabled: false},
@@ -1377,7 +1381,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingErrTooLong(t *testin
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				MaxLineSize: 32,
@@ -1405,7 +1409,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingDataIntervalTimeout(
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				StreamDataIntervalTimeout: 1,
@@ -1438,7 +1442,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingSendsKeepaliveDuring
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				StreamKeepaliveInterval: 1,
@@ -1486,7 +1490,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingKeepaliveDoesNotInte
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				StreamKeepaliveInterval: 1,
@@ -1531,7 +1535,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingReadError(t *testing
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				MaxLineSize: defaultMaxLineSize,
@@ -1561,7 +1565,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingTimeoutAfterClientDi
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 	c.Writer = &failWriteResponseWriter{ResponseWriter: c.Writer}
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				StreamDataIntervalTimeout: 1,
@@ -1604,7 +1608,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingContextCanceled(t *t
 	c, _ := gin.CreateTestContext(rec)
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				MaxLineSize: defaultMaxLineSize,
@@ -1634,7 +1638,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_StreamingUpstreamReadErrorAft
 	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
 	c.Writer = &failWriteResponseWriter{ResponseWriter: c.Writer}
 
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Gateway: config.GatewayConfig{
 				MaxLineSize: defaultMaxLineSize,
@@ -1663,7 +1667,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_TransportErrorRecordsOllamaAc
 	gin.SetMode(gin.TestMode)
 	deferred := NewDeferredService(nil, nil, time.Second)
 	upstream := &anthropicHTTPUpstreamRecorder{err: errors.New("dial tcp timeout")}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Security: config.SecurityConfig{
 				URLAllowlist: config.URLAllowlistConfig{Enabled: false},
@@ -1705,7 +1709,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_ContextCanceledSkipsOllamaAct
 	gin.SetMode(gin.TestMode)
 	deferred := NewDeferredService(nil, nil, time.Second)
 	upstream := &anthropicHTTPUpstreamRecorder{err: context.Canceled}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Security: config.SecurityConfig{
 				URLAllowlist: config.URLAllowlistConfig{Enabled: false},
@@ -1743,7 +1747,7 @@ func TestGatewayService_AnthropicAPIKeyPassthrough_Non2xxRecordsOllamaActivity(t
 			Body:       io.NopCloser(strings.NewReader(`{"type":"error","error":{"type":"invalid_request_error","message":"bad"}}`)),
 		},
 	}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg: &config.Config{
 			Security: config.SecurityConfig{
 				URLAllowlist: config.URLAllowlistConfig{Enabled: false},
@@ -1785,7 +1789,7 @@ func TestOpus55RejectsUnsupportedParametersBeforeMimicry(t *testing.T) {
 				}
 				body := []byte(`{"model":"` + model + `","messages":[{"role":"user","content":"hello"}],` + field + `}`)
 				parsed := &ParsedRequest{Model: model, Body: NewRequestBodyRef(body)}
-				svc := &GatewayService{}
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}}
 				var err error
 				if count {
 					err = svc.ForwardCountTokens(context.Background(), c, account, parsed)
@@ -1842,7 +1846,7 @@ func TestSonnet55RejectsUnsupportedParametersBeforeMimicry(t *testing.T) {
 				rec := httptest.NewRecorder()
 				c, _ := gin.CreateTestContext(rec)
 				c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil)
-				svc := &GatewayService{}
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}}
 				var err error
 				if count {
 					err = svc.ForwardCountTokens(context.Background(), c, account, parsed)
@@ -1877,7 +1881,7 @@ func TestSonnet55BedrockCCCompatTransformsBeforeValidation(t *testing.T) {
 			groupID: {Status: StatusActive, FeaturesConfig: map[string]any{featureKeyBedrockCCCompat: true}},
 		},
 	})
-	svc := &GatewayService{channelService: channels}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, channelService: channels}
 	account := &Account{Platform: PlatformAnthropic, Type: AccountTypeBedrock,
 		Credentials: map[string]any{"aws_region": "eu-west-1"}}
 	for _, tc := range []struct {

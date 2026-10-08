@@ -25,7 +25,8 @@ func SetCLIVersionResolver(resolver func() string) {
 // EffectiveCLIVersion 返回当前生效的 Claude CLI 版本号。
 // resolver 返回值必须通过 IsSupportedCLIVersion 校验（严格三段 semver 且不低于
 // 内置基线），否则回退 CLIVersion()（环境变量覆盖 → 内置基线）。
-// 运行期值恒 >= 内置基线，identity_service 的"只升不降"语义不受影响。
+// Saved settings use the historical version floor; request conversion separately
+// requires a measured complete profile.
 func EffectiveCLIVersion() string {
 	if r := cliVersionResolver.Load(); r != nil {
 		if v := (*r)(); IsSupportedCLIVersion(v) {

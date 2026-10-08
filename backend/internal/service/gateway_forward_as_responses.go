@@ -35,6 +35,9 @@ func (s *GatewayService) ForwardAsResponses(
 	body []byte,
 	parsed *ParsedRequest,
 ) (*ForwardResult, error) {
+	if metadata := ParseMetadataUserID(gjson.GetBytes(body, "metadata.user_id").String()); metadata != nil {
+		ctx = context.WithValue(ctx, claudeOriginalSessionKey{}, metadata.SessionID)
+	}
 	startTime := time.Now()
 
 	normalizedBody, normalized, err := normalizeOpenAIResponsesLegacyIngress(body)
@@ -115,6 +118,15 @@ func (s *GatewayService) ForwardAsResponses(
 	shouldMimicClaudeCode := account.IsOAuth() && !isClaudeCode
 
 	if shouldMimicClaudeCode {
+		// The adapter's fallback is not an explicit caller limit. Let the
+		// measured model profile fill it when the caller supplied no limit.
+		if !gjson.GetBytes(body, "max_tokens").Exists() && !gjson.GetBytes(body, "max_completion_tokens").Exists() && !gjson.GetBytes(body, "max_output_tokens").Exists() {
+			anthropicBody, _ = deleteJSONPathBytes(anthropicBody, "max_tokens")
+		}
+		ctx, err = prepareClaudeCompatibility(ctx, c, body, parsed)
+		if err != nil {
+			return nil, err
+		}
 		anthropicBody = s.applyClaudeCodeOAuthMimicryToBody(ctx, c, account, anthropicBody, anthropicReq.System, mappedModel)
 	}
 
@@ -166,7 +178,7 @@ func (s *GatewayService) ForwardAsResponses(
 		upstreamMsg := strings.TrimSpace(extractUpstreamErrorMessage(respBody))
 		upstreamMsg = sanitizeUpstreamErrorMessage(upstreamMsg)
 
-		if s.shouldFailoverUpstreamError(resp.StatusCode) {
+		if s.shouldFailoverUpstreamError(resp.StatusCode) && !claudeCallerOwnsRetries(ctx, c, account, forwardedBody) {
 			appendOpsUpstreamError(c, OpsUpstreamErrorEvent{
 				ProxyID:            opsUpstreamProxyID(account),
 				ProxyName:          opsUpstreamProxyName(account),
@@ -190,7 +202,11 @@ func (s *GatewayService) ForwardAsResponses(
 		}
 
 		// Non-failover error: return Responses-formatted error to client
-		writeResponsesError(c, mapUpstreamStatusCode(resp.StatusCode), "server_error", upstreamMsg)
+		status := mapUpstreamStatusCode(resp.StatusCode)
+		if claudeCallerOwnsRetries(ctx, c, account, forwardedBody) {
+			status = resp.StatusCode
+		}
+		writeResponsesError(c, status, "server_error", upstreamMsg)
 		return nil, fmt.Errorf("upstream error: %d %s", resp.StatusCode, upstreamMsg)
 	}
 

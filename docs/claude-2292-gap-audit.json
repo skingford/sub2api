@@ -1,0 +1,178 @@
+{
+  "source_commit": "ee2f9fea3cacee7380dc280fb549efa7db4b0cc9",
+  "cli": "2.1.292",
+  "scope": "local mock and network-none Docker audit; no live provider acceptance test",
+  "forwarded_native_cases": 27,
+  "all_native_bodies_equal": true,
+  "native_oauth_count_header_diffs": [
+    {
+      "x-stainless-timeout": [
+        "<absent>",
+        "600"
+      ]
+    },
+    {
+      "x-stainless-timeout": [
+        "<absent>",
+        "600"
+      ]
+    },
+    {
+      "x-stainless-timeout": [
+        "<absent>",
+        "600"
+      ]
+    }
+  ],
+  "generic_profiles": [
+    {
+      "case": "generic-oauth-2.1.258",
+      "headers": {
+        "accept": "application/json",
+        "anthropic-beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,prompt-caching-scope-2026-01-05,effort-2025-11-24,context-management-2025-06-27,thinking-binding-controls-2026-08-01,mid-conversation-output-config-2026-07-01,extended-cache-ttl-2025-04-11",
+        "anthropic-dangerous-direct-browser-access": "true",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "user-agent": "claude-cli/2.1.258 (external, cli)",
+        "x-app": "cli",
+        "x-client-request-id": "2cb1424a-8d3c-4759-b71e-9346aba58ffe",
+        "x-stainless-arch": "arm64",
+        "x-stainless-lang": "js",
+        "x-stainless-os": "Linux",
+        "x-stainless-package-version": "0.94.0",
+        "x-stainless-retry-count": "0",
+        "x-stainless-runtime": "node",
+        "x-stainless-runtime-version": "v24.3.0",
+        "x-stainless-timeout": "600"
+      },
+      "billing": "x-anthropic-billing-header: cc_version=2.1.258.f31; cc_entrypoint=cli;",
+      "profile": "",
+      "late_native_classification": true,
+      "max_tokens": 128000,
+      "temperature": 1,
+      "thinking": null,
+      "output_config": null
+    },
+    {
+      "case": "generic-oauth-2.1.292",
+      "headers": {
+        "accept": "application/json",
+        "anthropic-beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,prompt-caching-scope-2026-01-05,effort-2025-11-24,context-management-2025-06-27,thinking-binding-controls-2026-08-01,mid-conversation-output-config-2026-07-01,extended-cache-ttl-2025-04-11",
+        "anthropic-dangerous-direct-browser-access": "true",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "user-agent": "claude-cli/2.1.292 (external, cli)",
+        "x-app": "cli",
+        "x-client-request-id": "c50051b1-dab3-4fb7-a08c-cae6e3e7d16d",
+        "x-stainless-arch": "arm64",
+        "x-stainless-lang": "js",
+        "x-stainless-os": "Linux",
+        "x-stainless-package-version": "0.94.0",
+        "x-stainless-retry-count": "0",
+        "x-stainless-runtime": "node",
+        "x-stainless-runtime-version": "v24.3.0",
+        "x-stainless-timeout": "600"
+      },
+      "billing": "x-anthropic-billing-header: cc_version=2.1.292.357; cc_entrypoint=cli; cch=8b85b;",
+      "profile": "",
+      "late_native_classification": true,
+      "max_tokens": 128000,
+      "temperature": 1,
+      "thinking": null,
+      "output_config": null
+    }
+  ],
+  "response_codecs": [
+    {
+      "decoded": "{\"input_tokens\":128}",
+      "encoding": "gzip",
+      "equal": true,
+      "error": ""
+    },
+    {
+      "decoded": "{\"input_tokens\":128}",
+      "encoding": "raw-deflate",
+      "equal": true,
+      "error": ""
+    },
+    {
+      "decoded": "",
+      "encoding": "zlib-deflate",
+      "equal": false,
+      "error": "flate: corrupt input before offset 5"
+    },
+    {
+      "case": "transport-default-accept-encoding",
+      "value": "gzip, deflate, br"
+    }
+  ],
+  "native_response_codecs": [
+    {
+      "encoding": "identity",
+      "text": "{\"input_tokens\":128}"
+    },
+    {
+      "encoding": "gzip",
+      "text": "{\"input_tokens\":128}"
+    },
+    {
+      "encoding": "raw-deflate",
+      "text": "{\"input_tokens\":128}"
+    },
+    {
+      "encoding": "zlib-deflate",
+      "text": "{\"input_tokens\":128}"
+    }
+  ],
+  "native_permission_error": {
+    "model_requests": 1,
+    "cli_exit_code": 1,
+    "timed_out": false
+  },
+  "gateway_permission_error": {
+    "attempts": 2,
+    "request_ids": [
+      "c61812cc-67ee-4793-a964-203b7c959b0e",
+      "c61812cc-67ee-4793-a964-203b7c959b0e"
+    ],
+    "dispatch_ids": [
+      "",
+      ""
+    ],
+    "sdk_retry_counts": [
+      "0",
+      "0"
+    ],
+    "same_body": true
+  },
+  "session_reference": {
+    "unmodified_cli": true,
+    "same_messages": true,
+    "different_sessions": true
+  },
+  "metadata_case": {
+    "case": "cross-account-native",
+    "metadata_account_uuid": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "selected_account_uuid": "11111111-1111-4111-8111-111111111111",
+    "selected_credential_used": true
+  },
+  "session_case": {
+    "case": "session-derivation",
+    "first": "a48c8201-68fe-444a-9d57-e82f7bc24709",
+    "method": "SHA256(account + client + first user text), UUID-shaped",
+    "new_conversation_same_prompt": "a48c8201-68fe-444a-9d57-e82f7bc24709"
+  },
+  "evidence_sha256": {
+    "service_audit_test.go": "32ca9d50b669679ba8986da57f3eac2b6e5fdc5092a537c532064436b8132959",
+    "repository_audit_test.go": "f91577a36b202a10e89fc41aa2dbfd4efb6f9739f4b5ec2a26cb3e0b13459cb4",
+    "service-results.json": "a3db68b625725b04c76650fef31acc3999f07dc19171da5b1189d19c6bd8336d",
+    "repository-results.json": "76426adf89eb5d7fc5c2df7b472dd0bf4e45f6a984628c42d0264d0caf769c14",
+    "retry-results.json": "6c7eb2e4c441b76903e7f1591bd0cc9c77f6b2d12e70ae696ed1773d63c63dd4",
+    "session-reference.json": "3cf676832480e451a8675e5461f6e89b8c9c61ee82fc8097966da19d8f96130a",
+    "source.json": "3cbd2e8c3670d3d6630a71673680fca4ba25c974be5799c33ccb8fc1c7ef6cdc",
+    "oauth-count/analysis/capture-validation.json": "f78cfc0c3aa37dcab26b3d6b61a85c7bf6f1e1b3d224b4b0b381f788a108abe8",
+    "oauth-retry/analysis/capture-validation.json": "e533273698b3c8a5b25f7176a06a9eeda1b89e6720b2be988b8297ddf6f90ef6",
+    "response-probe/runtime-probe-provenance.json": "433a2fa83a62de96ce6632bf2d23aa1dd989084493167f5cbd03c505f95d23ee",
+    "response-probe/results/stdout.txt": "1245b9fe05c5a1de833db94b796bdb5d14dcfe636fdb6587dc6cd02956b081e6"
+  }
+}

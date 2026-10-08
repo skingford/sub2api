@@ -24,6 +24,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/pkg/xai"
 	"github.com/Wei-Shaw/sub2api/internal/util/responseheaders"
 	"github.com/cespare/xxhash/v2"
+	"github.com/google/uuid"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -775,6 +776,7 @@ func (s *GatewayService) TempUnscheduleRetryableError(ctx context.Context, accou
 
 // GatewayService handles API gateway operations
 type GatewayService struct {
+	claudeSessionStore    ClaudeSessionStore
 	accountRepo           AccountRepository
 	groupRepo             GroupRepository
 	usageLogRepo          UsageLogRepository
@@ -882,6 +884,7 @@ func NewGatewayService(
 		balanceNotifyService:  balanceNotifyService,
 		userPlatformQuotaRepo: userPlatformQuotaRepo,
 	}
+	svc.claudeSessionStore, _ = accountRepo.(ClaudeSessionStore)
 	if compositeResolver != nil {
 		compositeResolver.SetModelOwnershipResolver(svc.resolveCompositeModelOwnership)
 	}
@@ -910,18 +913,39 @@ func (s *GatewayService) GenerateSessionHash(parsed *ParsedRequest) string {
 	if parsed.MetadataUserID != "" {
 		uid := ParseMetadataUserID(parsed.MetadataUserID)
 		if uid != nil && uid.SessionID != "" {
+			id, err := uuid.Parse(uid.SessionID)
+			if err != nil || id == uuid.Nil {
+				// A client-controlled string must not address internal cache
+				// namespaces used for conversation identity binding.
+				return ""
+			}
 			slog.Info("sticky.hash_source",
 				"source", "metadata_user_id",
 				"session_id", uid.SessionID,
 				"device_id", uid.DeviceID,
 				"is_new_format", uid.IsNewFormat,
 			)
-			return uid.SessionID
+			return id.String()
 		}
 		slog.Info("sticky.hash_metadata_parse_failed",
 			"metadata_user_id", parsed.MetadataUserID,
 			"parsed_nil", uid == nil,
 		)
+	}
+
+	if parsed.ClaudeSessionID != "" {
+		id, err := uuid.Parse(parsed.ClaudeSessionID)
+		if err != nil || id == uuid.Nil {
+			return ""
+		}
+		var callerID int64
+		if parsed.SessionContext != nil {
+			if parsed.SessionContext.NativeClaude {
+				return id.String()
+			}
+			callerID = parsed.SessionContext.APIKeyID
+		}
+		return claudeConversationRoutingKey(callerID, id.String())
 	}
 
 	// 2. 提取带 cache_control: {type: "ephemeral"} 的内容

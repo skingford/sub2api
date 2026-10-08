@@ -55,7 +55,7 @@ func newForwardPartialUsageServiceForTest(upstream *anthropicHTTPUpstreamRecorde
 			MaxLineSize: defaultMaxLineSize,
 		},
 	}
-	return &GatewayService{
+	return &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -210,7 +210,7 @@ func TestGatewayService_Forward_FailoverErrorKeepsNilResult(t *testing.T) {
 	result, err := svc.Forward(context.Background(), c, account, parsed)
 	require.Error(t, err)
 	var failoverErr *UpstreamFailoverError
-	require.True(t, errors.As(err, &failoverErr))
+	require.False(t, errors.As(err, &failoverErr), "the caller owns retries for this profile")
 	require.Nil(t, result, "failover 错误必须保持 result=nil，防止重试成功后双重计费")
 }
 
@@ -233,7 +233,7 @@ func TestGatewayService_Forward_PreOutputSSEOverloadedErrorUsesSemantic529(t *te
 	}}
 	repo := &gatewayForwardErrorPolicyRepoStub{}
 	cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -253,12 +253,12 @@ func TestGatewayService_Forward_PreOutputSSEOverloadedErrorUsesSemantic529(t *te
 	require.Nil(t, result)
 
 	var failoverErr *UpstreamFailoverError
-	require.ErrorAs(t, err, &failoverErr)
-	require.Equal(t, 529, failoverErr.StatusCode)
-	require.JSONEq(t, errorJSON, string(failoverErr.ResponseBody))
+	require.False(t, errors.As(err, &failoverErr))
+	require.Equal(t, 529, rec.Code)
+	require.Contains(t, rec.Body.String(), "Overloaded")
 	require.Equal(t, 1, repo.overloadCalls, "synthetic 529 must apply global overload cooldown")
 	require.Empty(t, repo.modelRateLimitCalls, "global 529 cooldown must take precedence over custom model rules")
-	require.Empty(t, rec.Body.String(), "pre-output overload must remain eligible for account failover")
+	require.NotEmpty(t, rec.Body.String(), "return overload to the caller without account failover")
 }
 
 func TestGatewayService_Forward_PostOutputSSEOverloadedErrorKeepsExistingStatus(t *testing.T) {
@@ -282,7 +282,7 @@ func TestGatewayService_Forward_PostOutputSSEOverloadedErrorKeepsExistingStatus(
 	}}
 	repo := &gatewayForwardErrorPolicyRepoStub{}
 	cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-	svc := &GatewayService{
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 		cfg:                  cfg,
 		responseHeaderFilter: compileResponseHeaderFilter(cfg),
 		httpUpstream:         upstream,
@@ -295,9 +295,8 @@ func TestGatewayService_Forward_PostOutputSSEOverloadedErrorKeepsExistingStatus(
 	require.Nil(t, result)
 
 	var failoverErr *UpstreamFailoverError
-	require.ErrorAs(t, err, &failoverErr)
-	require.Equal(t, http.StatusForbidden, failoverErr.StatusCode)
-	require.JSONEq(t, errorJSON, string(failoverErr.ResponseBody))
+	require.False(t, errors.As(err, &failoverErr))
+	require.Equal(t, http.StatusOK, rec.Code)
 	require.Zero(t, repo.tempCalls)
 	require.Contains(t, rec.Body.String(), "message_start")
 }

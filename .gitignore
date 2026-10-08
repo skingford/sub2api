@@ -136,6 +136,9 @@ vite.config.js
 docs/*
 !docs/claude-code-request-parity.md
 !docs/claude-code-cch-2.1.292.md
+!docs/claude-code-remaining-differences.md
+!docs/claude-code-gap-fixes.md
+!docs/claude-2292-gap-audit.json
 !docs/claude-change-log.md
 !docs/PAYMENT.md
 !docs/PAYMENT_CN.md

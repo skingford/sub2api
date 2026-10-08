@@ -125,6 +125,11 @@ func (s *GatewayService) forwardAnthropicAPIKeyPassthroughWithInput(
 		}
 
 		// 透传分支禁止 400 请求体降级重试（该重试会改写请求体）
+		if resp.StatusCode >= 400 && claudeCallerOwnsRetries(ctx, c, account, input.Body) {
+			defer func() { _ = resp.Body.Close() }()
+			return nil, s.returnClaudeUpstreamError(ctx, c, account, resp, input.RequestModel)
+		}
+
 		if resp.StatusCode >= 400 && resp.StatusCode != 400 && s.shouldRetryUpstreamError(account, resp.StatusCode) {
 			if attempt < maxRetryAttempts {
 				elapsed := time.Since(retryStart)
@@ -380,6 +385,9 @@ func (s *GatewayService) buildUpstreamRequestAnthropicAPIKeyPassthrough(
 	filterSonnet55ToolsetBetaHeader(req.Header, body, gjson.GetBytes(body, "model").String())
 	body, err = finalizeNativeClaudeRequest(req, c, account, body)
 	if err != nil {
+		return nil, nil, err
+	}
+	if err := s.bindClaudeConversation(req.Context(), c, account, body, req.Header); err != nil {
 		return nil, nil, err
 	}
 	prepareNativeClaudeTransport(req, c, account, body)

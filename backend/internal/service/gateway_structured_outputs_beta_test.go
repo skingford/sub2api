@@ -60,7 +60,7 @@ func TestBuildUpstreamRequestStructuredOutputsBeta(t *testing.T) {
 			account := &Account{ID: 701, Platform: PlatformAnthropic, Type: AccountTypeOAuth,
 				Credentials: map[string]any{"access_token": "test-token"}, Status: StatusActive, Schedulable: true}
 			body := []byte(`{"model":"claude-sonnet-5","max_tokens":1024,"output_format":{"type":"json_schema","schema":{"type":"object","properties":{"ok":{"type":"boolean"}},"required":["ok"],"additionalProperties":false}},"messages":[{"role":"user","content":"Return JSON"}]}`)
-			svc := &GatewayService{cfg: &config.Config{}}
+			svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 			req, _, err := svc.buildUpstreamRequest(context.Background(), c, account, body,
 				"test-token", "oauth", "claude-sonnet-5", false, true)
 			require.NoError(t, err)

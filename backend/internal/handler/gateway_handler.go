@@ -289,6 +289,15 @@ func (h *GatewayHandler) Messages(c *gin.Context) {
 		UserAgent: c.GetHeader("User-Agent"),
 		APIKeyID:  apiKey.ID,
 	}
+	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
+		return
+	}
+	parsedReq.ClaudeSessionID = c.GetHeader("X-Sub2API-Session-Id")
+	if parsedReq.ClaudeSessionID == "" {
+		parsedReq.ClaudeSessionID = c.GetHeader("X-Claude-Code-Session-Id")
+	}
+	parsedReq.SessionContext.NativeClaude = service.IsClaudeCodeClient(c.Request.Context())
+	parsedReq.GroupID = apiKey.GroupID
 	sessionHash := h.gatewayService.GenerateSessionHash(parsedReq)
 
 	// [DEBUG-STICKY] 打印会话 hash 生成结果
@@ -2208,6 +2217,15 @@ func (h *GatewayHandler) CountTokens(c *gin.Context) {
 		UserAgent: c.GetHeader("User-Agent"),
 		APIKeyID:  apiKey.ID,
 	}
+	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
+		return
+	}
+	parsedReq.ClaudeSessionID = c.GetHeader("X-Sub2API-Session-Id")
+	if parsedReq.ClaudeSessionID == "" {
+		parsedReq.ClaudeSessionID = c.GetHeader("X-Claude-Code-Session-Id")
+	}
+	parsedReq.SessionContext.NativeClaude = service.IsClaudeCodeClient(c.Request.Context())
+	parsedReq.GroupID = apiKey.GroupID
 	sessionHash := h.gatewayService.GenerateSessionHash(parsedReq)
 
 	// 选择支持该模型的账号

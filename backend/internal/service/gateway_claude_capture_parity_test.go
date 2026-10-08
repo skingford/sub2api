@@ -63,7 +63,7 @@ func TestClaudeCode2286CaptureForwarding(t *testing.T) {
 						"data: {\"type\":\"message_stop\"}\n\n")),
 				}}
 				cfg := &config.Config{Gateway: config.GatewayConfig{MaxLineSize: defaultMaxLineSize}}
-				svc := &GatewayService{
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{},
 					cfg: cfg, responseHeaderFilter: compileResponseHeaderFilter(cfg),
 					httpUpstream: upstream, rateLimitService: &RateLimitService{}, deferredService: &DeferredService{},
 				}
@@ -185,7 +185,7 @@ func TestClaudeCode2286ConditionalHeadersForwarded(t *testing.T) {
 		c.Request.Header.Set(key, value)
 	}
 	c.Request.Header.Set("x-unlisted-private-header", "must-not-leak")
-	svc := &GatewayService{cfg: &config.Config{}}
+	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 	account := newAnthropicAPIKeyAccountForTest()
 	req, _, err := svc.buildUpstreamRequestAnthropicAPIKeyPassthrough(context.Background(), c, account, capture.Body, "upstream-only")
 	require.NoError(t, err)
@@ -204,7 +204,7 @@ func TestClaudeCode2286NormalizationPreservesExplicitTemperature(t *testing.T) {
 	for _, thinking := range []string{``, `,"thinking":{"type":"disabled"}`} {
 		body := []byte(`{"model":"claude-sonnet-4-6"` + thinking + `}`)
 		out, _ := normalizeClaudeOAuthRequestBody(body, "claude-sonnet-4-6", claudeOAuthNormalizeOptions{})
-		require.Equal(t, float64(1), gjson.GetBytes(out, "temperature").Float())
+		require.False(t, gjson.GetBytes(out, "temperature").Exists(), "verified defaults do not invent temperature")
 	}
 }
 
@@ -233,7 +233,7 @@ func TestClaudeCode2286SafeguardsRejectMissingCapability(t *testing.T) {
 					account.Credentials[credKeyHeaderOverrideEnabled] = true
 					account.Credentials[credKeyHeaderOverrides] = map[string]any{"anthropic-beta": filtered}
 				}
-				svc := &GatewayService{cfg: &config.Config{}}
+				svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 				var req *http.Request
 				var err error
 				if route == "apikey_passthrough" {

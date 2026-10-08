@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"compress/zlib"
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -1565,7 +1566,23 @@ func decompressResponseBody(resp *http.Response) {
 	case "br":
 		reader = brotli.NewReader(resp.Body)
 	case "deflate":
-		reader = flate.NewReader(resp.Body)
+		buffered := bufio.NewReader(resp.Body)
+		// RFC 1950 wrapping and raw DEFLATE are both accepted by the native
+		// runtime. Peek without consuming bytes so the raw fallback is intact.
+		header, _ := buffered.Peek(2)
+		if len(header) == 2 && header[0]&0x0f == 8 && header[0]>>4 <= 7 &&
+			(uint16(header[0])<<8|uint16(header[1]))%31 == 0 {
+			zr, err := zlib.NewReader(buffered)
+			if err != nil {
+				// Preserve the decoding error instead of treating a broken zlib
+				// stream as raw DEFLATE or returning consumed compressed bytes.
+				reader = &responseDecodeErrorReader{err: err}
+			} else {
+				reader = zr
+			}
+		} else {
+			reader = flate.NewReader(buffered)
+		}
 	case "zstd":
 		bufferedBody := bufio.NewReader(resp.Body)
 		resp.Body = &decompressedBody{reader: bufferedBody, closer: originalBody}
@@ -1592,6 +1609,10 @@ func decompressResponseBody(resp *http.Response) {
 	resp.Header.Del("Content-Length") // 解压后长度不确定
 	resp.ContentLength = -1
 }
+
+type responseDecodeErrorReader struct{ err error }
+
+func (r *responseDecodeErrorReader) Read([]byte) (int, error) { return 0, r.err }
 
 type zstdResponseReader struct {
 	io.ReadCloser

@@ -1,0 +1,94 @@
+{
+  "change_id": "CC-20261008-007",
+  "base_head": "3d7d660bee6a7f1a868ac47bb24e020ea1d7a6d1",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "cli_profile": "2.1.292",
+  "invariant": "incoming session UUID -> immutable account ID -> same outgoing session UUID",
+  "provider_requests": false,
+  "checks": {
+    "unit-release": {
+      "log": "sub2api-session-unit-release.log",
+      "sha256": "373ef59e30925552e22ddbf698ff1357c622ff7273e2da280b10d6d1c5d4e554",
+      "passed_packages": 57,
+      "failures": 0,
+      "exit_code": 0
+    },
+    "integration-verified": {
+      "log": "sub2api-session-integration-verified.log",
+      "sha256": "21121c946baef13aa96cb93c3d1b2e157407ddde8df4ff4d606cb91f9e7519c5",
+      "passed_packages": 51,
+      "failures": 0,
+      "exit_code": 0
+    },
+    "lint-release": {
+      "log": "sub2api-session-lint-release.log",
+      "sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+      "passed_packages": 0,
+      "failures": 0,
+      "exit_code": 0
+    },
+    "final-regression": {
+      "log": "sub2api-session-final-regression.log",
+      "sha256": "73c006a161a0e166e9fe1fda5e4b8632b9d4cd2620b26abf1aca03d047cb0783",
+      "passed_packages": 1,
+      "failures": 0,
+      "exit_code": 0
+    },
+    "db-release": {
+      "log": "sub2api-session-db-release.log",
+      "sha256": "635e623bc85297c99229f4bbc3d345f87575966ad069905f0f00045b80da1693",
+      "passed_packages": 1,
+      "failures": 0,
+      "exit_code": 0
+    },
+    "final-lint": {
+      "log": "sub2api-session-final-lint-verified.log",
+      "sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+      "issues": 0,
+      "exit_code": 0
+    }
+  },
+  "validation_sequence": "Full unit and integration suites passed; the subsequent losing-claim slot release received a final session/identity/contract regression. Final SQL concurrency test repeated after close-handling lint fix. Final affected-package lint passed with 0 issues.",
+  "source_sha256": {
+    "backend/internal/handler/gateway_handler.go": "b78591dda1012ee841b91d9cb308c24b4731024554c9b7f949f5569638ca3e24",
+    "backend/internal/handler/gateway_handler_chat_completions.go": "402639fd704fdc63973d1daf80297668e7a73e80a0499138e9954b7534b87b48",
+    "backend/internal/handler/gateway_handler_responses.go": "2ff8fce6ff7246f0454391b1c2861f4d59d37548762daf0a8943fd8c69a1194c",
+    "backend/internal/repository/claude_session_ownership.go": "293b991d27770ea60f093556308a660fd1c77d44a5466b59ff2f0718eccc3530",
+    "backend/internal/repository/claude_session_ownership_integration_test.go": "fb71b97cfb410baacffe6cacc7d65da76a77fb46e80a4d01c5011b070ca3fa3d",
+    "backend/internal/service/gateway_anthropic_apikey_passthrough_test.go": "b9e84db9c707251122c530686378eff5515b0b8b7290d2b9835f7d1a2678ea49",
+    "backend/internal/service/gateway_anthropic_passthrough.go": "97bc8436fe6dce45d8a6c6dd4e79ca5bd781c2b2b044191158a5fd53b8824c55",
+    "backend/internal/service/gateway_billing_header_test.go": "07b69eda1c6ee18c62c29a39f3231aecac2bf472030ab7ebe6fc9edd759c81ea",
+    "backend/internal/service/gateway_claude_2291_parity_test.go": "95dd066de99681babfac8b283212b253a011eb164f16d0635f9d94539cb35513",
+    "backend/internal/service/gateway_claude_2292_identity_test.go": "e3f1ceda22f729d2f7dbeae2c9cd46b48489aa2c1cf14d290e78b40377f8ea54",
+    "backend/internal/service/gateway_claude_capture_parity_test.go": "a4978f6cdfd127e9f722e4674ca61df9538546b13da53e25761e60184d9fbb3c",
+    "backend/internal/service/gateway_claude_compatibility.go": "710cd8bf56ae62a8463897c582828462c285ff068ab0b5e2ae92fafa1def6c95",
+    "backend/internal/service/gateway_claude_contract_test.go": "ff77b66295661111367da33806ff57e2f0f7ec0439ea4c7afa59a34232a159b7",
+    "backend/internal/service/gateway_claude_native.go": "2ec3fa570208f44d84fc4d3d3f2704b5faee3cb7b66911e6b9ac3ac29ab9d034",
+    "backend/internal/service/gateway_claude_session.go": "79506ffdbe0886b8ee6f2310c223d05f46dc250881c91d386fb4f174a38d329f",
+    "backend/internal/service/gateway_claude_session_store_test.go": "51c934f873e7a046c64c740cafe99dd76d5b4dc9c172ad420ef377e9673b84d7",
+    "backend/internal/service/gateway_claude_session_test.go": "760e8620487e35ca9305fe89de68793e85d34e1e342c4088304307e550f39f47",
+    "backend/internal/service/gateway_cli_version_runtime_test.go": "8d0c7ef9d954706b328713ef8f7a2c8aae3dc587d046a6dfbb156eebd2b9dba5",
+    "backend/internal/service/gateway_context_management_test.go": "f0d1d5b2b8819ab48c43314dba496ea206721e332d0732f69252057bb90a4205",
+    "backend/internal/service/gateway_count_tokens.go": "f8cb4de8ff307bd3d1c3ee6d75ddfaf5261098af7ec4d8c9832755e93ef9350d",
+    "backend/internal/service/gateway_fallbacks_sanitize_test.go": "9a6abf8d9128a7f811cdceba1836ec9802c1548fe89d648c8ecd1722f023ea0d",
+    "backend/internal/service/gateway_forward_as_chat_completions.go": "67e4b028d4277c09bb419fec893ba2a66269228e2f7313db3bf5c1675ffba6a8",
+    "backend/internal/service/gateway_forward_as_responses.go": "232688c780311cba83aed853cb7bb37e13dde19a884a6d7830a875d4a6f22960",
+    "backend/internal/service/gateway_forward_partial_usage_test.go": "be9cbe333462c70735d35704ecdb24d75941af3b7098dd632803ffb79d9910b2",
+    "backend/internal/service/gateway_mid_conversation_output_config_test.go": "eab27a560bc026e90367bdf4d421b109fbc10e2397802295062139829c251648",
+    "backend/internal/service/gateway_scheduling.go": "62439e12b9de16413c354d0ff40a87539d3af948ee66a1d71ab865385e42d30b",
+    "backend/internal/service/gateway_service.go": "1751257391bf034c2392f107ffba3bb0f573eeb6f4292a9edb0296b5f153f2f4",
+    "backend/internal/service/gateway_structured_outputs_beta_test.go": "9d67ea58d3c87e701a80f3499791bf27004169a35efef8cd6258edebd6aaa227",
+    "backend/internal/service/gateway_system_cache_control_test.go": "4a140786c8f628baf3d13a0131fb05a982dbcb817c06162dd436d9ce7f09866e",
+    "backend/internal/service/gateway_upstream_request.go": "57d359ec5b5444d24a55b96243ecf796fb9270b75bd2a6697f7c76530c3c76be",
+    "backend/migrations/242_claude_session_ownership.sql": "5917193b7e9beb0e9e7fe8510412ae4a0757fe6436ec17bda17a00457e092dfe"
+  },
+  "toolchain": "go1.27.0 darwin/amd64",
+  "commands": {
+    "unit-release": "GOTOOLCHAIN=go1.27.0 GOMAXPROCS=3 go test -p 2 -tags=unit ./...",
+    "integration-verified": "GOTOOLCHAIN=go1.27.0 GOMAXPROCS=3 CI=true go test -p 1 -tags=integration ./...",
+    "lint-release": "golangci-lint run --concurrency 2 ./...",
+    "final-regression": "GOTOOLCHAIN=go1.27.0 GOMAXPROCS=3 go test -p 2 -tags=unit ./internal/service -run 'TestClaude(Session|Code2292OAuthIdentitySettings|2292Contract)'",
+    "db-release": "GOTOOLCHAIN=go1.27.0 GOMAXPROCS=3 CI=true go test -p 1 -tags=integration ./internal/repository -run TestClaudeSessionOwnership -count=1",
+    "final-lint": "golangci-lint run --concurrency 2 ./internal/service/... ./internal/repository/..."
+  }
+}

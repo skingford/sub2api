@@ -1,0 +1,61 @@
+{
+  "source": "service-generated OAuth request compared with original native HTTP runtime; local synthetic credentials",
+  "native_runtime_modified_js_entrypoint": true,
+  "native_cli_version": "2.1.292",
+  "clienthello_normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+  "cases": [
+    {
+      "mode": "auto",
+      "body_equal": true,
+      "pcap_matches_receiver": true,
+      "header_values_equal": true,
+      "header_order_equal": true,
+      "normalized_clienthello_equal": true,
+      "kernel_drops_zero": true
+    },
+    {
+      "mode": "auto-http-proxy",
+      "body_equal": true,
+      "pcap_matches_receiver": true,
+      "header_values_equal": true,
+      "header_order_equal": true,
+      "normalized_clienthello_equal": true,
+      "kernel_drops_zero": true
+    },
+    {
+      "mode": "auto-https-proxy",
+      "body_equal": true,
+      "pcap_matches_receiver": true,
+      "header_values_equal": true,
+      "header_order_equal": true,
+      "normalized_clienthello_equal": true,
+      "kernel_drops_zero": true
+    },
+    {
+      "mode": "auto-socks5-proxy",
+      "body_equal": true,
+      "pcap_matches_receiver": true,
+      "header_values_equal": true,
+      "header_order_equal": true,
+      "normalized_clienthello_equal": true,
+      "kernel_drops_zero": true
+    }
+  ],
+  "native_cch_checks": [
+    {
+      "model": "claude-haiku-4-5-20251001",
+      "body_equal_after_native_cch": true,
+      "sha256": "ecdf303c33b49285af67535584cd264eb7ed50c39ce108a1dc6442543c3c593c"
+    },
+    {
+      "model": "claude-opus-4-6",
+      "body_equal_after_native_cch": true,
+      "sha256": "5cdbe720785be820324dbef8437c2291e3477425731d9c7c760a6301e5fc0fce"
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "body_equal_after_native_cch": true,
+      "sha256": "100b2e89adc79c78a37894143c6bc812ad880711d162561a8623249bf301472a"
+    }
+  ]
+}

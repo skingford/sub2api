@@ -17,8 +17,8 @@ import (
 // prepareNativeClaudeTransport selects only the version/platform actually
 // captured. Custom destinations and explicitly bound profiles keep their policy.
 func prepareNativeClaudeTransport(req *http.Request, c *gin.Context, account *Account, body []byte) {
-	if req == nil || c == nil || c.Request == nil ||
-		!preserveNativeClaudeRequest(req.Context(), c, account, body) ||
+	if req == nil || c == nil || c.Request == nil || account == nil || account.Platform != PlatformAnthropic ||
+		(!preserveNativeClaudeRequest(req.Context(), c, account, body) && claudeCompatibilityFromContext(req.Context()) == nil) ||
 		account.GetTLSFingerprintProfileID() != 0 {
 		return
 	}
@@ -46,6 +46,23 @@ type nativeClaudeBodyDigestKey struct{}
 func withNativeClaudeBodyIntegrity(ctx context.Context, c *gin.Context, account *Account, body []byte) context.Context {
 	if ctx == nil {
 		ctx = context.Background()
+	}
+	if _, frozen := ctx.Value(claudeOriginalSessionKey{}).(string); !frozen {
+		original := ""
+		if metadata := ParseMetadataUserID(gjson.GetBytes(body, "metadata.user_id").String()); metadata != nil {
+			original = metadata.SessionID
+		}
+		ctx = context.WithValue(ctx, claudeOriginalSessionKey{}, original)
+	}
+	if _, frozen := ctx.Value(nativeClaudeOriginKey{}).(bool); !frozen {
+		ctx = context.WithValue(ctx, nativeClaudeOriginKey{}, isNativeClaudeInput(ctx, c, body))
+	}
+	if c != nil && claudeCompatibilityFromContext(ctx) == nil {
+		if value, ok := c.Get(claudeCompatibilityGinKey); ok {
+			if state, ok := value.(*claudeCompatibilityState); ok {
+				ctx = context.WithValue(ctx, claudeCompatibilityKey{}, state)
+			}
+		}
 	}
 	if !preserveNativeClaudeRequest(ctx, c, account, body) {
 		return ctx
@@ -86,9 +103,13 @@ func validateNativeClaudeBodyIntegrity(ctx context.Context, c *gin.Context, body
 // Only the measured native version is eligible; unknown versions retain the
 // opaque-body guard. Authentication and entitlement policy remain independent.
 func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Account, body []byte) ([]byte, error) {
+	if err := validateClaudeAccountIdentity(req.Context(), c, account, body); err != nil {
+		return nil, err
+	}
 	u := req.URL
 	billing := gjson.GetBytes(body, "system.0.text")
-	known := preserveNativeClaudeRequest(req.Context(), c, account, body) &&
+	known := account != nil && account.Platform == PlatformAnthropic &&
+		(preserveNativeClaudeRequest(req.Context(), c, account, body) || claudeCompatibilityFromContext(req.Context()) != nil) &&
 		req.Method == http.MethodPost && u != nil && u.Scheme == "https" && u.User == nil &&
 		strings.EqualFold(u.Hostname(), "api.anthropic.com") && (u.Port() == "" || u.Port() == "443") &&
 		(u.Path == "/v1/messages" || u.Path == "/v1/messages/count_tokens") &&
@@ -184,6 +205,20 @@ func preserveNativeClaudeRequest(ctx context.Context, c *gin.Context, account *A
 	}
 	if enabled, ok := account.Extra["claude_native_passthrough"].(bool); ok && !enabled {
 		return false
+	}
+	return isNativeClaudeInput(ctx, c, body)
+}
+
+func isNativeClaudeInput(ctx context.Context, c *gin.Context, body []byte) bool {
+	if ctx != nil {
+		if native, frozen := ctx.Value(nativeClaudeOriginKey{}).(bool); frozen {
+			return native
+		}
+	}
+	if c != nil {
+		if _, converted := c.Get(claudeCompatibilityGinKey); converted {
+			return false
+		}
 	}
 	if ctx != nil && IsClaudeCodeClient(ctx) {
 		return true

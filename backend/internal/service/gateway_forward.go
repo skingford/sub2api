@@ -95,6 +95,26 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 	}
 	// API-key mappings and OAuth native IDs are resolved before mimicry.
 	ctx = withNativeClaudeBodyIntegrity(ctx, c, account, parsed.Body.Bytes())
+	defer func() {
+		var failover *UpstreamFailoverError
+		if err != nil && errors.As(err, &failover) && claudeCallerOwnsRetries(ctx, c, account, parsed.Body.Bytes()) {
+			// An early stream failure must not reopen the operation on a
+			// different account. Preserve any usage result already collected.
+			if c != nil && !c.Writer.Written() {
+				MarkResponseCommitted(c)
+				status := failover.StatusCode
+				if status < 400 || status > 599 {
+					status = http.StatusBadGateway
+				}
+				message := sanitizeUpstreamErrorMessage(strings.TrimSpace(extractUpstreamErrorMessage(failover.ResponseBody)))
+				if message == "" {
+					message = "Upstream request failed"
+				}
+				c.JSON(status, gin.H{"type": "error", "error": gin.H{"type": "api_error", "message": message}})
+			}
+			err = fmt.Errorf("claude upstream operation failed: %s", failover.Error())
+		}
+	}()
 	validationModel := parsed.Model
 	if account != nil {
 		if account.IsBedrock() {
@@ -195,26 +215,17 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 	// 最低缓存门槛，导致系统级缓存失效）。
 	//
 	// 对于非 Claude Code 的第三方客户端（opencode 等），仍然走完整 mimicry。
-	var clientUserAgent string
-	if c != nil {
-		clientUserAgent = c.GetHeader("User-Agent")
-	}
-	isClaudeCode := IsClaudeCodeClient(ctx) || isClaudeCodeClient(clientUserAgent, parsed.MetadataUserID)
-
-	// 补充判定：上游 API 网关（如 new-api）转发真实 Claude Code 流量时，
-	// UA 会变成 Go-http-client 但 body 保留了完整的 Claude Code 特征
-	// （billing attribution block + metadata.user_id）。此时如果仍走 mimicry
-	// 重写 system prompt，会破坏 Anthropic prompt cache 的前缀匹配——
-	// 导致 messages 级缓存永远 miss、cache_creation 每轮全量重写。
-	// 通过检查 body 中的 billing attribution block 来识别被代理的真实 CC 流量。
-	if !isClaudeCode && parsed.MetadataUserID != "" {
-		isClaudeCode = systemHasBillingAttributionBlock(body)
-	}
+	isClaudeCode := isNativeClaudeInput(ctx, c, body)
 
 	shouldMimicClaudeCode := account.IsOAuth() && !isClaudeCode
 	preserveNative := !shouldMimicClaudeCode && preserveNativeClaudeRequest(ctx, c, account, body)
 
 	if shouldMimicClaudeCode {
+		ctx, err = prepareClaudeCompatibility(ctx, c, body, parsed)
+		if err != nil {
+			return nil, err
+		}
+		parsed.ClaudeSessionID = claudeCompatibilityFromContext(ctx).SessionID
 		// 与 Parrot 对齐：OAuth 账号无条件重写 system（即使客户端已发了 Claude Code
 		// 风格的 system prompt）。原因：第三方工具（opencode 等）会发 "You are Claude
 		// Code..." system prompt 但缺少 billing attribution block，导致 Anthropic
@@ -228,7 +239,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 			}
 		}
 
-		normalizeOpts := claudeOAuthNormalizeOptions{}
+		normalizeOpts := claudeOAuthNormalizeOptions{replaceOpaqueMetadata: true}
 		if s.identityService != nil && c != nil {
 			fp, err := s.identityService.GetOrCreateFingerprint(ctx, account.ID, c.Request.Header)
 			if err == nil && fp != nil {
@@ -417,6 +428,11 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 			return nil, s.handleUpstreamTransportError(ctx, c, account, err, OpsUpstreamErrorEvent{
 				UpstreamURL: safeUpstreamURL(upstreamReq.URL.String()),
 			})
+		}
+
+		if resp.StatusCode >= 400 && claudeCallerOwnsRetries(ctx, c, account, body) {
+			defer func() { _ = resp.Body.Close() }()
+			return nil, s.returnClaudeUpstreamError(ctx, c, account, resp, reqModel)
 		}
 
 		// 优先检测thinking block签名错误（400）并重试一次

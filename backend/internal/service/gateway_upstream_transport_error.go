@@ -66,6 +66,13 @@ func (s *GatewayService) handleUpstreamTransportError(ctx context.Context, c *gi
 	if classifyUpstreamTransportError(err).Persistent {
 		s.tempUnscheduleTransportError(ctx, account, safeErr)
 	}
+	if claudeCallerOwnsRetries(ctx, c, account, nil) {
+		if c != nil && !c.Writer.Written() {
+			MarkResponseCommitted(c)
+			c.Data(http.StatusBadGateway, "application/json", gatewayTransportFailoverBody)
+		}
+		return err
+	}
 
 	return &UpstreamFailoverError{
 		StatusCode:   http.StatusBadGateway,

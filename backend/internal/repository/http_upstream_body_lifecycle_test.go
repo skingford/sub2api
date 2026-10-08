@@ -153,7 +153,7 @@ func TestHTTPUpstreamConcurrentEarlyCloseDoesNotPoisonNextResponse(t *testing.T)
 }
 
 func TestHTTPUpstreamCompletedBodyPreservesKeepAlive(t *testing.T) {
-	for _, encoding := range []string{"", "gzip"} {
+	for _, encoding := range []string{"", "gzip", "raw-deflate", "zlib-deflate"} {
 		t.Run("encoding="+encoding, func(t *testing.T) {
 			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if encoding == "gzip" {
@@ -161,6 +161,15 @@ func TestHTTPUpstreamCompletedBodyPreservesKeepAlive(t *testing.T) {
 					zw := gzip.NewWriter(w)
 					_, _ = io.WriteString(zw, "complete response")
 					_ = zw.Close()
+					return
+				}
+				if encoding == "raw-deflate" || encoding == "zlib-deflate" {
+					w.Header().Set("Content-Encoding", "deflate")
+					compress := compressDeflate
+					if encoding == "zlib-deflate" {
+						compress = compressZlib
+					}
+					_, _ = w.Write(compress(t, []byte("complete response")))
 					return
 				}
 				_, _ = io.WriteString(w, "complete response")
