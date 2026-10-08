@@ -1,0 +1,27 @@
+{
+  "macos_binary_sha256": "a9739a215728ce72435885fedb19d1317ee1ccec61e246fbfb3acaf01689c473",
+  "linux_binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "seed": "0x4D659218E32A3268",
+  "macos_seed_instruction": "0x101c0b1b1",
+  "linux_seed_instruction": "0x35f1197",
+  "macos_normalization_function": "0x101c13fc0",
+  "linux_normalization_function": "0x35f96f0",
+  "artifacts": {
+    "seed-disassembly.txt": {
+      "sha256": "61608e0239192b20c78c592c3cae7be59f4bcc02922223e1a2374a0b948e24a4",
+      "bytes": 8890
+    },
+    "normalization-disassembly.txt": {
+      "sha256": "ad2c40db4f85c9538285e84fc6ed86775608e7bbef3b1683ad8d6281c8eae8ad",
+      "bytes": 22407
+    },
+    "linux-seed-corrected.txt": {
+      "sha256": "82becfc69c452b70384a7b88baac9418aa25e1eff18410980dafa9e3ae5e0fcc",
+      "bytes": 1198
+    },
+    "existing-capture-check.json": {
+      "sha256": "0b4ae2cbb87c3f4dc75d8287978ac9b03e7a69ade5dd8d57b342ded0059ae4e5",
+      "bytes": 1241
+    }
+  }
+}

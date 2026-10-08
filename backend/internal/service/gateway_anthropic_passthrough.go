@@ -339,10 +339,6 @@ func (s *GatewayService) buildUpstreamRequestAnthropicAPIKeyPassthrough(
 	// base 取值同源（GetBaseURL），详见 helper 注释。
 	body = clampOllamaCloudAnthropicMessagesMaxTokens(account, account.GetBaseURL(), body)
 
-	if err := validateNativeClaudeBodyIntegrity(ctx, c, body); err != nil {
-		return nil, nil, err
-	}
-
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, targetURL, bytes.NewReader(body))
 	if err != nil {
 		return nil, nil, err
@@ -382,6 +378,10 @@ func (s *GatewayService) buildUpstreamRequestAnthropicAPIKeyPassthrough(
 	// 账号级请求头覆写（最终生效，覆盖上面所有来源的同名头）
 	account.ApplyHeaderOverrides(req.Header)
 	filterSonnet55ToolsetBetaHeader(req.Header, body, gjson.GetBytes(body, "model").String())
+	body, err = finalizeNativeClaudeRequest(req, c, account, body)
+	if err != nil {
+		return nil, nil, err
+	}
 	prepareNativeClaudeTransport(req, c, account, body)
 
 	return req, body, nil

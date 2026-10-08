@@ -102,3 +102,36 @@ GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service \
 [`testdata/claude_code_2_1_292`](../../backend/internal/service/testdata/claude_code_2_1_292)。
 修复和实验结论见 [请求对齐报告](../../docs/claude-code-request-parity.md)
 及 [Claude 改动记录](../../docs/claude-change-log.md)。
+
+## cch 原生运行时对照
+
+完整依据与边界见 [cch 2.1.292 报告](../../docs/claude-code-cch-2.1.292.md)。
+下面在官方 Linux x64 二进制的实验副本里，仅替换 JavaScript 入口并关闭该入口 bytecode。
+原生 HTTP 和哈希代码保持原样。产物是运行时探针，不能作为未修改 CLI 的产品行为样本。
+
+从仓库根目录执行，`claude_binary` 指向上文已校验的官方 Linux x64 文件；镜像复用上文构建结果。
+
+```bash
+claude_binary=/absolute/path/to/official/linux-x64/claude
+cch_probe_dir=$(mktemp -d)/probe
+python3 .github/claude-validation/prepare_cch_probe.py "$claude_binary" "$cch_probe_dir"
+
+docker run --rm --network none \
+  --add-host api.anthropic.com:127.0.0.1 \
+  --mount "type=bind,src=$cch_probe_dir,dst=/work" \
+  --mount "type=bind,src=$cch_probe_dir/claude-runtime-probe,dst=/opt/claude-runtime-probe,readonly" \
+  --mount "type=bind,src=$PWD/.github/claude-validation/cch_runtime_lab.py,dst=/opt/cch_runtime_lab.py,readonly" \
+  --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/cch_runtime_lab.py
+
+docker run --rm --network none \
+  --mount "type=bind,src=$cch_probe_dir,dst=/work" \
+  --mount "type=bind,src=$PWD/.github/claude-validation/verify_cch_capture.py,dst=/opt/verify_cch_capture.py,readonly" \
+  --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/verify_cch_capture.py
+
+(cd backend && GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/pkg/claude ./internal/service \
+  -run 'TestCCH2292|TestClaudeNative|TestClaudeCode2292' -count=1)
+```
+
+核对器要求 81 条接收正文与已提交向量、PCAP 原始字节全部一致且内核丢包为 0。
+`runtime-probe-provenance.json` 记录二进制哈希和入口修改位置。目录内私钥只属于本地模拟服务，
+不应提交；探针只在断网容器运行。
