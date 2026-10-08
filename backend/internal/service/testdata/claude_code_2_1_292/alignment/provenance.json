@@ -1,0 +1,161 @@
+{
+  "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "version": "2.1.292",
+  "upstream": "synthetic TLS mock; no real provider acceptance",
+  "sources": [
+    {
+      "fixture": "sonnet55-api-arg.json",
+      "sha256": "d90f6123d66cc89ffd23fb88d5db169a9b531f6f30cd2baa1ef15b0df8a03f58",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/sonnet55/api-arg",
+      "raw_requests_sha256": "87f15dc8a08c3c683b2d99547ffe0f82f06a23c3a97f972e9e342e75cb17c1da",
+      "raw_responses_sha256": "7d6301d5d7bddaa82067c58eee36068d1053703b32fd672dccaea78b54bf401c"
+    },
+    {
+      "fixture": "sonnet55-compact.json",
+      "sha256": "59411924952e881d79c22e495020a8a0ff55d851e0dc557f75333cc724b71cfb",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/sonnet55/compact",
+      "raw_requests_sha256": "83464067b8dfdd597f29ad37ae0e002010c7c6f5d961e76db53cdbcec3566887",
+      "raw_responses_sha256": "3ba9d62d2a272a58fba8319020119d50f775d14dee71128b8f96da5bd9c0495a"
+    },
+    {
+      "fixture": "sonnet55-count-context.json",
+      "sha256": "6b68443cb9b2556f1f02a1e52eb6d251dfaa8534209172454af15c73eddcdfb9",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/sonnet55/count-context",
+      "raw_requests_sha256": "61fb5e33f7d2da283f86a3513fd085dd66d18d4af9f1bb9f4cea1d2fe6209c5f",
+      "raw_responses_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "fixture": "sonnet55-multi-turn.json",
+      "sha256": "ce680b5523ecda9616c029677a4fda658120bff18df4014aa82f3cd6e02c17de",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/sonnet55/multi-turn",
+      "raw_requests_sha256": "b5e53eb362728dbfa2771eaa3dd82b94e1dff680a69bfe11ae7e10bd9112421d",
+      "raw_responses_sha256": "a2218a4ecbb65a192db7eed087858485530f75609c7a33c6fd7d034aa17579ad"
+    },
+    {
+      "fixture": "sonnet55-oauth-arg.json",
+      "sha256": "b764d57729aad14584ade8bf50b1b3ba4089a2ea970fd345e5d893ab170f7e0a",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/sonnet55/oauth-arg",
+      "raw_requests_sha256": "e0bc5694470bbfe7cfc0198de7e3be49d43c7257a7d85e81c95385ee2e17581f",
+      "raw_responses_sha256": "7d6301d5d7bddaa82067c58eee36068d1053703b32fd672dccaea78b54bf401c"
+    },
+    {
+      "fixture": "sonnet55-oauth-count-context.json",
+      "sha256": "a75e28e4b21d3c8b635c0472d1808d80dd486241c9128dc4b69c2f63da2d5429",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/sonnet55/oauth-count-context",
+      "raw_requests_sha256": "a957c891e883d83dbc678d49e6d52621fff2ca377e8a672a1a597fb38b673252",
+      "raw_responses_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "fixture": "sonnet55-oauth-stream.json",
+      "sha256": "faf30fad32614092bccadc8a5d1330c8b6b485c07ae88f5482ac75f0c8b656ab",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/sonnet55/oauth-stream",
+      "raw_requests_sha256": "f2352a82727955d873f7ac86424a1f19aaa81d462fddc12ee34ff88d33d7d20e",
+      "raw_responses_sha256": "7d6301d5d7bddaa82067c58eee36068d1053703b32fd672dccaea78b54bf401c"
+    },
+    {
+      "fixture": "opus55-api-arg.json",
+      "sha256": "f1e4305a9dc042e10837133a5ad7d0021ef7901b689a48ab457b2c490f0d094f",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/opus55/api-arg",
+      "raw_requests_sha256": "3eb9cc8e4026ec316244729270353a8d562869dcea3e41e8323944ddf78ff2a6",
+      "raw_responses_sha256": "46185a57dcd243315d77ace557816559ede64bdf3eee9d4018ac216f5e1bf496"
+    },
+    {
+      "fixture": "opus55-compact.json",
+      "sha256": "a0e5b3e5982ac89412378a1a0d003debdc828103206bdbb74ada09a9ce7c2099",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/opus55/compact",
+      "raw_requests_sha256": "771299119d9ca7140651ce1649c24beea6198bfb27a2ed299cd528f3b8278d0e",
+      "raw_responses_sha256": "e4b7341bc51da09442fbde05b64121a42a02109b162ae1417ab98c8470620636"
+    },
+    {
+      "fixture": "opus55-count-context.json",
+      "sha256": "9dbc60312e225407506e666825caa4070c61876cfecab39e470a0faae1ce67e4",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/opus55/count-context",
+      "raw_requests_sha256": "f96a67c32d6c5911bc9fc35a67ac0b420820f21eb0d0ee1288ed8279aa4c4a65",
+      "raw_responses_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "fixture": "opus55-multi-turn.json",
+      "sha256": "d6a939fe80f9f897e7e7cabd9634256b1ce9e74d4eb802e9dcd9023258f93e70",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/opus55/multi-turn",
+      "raw_requests_sha256": "7ca3ac649c041a765fb433244c61f17a142c329db70d6184e3357bd4ed9efe04",
+      "raw_responses_sha256": "705d189bbaaaa57986259d500989a5d893bab86807d278d6ce4b9a3a50694123"
+    },
+    {
+      "fixture": "opus55-oauth-arg.json",
+      "sha256": "ffa6276da8b2e0a48c24c4f9f9aeb427a00804f8903095279c9ffe0b71e19437",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/opus55/oauth-arg",
+      "raw_requests_sha256": "ce2051498fde133fa99843c18732c50674631ebaba06830c3eaa43ddad4c2ad5",
+      "raw_responses_sha256": "46185a57dcd243315d77ace557816559ede64bdf3eee9d4018ac216f5e1bf496"
+    },
+    {
+      "fixture": "opus55-oauth-count-context.json",
+      "sha256": "7f0f8c8db8be0b30d3531539c73efd6c981874682e5e9b027af1daa8fb8ad97d",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/opus55/oauth-count-context",
+      "raw_requests_sha256": "97ae55016a9591a9208b9c9c1e6ef15ae3fb2089eec7002cadc2caf3bb890d15",
+      "raw_responses_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "fixture": "opus55-oauth-stream.json",
+      "sha256": "cf427b0f122f0a7e169600e5daed0303498e900d36bd1ab5f7c66b83b05422c6",
+      "source": "/Users/kingford/claude-capture/alignment-fixes-20261008/opus55/oauth-stream",
+      "raw_requests_sha256": "867356b31c6f280bc5ea5a92e479d08162eb4037ac7ac56bfbfd61b8f9f9fc70",
+      "raw_responses_sha256": "46185a57dcd243315d77ace557816559ede64bdf3eee9d4018ac216f5e1bf496"
+    },
+    {
+      "fixture": "audit-alias-sonnet.json",
+      "sha256": "23f32a0b3bf6eee0d7bb8c1be4c69a0fa306ea0c4fa98079093cbefdf6d73967",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/alias-sonnet",
+      "raw_requests_sha256": "8ff7715c4c37ce8f328a71524c4ff4e926b50edd2672765476556d4b25c38d4f",
+      "raw_responses_sha256": "7d6301d5d7bddaa82067c58eee36068d1053703b32fd672dccaea78b54bf401c"
+    },
+    {
+      "fixture": "audit-compact.json",
+      "sha256": "e0a7a6d50396828dc0f562b01c05fff2485bfd3926f0cd3ba70d12992af3db29",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/compact",
+      "raw_requests_sha256": "35eb3fd80cba5bb008acc8bdbad913284bba2b6da637f2d08b08d07f11cce48b",
+      "raw_responses_sha256": "161e0e68f520bfa0f10285f810f3faadcfde8775c5bd1d29a7b925bf3a0176f0"
+    },
+    {
+      "fixture": "audit-extra-metadata.json",
+      "sha256": "83880b744ecc3d15238e1c9904d09d13c1e299d517973414b53ad893eb612434",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/extra-metadata",
+      "raw_requests_sha256": "54507e721d5f0f0dd47e0e06e2c94f3359cb050b28060848369a11725acfb1f2",
+      "raw_responses_sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a"
+    },
+    {
+      "fixture": "audit-image-read.json",
+      "sha256": "6912c8b23a5e73ce9cca26e621fc3d6ee4c9df4024b5d4cad862846b6559becc",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/image-read",
+      "raw_requests_sha256": "211c57cbeac50807310b7768bd8763cdc7924fb0d54e60396d8e43574d438755",
+      "raw_responses_sha256": "8917bfece010f09b86d41dc706b563eafacbffbeb4831e14a38adeee6e8bbcf2"
+    },
+    {
+      "fixture": "audit-parallel-read.json",
+      "sha256": "2a061d8e6d42d50f89d581fddbf8a793e7ee5e13ce0e56fd097415b823d1b83a",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/parallel-read",
+      "raw_requests_sha256": "d87e9a9a41764b4d37264e0813e4098fb32edba77aaa907bd78f218b3fdce104",
+      "raw_responses_sha256": "1cac431f8a5d74dc77cd97981334fb13261105970643daec99506ea41c0ccc9f"
+    },
+    {
+      "fixture": "audit-resume.json",
+      "sha256": "a5b38db2da1ba8eabef880e788ff1771f1ecf2029ccc062dc8290affc04ffa37",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/resume",
+      "raw_requests_sha256": "2e34ede9c836b368e2b86a50673b0c405918eefcfb893bd57f8af4ca85ed1fe1",
+      "raw_responses_sha256": "1d895767aeda9120434ad2c2af00708c37033aaa3a04f202262fbdf9e81305da"
+    },
+    {
+      "fixture": "audit-structured-output.json",
+      "sha256": "2c9db6a96514ca891331d4cd8ac9d15ae8e273cc55e2235b63789b32e5b5774f",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/structured-output",
+      "raw_requests_sha256": "39b4916838fa8b2a1b2ae151814b4aca830431ede1e46b980b424f7ed52b3f51",
+      "raw_responses_sha256": "510b64a4113a76e2da409e722f3580e741e3a2f83fee0418138d1c68915f88c7"
+    },
+    {
+      "fixture": "audit-thinking-tool.json",
+      "sha256": "a7573bb17f9a8b1623b66255797ee3ff68e6d43ce1028888fb9e5fdce39a5e40",
+      "source": "/Users/kingford/claude-capture/extended-audit-20261008/run1/thinking-tool",
+      "raw_requests_sha256": "019d3a2c772b8c6f9f0fefa3b2ef53545965cece2c2e3b7b8b830625292ea326",
+      "raw_responses_sha256": "189bd2caa87b763303e77941344e1cf9c14c7e15772d7cd62467959c1d751a69"
+    }
+  ]
+}

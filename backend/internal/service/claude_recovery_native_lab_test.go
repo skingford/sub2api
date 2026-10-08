@@ -98,6 +98,13 @@ func (s *recoveryLabStore) FinishRecovery(_ context.Context, f RecoveryFinish) e
 	if f.Source != nil {
 		r.Source = append([]byte(nil), f.Source...)
 	}
+	if f.ResetHistory {
+		r.Checkpoint = nil
+		r.Source = append([]byte(nil), f.Source...)
+	}
+	if f.ClearRestore {
+		r.Restore = nil
+	}
 	s.rows[r.Scope] = r
 	return nil
 }
@@ -162,7 +169,10 @@ func (recoveryLabSummary) Summarize(_ context.Context, h RecoveryHistory) (Recov
 	return cp, RecoverySummaryUsage{Confirmed: true}, nil
 }
 
-type recoveryLabUpstream struct{ records []map[string]any }
+type recoveryLabUpstream struct {
+	records []map[string]any
+	reply   func(*http.Request, []byte) string
+}
 
 func (u *recoveryLabUpstream) Do(r *http.Request, _ string, account int64, _ int) (*http.Response, error) {
 	body, e := io.ReadAll(r.Body)
@@ -177,6 +187,9 @@ func (u *recoveryLabUpstream) Do(r *http.Request, _ string, account int64, _ int
 	if !strings.Contains(r.URL.Path, "count_tokens") {
 		contentType = "text/event-stream"
 		payload = "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_lab\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-4-6\",\"content\":[],\"usage\":{\"input_tokens\":10,\"output_tokens\":0}}}\n\nevent: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"OK\"}}\n\nevent: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":0}\n\nevent: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\",\"stop_sequence\":null},\"usage\":{\"output_tokens\":1}}\n\nevent: message_stop\ndata: {\"type\":\"message_stop\"}\n\n"
+	}
+	if u.reply != nil && !strings.Contains(r.URL.Path, "count_tokens") {
+		payload = u.reply(r, body)
 	}
 	return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": {contentType}}, Body: io.NopCloser(strings.NewReader(payload))}, nil
 }
@@ -194,7 +207,12 @@ func TestClaudeRecoveryNativeCLILab(t *testing.T) {
 	}
 }
 
-func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string) {
+func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string, alignmentModel ...string) {
+	model := "claude-sonnet-4-6"
+	extended := len(alignmentModel) > 0
+	if extended {
+		model = alignmentModel[0]
+	}
 	store := &recoveryLabStore{rows: map[RecoveryScope]RecoveryRow{}, sent: map[string]bool{}}
 	rc := config.ClaudeRecoveryConfig{Enabled: true, GroupIDs: []int64{7}, EncryptionKey: base64.StdEncoding.EncodeToString(make([]byte, 32)), SummaryAPIKey: "fake-summary-only", SummaryModel: "fake-model"}.WithDefaults()
 	manager := NewClaudeRecoveryService(rc, store, recoveryLabSummary{})
@@ -212,6 +230,19 @@ func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string) {
 	svc.accountRepo = accounts
 	svc.groupRepo = &mockGroupRepoForGateway{groups: map[int64]*Group{7: {ID: 7, Platform: PlatformAnthropic, Status: StatusActive, Hydrated: true}}}
 	upstream := &recoveryLabUpstream{}
+	if extended {
+		upstream.reply = func(r *http.Request, body []byte) string {
+			marker := "PRIVATE_NATIVE_A"
+			if bytes.Contains(body, []byte("PRIVATE_NATIVE_B")) {
+				marker = "PRIVATE_NATIVE_B"
+			}
+			text := "OK " + marker
+			if getHeaderRaw(r.Header, "x-claude-code-request-class") == "compaction" || recoveryLooksLikeCompactionBody(body) {
+				text = "<analysis>synthetic</analysis>\n<summary>Remember " + marker + " and preserve its instructions.</summary>"
+			}
+			return alignmentNativeStream(model, text)
+		}
+	}
 	svc.httpUpstream = upstream
 	var mu sync.Mutex
 	var problems []string
@@ -243,9 +274,23 @@ func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string) {
 			}
 		}
 		readOnly := strings.HasSuffix(r.URL.Path, "count_tokens")
-		p, e := manager.Begin(r.Context(), svc, RecoveryScope{UserID: 1, GroupID: 7, ClientSession: sid}, body, "messages", "", readOnly)
+		recoveryCtx, e := WithClaudeRecoveryRequest(r.Context(), r.Header)
+		if e != nil {
+			http.Error(w, e.Error(), 409)
+			return
+		}
+		p, e := manager.Begin(recoveryCtx, svc, RecoveryScope{UserID: 1, GroupID: 7, ClientSession: sid}, body, "messages", "", readOnly)
 		if e != nil {
 			problems = append(problems, e.Error())
+			if len(problems) == 1 {
+				t.Logf("native managed request rejected: model=%s class=%s: %v", model, r.Header.Get("x-claude-code-request-class"), e)
+				if dir := os.Getenv("CLAUDE_RECOVERY_LAB_OUTPUT"); dir != "" {
+					dir = filepath.Join(dir, model, kind)
+					if os.MkdirAll(dir, 0700) == nil {
+						_ = os.WriteFile(filepath.Join(dir, "first-rejected-body.json"), body, 0600)
+					}
+				}
+			}
 			http.Error(w, e.Error(), 409)
 			return
 		}
@@ -279,7 +324,7 @@ func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string) {
 		w.WriteHeader(rec.Code)
 		_, _ = w.Write(rec.Body.Bytes())
 	}))
-	defer server.Close()
+	t.Cleanup(server.Close)
 	type nativeProcess struct {
 		cmd    *exec.Cmd
 		in     io.WriteCloser
@@ -289,12 +334,18 @@ func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string) {
 	start := func(marker string) *nativeProcess {
 		folder := t.TempDir()
 		require.NoError(t, os.MkdirAll(filepath.Join(folder, "home"), 0700))
-		args := []string{"--bare", "--model", "claude-sonnet-4-6", "--tools", "", "--permission-mode", "default", "--strict-mcp-config", "--mcp-config", `{"mcpServers":{}}`, "--setting-sources", "", "--disable-slash-commands", "--system-prompt", "Local synthetic protocol test. Reply OK.", "--no-session-persistence", "--max-turns", "4", "--output-format", "stream-json", "--input-format", "stream-json", "--verbose", "-p"}
+		args := []string{"--bare", "--model", model, "--tools", "", "--permission-mode", "default", "--strict-mcp-config", "--mcp-config", `{"mcpServers":{}}`, "--setting-sources", "", "--system-prompt", "Local synthetic protocol test. Reply OK.", "--no-session-persistence", "--max-turns", "4", "--output-format", "stream-json", "--input-format", "stream-json", "--verbose", "-p"}
+		if !extended {
+			args = append(args, "--disable-slash-commands")
+		}
 		ctx, cancel := context.WithTimeout(context.Background(), 75*time.Second)
 		t.Cleanup(cancel)
 		cmd := exec.CommandContext(ctx, binary, args...)
 		cmd.Dir = folder
 		cmd.Env = []string{"PATH=" + os.Getenv("PATH"), "HOME=" + filepath.Join(folder, "home"), "CLAUDE_CONFIG_DIR=" + filepath.Join(folder, "config"), "ANTHROPIC_BASE_URL=" + server.URL, "ANTHROPIC_API_KEY=sk-ant-synthetic-only", "DISABLE_AUTOUPDATER=1", "DISABLE_TELEMETRY=1", "DISABLE_ERROR_REPORTING=1", "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1", "CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1", "CLAUDE_CODE_ENABLE_TELEMETRY=0", "API_TIMEOUT_MS=5000", "TERM=dumb"}
+		if extended {
+			cmd.Env = append(cmd.Env, `CLAUDE_CODE_EXTRA_METADATA={"audit_label":"`+marker+`"}`)
+		}
 		in, e := cmd.StdinPipe()
 		require.NoError(t, e)
 		out, e := cmd.StdoutPipe()
@@ -340,16 +391,38 @@ func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string) {
 	a, b := start("PRIVATE_NATIVE_A"), start("PRIVATE_NATIVE_B")
 	awaitResult(a)
 	awaitResult(b)
+	if extended {
+		for _, prompt := range []string{"/compact", "Continue after first compaction.", "/compact Keep this conversation's marker.", "Continue after second compaction."} {
+			for _, p := range []*nativeProcess{a, b} {
+				require.NoError(t, json.NewEncoder(p.in).Encode(map[string]any{"type": "user", "message": map[string]any{"role": "user", "content": prompt}}))
+			}
+			awaitResult(a)
+			awaitResult(b)
+		}
+	}
 	mu.Lock()
 	accounts.accountsByID[1].Schedulable = false
 	mu.Unlock()
 	for i, p := range []*nativeProcess{a, b} {
 		marker := []string{"PRIVATE_NATIVE_A", "PRIVATE_NATIVE_B"}[i]
 		require.NoError(t, json.NewEncoder(p.in).Encode(map[string]any{"type": "user", "message": map[string]any{"role": "user", "content": marker + " second turn. Continue and reply OK."}}))
-		require.NoError(t, p.in.Close())
+		if !extended {
+			require.NoError(t, p.in.Close())
+		}
 	}
 	awaitResult(a)
 	awaitResult(b)
+	if extended {
+		for _, prompt := range []string{"/compact", "Continue after compaction on the migrated account."} {
+			for _, p := range []*nativeProcess{a, b} {
+				require.NoError(t, json.NewEncoder(p.in).Encode(map[string]any{"type": "user", "message": map[string]any{"role": "user", "content": prompt}}))
+			}
+			awaitResult(a)
+			awaitResult(b)
+		}
+		require.NoError(t, a.in.Close())
+		require.NoError(t, b.in.Close())
+	}
 	require.NoError(t, a.cmd.Wait(), a.stderr.String())
 	require.NoError(t, b.cmd.Wait(), b.stderr.String())
 	mu.Lock()
@@ -375,13 +448,34 @@ func runClaudeRecoveryNativeCLILab(t *testing.T, binary, kind string) {
 		}
 	}
 	for marker, records := range byMarker {
-		require.Len(t, records, 2, marker)
+		want := 2
+		if extended {
+			want = 8
+		}
+		require.Len(t, records, want, marker)
 		require.Equal(t, int64(1), records[0]["account"])
-		require.Equal(t, int64(2), records[1]["account"])
-		require.NotEqual(t, records[0]["session"], records[1]["session"])
+		require.Equal(t, int64(2), records[want-1]["account"])
+		require.NotEqual(t, records[0]["session"], records[want-1]["session"])
+		if extended {
+			for _, record := range records[:5] {
+				require.Equal(t, records[0]["session"], record["session"])
+			}
+			for _, record := range records[5:] {
+				require.Equal(t, records[5]["session"], record["session"])
+				require.Equal(t, int64(2), record["account"])
+			}
+			for _, record := range records {
+				body, _ := json.Marshal(record["body"])
+				uid := gjson.GetBytes(body, "metadata.user_id").String()
+				require.Equal(t, marker, gjson.Get(uid, "audit_label").String())
+			}
+		}
 	}
 	require.Len(t, byMarker, 2)
 	if dir := os.Getenv("CLAUDE_RECOVERY_LAB_OUTPUT"); dir != "" {
+		if extended {
+			dir = filepath.Join(dir, model)
+		}
 		dir = filepath.Join(dir, kind)
 		require.NoError(t, os.MkdirAll(dir, 0700))
 		data, e := json.MarshalIndent(map[string]any{"clients": clients, "requests": upstream.records, "cross_session_leaks": 0, "errors": problems}, "", "  ")

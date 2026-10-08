@@ -1812,7 +1812,9 @@ func TestOpus55ThinkingDefaultPreservesSignedHistory(t *testing.T) {
 	require.Equal(t, string(withoutThinking), string(FilterThinkingBlocks(withoutThinking, "claude-opus-5-5")))
 	out, _ := normalizeClaudeOAuthRequestBody(body, "claude-opus-5-5", claudeOAuthNormalizeOptions{})
 	require.Equal(t, "none", gjson.GetBytes(out, "tool_choice.type").String())
-	require.False(t, gjson.GetBytes(out, "output_config.effort").Exists(), "omission uses the official medium default")
+	// The pinned 2.1.292 Opus 5.5 OAuth capture explicitly sends medium. The
+	// compatibility profile now does the same without modifying signed history.
+	require.Equal(t, "medium", gjson.GetBytes(out, "output_config.effort").String())
 	require.Equal(t, "omitted", gjson.GetBytes(out, "thinking.display").String())
 	require.JSONEq(t, gjson.GetBytes(body, "messages").Raw, gjson.GetBytes(out, "messages").Raw)
 }

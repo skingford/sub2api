@@ -1010,6 +1010,15 @@ func sanitizeAnthropicBodyForBetaTokens(body []byte, anthropicBetaHeader string)
 
 	changed := false
 
+	// The native CLI falls back to omitted display when updates are disabled.
+	// Apply policy after the final header is known and before CCH calculation.
+	if gjson.GetBytes(body, "thinking.display").String() == "updates" &&
+		!anthropicBetaTokensContains(anthropicBetaHeader, claude.BetaThinkingDisplayUpdates) {
+		if b, ok := setJSONValueBytes(body, "thinking.display", "omitted"); ok {
+			body, changed = b, true
+		}
+	}
+
 	// Native 2.1.291 emits diagnostics only while cache-diagnosis is enabled.
 	// Follow the effective header after policy filtering and account overrides;
 	// preserving the beta never creates a missing diagnostics object.
@@ -1035,7 +1044,7 @@ func sanitizeAnthropicBodyForBetaTokens(body []byte, anthropicBetaHeader string)
 
 	// fallbacks：server-side refusal fallback，仅接受 server-side-fallback beta。
 	if b, deleted := stripAnthropicBodyFieldUnlessBeta(
-		body, "fallbacks", anthropicBetaHeader, claude.BetaServerSideFallback,
+		body, "fallbacks", anthropicBetaHeader, claude.BetaServerSideFallback, claude.BetaServerSideFallbackLegacy,
 	); deleted {
 		body, changed = b, true
 	}

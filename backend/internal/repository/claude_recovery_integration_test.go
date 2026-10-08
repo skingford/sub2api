@@ -43,6 +43,52 @@ func recoveryAcquire(scope service.RecoveryScope) service.RecoveryAcquire {
 	return service.RecoveryAcquire{Scope: scope, Route: "messages", Model: "claude-sonnet-4-6", Digest: "digest", Lease: time.Minute, Retention: time.Hour}
 }
 
+func TestClaudeRecoveryCompactionCommitInvalidatesOldSummaryAndRestore(t *testing.T) {
+	ctx := context.Background()
+	repo := newAccountRepositoryWithSQL(nil, integrationDB, nil)
+	scope := recoveryTestScope(t)
+	p, e := repo.AcquireRecovery(ctx, recoveryAcquire(scope))
+	require.NoError(t, e)
+	require.NoError(t, repo.BindRecoveryAccount(ctx, *p, 1, "principal-1", false))
+	require.NoError(t, repo.MarkRecoverySent(ctx, *p))
+	require.NoError(t, repo.FinishRecovery(ctx, service.RecoveryFinish{Row: *p, State: "completed", Material: []byte("history-1"), Source: []byte("source-1"), Retention: time.Hour}))
+	job, e := repo.ClaimRecoverySummary(ctx, time.Minute, []int64{scope.GroupID}, 1)
+	require.NoError(t, e)
+	require.NotNil(t, job)
+	require.NoError(t, repo.SaveRecoverySummary(ctx, *job, []byte("checkpoint-1"), true))
+	p, e = repo.AcquireRecovery(ctx, recoveryAcquire(scope))
+	require.NoError(t, e)
+	p, e = repo.MigrateRecovery(ctx, *p, uuid.NewString(), 2, "principal-2", []byte("old-fixed-restore"), "test")
+	require.NoError(t, e)
+	require.NoError(t, repo.MarkRecoverySent(ctx, *p))
+	require.NoError(t, repo.FinishRecovery(ctx, service.RecoveryFinish{Row: *p, State: "completed", Material: []byte("history-2"), Source: []byte("source-2"), Retention: time.Hour}))
+	stale, e := repo.ClaimRecoverySummary(ctx, time.Minute, []int64{scope.GroupID}, 1)
+	require.NoError(t, e)
+	require.NotNil(t, stale)
+	p, e = repo.AcquireRecovery(ctx, recoveryAcquire(scope))
+	require.NoError(t, e)
+	require.NoError(t, repo.MarkRecoverySent(ctx, *p))
+	bad := service.RecoveryFinish{Row: *p, State: "failed", ResetHistory: true, ClearRestore: true, Material: []byte("new-history"), Retention: time.Hour}
+	require.ErrorIs(t, repo.FinishRecovery(ctx, bad), service.ErrRecoveryConflict)
+	bad.State = "completed"
+	bad.Source = []byte("new-source")
+	require.NoError(t, repo.FinishRecovery(ctx, bad))
+	require.Error(t, repo.SaveRecoverySummary(ctx, *stale, []byte("stale-checkpoint"), true))
+	query := recoveryAcquire(scope)
+	query.ReadOnly = true
+	current, e := repo.AcquireRecovery(ctx, query)
+	require.NoError(t, e)
+	require.Equal(t, p.Session, current.Session)
+	require.Equal(t, int64(2), current.AccountID)
+	require.Equal(t, []byte("new-history"), current.Material)
+	require.Equal(t, []byte("new-source"), current.Source)
+	require.Empty(t, current.Checkpoint)
+	require.Empty(t, current.Restore)
+	owner, e := repo.ClaimClaudeSessionAccountID(ctx, p.Session, 3)
+	require.NoError(t, e)
+	require.Equal(t, int64(2), owner, "compaction cannot rebind the upstream session")
+}
+
 func TestClaudeRecoveryStoreConcurrentScopeAndFence(t *testing.T) {
 	ctx := context.Background()
 	repo := newAccountRepositoryWithSQL(nil, integrationDB, nil)

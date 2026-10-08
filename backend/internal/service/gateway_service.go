@@ -458,6 +458,8 @@ var allowedHeaders = map[string]bool{
 	"x-claude-code-prompt-id":           true,
 	"x-claude-code-context-compacted":   true,
 	"x-claude-code-compaction":          true,
+	"x-cc-compaction-request":           true,
+	"x-cc-context-compacted":            true,
 	"x-claude-code-prev-tool-durations": true,
 	"traceparent":                       true,
 }

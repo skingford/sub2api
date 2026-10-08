@@ -1,0 +1,3275 @@
+{
+  "change_id": "CC-20261008-009",
+  "source_head": "93275632a6a66dfc2648e9504a7d16bcf32da5d7",
+  "release_baseline": "b4430850844263e3fd3d2d180f514099bffad04e",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "cli_version": "2.1.292",
+  "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "docker_image": "claude-validation:2.1.292-20261008",
+  "docker_image_id": "eb7d83c374af",
+  "evidence_root": "/Users/kingford/claude-capture/extended-audit-20261008",
+  "scope": "Unmodified Linux x64 CLI in network-none Docker with fake credentials and synthetic TLS responses; unchanged Go production services with test storage/network boundaries; no real provider acceptance or entitlement validation.",
+  "model_requests": 21,
+  "strict_forward_combinations": 60,
+  "strict_body_equal": 60,
+  "cases": [
+    {
+      "case": "alias-sonnet",
+      "directory": "run1/alias-sonnet",
+      "request_count": 1,
+      "summary": {
+        "case": "alias-sonnet",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "compact",
+      "directory": "run1/compact",
+      "request_count": 3,
+      "summary": {
+        "case": "compact",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 3,
+        "pcap": {
+          "http_requests": 5,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true",
+            "/v1/messages?beta=true",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "extra-metadata",
+      "directory": "run1/extra-metadata",
+      "request_count": 1,
+      "summary": {
+        "case": "extra-metadata",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "image-read",
+      "directory": "run1/image-read",
+      "request_count": 2,
+      "summary": {
+        "case": "image-read",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 2,
+        "pcap": {
+          "http_requests": 4,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "parallel-read",
+      "directory": "run1/parallel-read",
+      "request_count": 2,
+      "summary": {
+        "case": "parallel-read",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 2,
+        "pcap": {
+          "http_requests": 4,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "resume",
+      "directory": "run1/resume",
+      "request_count": 2,
+      "summary": {
+        "case": "resume",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          },
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 2,
+        "pcap": {
+          "http_requests": 6,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true",
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "structured-output",
+      "directory": "run1/structured-output",
+      "request_count": 2,
+      "summary": {
+        "case": "structured-output",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 2,
+        "pcap": {
+          "http_requests": 4,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "thinking-tool",
+      "directory": "run1/thinking-tool",
+      "request_count": 2,
+      "summary": {
+        "case": "thinking-tool",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 2,
+        "pcap": {
+          "http_requests": 4,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "api-json",
+      "directory": "modes2/api-json",
+      "request_count": 1,
+      "summary": {
+        "case": "api-json",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "oauth-json",
+      "directory": "modes2/oauth-json",
+      "request_count": 1,
+      "summary": {
+        "case": "oauth-json",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "oauth-stream",
+      "directory": "modes2/oauth-stream",
+      "request_count": 1,
+      "summary": {
+        "case": "oauth-stream",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "api-arg",
+      "directory": "modes3/api-arg",
+      "request_count": 1,
+      "summary": {
+        "case": "api-arg",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "api-stdin",
+      "directory": "modes3/api-stdin",
+      "request_count": 1,
+      "summary": {
+        "case": "api-stdin",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    },
+    {
+      "case": "oauth-arg",
+      "directory": "modes3/oauth-arg",
+      "request_count": 1,
+      "summary": {
+        "case": "oauth-arg",
+        "outcomes": [
+          {
+            "exit_code": 0,
+            "timed_out": false
+          }
+        ],
+        "model_requests": 1,
+        "pcap": {
+          "http_requests": 3,
+          "uris": [
+            "/api/claude_code/settings",
+            "/api/claude_code/policy_limits",
+            "/v1/messages?beta=true"
+          ],
+          "marker_visible": false
+        }
+      }
+    }
+  ],
+  "pcap_checks": [
+    {
+      "case": "/parallel-read",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prev-tool-durations",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/image-read",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prev-tool-durations",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/thinking-tool",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prev-tool-durations",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/compact",
+      "request_count": 3,
+      "decrypted_count": 3,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-cc-compaction-request",
+          "x-claude-code-compaction",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-cc-context-compacted",
+          "x-claude-code-context-compacted",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/resume",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        },
+        {
+          "tcp.stream": "5",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/alias-sonnet",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/extra-metadata",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/structured-output",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/api-json",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/oauth-json",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Authorization",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/oauth-stream",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Authorization",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/api-arg",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/oauth-arg",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Authorization",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/api-stdin",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    }
+  ],
+  "production_observations": [
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "output_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "output_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "output_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "output_sha256": "8bca61d04d67e11f662ef89fcdcdf905bacda885897bfb3811cb2fba6409e84d",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "parallel-read",
+      "closed_tools": true,
+      "index": 2,
+      "kind": "managed_history",
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "parallel-read",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "output_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "output_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "output_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "output_sha256": "601d7fa7be021436e4ff550de2aff8a702919ea4bb4af2367f082fb9b9082bd0",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "parallel-read",
+      "closed_tools": true,
+      "config_equal": true,
+      "extends_previous": true,
+      "index": 3,
+      "kind": "managed_history",
+      "mismatched_message_indices": null,
+      "next_messages": 3,
+      "previous_messages": 2,
+      "safe_migration_boundary": false
+    },
+    {
+      "case": "parallel-read",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "output_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "output_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "output_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "output_sha256": "d7f1405e5c585d5e4406ade94576d4a4ca04ec6356cb3bdbd57f70d5e569f4b4",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "image-read",
+      "closed_tools": true,
+      "index": 2,
+      "kind": "managed_history",
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "image-read",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "output_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "output_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "output_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "output_sha256": "292ae71bac48d18974f12ce1b3e8fdd07d648fc489a4ad4391cd62ba19b022d1",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "image-read",
+      "closed_tools": true,
+      "config_equal": true,
+      "extends_previous": true,
+      "index": 3,
+      "kind": "managed_history",
+      "mismatched_message_indices": null,
+      "next_messages": 3,
+      "previous_messages": 2,
+      "safe_migration_boundary": false
+    },
+    {
+      "case": "image-read",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "output_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "output_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "output_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "output_sha256": "c452d11296cc762c61f583000ddcafad740273a3e6f44e987674d50816b8223c",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "thinking-tool",
+      "closed_tools": true,
+      "index": 2,
+      "kind": "managed_history",
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "thinking-tool",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "output_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "output_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "output_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "output_sha256": "0038dafe403bdcede85bcc78b85658db356f18ccca6250b5556619008de4ca19",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "thinking-tool",
+      "closed_tools": true,
+      "config_equal": true,
+      "extends_previous": true,
+      "index": 3,
+      "kind": "managed_history",
+      "mismatched_message_indices": null,
+      "next_messages": 3,
+      "previous_messages": 2,
+      "safe_migration_boundary": false
+    },
+    {
+      "case": "thinking-tool",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "output_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "output_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "output_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "output_sha256": "fa21d8713a8278a880921307a3577501c3487f15d4ba455872a696ebb4e9c4b9",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "compact",
+      "closed_tools": true,
+      "index": 2,
+      "kind": "managed_history",
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "compact",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "x-cc-compaction-request: manual -> "
+      ],
+      "index": 3,
+      "input_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "output_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "x-cc-compaction-request: manual -> "
+      ],
+      "index": 3,
+      "input_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "output_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+        "x-cc-compaction-request: manual -> "
+      ],
+      "index": 3,
+      "input_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "output_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+        "x-cc-compaction-request: manual -> "
+      ],
+      "index": 3,
+      "input_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "output_sha256": "d8b6d21bc70ef0cfc35b87b4ea218a1d5fa257f5ebf1a514fd2223e5c19af465",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "compact",
+      "closed_tools": true,
+      "config_equal": true,
+      "extends_previous": true,
+      "index": 3,
+      "kind": "managed_history",
+      "mismatched_message_indices": null,
+      "next_messages": 3,
+      "previous_messages": 2,
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "compact",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "x-cc-context-compacted: manual -> "
+      ],
+      "index": 4,
+      "input_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "output_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "x-cc-context-compacted: manual -> "
+      ],
+      "index": 4,
+      "input_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "output_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+        "x-cc-context-compacted: manual -> "
+      ],
+      "index": 4,
+      "input_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "output_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+        "x-cc-context-compacted: manual -> "
+      ],
+      "index": 4,
+      "input_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "output_sha256": "61f9701634b9f046a63de9828724a84bd54d6e3796e0dbcaac2ee0ea618d136b",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "compact",
+      "closed_tools": true,
+      "config_equal": true,
+      "extends_previous": false,
+      "index": 4,
+      "kind": "managed_history",
+      "mismatched_message_indices": [
+        0
+      ],
+      "next_messages": 1,
+      "previous_messages": 4,
+      "safe_migration_boundary": true
+    },
+    {
+      "begin_error": "history rewind, compaction or branch does not match the stored conversation: conversation history or identity conflicts with its recovery record",
+      "case": "compact",
+      "index": 4,
+      "kind": "managed_service"
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "output_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "output_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "output_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "output_sha256": "af1277dc8118df53c29281736ed8c84432c85067858084c0ec523be00c38a7b8",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "resume",
+      "closed_tools": true,
+      "index": 2,
+      "kind": "managed_history",
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "resume",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [],
+      "index": 5,
+      "input_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "output_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [],
+      "index": 5,
+      "input_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "output_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 5,
+      "input_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "output_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 5,
+      "input_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "output_sha256": "65de1ee2684e6bf266d94d676eff4fe103df450e0e7eb76c64cdf6e2edf36b34",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "resume",
+      "closed_tools": true,
+      "config_equal": true,
+      "extends_previous": true,
+      "index": 5,
+      "kind": "managed_history",
+      "mismatched_message_indices": null,
+      "next_messages": 3,
+      "previous_messages": 2,
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "resume",
+      "index": 5,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "output_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "output_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "output_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "output_sha256": "dcc45832d645ea5b107f4c4c42ca8de6775db0bae1fe8c055084aa58dda3cedc",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "alias-sonnet",
+      "index": 2,
+      "kind": "managed_history",
+      "parse_error": "managed recovery requires a verified model profile"
+    },
+    {
+      "begin_error": "managed recovery requires a verified model profile",
+      "case": "alias-sonnet",
+      "index": 2,
+      "kind": "managed_service"
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "output_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "output_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "output_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "output_sha256": "92611d01954e819e309ab9dd14f01bf7f9518ee728f5c7718f15c758571f7596",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "extra-metadata",
+      "index": 2,
+      "kind": "managed_history",
+      "parse_error": "unverified metadata identity fields: conversation history or identity conflicts with its recovery record"
+    },
+    {
+      "begin_error": "unverified metadata identity fields: conversation history or identity conflicts with its recovery record",
+      "case": "extra-metadata",
+      "index": 2,
+      "kind": "managed_service"
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "output_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [],
+      "index": 2,
+      "input_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "output_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "output_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 2,
+      "input_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "output_sha256": "e318a698eb9f2144f0303951b3fc3e6a3202f2a48b77115f1750b6c18153a28b",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "structured-output",
+      "closed_tools": true,
+      "index": 2,
+      "kind": "managed_history",
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "structured-output",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "output_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "apikey",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [],
+      "index": 3,
+      "input_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "output_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "output_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "passthrough": false,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "header_differences": [
+        "anthropic-beta: claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07 -> claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+      ],
+      "index": 3,
+      "input_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "output_sha256": "b05cdbc37bb9c0286591f161201fe7e1ee26911e4e551971695d2fafb5347fef",
+      "passthrough": true,
+      "profile": "claude_2_1_292_x64",
+      "status": 200
+    },
+    {
+      "case": "structured-output",
+      "closed_tools": true,
+      "config_equal": true,
+      "extends_previous": true,
+      "index": 3,
+      "kind": "managed_history",
+      "mismatched_message_indices": null,
+      "next_messages": 3,
+      "previous_messages": 2,
+      "safe_migration_boundary": true
+    },
+    {
+      "case": "structured-output",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    }
+  ],
+  "generic_profiles": [
+    {
+      "context_management": {
+        "converted": null,
+        "native": {
+          "edits": [
+            {
+              "keep": "all",
+              "type": "clear_thinking_20251015"
+            }
+          ]
+        }
+      },
+      "conversion_mode": "generic API to OAuth",
+      "converted_beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "max_tokens": {
+        "converted": 128000,
+        "native": 128000
+      },
+      "model": "claude-sonnet-5-5",
+      "native_beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+      "output_config": {
+        "converted": null,
+        "native": {
+          "effort": "medium"
+        }
+      },
+      "reference_mode": "API key stream-json",
+      "status": 200,
+      "temperature": {
+        "converted": 1,
+        "native": null
+      },
+      "thinking": {
+        "converted": null,
+        "native": {
+          "display": "updates",
+          "type": "adaptive"
+        }
+      }
+    },
+    {
+      "context_management": {
+        "converted": {
+          "edits": [
+            {
+              "keep": "all",
+              "type": "clear_thinking_20251015"
+            }
+          ]
+        },
+        "native": {
+          "edits": [
+            {
+              "keep": "all",
+              "type": "clear_thinking_20251015"
+            }
+          ]
+        }
+      },
+      "conversion_mode": "generic API to OAuth",
+      "converted_beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "max_tokens": {
+        "converted": 32000,
+        "native": 32000
+      },
+      "model": "claude-sonnet-4-6",
+      "native_beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+      "output_config": {
+        "converted": {
+          "effort": "high"
+        },
+        "native": {
+          "effort": "high"
+        }
+      },
+      "reference_mode": "API key stream-json",
+      "status": 200,
+      "temperature": {
+        "converted": null,
+        "native": null
+      },
+      "thinking": {
+        "converted": {
+          "display": "omitted",
+          "type": "adaptive"
+        },
+        "native": {
+          "display": "updates",
+          "type": "adaptive"
+        }
+      }
+    }
+  ],
+  "mode_profiles": [
+    {
+      "case": "api-json",
+      "argv": [
+        [
+          "/opt/claude",
+          "--bare",
+          "--model",
+          "claude-sonnet-4-6",
+          "--tools",
+          "",
+          "--permission-mode",
+          "default",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--system-prompt",
+          "Local synthetic protocol test. Reply OK.",
+          "--max-turns",
+          "5",
+          "--output-format",
+          "json",
+          "--verbose",
+          "-p",
+          "--no-session-persistence",
+          "--disable-slash-commands"
+        ]
+      ],
+      "thinking": {
+        "type": "adaptive",
+        "display": "updates"
+      },
+      "beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+    },
+    {
+      "case": "oauth-json",
+      "argv": [
+        [
+          "/opt/claude",
+          "--model",
+          "claude-sonnet-4-6",
+          "--tools",
+          "",
+          "--permission-mode",
+          "default",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--system-prompt",
+          "Local synthetic protocol test. Reply OK.",
+          "--max-turns",
+          "5",
+          "--output-format",
+          "json",
+          "--verbose",
+          "-p",
+          "--no-session-persistence",
+          "--disable-slash-commands"
+        ]
+      ],
+      "thinking": {
+        "type": "adaptive",
+        "display": "updates"
+      },
+      "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,extended-cache-ttl-2025-04-11,cache-diagnosis-2026-04-07"
+    },
+    {
+      "case": "oauth-stream",
+      "argv": [
+        [
+          "/opt/claude",
+          "--model",
+          "claude-sonnet-4-6",
+          "--tools",
+          "",
+          "--permission-mode",
+          "default",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--system-prompt",
+          "Local synthetic protocol test. Reply OK.",
+          "--max-turns",
+          "5",
+          "--output-format",
+          "stream-json",
+          "--input-format",
+          "stream-json",
+          "--verbose",
+          "-p",
+          "--no-session-persistence",
+          "--disable-slash-commands"
+        ]
+      ],
+      "thinking": {
+        "type": "adaptive",
+        "display": "updates"
+      },
+      "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,extended-cache-ttl-2025-04-11,cache-diagnosis-2026-04-07"
+    },
+    {
+      "case": "api-arg",
+      "argv": [
+        [
+          "/opt/claude",
+          "--bare",
+          "--model",
+          "claude-sonnet-4-6",
+          "--tools",
+          "",
+          "--permission-mode",
+          "default",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--system-prompt",
+          "Local synthetic protocol test. Reply OK.",
+          "--max-turns",
+          "5",
+          "--output-format",
+          "json",
+          "-p",
+          "--no-session-persistence",
+          "--disable-slash-commands",
+          "--",
+          "LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK."
+        ]
+      ],
+      "thinking": {
+        "type": "adaptive",
+        "display": "omitted"
+      },
+      "beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+    },
+    {
+      "case": "api-stdin",
+      "argv": [
+        [
+          "/opt/claude",
+          "--bare",
+          "--model",
+          "claude-sonnet-4-6",
+          "--tools",
+          "",
+          "--permission-mode",
+          "default",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--system-prompt",
+          "Local synthetic protocol test. Reply OK.",
+          "--max-turns",
+          "5",
+          "--output-format",
+          "json",
+          "-p",
+          "--no-session-persistence",
+          "--disable-slash-commands"
+        ]
+      ],
+      "thinking": {
+        "type": "adaptive",
+        "display": "omitted"
+      },
+      "beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+    },
+    {
+      "case": "oauth-arg",
+      "argv": [
+        [
+          "/opt/claude",
+          "--model",
+          "claude-sonnet-4-6",
+          "--tools",
+          "",
+          "--permission-mode",
+          "default",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--system-prompt",
+          "Local synthetic protocol test. Reply OK.",
+          "--max-turns",
+          "5",
+          "--output-format",
+          "json",
+          "-p",
+          "--no-session-persistence",
+          "--disable-slash-commands",
+          "--",
+          "LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK."
+        ]
+      ],
+      "thinking": {
+        "type": "adaptive",
+        "display": "omitted"
+      },
+      "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11,cache-diagnosis-2026-04-07"
+    }
+  ],
+  "source_hashes": {
+    "backend/internal/service/gateway_service.go": "f77a9046fb6a197657332443f1933f0cc84fa4046a3b44c453a674552d8e0504",
+    "backend/internal/service/gateway_claude_2292_defaults.go": "a71a8f0659f83219edb647dee1771dda1e884e1a555aca8957179f8b4beaa426",
+    "backend/internal/service/gateway_claude_oauth_body.go": "c90f3d568c2ceb6eb14590b7a8e9b4a9217aad91d0db46cfeceabe1a3bb05674",
+    "backend/internal/service/claude_recovery_service.go": "53a5e999182854a6e0c0744339cf8a98be93d06e5b2512564672e82b0a8d478a",
+    "backend/internal/service/claude_recovery_history.go": "dde06110e67fdb740002fb16af704fdcf973031c6054b747389f5192b5c3d5d8",
+    "backend/internal/service/claude_recovery_response.go": "916516eba9052ba3991b4a31153a5fb23851874ee72ce1db0b88f128c6814613",
+    "backend/internal/handler/gateway_claude_recovery.go": "2dc15cb46e1ecbfdcd6fa7e58fa8fe6767fb20da9c46f0801bee4fe5913ba0a2",
+    "backend/internal/service/gateway_upstream_request.go": "57d359ec5b5444d24a55b96243ecf796fb9270b75bd2a6697f7c76530c3c76be",
+    ".github/claude-validation/extended_audit.py": "e259b3d091a5448b576dd9e1aa2f516b49951f6d9a57feab9be77048a9317940",
+    ".github/claude-validation/extended_audit_test.go": "62a6818c8cc75c857782ab91346fa2a1353b0f6b776ebb8d3a741b47f7e29f43"
+  },
+  "evidence_manifest": [
+    {
+      "path": "run1/alias-sonnet/requests.json",
+      "sha256": "8ff7715c4c37ce8f328a71524c4ff4e926b50edd2672765476556d4b25c38d4f",
+      "bytes": 6469
+    },
+    {
+      "path": "run1/alias-sonnet/responses.json",
+      "sha256": "7d6301d5d7bddaa82067c58eee36068d1053703b32fd672dccaea78b54bf401c",
+      "bytes": 1024
+    },
+    {
+      "path": "run1/alias-sonnet/capture.pcap",
+      "sha256": "0edcc1998ae422a47e81c7440f9afe4c876094b02774c2e6fc2c3f409b09774e",
+      "bytes": 20204
+    },
+    {
+      "path": "run1/alias-sonnet/invocation.json",
+      "sha256": "c4c6e0f65c4f9b62854fdb9c66941366514685622e769f4b2dc19d02f7a8512b",
+      "bytes": 651
+    },
+    {
+      "path": "run1/alias-sonnet/summary.json",
+      "sha256": "ed8e806480a7e0d219c78fcaf180535010d468da05284785cd9effe29c98a031",
+      "bytes": 328
+    },
+    {
+      "path": "run1/alias-sonnet/tcpdump.log",
+      "sha256": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+      "bytes": 163
+    },
+    {
+      "path": "run1/compact/requests.json",
+      "sha256": "35eb3fd80cba5bb008acc8bdbad913284bba2b6da637f2d08b08d07f11cce48b",
+      "bytes": 30781
+    },
+    {
+      "path": "run1/compact/responses.json",
+      "sha256": "161e0e68f520bfa0f10285f810f3faadcfde8775c5bd1d29a7b925bf3a0176f0",
+      "bytes": 3066
+    },
+    {
+      "path": "run1/compact/capture.pcap",
+      "sha256": "0549c1040b4f1a7ad8877753048a9fc303fabc5f95d097a02184fb0f00debb99",
+      "bytes": 35038
+    },
+    {
+      "path": "run1/compact/invocation.json",
+      "sha256": "9b7c7da56758da8f2a9018ce904bef5b9ac517ac5a02e6c7e9675dc77dce6371",
+      "bytes": 628
+    },
+    {
+      "path": "run1/compact/summary.json",
+      "sha256": "9917b2f3dea3ffb6e3f8ee2a69f8859c6a8a2773a63ee1da7e8a12f6f6dcbe2d",
+      "bytes": 387
+    },
+    {
+      "path": "run1/compact/tcpdump.log",
+      "sha256": "6cd8789f74931a22fed9ede992e0523691edbd9cd4dc431c2e842b22276a01c8",
+      "bytes": 163
+    },
+    {
+      "path": "run1/extra-metadata/requests.json",
+      "sha256": "54507e721d5f0f0dd47e0e06e2c94f3359cb050b28060848369a11725acfb1f2",
+      "bytes": 6221
+    },
+    {
+      "path": "run1/extra-metadata/responses.json",
+      "sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+      "bytes": 1024
+    },
+    {
+      "path": "run1/extra-metadata/capture.pcap",
+      "sha256": "ab0e39284bb9bb658c385a54bd369f3b45b8ff50e89b4d0f62e46e865ee615a2",
+      "bytes": 20065
+    },
+    {
+      "path": "run1/extra-metadata/invocation.json",
+      "sha256": "6780c89bbb4f40bdde747a82bff81c56e6ebe36affa0293d80f77298867933b5",
+      "bytes": 662
+    },
+    {
+      "path": "run1/extra-metadata/summary.json",
+      "sha256": "3f722f7b4181970cf5f87fada4050a094c62a69d885393f26197e036b7dcb862",
+      "bytes": 330
+    },
+    {
+      "path": "run1/extra-metadata/tcpdump.log",
+      "sha256": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+      "bytes": 163
+    },
+    {
+      "path": "run1/image-read/requests.json",
+      "sha256": "211c57cbeac50807310b7768bd8763cdc7924fb0d54e60396d8e43574d438755",
+      "bytes": 16650
+    },
+    {
+      "path": "run1/image-read/responses.json",
+      "sha256": "8917bfece010f09b86d41dc706b563eafacbffbeb4831e14a38adeee6e8bbcf2",
+      "bytes": 2162
+    },
+    {
+      "path": "run1/image-read/capture.pcap",
+      "sha256": "dd927a4ceb69ab91e4b26dc1ac087c7a0ae6976145e217a758247a9f7ef2b365",
+      "bytes": 26058
+    },
+    {
+      "path": "run1/image-read/invocation.json",
+      "sha256": "40fe1f53271f450974296e805e88595d42bd67e946b76408959009c7e0954484",
+      "bytes": 704
+    },
+    {
+      "path": "run1/image-read/summary.json",
+      "sha256": "5f563d4bd4090ad6952b8554aac085457e9e0733abc21302d8db389d83fd212e",
+      "bytes": 358
+    },
+    {
+      "path": "run1/image-read/tcpdump.log",
+      "sha256": "f1643e511fb446c63b1335b4997b667ba785e24941dfd41aba5c55dd0473662e",
+      "bytes": 163
+    },
+    {
+      "path": "run1/parallel-read/requests.json",
+      "sha256": "d87e9a9a41764b4d37264e0813e4098fb32edba77aaa907bd78f218b3fdce104",
+      "bytes": 16945
+    },
+    {
+      "path": "run1/parallel-read/responses.json",
+      "sha256": "1cac431f8a5d74dc77cd97981334fb13261105970643daec99506ea41c0ccc9f",
+      "bytes": 2659
+    },
+    {
+      "path": "run1/parallel-read/capture.pcap",
+      "sha256": "a003083c081a9f505070e9e9a03060f624266b51c25de2ea2f405965aaf4f3fc",
+      "bytes": 26619
+    },
+    {
+      "path": "run1/parallel-read/invocation.json",
+      "sha256": "40fe1f53271f450974296e805e88595d42bd67e946b76408959009c7e0954484",
+      "bytes": 704
+    },
+    {
+      "path": "run1/parallel-read/summary.json",
+      "sha256": "7e133c5ee5e9ef65cb64d5d431b18fac891125be18b0c0cff758570527d358d1",
+      "bytes": 361
+    },
+    {
+      "path": "run1/parallel-read/tcpdump.log",
+      "sha256": "f1643e511fb446c63b1335b4997b667ba785e24941dfd41aba5c55dd0473662e",
+      "bytes": 163
+    },
+    {
+      "path": "run1/resume/requests.json",
+      "sha256": "2e34ede9c836b368e2b86a50673b0c405918eefcfb893bd57f8af4ca85ed1fe1",
+      "bytes": 12710
+    },
+    {
+      "path": "run1/resume/responses.json",
+      "sha256": "1d895767aeda9120434ad2c2af00708c37033aaa3a04f202262fbdf9e81305da",
+      "bytes": 2045
+    },
+    {
+      "path": "run1/resume/capture.pcap",
+      "sha256": "13e905e1bf074a3367ea4d193c35b8fc9328cd4f8f7b2efaa49466c07429a5ce",
+      "bytes": 40224
+    },
+    {
+      "path": "run1/resume/invocation.json",
+      "sha256": "5f9e89351cadd8e61c506ff5d6039ba5293600f0799a29c944e43b6445eea5c5",
+      "bytes": 1304
+    },
+    {
+      "path": "run1/resume/summary.json",
+      "sha256": "4c0deb43a7a4e30b62e4382ab4be74440de5ca0dc87f75d385dfb434ff2dc6eb",
+      "bytes": 489
+    },
+    {
+      "path": "run1/resume/tcpdump.log",
+      "sha256": "4794b97ec2743d5bf0ca5c836e72bba8a7d523fcc7a51c891dad62ea455509ee",
+      "bytes": 164
+    },
+    {
+      "path": "run1/structured-output/requests.json",
+      "sha256": "39b4916838fa8b2a1b2ae151814b4aca830431ede1e46b980b424f7ed52b3f51",
+      "bytes": 12635
+    },
+    {
+      "path": "run1/structured-output/responses.json",
+      "sha256": "510b64a4113a76e2da409e722f3580e741e3a2f83fee0418138d1c68915f88c7",
+      "bytes": 2045
+    },
+    {
+      "path": "run1/structured-output/capture.pcap",
+      "sha256": "4581a4b5d67bde574e6d77774e2a5cd3d6d477ce75a567826d7ba4cf0df26fba",
+      "bytes": 24438
+    },
+    {
+      "path": "run1/structured-output/invocation.json",
+      "sha256": "25762a1785690e67a202f48da223a1e3e731cb4e8cbe363125049b72dfb0a4db",
+      "bytes": 785
+    },
+    {
+      "path": "run1/structured-output/summary.json",
+      "sha256": "a4ec800c90ce4bed42df9809ed74083c502e0d3ca73e448a4f5eb35ef79a460a",
+      "bytes": 365
+    },
+    {
+      "path": "run1/structured-output/tcpdump.log",
+      "sha256": "f1643e511fb446c63b1335b4997b667ba785e24941dfd41aba5c55dd0473662e",
+      "bytes": 163
+    },
+    {
+      "path": "run1/thinking-tool/requests.json",
+      "sha256": "019d3a2c772b8c6f9f0fefa3b2ef53545965cece2c2e3b7b8b830625292ea326",
+      "bytes": 16559
+    },
+    {
+      "path": "run1/thinking-tool/responses.json",
+      "sha256": "189bd2caa87b763303e77941344e1cf9c14c7e15772d7cd62467959c1d751a69",
+      "bytes": 2772
+    },
+    {
+      "path": "run1/thinking-tool/capture.pcap",
+      "sha256": "d97a693454023c8baabb0f8c33a0ced2b6df2508c9f63b615d89f765637e2ef5",
+      "bytes": 26602
+    },
+    {
+      "path": "run1/thinking-tool/invocation.json",
+      "sha256": "40fe1f53271f450974296e805e88595d42bd67e946b76408959009c7e0954484",
+      "bytes": 704
+    },
+    {
+      "path": "run1/thinking-tool/summary.json",
+      "sha256": "aaa837d84d8bcb982d0fc4bdf3d098944e87b03dfb2474408fd68bcda6d9845a",
+      "bytes": 361
+    },
+    {
+      "path": "run1/thinking-tool/tcpdump.log",
+      "sha256": "f1643e511fb446c63b1335b4997b667ba785e24941dfd41aba5c55dd0473662e",
+      "bytes": 163
+    },
+    {
+      "path": "modes2/api-json/requests.json",
+      "sha256": "9d5da6e235e2a46232737ddf2de5395dbfb81b74af38dc720bed9bf1716cfdc0",
+      "bytes": 6124
+    },
+    {
+      "path": "modes2/api-json/responses.json",
+      "sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+      "bytes": 1024
+    },
+    {
+      "path": "modes2/api-json/capture.pcap",
+      "sha256": "1f29ae5564793013c90a34c850405ae9d6af0399bc28096d3c40d7f137ba06d2",
+      "bytes": 20029
+    },
+    {
+      "path": "modes2/api-json/invocation.json",
+      "sha256": "13acff055f7db4dec702844ddd135ea10bd2cba826eae2804072aa0bb00529ee",
+      "bytes": 610
+    },
+    {
+      "path": "modes2/api-json/summary.json",
+      "sha256": "4079c8bd4ab575122c12bea4a5c9da4e7f2c1a36bc86a66709d37bac2356e38a",
+      "bytes": 324
+    },
+    {
+      "path": "modes2/api-json/tcpdump.log",
+      "sha256": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+      "bytes": 163
+    },
+    {
+      "path": "modes2/oauth-json/requests.json",
+      "sha256": "76cfc752398142fd2c8c16fc6edb2663d623546fe6e560c4f3f73dbb72374e01",
+      "bytes": 9049
+    },
+    {
+      "path": "modes2/oauth-json/responses.json",
+      "sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+      "bytes": 1024
+    },
+    {
+      "path": "modes2/oauth-json/capture.pcap",
+      "sha256": "ebe5c00987de544e8839b7cdb9919e32e250f4e07e295f72dedc53cd2bc5cba1",
+      "bytes": 21716
+    },
+    {
+      "path": "modes2/oauth-json/invocation.json",
+      "sha256": "c78f8395649f6a4ce0e58c58b709b8255fd9b0e997237418b48f7bdcba0f1021",
+      "bytes": 596
+    },
+    {
+      "path": "modes2/oauth-json/summary.json",
+      "sha256": "942e4e7a466568e9df9907180e6bc712a12c4d805519fbc4c5ae523e1ddb69c3",
+      "bytes": 326
+    },
+    {
+      "path": "modes2/oauth-json/tcpdump.log",
+      "sha256": "5612641b0b7af221feb0a7bc171bbe5e8840c58a8a8a57f06ca5cb42a53b9d9e",
+      "bytes": 163
+    },
+    {
+      "path": "modes2/oauth-stream/requests.json",
+      "sha256": "93f6e9ffd6cfd9f9de694b2f3094c737eae46d76c8ab28cd04a07eee6553b4f8",
+      "bytes": 9054
+    },
+    {
+      "path": "modes2/oauth-stream/responses.json",
+      "sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+      "bytes": 1024
+    },
+    {
+      "path": "modes2/oauth-stream/capture.pcap",
+      "sha256": "92f295424253484b066c1555a4d267bdfb3bb2f2975ee5e6ea4e923cccf08814",
+      "bytes": 21716
+    },
+    {
+      "path": "modes2/oauth-stream/invocation.json",
+      "sha256": "df7becc35af67064b2a2daef9c866c8cb14618c6a80398605fe50678ae0d4020",
+      "bytes": 648
+    },
+    {
+      "path": "modes2/oauth-stream/summary.json",
+      "sha256": "1a4c88120e735b74e44b9d790fde053c9f71bf665caf306506bfbf95317264b2",
+      "bytes": 328
+    },
+    {
+      "path": "modes2/oauth-stream/tcpdump.log",
+      "sha256": "5612641b0b7af221feb0a7bc171bbe5e8840c58a8a8a57f06ca5cb42a53b9d9e",
+      "bytes": 163
+    },
+    {
+      "path": "modes3/api-arg/requests.json",
+      "sha256": "6a6065cff42634ee47d67ab65369b712fdcdc757aff814d1e495a9a85912cae1",
+      "bytes": 6080
+    },
+    {
+      "path": "modes3/api-arg/responses.json",
+      "sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+      "bytes": 1024
+    },
+    {
+      "path": "modes3/api-arg/capture.pcap",
+      "sha256": "a79c05e03966799c9c6d4fdb138b38b59cccdbcb17b6f9d04c4d0577b40b4293",
+      "bytes": 19991
+    },
+    {
+      "path": "modes3/api-arg/invocation.json",
+      "sha256": "3c1ad04dc19cfa704b68a93320d2e5a7a80d65216a9a532853e9e26d661e7914",
+      "bytes": 674
+    },
+    {
+      "path": "modes3/api-arg/summary.json",
+      "sha256": "04c84cffc9ef8101dbe6211960e8cdc6b0d675817eb7f895cbd3c98ed3de94fc",
+      "bytes": 323
+    },
+    {
+      "path": "modes3/api-arg/tcpdump.log",
+      "sha256": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+      "bytes": 163
+    },
+    {
+      "path": "modes3/api-stdin/requests.json",
+      "sha256": "ee18598036829144b8a655f1da55ca7776ab4e0e5eebb1bc896d0462f8c8190c",
+      "bytes": 6091
+    },
+    {
+      "path": "modes3/api-stdin/responses.json",
+      "sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+      "bytes": 1024
+    },
+    {
+      "path": "modes3/api-stdin/capture.pcap",
+      "sha256": "5e61d5f32b02b9905f9b776ae75d0530419d3c2252030691b3f30ee04ddc18d5",
+      "bytes": 19993
+    },
+    {
+      "path": "modes3/api-stdin/invocation.json",
+      "sha256": "073c6a116c174c617f656c66be7dffe9787afacc6727f0b5733fc1526f428a1f",
+      "bytes": 591
+    },
+    {
+      "path": "modes3/api-stdin/summary.json",
+      "sha256": "b774a578f37b3fc902130fc887d478e62512622f7f7f7e6f596d6d949e834a69",
+      "bytes": 325
+    },
+    {
+      "path": "modes3/api-stdin/tcpdump.log",
+      "sha256": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+      "bytes": 163
+    },
+    {
+      "path": "modes3/oauth-arg/requests.json",
+      "sha256": "6ef443c4c497ae81dfab21c0efe2606e7c8fd8752bcd265cf30a08777c9f4f0d",
+      "bytes": 9003
+    },
+    {
+      "path": "modes3/oauth-arg/responses.json",
+      "sha256": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+      "bytes": 1024
+    },
+    {
+      "path": "modes3/oauth-arg/capture.pcap",
+      "sha256": "55293672054ba3ade0c9e702150b9a729de9cdc81b1e0965d427fe5835290999",
+      "bytes": 21349
+    },
+    {
+      "path": "modes3/oauth-arg/invocation.json",
+      "sha256": "df660379d376dd1edf4f0b139052506c67a5f65773bfa7bb16421eb2ff71b76a",
+      "bytes": 660
+    },
+    {
+      "path": "modes3/oauth-arg/summary.json",
+      "sha256": "0750bd2780500cb2c4b4f244a794737551e7b2f95f6a3063a6fbc92b725abd21",
+      "bytes": 325
+    },
+    {
+      "path": "modes3/oauth-arg/tcpdump.log",
+      "sha256": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+      "bytes": 163
+    }
+  ],
+  "limitations": [
+    "Fresh run covers HTTP/1.1 Linux x64 only, not new proxy or full ClientHello equivalence.",
+    "Managed flow uses test storage, not PostgreSQL or full deployed handlers.",
+    "Synthetic thinking signature is not provider verified.",
+    "Structured-output CLI exited successfully without a structured_output result; schema fulfillment is not proven.",
+    "Initial modes capture aborted because verbose JSON output is an array; corrected parser and reran in new modes2 directory.",
+    "No full unit, integration or lint rerun for report-only changes."
+  ],
+  "explicit_display": [
+    {
+      "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "explicit_beta": false,
+      "status": 200,
+      "thinking": {
+        "display": "updates",
+        "type": "adaptive"
+      }
+    },
+    {
+      "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "explicit_beta": true,
+      "status": 200,
+      "thinking": {
+        "display": "updates",
+        "type": "adaptive"
+      }
+    }
+  ],
+  "test_commands": [
+    {
+      "command": "GOTOOLCHAIN=go1.27.0 go test -overlay=<audit>/overlay.json -tags=unit ./internal/service -run ^TestExtendedNative -count=1 -v",
+      "result": "PASS (audit capture and generic profiles; before final explicit-display test was added)",
+      "log": "analysis/production-audit-final.log"
+    },
+    {
+      "command": "GOTOOLCHAIN=go1.27.0 go test -overlay=<audit>/overlay.json -tags=unit ./internal/service -run ^TestExtendedNativeExplicitDisplay$ -count=1 -v",
+      "result": "PASS (both omitted and explicit incoming beta observed)",
+      "log": "analysis/explicit-display.log"
+    }
+  ]
+}

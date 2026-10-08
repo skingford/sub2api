@@ -276,6 +276,9 @@ func (r *accountRepository) FinishRecovery(ctx context.Context, f service.Recove
 	if f.State != "completed" && f.State != "failed" && f.State != "uncertain" {
 		return service.ErrRecoveryConflict
 	}
+	if (f.ResetHistory || f.ClearRestore) && (f.State != "completed" || len(f.Material) == 0 || (f.ClearRestore && !f.ResetHistory)) {
+		return service.ErrRecoveryConflict
+	}
 	if e = recoveryAffected(tx.ExecContext(ctx, `UPDATE claude_recovery_operations SET state=$3,result=$4 WHERE id=$1 AND conversation_id=$2 AND state IN ('prepared','sent')`, f.Row.Operation, f.Row.ID, f.State, f.Result)); e != nil {
 		return e
 	}
@@ -284,11 +287,20 @@ func (r *accountRepository) FinishRecovery(ctx context.Context, f service.Recove
 		state = "uncertain"
 	}
 	_, e = tx.ExecContext(ctx, `UPDATE claude_recovery_conversations SET state=$2,lease_token=NULL,lease_until=NULL,
- material=COALESCE($3,material),source=COALESCE($4,source),source_version=source_version+CASE WHEN $4::bytea IS NULL THEN 0 ELSE 1 END,
- summary_state=CASE WHEN $4::bytea IS NULL THEN summary_state ELSE 'pending' END,migration_blocked=migration_blocked OR $5,
- expires_at=NOW()+$6*INTERVAL '1 second' WHERE id=$1`, f.Row.ID, state, f.Material, f.Source, f.BlockMigration, f.Retention.Seconds())
+ material=COALESCE($3,material),source=CASE WHEN $7 THEN $4 ELSE COALESCE($4,source) END,
+ source_version=source_version+CASE WHEN $4::bytea IS NOT NULL OR $7 THEN 1 ELSE 0 END,
+ checkpoint=CASE WHEN $7 THEN NULL ELSE checkpoint END,checkpoint_version=CASE WHEN $7 THEN 0 ELSE checkpoint_version END,
+ summary_lease=CASE WHEN $7 THEN NULL ELSE summary_lease END,summary_lease_until=CASE WHEN $7 THEN NULL ELSE summary_lease_until END,
+ summary_state=CASE WHEN $7 AND $4::bytea IS NULL THEN 'idle' WHEN $4::bytea IS NOT NULL THEN 'pending' ELSE summary_state END,
+ migration_blocked=migration_blocked OR $5,
+ expires_at=NOW()+$6*INTERVAL '1 second' WHERE id=$1`, f.Row.ID, state, f.Material, f.Source, f.BlockMigration, f.Retention.Seconds(), f.ResetHistory)
 	if e != nil {
 		return e
+	}
+	if f.ClearRestore {
+		if e = recoveryAffected(tx.ExecContext(ctx, `UPDATE claude_recovery_segments SET restore=NULL WHERE session_id=$1 AND conversation_id=$2 AND generation=$3`, f.Row.Session, f.Row.ID, f.Row.Generation)); e != nil {
+			return e
+		}
 	}
 	return tx.Commit()
 }

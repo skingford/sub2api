@@ -73,6 +73,12 @@ func recoveryMessageHash(raw json.RawMessage, route string) string {
 		if text, ok := m["reasoning_content"].(string); ok && text != "" {
 			out["reasoning_content"] = text
 		}
+		// Native 5.5 control messages are part of the historical contract too.
+		for _, key := range []string{"output_config", "tools", "clear_at"} {
+			if value, exists := m[key]; exists {
+				out[key] = value
+			}
+		}
 		m = out
 	} else if route == "responses" {
 		delete(m, "id")

@@ -98,7 +98,12 @@ func (h *GatewayHandler) prepareClaudeRecovery(c *gin.Context, parsed *service.P
 		return false
 	}
 	c.Header("X-Sub2API-Session-Id", sid)
-	exchange, err := m.Begin(c.Request.Context(), h.gatewayService, scope, *body, route, c.GetHeader("Idempotency-Key"), readOnly)
+	recoveryCtx, err := service.WithClaudeRecoveryRequest(c.Request.Context(), c.Request.Header)
+	if err != nil {
+		h.errorResponse(c, 409, "invalid_request_error", "Conflicting or unverified compaction markers")
+		return false
+	}
+	exchange, err := m.Begin(recoveryCtx, h.gatewayService, scope, *body, route, c.GetHeader("Idempotency-Key"), readOnly)
 	if err != nil {
 		status := http.StatusServiceUnavailable
 		message := "Managed recovery unavailable; retry later or start a new conversation"

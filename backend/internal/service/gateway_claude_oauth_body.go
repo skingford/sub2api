@@ -269,7 +269,7 @@ func normalizeClaudeOAuthRequestBody(body []byte, modelID string, opts claudeOAu
 		}
 	}
 
-	verifiedModel := modelID == "claude-sonnet-4-6" || modelID == "claude-opus-4-6" || modelID == "claude-haiku-4-5-20251001"
+	verifiedModel := claude2292VerifiedModel(modelID)
 	if verifiedModel && !opts.countTokens {
 		defaults := claude2292ModelDefaults(out, modelID)
 		if !bytes.Equal(defaults, out) {

@@ -1,6 +1,6 @@
 # Claude 托管会话恢复与隔离
 
-更新：2026-10-08。实现记录 CC-20261008-008；基线 release `b4430850844263e3fd3d2d180f514099bffad04e`，上游 `3f1a2ea0`。
+更新：2026-10-08。实现记录 CC-20261008-008，扩展修复 CC-20261008-010；基线 release `b4430850844263e3fd3d2d180f514099bffad04e`，上游 `3f1a2ea0`。
 
 ## 行为与约束
 
@@ -110,10 +110,14 @@ cch 仍在最终正文上计算。
 - 单次捕获用于核对 / 重放的响应上限为 2 MiB，超出时停止自动恢复；不会假装保存了完整回复。
 - 自动恢复不能保证摘要无损，也不能保证新模型永远不再提出相似工具操作；外部工具的幂等仍由执行端负责。
 
-当前支持固定模型 `claude-sonnet-4-6`、`claude-opus-4-6`、`claude-haiku-4-5-20251001`，以及 CLI 2.1.292。
+当前支持固定模型 `claude-sonnet-4-6`、`claude-opus-4-6`、`claude-haiku-4-5-20251001`、`claude-sonnet-5-5`、`claude-opus-5-5`，以及 CLI 2.1.292。
 Messages、Chat Completions、Responses 各自可使用托管会话；同一逻辑对话不跨协议格式 / 模型切换。
 Responses 必须提供完整 input，不接受无法还原的 previous_response_id。多候选回答、未验证版本、
-子代理 / 远程会话、辅助生成、历史编辑与不能匹配的 /compact 或 /resume 路径会停止自动恢复。
+子代理 / 远程会话、辅助生成、历史编辑与不能匹配的 /resume 路径会停止自动恢复。
+原生 /compact 支持已记录历史的前缀摘要与已知最近回复保留，包含自定义 base URL 省略分类头的情况；
+只有摘要确由本会话生成且新历史通过核对才能继续。未验证的截断和保留格式仍会拒绝。
+普通扩展 metadata 在身份改写时保留；parent_session_id / tk 等分支、远程身份不在支持范围。
+详见 [扩展对齐修复](claude-alignment-fixes.md)。
 严格模式保留既有行为，不受这些托管模式的支持范围限制。
 
 ## 部署、保留和回滚
@@ -135,3 +139,8 @@ Responses 必须提供完整 input，不接受无法还原的 previous_response_
 - 原生实验使用测试存储端口和模拟上游；数据库并发 / 持久性另外使用真实 PostgreSQL 容器验证。这不等同于真实服务端验收。
 - 完整 unit 57 个包、integration 51 个包通过，完整 / 受影响包 lint 0 issues；最终保留清理与幂等键哈希调整另有专项复验。
 - [结构化验证与源码哈希](claude-managed-recovery-validation.json)。本机 `claude-capture/managed-recovery-20261008/` 保存实验、原始日志和构建产物。原生恢复实验当前使用 Sonnet 4.6；其他两个模型沿用已有参数配置及通用恢复逻辑，未宣称新的真实服务端验收。
+
+上述是 CC-20261008-008 的原始验证。CC-20261008-010 追加 Sonnet / Opus 5.5 和连续压缩：
+三个模型、两种上游认证、12 条独立 CLI 对话，共 96 次生成和 24 次计数，包含迁移后的再次压缩。
+新证据及当前代码哈希见 [扩展修复验证](claude-alignment-validation.json)。旧版不识别新保存的待确认摘要，
+应统一部署修复后再使用这项压缩能力。

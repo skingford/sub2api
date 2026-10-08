@@ -122,6 +122,8 @@ func (m *ClaudeRecoveryService) Begin(ctx context.Context, g *GatewayService, sc
 		return nil, e
 	}
 	p = &ClaudeRecoveryExchange{Row: *row, History: h, Body: body, ReadOnly: readOnly, manager: m}
+	initialSession := row.Session
+	previousRestore := len(row.Restore) > 0
 	if len(row.Replay) > 0 {
 		var replay RecoveryReplay
 		if e = m.cipher.open(*row, "replay:"+key, row.Replay, &replay); e != nil {
@@ -157,9 +159,26 @@ func (m *ClaudeRecoveryService) Begin(ctx context.Context, g *GatewayService, sc
 				}
 			}
 		}
-		if !readOnly && !recoveryHistoryExtends(old, h) {
-			return p, fmt.Errorf("history rewind, compaction or branch does not match the stored conversation: %w", ErrRecoveryConflict)
+		if !readOnly {
+			if recoveryIsCompactionRequest(ctx, body) {
+				prefix, err := recoveryCompactionPrefix(old, h)
+				if err != nil {
+					return p, err
+				}
+				p.compactionBase, p.compactionPrefix = &old, prefix
+			} else if !recoveryHistoryExtends(old, h) {
+				if !recoveryAcceptCompaction(old, h) && !recoveryCompactionContinuation(old, h) {
+					return p, fmt.Errorf("history rewind, compaction or branch does not match the stored conversation: %w", ErrRecoveryConflict)
+				}
+				p.resetHistory = true
+				// Checkpoints and fixed restore prefixes refer to the previous
+				// client history. Do not apply them to the verified replacement.
+				row.Checkpoint, row.Restore = nil, nil
+				p.Row.Checkpoint, p.Row.Restore = nil, nil
+			}
 		}
+	} else if recoveryCompactionKind(ctx) != "" {
+		return p, fmt.Errorf("compaction requires a recorded conversation: %w", ErrRecoveryConflict)
 	} else if recoveryHasOpaqueHistory(h) {
 		return p, fmt.Errorf("a new managed conversation cannot import opaque signed history")
 	}
@@ -192,7 +211,7 @@ func (m *ClaudeRecoveryService) Begin(ctx context.Context, g *GatewayService, sc
 	if row.AccountID > 0 {
 		account, lookupErr := g.accountRepo.GetByID(ctx, row.AccountID)
 		if recoveryAccountUnavailable(account, lookupErr) {
-			if readOnly || row.MigrationBlocked || !recoverySafeBoundary(h) {
+			if readOnly || p.compactionBase != nil || row.MigrationBlocked || !recoverySafeBoundary(h) {
 				return p, fmt.Errorf("bound account is unavailable outside an automatic recovery boundary")
 			}
 			cp, e := m.checkpointForMigration(ctx, *row, h)
@@ -226,6 +245,7 @@ func (m *ClaudeRecoveryService) Begin(ctx context.Context, g *GatewayService, sc
 			return p, fmt.Errorf("upstream account identity changed; start a new conversation")
 		}
 	}
+	p.clearRestore = p.resetHistory && previousRestore && initialSession == p.Row.Session
 	if len(p.Row.Restore) > 0 {
 		var cp RecoveryCheckpoint
 		if e = m.cipher.open(p.Row, "restore:"+p.Row.Session, p.Row.Restore, &cp); e != nil {
@@ -382,7 +402,8 @@ func (m *ClaudeRecoveryService) worker() {
 }
 
 func recoveryRewriteSession(body []byte, session, account string) ([]byte, error) {
-	uid := ParseMetadataUserID(gjson.GetBytes(body, "metadata.user_id").String())
+	raw := gjson.GetBytes(body, "metadata.user_id").String()
+	uid := ParseMetadataUserID(raw)
 	if uid == nil {
 		return body, nil
 	}
@@ -392,11 +413,23 @@ func recoveryRewriteSession(body []byte, session, account string) ([]byte, error
 	} else if account != "" {
 		uid.AccountUUID = account
 	}
-	version := "2.1.292"
-	if !uid.IsNewFormat {
-		version = "2.1.0"
+	if uid.IsNewFormat {
+		if e := recoveryUniqueJSON([]byte(raw)); e != nil {
+			return nil, e
+		}
+		// Patch only the two gateway-owned identity values. Client extension
+		// metadata remains opaque and belongs only to this request/scope.
+		next, e := sjson.Set(raw, "session_id", uid.SessionID)
+		if e != nil {
+			return nil, e
+		}
+		next, e = sjson.Set(next, "account_uuid", uid.AccountUUID)
+		if e != nil {
+			return nil, e
+		}
+		return sjson.SetBytes(body, "metadata.user_id", next)
 	}
-	return sjson.SetBytes(body, "metadata.user_id", FormatMetadataUserID(uid.DeviceID, uid.AccountUUID, uid.SessionID, version))
+	return sjson.SetBytes(body, "metadata.user_id", FormatMetadataUserID(uid.DeviceID, uid.AccountUUID, uid.SessionID, "2.1.0"))
 }
 func (p *ClaudeRecoveryExchange) BeforeSend(ctx context.Context, a *Account) error {
 	if p.LeaseLost.Load() || !recoveryAccountSupported(a) || !recoveryAccountInScope(a, p.Row.Scope) || !recoveryAccountModelCompatible(a, p.History.Model) {
@@ -443,6 +476,17 @@ func (p *ClaudeRecoveryExchange) Finish(ctx context.Context, status int, headers
 			f.State = "uncertain"
 			return p.manager.store.FinishRecovery(ctx, f)
 		}
+		if p.compactionBase != nil {
+			summary, err := recoveryCompactionReply(confirmed)
+			if err != nil {
+				f.State = "uncertain"
+				return p.manager.store.FinishRecovery(ctx, f)
+			}
+			reply := confirmed.Messages[len(confirmed.Messages)-1]
+			confirmed = *p.compactionBase
+			confirmed.Compaction = &RecoveryCompaction{Summary: summary, Prefix: p.compactionPrefix,
+				InputPrefix: len(p.History.Messages) - 1, ContinuationTail: []json.RawMessage{p.History.Messages[len(p.History.Messages)-1], reply}}
+		}
 		if raw, marshalErr := json.Marshal(confirmed); marshalErr != nil || len(raw) > p.manager.cfg.MaxHistoryBytes {
 			f.State = "uncertain"
 			return p.manager.store.FinishRecovery(ctx, f)
@@ -453,12 +497,13 @@ func (p *ClaudeRecoveryExchange) Finish(ctx context.Context, status int, headers
 		}
 		source := confirmed
 		source.Messages = append(append([]json.RawMessage(nil), confirmed.Messages...), json.RawMessage(`{"role":"user","content":""}`))
-		if recoverySafeBoundary(source) && len(source.Messages) > 1 {
+		if p.compactionBase == nil && recoverySafeBoundary(source) && len(source.Messages) > 1 {
 			f.Source, e = p.manager.cipher.seal(p.Row, "source", source)
 			if e != nil {
 				return e
 			}
 		}
+		f.ResetHistory, f.ClearRestore = p.resetHistory, p.clearRestore
 		if key != "" && len(body) > 0 {
 			f.Result, e = p.manager.cipher.seal(p.Row, "replay:"+key, RecoveryReplay{Status: status, Headers: headers, Body: body})
 			if e != nil {

@@ -578,7 +578,7 @@ func (s *GatewayService) computeFinalAnthropicBeta(
 			// supports. Do not enable diagnostics on callers' behalf. Unknown
 			// client betas remain excluded, and policy drops still take precedence.
 			incomingBetas := make([]string, 0, 2)
-			for _, token := range []string{claude.BetaStructuredOutputs, claude.BetaCacheDiagnosis, claude.BetaMidConversationOutputConfig, claude.BetaMidConversationSystem, claude.BetaPerTurnControl, claude.BetaDangerousToolUse} {
+			for _, token := range []string{claude.BetaStructuredOutputs, claude.BetaCacheDiagnosis, claude.BetaMidConversationOutputConfig, claude.BetaMidConversationSystem, claude.BetaPerTurnControl, claude.BetaDangerousToolUse, claude.BetaThinkingDisplayUpdates, claude.BetaMidConversationSystemClear} {
 				if containsBetaToken(clientBeta, token) {
 					incomingBetas = append(incomingBetas, token)
 				}

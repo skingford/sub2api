@@ -35,11 +35,12 @@ type RecoveryAcquire struct {
 	Lease, Retention                  time.Duration
 }
 type RecoveryFinish struct {
-	Row                      RecoveryRow
-	State                    string
-	Material, Source, Result []byte
-	BlockMigration           bool
-	Retention                time.Duration
+	Row                        RecoveryRow
+	State                      string
+	Material, Source, Result   []byte
+	BlockMigration             bool
+	Retention                  time.Duration
+	ResetHistory, ClearRestore bool
 }
 type RecoverySummaryJob struct {
 	Row   RecoveryRow
@@ -70,6 +71,7 @@ type ClaudeRecoveryStore interface {
 }
 
 type RecoveryHistory struct {
+	Compaction  *RecoveryCompaction `json:"compaction,omitempty"`
 	SummaryBase *RecoveryCheckpoint `json:"-"`
 	Route       string              `json:"route"`
 	Model       string              `json:"model"`
@@ -102,16 +104,19 @@ type RecoveryReplay struct {
 
 type claudeRecoveryContextKey struct{}
 type ClaudeRecoveryExchange struct {
-	Row            RecoveryRow
-	History        RecoveryHistory
-	Body           []byte
-	Replay         *RecoveryReplay
-	ReadOnly       bool
-	Sent           atomic.Bool
-	ResponseStatus atomic.Int64
-	LeaseLost      atomic.Bool
-	manager        *ClaudeRecoveryService
-	cancel         context.CancelFunc
+	compactionBase             *RecoveryHistory
+	compactionPrefix           int
+	resetHistory, clearRestore bool
+	Row                        RecoveryRow
+	History                    RecoveryHistory
+	Body                       []byte
+	Replay                     *RecoveryReplay
+	ReadOnly                   bool
+	Sent                       atomic.Bool
+	ResponseStatus             atomic.Int64
+	LeaseLost                  atomic.Bool
+	manager                    *ClaudeRecoveryService
+	cancel                     context.CancelFunc
 }
 
 func ClaudeRecoveryFromContext(ctx context.Context) *ClaudeRecoveryExchange {

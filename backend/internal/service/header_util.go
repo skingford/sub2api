@@ -53,6 +53,8 @@ var headerWireCasing = map[string]string{
 	"x-claude-code-prompt-id":           "x-claude-code-prompt-id",
 	"x-claude-code-context-compacted":   "x-claude-code-context-compacted",
 	"x-claude-code-compaction":          "x-claude-code-compaction",
+	"x-cc-compaction-request":           "x-cc-compaction-request",
+	"x-cc-context-compacted":            "x-cc-context-compacted",
 	"x-claude-code-prev-tool-durations": "x-claude-code-prev-tool-durations",
 	"traceparent":                       "traceparent",
 }

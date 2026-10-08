@@ -66,9 +66,9 @@ func parseRecoveryHistory(body []byte, route string, max int) (RecoveryHistory, 
 		if e := json.Unmarshal([]byte(uid), &fields); e != nil {
 			return h, e
 		}
-		for key := range fields {
-			if key != "device_id" && key != "account_uuid" && key != "session_id" {
-				return h, fmt.Errorf("unverified metadata identity fields: %w", ErrRecoveryConflict)
+		for _, key := range []string{"parent_session_id", "tk"} {
+			if _, exists := fields[key]; exists {
+				return h, fmt.Errorf("branched or remote metadata identity is not supported: %w", ErrRecoveryConflict)
 			}
 		}
 	}
@@ -76,9 +76,7 @@ func parseRecoveryHistory(body []byte, route string, max int) (RecoveryHistory, 
 	if !gjson.ValidBytes(body) || h.Model == "" {
 		return h, ErrRecoveryConflict
 	}
-	switch h.Model {
-	case "claude-sonnet-4-6", "claude-opus-4-6", "claude-haiku-4-5-20251001":
-	default:
+	if !claude2292VerifiedModel(h.Model) {
 		return h, fmt.Errorf("managed recovery requires a verified model profile")
 	}
 	if route == "chat" && gjson.GetBytes(body, "n").Exists() && gjson.GetBytes(body, "n").Int() != 1 {
@@ -259,7 +257,11 @@ func recoverySafeBoundary(h RecoveryHistory) bool {
 	if !recoveryClosedTools(h) {
 		return false
 	}
-	last := gjson.ParseBytes(h.Messages[len(h.Messages)-1])
+	lastIndex := len(h.Messages) - 1
+	for lastIndex > 0 && h.Route == "messages" && gjson.GetBytes(h.Messages[lastIndex], "role").String() == "system" {
+		lastIndex--
+	}
+	last := gjson.ParseBytes(h.Messages[lastIndex])
 	if last.Get("role").String() != "user" {
 		return false
 	}

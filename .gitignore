@@ -138,6 +138,10 @@ docs/*
 !docs/claude-code-cch-2.1.292.md
 !docs/claude-code-remaining-differences.md
 !docs/claude-code-gap-fixes.md
+!docs/claude-code-extended-audit.md
+!docs/claude-extended-audit-20261008.json
+!docs/claude-alignment-fixes.md
+!docs/claude-alignment-validation.json
 !docs/claude-2292-gap-audit.json
 !docs/claude-change-log.md
 !docs/PAYMENT.md

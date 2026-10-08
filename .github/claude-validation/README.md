@@ -135,3 +135,83 @@ docker run --rm --network none \
 核对器要求 81 条接收正文与已提交向量、PCAP 原始字节全部一致且内核丢包为 0。
 `runtime-probe-provenance.json` 记录二进制哈希和入口修改位置。目录内私钥只属于本地模拟服务，
 不应提交；探针只在断网容器运行。
+## 扩展流程审查
+
+`extended_audit.py` 复用镜像内的 `lab.py` / `validation.py`，补充并行 Read、内联 PNG、
+合成 thinking + 工具、`/compact`、`--resume`、sonnet 别名、额外 metadata 和 JSON schema 请求。
+另有六种 API Key / OAuth、普通 / verbose / stream-json 模式对照。全部使用合成材料。
+默认运行扩展场景及模式对照，也可以在脚本后显式列出场景；输出目录必须为空。
+后续修复增加 multi-turn、count-context、oauth-count-context，compact 现在执行两次连续压缩。
+`CLAUDE_AUDIT_MODEL` 可指定固定模型进行同条件对照；不会传递宿主机凭证或登录配置。
+
+```bash
+audit_repo="$PWD"
+audit_output=$(mktemp -d)
+docker run --rm --network none --add-host api.anthropic.com:127.0.0.1 \
+  --mount "type=bind,src=$audit_output,dst=/work" \
+  --mount "type=bind,src=$audit_repo/.github/claude-validation/extended_audit.py,dst=/opt/extended_audit.py,readonly" \
+  --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/extended_audit.py
+
+mkdir -p "$audit_output/analysis"
+docker run --rm --network none \
+  --mount "type=bind,src=$audit_output,dst=/evidence,readonly" \
+  --mount "type=bind,src=$audit_output/analysis,dst=/analysis" \
+  --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/analyze.py \
+  parallel-read image-read thinking-tool compact resume alias-sonnet extra-metadata structured-output \
+  api-json oauth-json oauth-stream api-arg oauth-arg api-stdin multi-turn count-context oauth-count-context
+
+python3 - "$audit_repo" "$audit_output" <<'PY'
+import json, sys
+from pathlib import Path
+repo, output = map(Path, sys.argv[1:])
+(output / 'overlay.json').write_text(json.dumps({'Replace': {
+    str(repo / 'backend/internal/service/extended_cli_audit_test.go'):
+    str(repo / '.github/claude-validation/extended_audit_test.go')
+}}))
+PY
+(
+  cd backend
+  CLAUDE_EXTENDED_AUDIT_INPUT="$audit_output" \
+  CLAUDE_EXTENDED_AUDIT_OUTPUT="$audit_output/analysis/production-audit.json" \
+  GOTOOLCHAIN=go1.27.0 go test -overlay="$audit_output/overlay.json" -tags=unit \
+    ./internal/service -run '^TestExtendedNative' -count=1 -v
+)
+```
+
+overlay 不改生产源码。审查测试采集差异，PASS 不等于没有差异；务必阅读输出 JSON。
+托管服务使用测试存储；CLI 到模拟器、原始捕获到生产组件是两阶段验证，不冒充完整部署联调。
+`--json-schema` 实验不会由模拟器保证 schema 输出，thinking 签名也仅为合成值。
+结果见 [扩展复核报告](../../docs/claude-code-extended-audit.md)。
+
+## 修复后的连续压缩与迁移联调
+
+永久回归读取 `backend/internal/service/testdata/claude_code_2_1_292/alignment/` 的原生样本，
+检查 49 条报文 × 4 个转发配置，并验证托管历史、模型配置和能力策略。执行：
+
+```bash
+(cd backend && GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service -run '^TestClaudeAlignment' -count=1)
+```
+
+实时 CLI 联调使用生产恢复 / Forward 服务和测试存储 / 上游。它覆盖 Sonnet 4.6、Sonnet / Opus 5.5，
+两种上游认证，各两条独立对话；每条连续压缩两次后迁移账号，再次压缩并续聊，检查会话隔离和额外 metadata。
+PostgreSQL 的原子状态和摘要工作器失效由 `TestClaudeRecoveryCompactionCommitInvalidatesOldSummaryAndRestore` 单独覆盖。
+
+```bash
+alignment_repo="$PWD"
+alignment_output=$(mktemp -d)
+(
+  cd backend
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOTOOLCHAIN=go1.27.0 \
+    go test -tags=unit -c -o "$alignment_output/service-alignment.test" ./internal/service
+)
+mkdir "$alignment_output/results"
+docker run --rm --network none --add-host api.anthropic.com:127.0.0.1 \
+  --mount "type=bind,src=$alignment_output/results,dst=/work" \
+  --mount "type=bind,src=$alignment_output/service-alignment.test,dst=/opt/service-alignment.test,readonly" \
+  --mount "type=bind,src=$alignment_repo/.github/claude-validation/run_alignment_lab.py,dst=/opt/run_alignment_lab.py,readonly" \
+  --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/run_alignment_lab.py
+```
+
+运行器验证断网和固定 CLI 哈希。实时服务实验使用自定义回环地址，不将它当作 TLS / PCAP 抓包；
+固定官方 origin 的 TLS 捕获继续使用上面的 `extended_audit.py`。修复说明见
+[扩展对齐修复](../../docs/claude-alignment-fixes.md)。

@@ -1,0 +1,188 @@
+{
+  "change_id": "CC-20261008-010",
+  "base_head": "93275632a6a66dfc2648e9504a7d16bcf32da5d7",
+  "release_base": "b4430850844263e3fd3d2d180f514099bffad04e",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "cli_version": "2.1.292",
+  "sdk_version": "0.128.0",
+  "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "source_hashes": {
+    "backend/internal/handler/gateway_claude_recovery.go": "7c4ed02533efb09fcea3a587887e6aec2b1464d376d93cf2e49dc6ca380425df",
+    "backend/internal/pkg/claude/constants.go": "5d16cde8611529498f387ba8717cb32e678d06974a5a45ce1ec5f56600353d30",
+    "backend/internal/repository/claude_recovery.go": "8f27266f4e4d7a01170a4bcd809a20c811d4b79307fa9df637abe010988abbdd",
+    "backend/internal/repository/claude_recovery_integration_test.go": "8db7125f02ae0e466f435465ec7a1d4d61d45187641e4c1ac3e6dbb467449bb9",
+    "backend/internal/service/claude_recovery_compaction.go": "ab8d6319e104006163087bd46a7a73efdd527fbd6e7f967b130b30e3074559f1",
+    "backend/internal/service/claude_recovery_history.go": "5bb7bfaaac33737a18f2dcf21b19dce2d1d9aeec4f30e69063e8cd606c9305c4",
+    "backend/internal/service/claude_recovery_native_lab_test.go": "7550380b9f8cd3d77ea2d69aac5e6a90919b76f2a28c93741cc0007bd3569033",
+    "backend/internal/service/claude_recovery_response.go": "a737b8a47c29780fd84777547b254c5af45fc76b33cde04b2380550d72309966",
+    "backend/internal/service/claude_recovery_service.go": "10455ea4263f5a53f8e42ab0abf5d49cd77d8f69c7abc9ae3729ff8ba6bfaf85",
+    "backend/internal/service/claude_recovery_types.go": "bb7f7efbb1d1d7e4a26c44003ce9a3f3904f7374a3c5fbb6c1f6a22a4eeee3fd",
+    "backend/internal/service/gateway_anthropic_apikey_passthrough_test.go": "34522c5ec13040591a97128c0631af5f2cba6157506ab4ad279b403dd369b05f",
+    "backend/internal/service/gateway_claude_2292_defaults.go": "c390b1d08784e8277b8c110099cb7894e2e06fd4e71e2c7e50b08010de8457e1",
+    "backend/internal/service/gateway_claude_alignment_test.go": "c8cab8959e7a239139e45e2f06d379251d9431c6322ff26bb001aa6137199ea5",
+    "backend/internal/service/gateway_claude_oauth_body.go": "073f94c450194e83857e811fb14692725beddbbbfa8eb3e932df0f74b6df1419",
+    "backend/internal/service/gateway_request.go": "46e3a1419d4072c8a959518469756cb9bb467c2037c86118f4be2892e0eefc33",
+    "backend/internal/service/gateway_service.go": "1350eeff9daadeea3e1954b9c56e2879507327bf6d38a2542f92dcf348c44369",
+    "backend/internal/service/gateway_upstream_request.go": "eec8e32bef2b628a784bae3331b8d936040484d92a49cd91b3387987dac55589",
+    "backend/internal/service/header_util.go": "a98675d06e1895b86ea4ce5833e6e7ec6386d1156bad58727fa94d3683ebf84f"
+  },
+  "full_source_manifest_sha256": "e1289bf3deee055434d52e936cf157510d0c2f61729b955070df6dfd1eaf8fdf",
+  "source_unchanged_during_final_checks": true,
+  "native_capture_verification": [
+    {
+      "model": "sonnet55",
+      "requests": 17,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "verification_file": "sonnet55-analysis/capture-validation.json",
+      "sha256": "abf1ce64c13723628524179b46eaf98f1f9de9afb25fae94fde526e0a9370fc0"
+    },
+    {
+      "model": "opus55",
+      "requests": 17,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "verification_file": "opus55-analysis/capture-validation.json",
+      "sha256": "abf1ce64c13723628524179b46eaf98f1f9de9afb25fae94fde526e0a9370fc0"
+    }
+  ],
+  "fixture_provenance": "../backend/internal/service/testdata/claude_code_2_1_292/alignment/provenance.json",
+  "native_request_fixtures": 49,
+  "forward_configuration_combinations": 196,
+  "configuration_note": "OAuth anthropic_passthrough values repeat the same send implementation; this is a configuration matrix, not 196 distinct transports.",
+  "live_native_service": [
+    {
+      "path": "native3/claude-opus-5-5/apikey/native-managed-recovery.json",
+      "sha256": "74561cc775e11382fb1c82d530c46f0acf185ecd4014b52e2b0315ca46972820",
+      "model": "claude-opus-5-5",
+      "upstream_auth": "apikey",
+      "conversations": 2,
+      "generations": 16,
+      "counts": 4,
+      "cross_session_leaks": 0,
+      "errors": null
+    },
+    {
+      "path": "native3/claude-opus-5-5/oauth/native-managed-recovery.json",
+      "sha256": "caab598d6298d4d6b9059f4638d0a22f60136fe1149a8410191d932f470617b0",
+      "model": "claude-opus-5-5",
+      "upstream_auth": "oauth",
+      "conversations": 2,
+      "generations": 16,
+      "counts": 4,
+      "cross_session_leaks": 0,
+      "errors": null
+    },
+    {
+      "path": "native3/claude-sonnet-4-6/apikey/native-managed-recovery.json",
+      "sha256": "36901cc27ad0b7de229f3a1e39dcc4d63ce774da002f302c83cae3ba3b3048e8",
+      "model": "claude-sonnet-4-6",
+      "upstream_auth": "apikey",
+      "conversations": 2,
+      "generations": 16,
+      "counts": 4,
+      "cross_session_leaks": 0,
+      "errors": null
+    },
+    {
+      "path": "native3/claude-sonnet-4-6/oauth/native-managed-recovery.json",
+      "sha256": "fe9a7c0aee02c94456d1774ae4c0d22014a4e70cc0de53f4346c2a2897735470",
+      "model": "claude-sonnet-4-6",
+      "upstream_auth": "oauth",
+      "conversations": 2,
+      "generations": 16,
+      "counts": 4,
+      "cross_session_leaks": 0,
+      "errors": null
+    },
+    {
+      "path": "native3/claude-sonnet-5-5/apikey/native-managed-recovery.json",
+      "sha256": "99a5b60ba5b93f152d85203f41150663addbe5afff175bb792706ddffa85c27b",
+      "model": "claude-sonnet-5-5",
+      "upstream_auth": "apikey",
+      "conversations": 2,
+      "generations": 16,
+      "counts": 4,
+      "cross_session_leaks": 0,
+      "errors": null
+    },
+    {
+      "path": "native3/claude-sonnet-5-5/oauth/native-managed-recovery.json",
+      "sha256": "1940b67e8f9469578b13fa265badbfdb9e8fb7dbb50d8016593c58cbd7b3f5d5",
+      "model": "claude-sonnet-5-5",
+      "upstream_auth": "oauth",
+      "conversations": 2,
+      "generations": 16,
+      "counts": 4,
+      "cross_session_leaks": 0,
+      "errors": null
+    }
+  ],
+  "live_native_binary_sha256": "7b05827addf0b2790fb0759b5f1ef33f384db64da6a5460d2d9cbffaa858d355",
+  "checks": {
+    "alignment-regression2.log": {
+      "sha256": "d679a6f47bab371405e744d4683855913b64ed58c27ade830924cf6ba05f7b62",
+      "passed_packages": 2,
+      "result": "passed"
+    },
+    "recovery-store.log": {
+      "sha256": "b41bdd5e865f7dd3af1df257487b60ae28d21186d82804ec07a92d1e0d3b0d04",
+      "passed_packages": 1,
+      "result": "passed"
+    },
+    "opus-default-regression.log": {
+      "sha256": "f0bbdf864b3f7d47277aa23a4217e8e8dfd07a302fc999947408940456fab40a",
+      "passed_packages": 1,
+      "result": "passed"
+    },
+    "full-integration-final.log": {
+      "sha256": "fcd34f421aea951147a3d82eeb208488fbe0cd6999bac50438eafe418c63605c",
+      "passed_packages": 51,
+      "cached_packages": 49,
+      "exit_code": 0,
+      "result": "passed"
+    },
+    "lint-final.log": {
+      "sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+      "passed_packages": 0,
+      "cached_packages": 0,
+      "exit_code": 0,
+      "result": "0 issues"
+    },
+    "native3-driver.log": {
+      "sha256": "4f284a585a8406a3f5ed497fef1541cf97889bbb81b4341d1d549fb3ca2c3984",
+      "passed_packages": 0,
+      "result": "passed"
+    },
+    "full-unit-final.log": {
+      "sha256": "c5033b72842c5254df4a5c5e7a65e5ba6ed3c639c4e25345ecf95baecf905761",
+      "passed_packages": 57,
+      "cached_packages": 56,
+      "exit_code": 0,
+      "result": "passed"
+    }
+  },
+  "full_unit_status": "passed",
+  "evidence_root": "/Users/kingford/claude-capture/alignment-fixes-20261008",
+  "official_provider_acceptance_verified": false,
+  "storage_note": "Live CLI uses production recovery and Forward with test storage and upstream. PostgreSQL transactions and stale-summary fencing are tested separately in real Docker PostgreSQL.",
+  "limitations": [
+    "Pinned Linux x64 CLI only; no new HTTP/2, TLS-resumption, ARM64 or provider entitlement claims.",
+    "Reject unknown compaction/truncation layouts and branched or remote identity; accepted history must match actual recorded request/response.",
+    "Synthetic thinking signatures are not provider-validated.",
+    "No merge, push, deployment or real model request performed."
+  ],
+  "initial_failures": [
+    "Native custom-origin run omitted compaction headers and failed continuation; added source-bound inference and a recorded ordinary-continuation branch, then passed the complete live matrix.",
+    "First full runs failed the old Opus 5.5 omission assertion; updated only the default-effort expectation to captured medium while preserving signed-history assertions.",
+    "System PATH golangci-lint was built with Go 1.26; final lint uses existing 2.13.0 built with Go 1.27.0.",
+    "Initial focused verification overlapped edits and did not compile; not counted as final verification."
+  ],
+  "commands": {
+    "unit": "GOTOOLCHAIN=go1.27.0 go test -tags=unit ./...",
+    "integration": "GOTOOLCHAIN=go1.27.0 go test -tags=integration ./...",
+    "lint": "GOTOOLCHAIN=go1.27.0 /Users/kingford/claude-capture/tools/golangci-lint run ./...",
+    "lint_version": "2.13.0 built with go1.27.0",
+    "native": "Docker --network none /opt/run_alignment_lab.py; TestClaudeAlignmentNativeCLILab"
+  }
+}

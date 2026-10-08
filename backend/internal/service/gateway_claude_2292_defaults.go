@@ -5,12 +5,23 @@ import (
 	"github.com/tidwall/gjson"
 )
 
+func claude2292VerifiedModel(model string) bool {
+	switch model {
+	case "claude-sonnet-4-6", "claude-opus-4-6", "claude-haiku-4-5-20251001", "claude-sonnet-5-5", "claude-opus-5-5":
+		return true
+	}
+	return false
+}
+
 // Defaults are limited to models captured with the pinned official executable.
 // Explicit sampling, tool choice and thinking controls retain their semantics.
 func claude2292ModelDefaults(body []byte, model string) []byte {
 	maxTokens := 32000
 	if model == "claude-opus-4-6" {
 		maxTokens = 64000
+	}
+	if isClaude55SignedThinkingModel(model) {
+		maxTokens = 128000
 	}
 	if !gjson.GetBytes(body, "max_tokens").Exists() {
 		body, _ = setJSONValueBytes(body, "max_tokens", maxTokens)
@@ -29,7 +40,11 @@ func claude2292ModelDefaults(body []byte, model string) []byte {
 		}
 	}
 	if gjson.GetBytes(body, "thinking.type").String() == "adaptive" && !gjson.GetBytes(body, "output_config.effort").Exists() {
-		body, _ = setJSONValueBytes(body, "output_config.effort", "high")
+		effort := "high"
+		if isClaude55SignedThinkingModel(model) {
+			effort = "medium"
+		}
+		body, _ = setJSONValueBytes(body, "output_config.effort", effort)
 	}
 	return body
 }
@@ -41,13 +56,24 @@ func claude2292CompatibilityBetas(model string, body []byte, countTokens bool) [
 	betas := []string{claude.BetaClaudeCode, claude.BetaOAuth, claude.BetaInterleavedThinking,
 		claude.BetaThinkingTokenCount, claude.BetaContextManagement, claude.BetaPromptCachingScope,
 		claude.BetaEffort, claude.BetaThinkingBindingControls, claude.BetaExtendedCacheTTL}
+	if isClaude55SignedThinkingModel(model) {
+		betas = []string{claude.BetaClaudeCode, claude.BetaOAuth, claude.BetaInterleavedThinking,
+			claude.BetaThinkingTokenCount, claude.BetaContextManagement, claude.BetaPromptCachingScope,
+			claude.BetaMidConversationSystem, claude.BetaPerTurnControl, claude.BetaMidConversationToolChanges, claude.BetaMidConversationSystemClear,
+			claude.BetaEffort, claude.BetaThinkingBindingControls, claude.BetaExtendedCacheTTL}
+	}
 	if claude.NormalizeModelID(model) == "claude-haiku-4-5-20251001" {
 		betas = []string{claude.BetaOAuth, claude.BetaInterleavedThinking, claude.BetaThinkingTokenCount,
 			claude.BetaContextManagement, claude.BetaPromptCachingScope, claude.BetaClaudeCode,
 			claude.BetaThinkingBindingControls, claude.BetaExtendedCacheTTL}
 	}
+	if gjson.GetBytes(body, "thinking.display").String() == "updates" {
+		// Native CLI adds this capability only when updates are requested. Keep
+		// its position before OAuth's extended cache TTL and diagnostics.
+		betas = append(betas[:len(betas)-1], claude.BetaThinkingDisplayUpdates, claude.BetaExtendedCacheTTL)
+	}
 	gjson.GetBytes(body, "messages").ForEach(func(_, message gjson.Result) bool {
-		if message.Get("output_config").Exists() {
+		if message.Get("output_config").Exists() && !isClaude55SignedThinkingModel(model) {
 			betas = append(betas, claude.BetaMidConversationOutputConfig)
 			return false
 		}
