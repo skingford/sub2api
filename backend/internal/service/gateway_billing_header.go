@@ -30,7 +30,9 @@ func effectiveBillingUserAgent(mimicUserAgent, tokenType string, mimicClaudeCode
 
 // syncBillingHeaderVersion rewrites cc_version in x-anthropic-billing-header
 // system text blocks to match the version extracted from userAgent.
-// Recompute any recognized fingerprint suffix because its input includes the version.
+// Preserve native attribution when the version already matches. The compatibility
+// fingerprint helper does not cover native Unicode or inserted system reminders.
+// Recompute a recognized suffix only when changing the version.
 // Only touches system array blocks whose text starts with "x-anthropic-billing-header".
 func syncBillingHeaderVersion(body []byte, userAgent string) []byte {
 	version := ExtractCLIVersion(userAgent)
@@ -48,7 +50,8 @@ func syncBillingHeaderVersion(body []byte, userAgent string) []byte {
 	systemResult.ForEach(func(_, item gjson.Result) bool {
 		text := item.Get("text")
 		if text.Exists() && text.Type == gjson.String &&
-			strings.HasPrefix(text.String(), "x-anthropic-billing-header") {
+			strings.HasPrefix(text.String(), "x-anthropic-billing-header") &&
+			ccVersionInBillingRe.FindString(text.String()) != replacement {
 			fingerprintedReplacement := replacement + "." + computeClaudeCodeFingerprint(body, version)
 			newText := ccVersionWithFingerprintInBillingRe.ReplaceAllString(text.String(), fingerprintedReplacement)
 			newText = ccVersionInBillingRe.ReplaceAllString(newText, replacement)

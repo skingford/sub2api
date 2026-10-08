@@ -86,7 +86,14 @@ func testNativeClaudeCaptureForwarding(t *testing.T, version string) {
 				_, err = svc.Forward(context.Background(), c, account, parsed)
 				require.NoError(t, err)
 				require.NotNil(t, upstream.lastReq)
-				require.Equal(t, []byte(capture.Body), upstream.lastBody, "preserve the captured body bytes, including opaque attribution and diagnostics")
+				expectedBody := []byte(capture.Body)
+				if version == "2_1_292" && fixture == "macos-loopback" {
+					// A custom-base CLI omits CCH. The first-party outbound request
+					// restores it; this golden output comes from the native runtime.
+					expectedBody, err = os.ReadFile("testdata/claude_code_2_1_292/cch-macos-forward.body.json")
+					require.NoError(t, err)
+				}
+				require.Equal(t, expectedBody, upstream.lastBody, "preserve native fields and finalize first-party attribution")
 				for key, value := range capture.Headers {
 					if strings.EqualFold(key, "anthropic-beta") && kind == AccountTypeOAuth {
 						value = strings.Replace(value, claude.BetaClaudeCode, claude.BetaClaudeCode+","+claude.BetaOAuth, 1)

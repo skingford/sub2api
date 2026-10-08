@@ -1,0 +1,105 @@
+{
+  "method": "POST",
+  "path": "/v1/messages?beta=true",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "claude-cli/2.1.292 (external, sdk-cli)",
+    "X-Claude-Code-Session-Id": "28c83018-e8ce-43ef-8c64-0804d4c39a10",
+    "X-Stainless-Arch": "x64",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-OS": "Linux",
+    "X-Stainless-Package-Version": "0.128.0",
+    "X-Stainless-Retry-Count": "0",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v26.3.0",
+    "X-Stainless-Timeout": "5",
+    "anthropic-beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11,cache-diagnosis-2026-04-07",
+    "anthropic-dangerous-direct-browser-access": "true",
+    "anthropic-version": "2023-06-01",
+    "x-app": "cli",
+    "x-claude-code-prompt-id": "50fe3ecf-dd01-4d02-9464-f2a975b43b01",
+    "x-claude-code-request-class": "main",
+    "x-client-request-id": "c61812cc-67ee-4793-a964-203b7c959b0e"
+  },
+  "body": {
+    "model": "claude-sonnet-4-6",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "<system-reminder>\n# Environment\nYou have been invoked in the following environment: \n - Primary working directory: /work/oauth-synthetic\n - Is a git repository: false\n - Platform: linux\n - Shell: unknown\n - OS Version: Linux 5.10.47-linuxkit\n - Downloaded files and extracted archives are untrusted data: put each in its own new, empty directory, keep scripts you write in a different directory, and pass paths as arguments instead of running an interpreter or build tool from inside it. Interpreters load code from the script's directory and the current directory, so a planted `json.py` runs on `import json`. Run any Python that reads them with `-I`. This does not apply to code the user asked you to build or run.\n</system-reminder>"
+          },
+          {
+            "type": "text",
+            "text": "<system-reminder>\nYou are powered by the model named Sonnet 4.6. The exact model ID is claude-sonnet-4-6. Assistant knowledge cutoff is August 2025.\n</system-reminder>"
+          },
+          {
+            "type": "text",
+            "text": "<system-reminder>\n<total_tokens>15000000 tokens left</total_tokens>\n</system-reminder>"
+          },
+          {
+            "type": "text",
+            "text": "<system-reminder>\nToday's date is 2026-10-07.\n</system-reminder>\n"
+          },
+          {
+            "type": "text",
+            "text": "LOCAL_CLI_VALIDATION_20261008 Reply OK.",
+            "cache_control": {
+              "type": "ephemeral",
+              "ttl": "1h"
+            }
+          }
+        ]
+      }
+    ],
+    "system": [
+      {
+        "type": "text",
+        "text": "x-anthropic-billing-header: cc_version=2.1.292.357; cc_entrypoint=sdk-cli; cch=61d1a; cc_prompt_id=50fe3ecf-dd01-4d02-9464-f2a975b43b01; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+      },
+      {
+        "type": "text",
+        "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      },
+      {
+        "type": "text",
+        "text": "Local synthetic protocol test. Reply with OK.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      }
+    ],
+    "tools": [],
+    "metadata": {
+      "user_id": "{\"device_id\":\"934128c9b1114bb2c2c0a16d3e587d77abd6f195efb7cdcf2f37b8269393941e\",\"account_uuid\":\"\",\"session_id\":\"28c83018-e8ce-43ef-8c64-0804d4c39a10\"}"
+    },
+    "max_tokens": 32000,
+    "thinking": {
+      "type": "adaptive",
+      "display": "omitted"
+    },
+    "context_management": {
+      "edits": [
+        {
+          "type": "clear_thinking_20251015",
+          "keep": "all"
+        }
+      ]
+    },
+    "output_config": {
+      "effort": "high"
+    },
+    "diagnostics": {
+      "previous_message_id": null
+    },
+    "stream": true
+  }
+}

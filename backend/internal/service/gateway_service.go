@@ -449,6 +449,7 @@ var allowedHeaders = map[string]bool{
 	// Native CLI context/tracing headers are conditional. Forward caller values
 	// without inventing IDs or forwarding account-scoped authentication headers.
 	"x-client-app":                      true,
+	"anthropic-dispatch-id":             true,
 	"x-claude-code-agent-id":            true,
 	"x-claude-code-parent-agent-id":     true,
 	"x-claude-code-agent-type":          true,

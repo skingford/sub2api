@@ -1,0 +1,119 @@
+{
+  "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "unmodified_cli": true,
+  "network": "none",
+  "fake_credentials_only": true,
+  "requests": 12,
+  "checksums": 9,
+  "all_match": true,
+  "results": [
+    {
+      "case": "unicode",
+      "index": 2,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "b07a1f0ed8d073f8e756ed3559c9f2cf09ce18b6a5846250ccd6f544e0d5d177",
+      "actual": "9483d",
+      "computed": "9483d",
+      "matched": true
+    },
+    {
+      "case": "multi-turn",
+      "index": 2,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "eb297f59ea3c2d3d3de94ed866f210b5751fcc71b90f08184ac67a91a13189de",
+      "actual": "f2ce8",
+      "computed": "f2ce8",
+      "matched": true
+    },
+    {
+      "case": "multi-turn",
+      "index": 3,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "f4a252cd9625806986ccdba7bed638979c646e8f5f4ca5bbf6dfa33a5ae71049",
+      "actual": "17c06",
+      "computed": "17c06",
+      "matched": true
+    },
+    {
+      "case": "baseline",
+      "index": 2,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "5647f22257ca42d11e24cc5a61e179ad185f9e16c9729c877823ac7c5f69590a",
+      "actual": "48dee",
+      "computed": "48dee",
+      "matched": true
+    },
+    {
+      "case": "read-tool",
+      "index": 2,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "3db8c70a3039e15f4c4e01612c553fe5e43fb59477968c5814e1ea33d9fc1451",
+      "actual": "3fb10",
+      "computed": "3fb10",
+      "matched": true
+    },
+    {
+      "case": "read-tool",
+      "index": 3,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "7ca689af7809d61090bcb00ad0d846ff0be91fe8b5379ad2f8fde9fc8d4ee24c",
+      "actual": "6ba2e",
+      "computed": "6ba2e",
+      "matched": true
+    },
+    {
+      "case": "retry-503",
+      "index": 2,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "5f2fabf0413ce9c8b654813abc66462fa872ecbd431cae993206aa90e86b70db",
+      "actual": "13f8e",
+      "computed": "13f8e",
+      "matched": true
+    },
+    {
+      "case": "retry-503",
+      "index": 3,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "5f2fabf0413ce9c8b654813abc66462fa872ecbd431cae993206aa90e86b70db",
+      "actual": "13f8e",
+      "computed": "13f8e",
+      "matched": true
+    },
+    {
+      "case": "count-context",
+      "index": 2,
+      "path": "/v1/messages/count_tokens?beta=true",
+      "body_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "actual": "",
+      "computed": "",
+      "matched": true
+    },
+    {
+      "case": "count-context",
+      "index": 3,
+      "path": "/v1/messages/count_tokens?beta=true",
+      "body_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "actual": "",
+      "computed": "",
+      "matched": true
+    },
+    {
+      "case": "count-context",
+      "index": 4,
+      "path": "/v1/messages/count_tokens?beta=true",
+      "body_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "actual": "",
+      "computed": "",
+      "matched": true
+    },
+    {
+      "case": "oauth-synthetic",
+      "index": 2,
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "ff2e724def3d321c739e81d9e5a4f74d7aaf6caa71f1acddc9b9b9d26d722d47",
+      "actual": "b0e5b",
+      "computed": "b0e5b",
+      "matched": true
+    }
+  ]
+}

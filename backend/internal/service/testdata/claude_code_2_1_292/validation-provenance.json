@@ -1,0 +1,97 @@
+{
+  "cli_version": "2.1.292",
+  "platform": "linux-x64",
+  "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "date": "2026-10-08",
+  "network": "Docker network=none; api.anthropic.com resolves to loopback",
+  "auth": "Synthetic API key or CLAUDE_CODE_OAUTH_TOKEN; no real credentials",
+  "scope": "Native request generation against a local TLS mock; no real provider acceptance or entitlement verification",
+  "excluded_headers": [
+    "authorization",
+    "x-api-key",
+    "cookie",
+    "host",
+    "content-length",
+    "connection",
+    "accept-encoding"
+  ],
+  "fixtures": [
+    {
+      "name": "validation-baseline-01",
+      "body_sha256": "04b6efee27a3fb332be67fded39aca3392f545bc1b8171908cadd8d500e410db",
+      "bytes": 1075,
+      "source": "results/baseline/requests.json"
+    },
+    {
+      "name": "validation-retry-503-01",
+      "body_sha256": "9f2e490f26f95196fc7bc846b06047a29c2eced5b8d7f636d24b1134b4485147",
+      "bytes": 1075,
+      "source": "results/retry-503/requests.json"
+    },
+    {
+      "name": "validation-retry-503-02",
+      "body_sha256": "9f2e490f26f95196fc7bc846b06047a29c2eced5b8d7f636d24b1134b4485147",
+      "bytes": 1075,
+      "source": "results/retry-503/requests.json"
+    },
+    {
+      "name": "validation-multi-turn-01",
+      "body_sha256": "8b7a65511049d340e0ded6acdede537c6f68facf5c2288b6879109e347ad78f5",
+      "bytes": 1087,
+      "source": "results/multi-turn/requests.json"
+    },
+    {
+      "name": "validation-multi-turn-02",
+      "body_sha256": "097cf3150318b55423612cf6de49401b0c436fe2f4256f2bf904b737e117bb4d",
+      "bytes": 1282,
+      "source": "results/multi-turn/requests.json"
+    },
+    {
+      "name": "validation-oauth-synthetic-01",
+      "body_sha256": "6b9697cd618019c65c288296d4ebd07776d9a0e2e650a3ceea4ae0ccc422762b",
+      "bytes": 2282,
+      "source": "results/oauth-synthetic/requests.json"
+    },
+    {
+      "name": "validation-read-tool-01",
+      "body_sha256": "cf1dafac874c04c289669411a4de62fdbd81f5046f74632069554e8141574d75",
+      "bytes": 1915,
+      "source": "results-additional/read-tool/requests.json"
+    },
+    {
+      "name": "validation-read-tool-02",
+      "body_sha256": "05f5f7ce10adf4b978e25b028a8f566f5fee397f565aa365eb5c319b643b2eec",
+      "bytes": 2237,
+      "source": "results-additional/read-tool/requests.json"
+    },
+    {
+      "name": "validation-unicode-01",
+      "body_sha256": "2d172f2cf8dda52ee42ced5d90135020082070bf06e17d52efa59d0986530383",
+      "bytes": 1122,
+      "source": "results-additional/unicode/requests.json"
+    },
+    {
+      "name": "validation-count-context-01",
+      "body_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "bytes": 127,
+      "source": "results-count-verified/count-context/requests.json"
+    },
+    {
+      "name": "validation-count-context-02",
+      "body_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "bytes": 85,
+      "source": "results-count-verified/count-context/requests.json"
+    },
+    {
+      "name": "validation-count-context-03",
+      "body_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "bytes": 85,
+      "source": "results-count-verified/count-context/requests.json"
+    }
+  ],
+  "packet_validation": "All 12 native model/count_tokens request bodies matched TLS-decrypted PCAP bytes by SHA-256; selected captures had zero kernel packet loss. Unicode compared using raw bytes, not Wireshark display text.",
+  "discarded_attempts": [
+    "Initial Read command had a variadic-option parsing error; rerun with an explicit -- separator.",
+    "Initial count_tokens capture dropped 25 packets; rerun with a 16 MiB tcpdump buffer."
+  ]
+}

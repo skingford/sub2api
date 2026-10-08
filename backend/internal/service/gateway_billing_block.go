@@ -4,37 +4,45 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"unicode/utf16"
 
 	"github.com/tidwall/gjson"
 )
 
 // fingerprintSalt 是计算 cc_version 后缀指纹的盐值。
 //
-// 来源：与 Parrot src/transform/cc_mimicry.py 的 FINGERPRINT_SALT 完全一致；
-// 这是真实 Claude Code CLI 抓包推导出的常量，改动会导致 fp 与 CLI 不一致，
-// 进一步触发 Anthropic 的第三方检测。
+// Verified against constant cne used by function Rk in the native 2.1.292 bundle.
+// Client-side matching does not establish any server-side detection rule.
 const fingerprintSalt = "59cf53e54c78"
 
-// computeClaudeCodeFingerprint 复刻真实 Claude Code CLI 的 cc_version 指纹算法：
+// computeClaudeCodeFingerprint builds the legacy compatibility cc_version suffix:
 //
 //  1. 取 messages 中第一条 role=user 的纯文本（首块 text）
-//  2. 取该文本的第 4、7、20 字符（不足以 '0' 补齐）
+//  2. Select UTF-16 code units at offsets 4, 7 and 20, falling back to '0'.
 //  3. SHA256(SALT + chars + cc_version) 取 hex 前 3 字符
 //
-// 算法来自 Parrot src/transform/cc_mimicry.py:compute_fingerprint，与官方 CLI 字节对齐。
-// 任何偏差都会导致 cc_version=X.Y.Z.{fp} 在上游侧与真实 CLI 不一致。
+// String indexing and encoding match function Rk in the extracted 2.1.292 bundle.
+// Its original input is selected before CLI-inserted context is serialized, which
+// cannot always be recovered from wire messages. Preserve native attribution.
 func computeClaudeCodeFingerprint(body []byte, version string) string {
 	firstText := extractFirstUserText(body)
+	return computeClaudeCodeFingerprintText(firstText, version)
+}
+
+func computeClaudeCodeFingerprintText(firstText, version string) string {
+	units := utf16.Encode([]rune(firstText))
 	indices := []int{4, 7, 20}
-	chars := make([]byte, 0, 3)
+	chars := make([]uint16, 0, 3)
 	for _, i := range indices {
-		if i < len(firstText) {
-			chars = append(chars, firstText[i])
+		if i < len(units) {
+			chars = append(chars, units[i])
 		} else {
 			chars = append(chars, '0')
 		}
 	}
-	sum := sha256.Sum256([]byte(fingerprintSalt + string(chars) + version))
+	// Node's UTF-8 encoder replaces unpaired surrogates after joining the selected
+	// code units. utf16.Decode makes the same replacement and joins valid pairs.
+	sum := sha256.Sum256([]byte(fingerprintSalt + string(utf16.Decode(chars)) + version))
 	return hex.EncodeToString(sum[:])[:3]
 }
 

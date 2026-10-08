@@ -1,6 +1,10 @@
 # Claude Code 原生请求对齐
 
-Updated: 2026-10-07
+> 2026-10-08 后续更新：`CC-20261008-003` 已恢复 2.1.292 的 cch 计算并接入最终请求构建。
+> 本文先前关于“cch 未恢复、正文变化一律拒绝、不补缺失 cch”的记录保留历史语境；
+> 当前条件、算法和验证范围以 [cch 专项报告](claude-code-cch-2.1.292.md) 为准。
+
+Updated: 2026-10-08
 
 本 fork 的上游基线已同步至 v0.2.14 / `3f1a2ea0`。Claude 相关改动编号、提交和验证记录
 统一维护在 [Claude 改动记录](claude-change-log.md)。
@@ -132,7 +136,7 @@ tool_use/tool_result、metadata 和条件 safeguards 应按最终 beta 能力保
 | `claude_code_version_sync_service.go` | 自动同步 CLI 发布版本号，其他 SDK / 运行时默认值独立维护 | 版本号更新不等于实际升级了整套客户端 |
 | `gateway_upstream_request.go` | OAuth mimic 路径跳过入站头，使用默认集合；metadata 和 session 还可能按配置改写 | 原生透传与兼容转换的出站结果需要分别审查 |
 | `gateway_billing_block.go` | Go 按 UTF-8 字节索引取样；CLI JavaScript 字符串索引语义不同 | 非 ASCII 文本的计算结果存在差异，不能宣称所有内容字节对齐 |
-| TLS / HTTP 传输层 | 本次 recorder 核对 JSON 与应用头，没有捕获真实上游 TLS / HTTP2 链路 | 不能声称已验证完整网络指纹一致 |
+| TLS / HTTP 传输层 | 2026-10-08 本地隔离对照发现默认传输、内置 TLS profile 均与原生 CLI 不同，详见下文 | 请求正文相同不意味着握手、头部顺序或完整链路相同 |
 
 这些差异不证明具体的封号、额度或客户端识别规则。本次修复限于可验证的请求兼容问题；
 账号权限、订阅资格和服务端策略仍由上游决定。
@@ -144,8 +148,10 @@ tool_use/tool_result、metadata 和条件 safeguards 应按最终 beta 能力保
 ## 配置与边界
 
 - Anthropic API Key 账号可使用已有 `anthropic_passthrough` 路径。
-- OAuth 的统一指纹、metadata 重写、会话 ID 屏蔽和账号级 header overrides 仍受现有配置控制。
-  若运营方主动开启重写，出站相应字段会按账号配置变化，不能同时要求这些字段字节不变。
+- 原生 Claude 请求默认保留 metadata、会话和身份头，跳过账号指纹缓存及旧的正文整流。
+  账号 `extra.claude_native_passthrough=false` 可恢复旧策略；非原生客户端继续走兼容转换。
+- 账号级 header overrides、模型映射与 beta 策略仍有效。若策略会修改带 cch 的原生正文，
+  本地返回 400，避免改过正文后继续携带旧的不透明归因值。
 - 管理员过滤 beta 或覆盖 anthropic-beta 时，最终出站 beta 是正文能力处理的依据。
 - safeguards 可以含本机目录、用户名、规则和 Git 上下文；仅转发调用方已经提供的内容，
   不从网关主机收集或补造这些数据。
@@ -196,3 +202,164 @@ DOCKER_CONFIG="$test_docker_config" CI=true GOTOOLCHAIN=go1.27.0 \
 - 诊断字段显式 null、缺省不生成、策略过滤、账号覆盖和清理幂等性通过。
 - 合并 v0.2.14 后，缓存诊断修复的全量 unit / integration 已通过，lint 0 issues。
 - 2.1.292 新增 4 个逐字节转发组合，针对性回归通过；包含最新样本的最终全量 unit / integration 全部通过，lint 0 issues。
+
+### 2026-10-08：启用身份服务及扩展场景验证
+
+本节记录首轮验证和旧策略的结果。原生请求的新默认行为及传输修复见下一节；
+旧的身份配置矩阵现在通过显式关闭 `claude_native_passthrough` 继续回归。
+
+本轮从 `release / f6b76203` 开始，上游基线仍为 `3f1a2ea0`。只运行假凭证和隔离模拟服务。
+可复现的脚本、Dockerfile 与命令见 [隔离实验说明](../.github/claude-validation/README.md)。
+
+#### 新增原生样本
+
+| 场景 | 请求数量 | 已确认的客户端行为 |
+|---|---:|---|
+| 普通请求 | 1 | 原生请求头与正文基线 |
+| Read 工具 | 2 | 发出工具定义，并将模拟服务指定的本地文件读取结果回填到下一条请求 |
+| HTTP 503 重试 | 2 | 正文不变；第二次新增 `anthropic-dispatch-id`，本次 `X-Stainless-Retry-Count` 仍为 `0` |
+| 两轮对话 | 2 | 第二轮包含上一轮 assistant 消息、新 user 消息，以及上一请求关联信息 |
+| 假 OAuth 环境变量 | 1 | 不使用 `--bare`；客户端生成 Bearer 认证及 OAuth / extended-cache-ttl beta |
+| 中文与 emoji | 1 | 保留原生 Unicode 正文和对应归因内容 |
+| `/context` | 3 | 原生 `count_tokens` 请求不包含 messages 接口的完整 system / metadata |
+
+官方 Linux x64 2.1.292 文件哈希与上一轮一致。全部 12 条模型或计数请求已用本地 TLS
+服务器会话密钥解密 PCAP，原始正文 SHA-256 与接收端记录一致，正式采用的捕获内核丢包数为 0。
+两条 Sub2API 传输组件重放请求也通过相同核对。每次 CLI 启动仍出现本地 settings / policy_limits 请求。
+
+采集过程的纠正：Read 首次运行时，可变参数选项吞掉了提示词，加入 `--` 分隔符后重跑；
+`/context` 首次捕获丢了 25 个包，增大 tcpdump 缓冲到 16 MiB 后重跑三条请求全部通过。
+Unicode 复核使用 tshark 原始字节字段，避免其显示文本的字符替换造成错误结论。
+
+#### 复现并修复的两处问题
+
+1. **重试关联头丢失**：原生 CLI 在 503 后携带 `anthropic-dispatch-id`，网关白名单原先将它删除。
+   现在仅在调用方提供时透传，并保持已观察到的小写形式；不默认生成此字段。
+2. **同版本归因被重算**：生产 `IdentityService` 启用后会同步 billing 版本。
+   原实现即使版本已经是 2.1.292，仍重算后缀；中文样本由 `f98` 变为 `004`，
+   带 CLI 自动插入提示块的假 OAuth 样本由 `357` 变为 `bc4`。
+   现在版本相同时保留原生归因内容，仅在配置确实改变版本时保留原有兼容处理。
+   这项修复不实现或声称验证了 cch 的生成算法，也不证明改写其他正文后 cch 仍被官方接受。
+
+修复前有 20 个新增回归用例失败：2 个重试头用例和 18 个同版本归因用例。
+修复后，12 条原生报文的 API Key / OAuth 共 24 个转发组合通过；身份配置矩阵共 180 个组合、
+每组连续请求两次，通过正文差异、凭证隔离、身份缓存和会话稳定性断言。
+完整后端 unit / integration 均通过，golangci-lint 0 issues；正式 token 计数样本更新后，
+新增转发与身份配置回归再次通过。本轮没有前端或部署变更。
+
+#### 身份配置矩阵的结论
+
+回归使用生产 `SettingService`、`IdentityService` 和 `GatewayService.Forward` / `ForwardCountTokens`，
+以内存实现替代设置存储与身份缓存，以 recorder 替代上游网络。没有加载真实用户配置或凭证。
+矩阵包括空缓存、旧版本缓存、同版本但平台 / SDK 不同的缓存。
+
+| 配置 | 本轮样本的正文结果 | 请求头结果 |
+|---|---|---|
+| 指纹统一关闭，metadata 透传开启 | 逐字节保留 | 保留原生应用头；凭证仍替换为所选上游账号，OAuth beta 按路径补充 |
+| 默认配置：指纹统一开启，metadata 透传关闭 | 有 metadata 的请求重写 user_id；其他正文保持 | 应用账号缓存，并让 session 头与正文一致 |
+| 仅指纹统一开启 | 正文保留，包括同版本归因 | 同版本的已有缓存可能覆盖客户端平台、SDK 和运行时 |
+| 仅 metadata 重写 | 只改 user_id | session 头随正文变化 |
+| 另开启会话 ID 固定 | 只改 user_id，重复请求保持会话值 | session 头与重写后的值一致 |
+
+因此，默认 OAuth 配置仍不等于原生请求全字段透传。已有同版本账号缓存中的 SDK `0.94.0`
+和 `arm64` 也不会因为新客户端带着 SDK `0.128.0` / `x64` 就自动更新。它是现有账号级配置行为，
+本轮没有擅自修改生产设置或重写所有缓存。缺少 metadata 的原生计数请求没有被补造 metadata。
+
+#### 传输层实测差异
+
+使用生产 `repository.NewHTTPUpstream(nil).DoWithTLS` 重放同一份请求，服务器仅提供 HTTP/1.1：
+
+| 客户端 / 传输 | 本轮 JA3 |
+|---|---|
+| 官方 Linux 原生 CLI 2.1.292 | `1523504b38f0fae0d881d4b6554aac1b` |
+| Sub2API 默认传输 | `9b7dcdf3f997f1fb7b4409c94cb7ef36` |
+| Sub2API 内置 TLS profile | `44f88fca027f27bab4bb08d4af15f23e` |
+
+JA3 是握手中部分参数的摘要，不是客户端身份证明。内置 profile 相比本轮原生 CLI 多了
+extension `65037`，缺少 supported group `4588`；普通传输的差异更多。
+两条 Go 传输的 HTTP 头以 Host / User-Agent / Content-Length 开始，原生 CLI 的顺序不同。
+正文相等，但不能称完整 HTTP / TLS 报文一致。此结果不覆盖 macOS、HTTP/2、实际出口或所有连接状态。
+本轮没有为消除差异而修改 TLS 模板。
+
+#### 仍需区分的范围
+
+- 兼容模式的旧 SDK / 运行时模板及归因构造仍与原生请求不同；仅更新 CLI 版本号不能完成整体对齐。
+- 新样本验证假 OAuth 环境变量下的客户端序列化，未验证真实账号登录、订阅权限或官方服务接受情况。
+- 图像、长上下文压缩、并行工具、其他模型与交互式权限模式尚未在本轮矩阵中覆盖。
+- 追踪依据：[样本来源](../backend/internal/service/testdata/claude_code_2_1_292/validation-provenance.json)、
+  [PCAP 与握手核对摘要](../backend/internal/service/testdata/claude_code_2_1_292/validation-transport-summary.json)。
+
+### 2026-10-08：原生保真、归因算法与传输修复
+
+#### 原生与兼容转换的边界
+
+原生请求默认保留客户端的 metadata.user_id、session 头、SDK / 平台 / 运行时头及归因内容。
+不读取或更新账号身份缓存，因此缓存里较新的 UA 或旧 SDK 值也不会覆盖来访客户端。
+日期文字、缓存断点、历史 thinking / redacted_thinking 内容不再经过旧的自动改写或签名错误整流。
+认证仍使用所选上游账号的凭证，API Key 到 OAuth 的转换仍需调整认证头和 OAuth beta。
+原生识别只决定序列化策略，不作为认证、订阅或计费资格证明。
+
+| 账号 extra 字段 | 默认值 | 行为 |
+|---|---|---|
+| `claude_native_passthrough` | `true` | 原生请求保真；设为 `false` 恢复旧身份、metadata 和正文转换策略 |
+| `claude_native_transport` | `true` | 对已验证的版本 / 平台自动选择传输配置；设为 `false` 保留原传输选择 |
+| `tls_fingerprint_profile_id` | 沿用账号值 | 显式绑定或随机选择的模板优先，不被自动配置覆盖 |
+
+模型映射和 beta 管理策略仍属于显式配置。原生正文带 cch 时，网关保存原始正文摘要；
+如策略要求修改正文，返回明确的本地 400，提示调整客户端请求或显式选择旧策略。
+这个 SHA-256 只用于检测本地修改，**不是官方 cch 算法**。
+
+非原生客户端的兼容转换仍与原生客户端有区别，尤其是旧身份模板、自动注入的上下文及
+缺少可恢复的客户端事件状态。本次不把任意 API 请求标为“完整复刻官方 CLI”。
+
+#### 签名与算法核对
+
+从官方 macOS x64 2.1.292 二进制只读提取 bundle，核对 `chunk-pnzxacn4.js` 中的 `Rk` 和 `dne`：
+
+- `Rk` 按 UTF-16 code unit 的索引 4、7、20 取样，缺位填字符 `0`；拼接固定盐和版本号后做 SHA-256，取前三位 hex。
+- 原 Go 实现按 UTF-8 字节取样，现已修正为 UTF-16，并按 Node 的 UTF-8 编码行为替换孤立 surrogate。
+  10 个直接执行提取函数得到的测试向量通过，覆盖中文、emoji、组合字符、NUL 和短文本。
+- `dne` 在请求序列化之前选择首条非 isMeta 的用户事件。这些事件标记不能总从最终 messages 恢复，
+  所以原生归因始终透传；兼容构造的输入选择不能被当成所有 CLI 场景的等价还原。
+- `cch` 在提取的 JavaScript 中只找到占位构造，最终运行时算法尚未恢复，不猜测生成。
+  自定义 base URL 的客户端可能根本不输出 cch，网关也不会凭空补造它。
+- `thinking.signature` 和 `redacted_thinking.data` 作为上游返回的不透明内容保留；客户端代码不能提供服务端签名密钥。
+- 请求关联 UUID 与 TLS 临时密钥保持每次生成，不复制抓包中的随机值或身份字段。
+
+函数、bundle 哈希和测试向量见 [归因算法证据](../backend/internal/service/testdata/claude_code_2_1_292/fingerprint-vectors.json)。
+
+#### 已验证的 TLS / HTTP 配置
+
+自动匹配条件为第一方 HTTPS origin、Claude Code 2.1.292、SDK 0.128.0、运行时头 v26.3.0、
+Linux 或 macOS、x64。以最终出站身份头为准；未知版本、ARM64、自定义目标及显式模板不强套此配置。
+
+配置包含实测的 cipher suites、扩展顺序、支持组、签名算法、ALPN、TLS 版本和 key shares。
+HTTP/1.1 使用 [fhttp v0.6.9](https://github.com/bogdanfinn/fhttp/tree/v0.6.9) 实现可控头序，保留连接池、
+请求取消、代理与流式响应处理。实际 TLS 握手继续使用现有 refraction uTLS；证书校验保持开启。
+TLS 客户端缓存键现包含模板内容，并持有模板深拷贝，配置变化后不会复用旧模板的连接池。
+新增依赖经过 govulncheck 检查；将传递依赖 CIRCL 固定到 1.6.5，修复
+[GO-2026-4550](https://pkg.go.dev/vuln/GO-2026-4550) 的影响。复查未发现当前代码可达的漏洞。
+HTTPS CONNECT 的外层通道使用 Go 标准 TLS；下表对比的是目标 API 侧的内层握手。
+
+| 路径 | 正文 SHA-256 | 头部值及顺序 | ClientHello 非随机部分 |
+|---|---|---|---|
+| 直连 | 一致 | 一致 | 一致 |
+| HTTP CONNECT | 一致 | 一致 | 一致 |
+| HTTPS CONNECT | 一致 | 一致 | 一致 |
+| SOCKS5 | 一致 | 一致 | 一致 |
+
+以上是同一份合成请求通过生产传输组件重放后的结果，认证使用同一假凭证以隔离比较传输行为。
+真实网关选择不同上游凭证时，认证值当然会不同；服务层另有凭证隔离断言。
+
+ClientHello 为 1499 字节。只将 random、session ID 与临时公钥材料置零后，完整握手摘要为
+`8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9`。
+macOS 的 messages 和三条 count_tokens 请求也匹配该摘要；settings / policy_limits 握手不同，
+未将模型请求配置推广到这些辅助接口。
+
+证据：[四条传输路径对照](../backend/internal/service/testdata/claude_code_2_1_292/native-wire-verification.json)、
+[macOS 握手核对](../backend/internal/service/testdata/claude_code_2_1_292/native-macos-clienthello-verification.json)。
+范围不包含 TLS 会话恢复、HTTP/2、ARM64、所有交互模式或真实官方服务验收。
+消除这些协议差异不能量化封号风险，也不能保证账号不会被限制。
+
+本轮完整后端 unit（57 个包）及 integration（51 个包）通过；安全依赖升级后，归因、
+身份、连接缓存、取消、代理及握手回归再次通过，四条传输路径也重新核对。

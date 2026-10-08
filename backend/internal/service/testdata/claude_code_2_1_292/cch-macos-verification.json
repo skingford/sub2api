@@ -1,0 +1,35 @@
+{
+  "binary_sha256": "a9739a215728ce72435885fedb19d1317ee1ccec61e246fbfb3acaf01689c473",
+  "unmodified_cli": true,
+  "source": "previous sandboxed macOS loopback CONNECT experiment",
+  "results": [
+    {
+      "source": "macos-verified",
+      "path": "/v1/messages?beta=true",
+      "body_sha256": "bc8f1bb9c8b142e9a0da897c2d1b8f09a61dbb3b93f9ba5a79f7ddcc763ae863",
+      "cch": "0b0ea",
+      "matched": true
+    },
+    {
+      "source": "macos-context",
+      "path": "/v1/messages/count_tokens?beta=true",
+      "body_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "cch": "",
+      "matched": true
+    },
+    {
+      "source": "macos-context",
+      "path": "/v1/messages/count_tokens?beta=true",
+      "body_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "cch": "",
+      "matched": true
+    },
+    {
+      "source": "macos-context",
+      "path": "/v1/messages/count_tokens?beta=true",
+      "body_sha256": "64eb92513b5183667dc9c6b4f027dd3a9b47591b9a081ae61e9737c99fb9ce17",
+      "cch": "",
+      "matched": true
+    }
+  ]
+}

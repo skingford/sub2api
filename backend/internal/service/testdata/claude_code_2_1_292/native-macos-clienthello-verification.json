@@ -1,0 +1,38 @@
+[
+  {
+    "case": "macos-verified",
+    "path": "/v1/messages?beta=true",
+    "os": "MacOS",
+    "arch": "x64",
+    "length": 1499,
+    "normalized_equal": true,
+    "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9"
+  },
+  {
+    "case": "macos-context",
+    "path": "/v1/messages/count_tokens?beta=true",
+    "os": "MacOS",
+    "arch": "x64",
+    "length": 1499,
+    "normalized_equal": true,
+    "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9"
+  },
+  {
+    "case": "macos-context",
+    "path": "/v1/messages/count_tokens?beta=true",
+    "os": "MacOS",
+    "arch": "x64",
+    "length": 1499,
+    "normalized_equal": true,
+    "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9"
+  },
+  {
+    "case": "macos-context",
+    "path": "/v1/messages/count_tokens?beta=true",
+    "os": "MacOS",
+    "arch": "x64",
+    "length": 1499,
+    "normalized_equal": true,
+    "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9"
+  }
+]
