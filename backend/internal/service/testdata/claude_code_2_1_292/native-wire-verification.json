@@ -43,5 +43,11 @@
       "body_sha256": "04b6efee27a3fb332be67fded39aca3392f545bc1b8171908cadd8d500e410db",
       "zero_dropped_packets": true
     }
-  ]
+  ],
+  "capture_set": "proxy-results-final",
+  "dependencies": {
+    "fhttp": "0.6.9",
+    "circl": "1.6.5",
+    "origin_tls": "refraction-networking/utls 1.8.2"
+  }
 }
