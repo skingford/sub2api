@@ -6,6 +6,9 @@
 
 Updated: 2026-10-08
 
+维护状态：本报告及 cch 专项实现已通过 [PR #2](https://github.com/skingford/sub2api/pull/2)
+合入 `release`（`81b7e5ce`）。下文各日期的试验记录保留当时的结论与适用范围。
+
 本 fork 的上游基线已同步至 v0.2.14 / `3f1a2ea0`。Claude 相关改动编号、提交和验证记录
 统一维护在 [Claude 改动记录](claude-change-log.md)。
 

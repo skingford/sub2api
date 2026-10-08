@@ -2,6 +2,9 @@
 
 更新：2026-10-08。对应改动 `CC-20261008-003`，接续 `CC-20261008-002`。
 
+维护状态：已于 2026-10-08 通过 [PR #2](https://github.com/skingford/sub2api/pull/2) 合入 `release`，
+合并提交 [`81b7e5ce`](https://github.com/skingford/sub2api/commit/81b7e5cec78e38c3bbca282cbc82822d54c76005)。
+
 ## 结论与适用范围
 
 已恢复本次官方原生安装包的 `cch` 计算规则，并接入 Sub2API 的最终请求构建。

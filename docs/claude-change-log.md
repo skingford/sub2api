@@ -144,3 +144,15 @@
 - 集成验证补记：首次全量运行的 repository 包因 Redis 测试容器启动超时失败；其余 50 个包通过。该包单独重跑通过（144.551 秒），合计 51 个包通过。golangci-lint 0 issues。
 - 最终单元验证：完整 unit 57 个包通过，service 包 206.919 秒；六个实际构建组合和所有原生 / 旧兼容回归均通过。实验与检查日志保存在本机 `claude-capture/cch-investigation-20261008/analysis/`。
 - 实现提交：[efcfbc3b](https://github.com/skingford/sub2api/commit/efcfbc3b753ce391ee11d29a001bfc1be586e7d7)，已推送至 PR #2；release 保持待人工合并。
+
+## CC-20261008-004：合入 release 并整理维护文档
+
+- 授权：维护者要求将已验证改动合入 release 并归档文档。
+- 合并：[PR #2](https://github.com/skingford/sub2api/pull/2) 于 2026-10-08 11:03:26（Asia/Shanghai）合并；release 从 `f6b76203` 更新为 `81b7e5cec78e38c3bbca282cbc82822d54c76005`，保留主题分支全部原始提交。
+- 范围：纳入 CC-20261008-001、002、003，包括请求与重试头保留、身份缓存绕过、UTF-16 归因、限定版 TLS / HTTP 头顺序、cch 最终正文计算及实验资产。
+- 验证基线：合并前 PR head 为 `45424008431bd27b5d0ce53c7df7523211dbe87b`；GitHub CI 的后端测试、前端、lint、shell、release helpers 及前后端安全扫描全部成功。CLA 工作流标为 skipped。
+- 云端证据：[CI](https://github.com/skingford/sub2api/actions/runs/37719057674)、[Security Scan](https://github.com/skingford/sub2api/actions/runs/37719057805)。本地 unit 57 个包、integration 51 个包、lint 0 issues 的结果沿用前条记录，包含 Redis 启动超时后的成功重跑。
+- 合并校验：release 合并提交的文件树与上述已验证 head 完全一致；本条后续仅整理 README、两份请求文档和改动记录，检查链接与差异，不重复执行模型请求或全量代码测试。
+- 分支约定：main 继续跟踪上游；本次没有合并历史 PR #1、发布 tag / GitHub Release 或部署运行服务。
+- 知识库：同步维护者的 `wiki/逆向工程/`，新增原生算法与 release 对齐记录，级联更新请求参数、隔离实验和审计边界。
+- 提交关联：本条使用 `Claude-Change-ID: CC-20261008-004`；文档后续 PR 以 release 为目标。历史“待合并”记录由本条更新，不删除原记录。
