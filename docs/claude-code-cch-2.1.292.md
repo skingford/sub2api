@@ -1,5 +1,9 @@
 # Claude Code 2.1.292：cch 算法与隔离验证
 
+> 后续完整性复核发现原生计数头、响应解压、普通 API 配置、身份与重试等剩余差异，
+> 详见 [release 剩余差异报告](claude-code-remaining-differences.md)。已有特定样本验证不代表所有路径等价。
+
+
 更新：2026-10-08。对应改动 `CC-20261008-003`，接续 `CC-20261008-002`。
 
 维护状态：已于 2026-10-08 通过 [PR #2](https://github.com/skingford/sub2api/pull/2) 合入 `release`，

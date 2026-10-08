@@ -156,3 +156,14 @@
 - 分支约定：main 继续跟踪上游；本次没有合并历史 PR #1、发布 tag / GitHub Release 或部署运行服务。
 - 知识库：同步维护者的 `wiki/逆向工程/`，新增原生算法与 release 对齐记录，级联更新请求参数、隔离实验和审计边界。
 - 提交关联：本条使用 `Claude-Change-ID: CC-20261008-004`；文档后续 PR 以 release 为目标。历史“待合并”记录由本条更新，不删除原记录。
+
+## CC-20261008-005：已合并版本的剩余差异审查
+
+- 基线：release `ee2f9fea3cacee7380dc280fb549efa7db4b0cc9`，CLI 2.1.292，原上游基线 `3f1a2ea0`。
+- 范围：本轮只补审查报告与证据摘要，没有修改生产实现或依赖，也没有再次合并 release。
+- 方法：Go overlay 调用生产 service / repository；断网 Docker 补跑未修改 CLI 的 OAuth count 和 403；原生运行时探针对照响应解压。全部使用假凭证和回环服务。
+- 结果：27 个原生转发组合正文一致；发现 count_tokens 多补 timeout 头、zlib 封装 deflate 解码失败、旧版普通 API 模板及转换后分类、账号 UUID 语义、确定性会话 ID、重试与请求 ID、压缩能力缺省值等差异。
+- 边界：区分真实差异、认证路线的必需变化和未验证场景；没有把差异写成已证明的封禁原因。此前特定重放样本的 cch / TLS / 头序结果保留。
+- 验证：service / repository 审查采集通过；原生 OAuth count 和 403 的 PCAP 正文逐字节一致、丢包 0；文档链接与 JSON 校验。没有为文档变更重复运行全量测试。
+- 证据：[剩余差异报告](claude-code-remaining-differences.md)、[机器可读摘要](claude-2292-gap-audit.json)；本机 `claude-capture/remaining-gaps-20261008/` 保存测试源码、输出与原生抓包。
+- 提交关联：`Claude-Change-ID: CC-20261008-005`，审查文档 PR 目标为 release，保持待后续修复评审。

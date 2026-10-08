@@ -54,7 +54,8 @@
 旧身份策略的 180 个配置组合继续保留回归；新的原生保真路径会绕过这些身份改写。
 四条传输路径已通过正文、头部值和顺序、ClientHello 非随机部分的对照。
 已按 2.1.292 原生运行时恢复 `cch` 算法，并在最终正文构建后计算；
-[算法与 Docker 对照记录](docs/claude-code-cch-2.1.292.md)。真实服务端验收仍未验证，
+[算法与 Docker 对照记录](docs/claude-code-cch-2.1.292.md)。
+后续完整性复核见 [剩余差异报告](docs/claude-code-remaining-differences.md)。真实服务端验收仍未验证，
 非原生兼容转换未宣称完整复刻 CLI。
 详细结论及单账号开关见 [请求报告](docs/claude-code-request-parity.md)，复现方法见
 [隔离实验说明](.github/claude-validation/README.md)。
