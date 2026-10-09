@@ -29,12 +29,22 @@ func ResponsesToAnthropicRequest(req *ResponsesRequest) (*AnthropicRequest, erro
 		TopP:        req.TopP,
 		Stream:      req.Stream,
 	}
+	format, err := responsesFormatToAnthropic(req.Text)
+	if err != nil {
+		return nil, err
+	}
+	if len(format) > 0 {
+		out.OutputConfig = &AnthropicOutputConfig{Format: format}
+	}
 
 	if len(system) > 0 {
 		out.System = system
 	}
 
 	// max_output_tokens → max_tokens
+	if req.MaxOutputTokens != nil && *req.MaxOutputTokens <= 0 {
+		return nil, fmt.Errorf("max_output_tokens must be positive")
+	}
 	if req.MaxOutputTokens != nil && *req.MaxOutputTokens > 0 {
 		out.MaxTokens = *req.MaxOutputTokens
 	}
@@ -109,14 +119,14 @@ func ResponsesToAnthropicRequest(req *ResponsesRequest) (*AnthropicRequest, erro
 		if isHaiku55 {
 			out.Thinking.Display = "omitted"
 		}
-		out.OutputConfig = &AnthropicOutputConfig{Effort: effort}
+		setAnthropicOutputEffort(out, effort)
 		return out, nil
 	}
 
 	// reasoning.effort → output_config.effort + thinking
 	if req.Reasoning != nil && req.Reasoning.Effort != "" {
 		effort := mapResponsesEffortToAnthropic(req.Reasoning.Effort)
-		out.OutputConfig = &AnthropicOutputConfig{Effort: effort}
+		setAnthropicOutputEffort(out, effort)
 		// Enable thinking for non-low efforts
 		if effort != "low" {
 			out.Thinking = &AnthropicThinking{

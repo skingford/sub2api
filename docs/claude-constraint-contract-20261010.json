@@ -1,0 +1,144 @@
+{
+  "change_id": "CC-20261010-001",
+  "date": "2026-10-10",
+  "started": "2026-10-09",
+  "base": "afb0c04a361a10ac17dc55ea00a573f1b415fcc7",
+  "upstream": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "evidence_root": "/Users/kingford/claude-capture/constraint-fix-20261009-qvh78u69",
+  "fixes": [
+    "Schema maps to native format and survives effort branches",
+    "Anthropic-target Chat preserves stop and original positive token cap",
+    "JS-compatible Unicode summary trim",
+    "Generated billing system cannot be shadowed by nested Schema data"
+  ],
+  "contract": {
+    "models": 6,
+    "account_types": 2,
+    "entrypoints": 3,
+    "asserted_explicit_combinations": 192,
+    "unicode_oracle_vectors": 62,
+    "observation_gate": {
+      "entrypoint_observations": 102,
+      "summary_requests": 36,
+      "contract_passed": true
+    },
+    "rejects_pre_fix_observations": {
+      "rejected": true,
+      "reason": "Schema changed or disappeared: ('claude-sonnet-4-6', '/v1/chat/completions', 'format')"
+    }
+  },
+  "wire": {
+    "requests": 192,
+    "all_constraints_match": true,
+    "pcap": {
+      "requests": 192,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    }
+  },
+  "nested_schema_cch": {
+    "comparison": {
+      "cases": 3,
+      "native_runtime_matches_go": true,
+      "native_prefix_unchanged": true
+    },
+    "pcap": {
+      "requests": 3,
+      "pcap_raw_bytes_equal": true,
+      "golden_vectors_checked": 0,
+      "kernel_drops": 0,
+      "new_vectors_use_independent_runtime_observations": true
+    },
+    "oracle_type": "2.1.295 native runtime with JS entrypoint replaced; not unmodified CLI"
+  },
+  "forwarding": {
+    "comparisons": 1528,
+    "logical_equal": 1524,
+    "wire_equal": 1524,
+    "exceptions": [
+      {
+        "case": "haiku55-updates-low",
+        "account": "apikey",
+        "passthrough": false
+      },
+      {
+        "case": "haiku55-updates-low",
+        "account": "apikey",
+        "passthrough": true
+      },
+      {
+        "case": "haiku55-updates-low",
+        "account": "oauth",
+        "passthrough": false
+      },
+      {
+        "case": "haiku55-updates-low",
+        "account": "oauth",
+        "passthrough": true
+      }
+    ],
+    "exception_policy": "Native late EXTRA_BODY requests updates without required beta; existing display fallback and CCH recomputation remain"
+  },
+  "summary_capture": {
+    "292": {
+      "scenarios": 3,
+      "requests": 18,
+      "pcap_all_match": true,
+      "all_recovery_steps_accepted": true
+    },
+    "295": {
+      "scenarios": 3,
+      "requests": 18,
+      "pcap_all_match": true,
+      "all_recovery_steps_accepted": true
+    }
+  },
+  "recovery": {
+    "2.1.292": {
+      "model_auth_cases": 6,
+      "sessions": 12,
+      "generation": 96,
+      "count_tokens": 24,
+      "cross_session_leaks": 0
+    },
+    "2.1.295": {
+      "model_auth_cases": 8,
+      "sessions": 16,
+      "generation": 128,
+      "count_tokens": 32,
+      "cross_session_leaks": 0
+    }
+  },
+  "engineering": {
+    "go": "1.27.2",
+    "unit": {
+      "packages": 58,
+      "failures": [],
+      "pass_events": 22989
+    },
+    "integration": {
+      "packages": 52,
+      "failures": [],
+      "pass_events": 13732
+    },
+    "lint_version": "2.14.0",
+    "lint_result": "0 issues",
+    "integration_setup": "Transient Docker API proxy binds only new testcontainers to IPv4; real PostgreSQL/Redis and original assertions unchanged",
+    "integration_proxy_removed": true,
+    "initial_integration_failure": "Redis internal readiness exec inspect timed out before business assertions; final complete run passed",
+    "modules_verified": true,
+    "tidy_diff_empty": true,
+    "source_files_with_json": 3338,
+    "working_source_matches_snapshot": true
+  },
+  "policies": [
+    "Explicit json_object/unknown format modes rejected for Anthropic conversion",
+    "OpenAI wrapper name/strict not native format fields; schema remains unchanged",
+    "Native raw-byte policy and ordinary API conversion are distinct",
+    "Auth/session rewriting, empty version defaults, display-beta fallback and documented endpoint defaults are explicit policies"
+  ],
+  "provider_acceptance_verified": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false
+}

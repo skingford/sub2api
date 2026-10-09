@@ -1,0 +1,312 @@
+[
+  {
+    "name": "u0009-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>\tKeep 中文 🧪\n\n\nSecond line\t</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u0009-outer",
+    "source": "\t<analysis>ignored</analysis>\n<summary>Keep text</summary>\t",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u000a-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>\nKeep 中文 🧪\n\n\nSecond line\n</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u000a-outer",
+    "source": "\n<analysis>ignored</analysis>\n<summary>Keep text</summary>\n",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u000b-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>\u000bKeep 中文 🧪\n\n\nSecond line\u000b</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u000b-outer",
+    "source": "\u000b<analysis>ignored</analysis>\n<summary>Keep text</summary>\u000b",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u000c-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>\fKeep 中文 🧪\n\n\nSecond line\f</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u000c-outer",
+    "source": "\f<analysis>ignored</analysis>\n<summary>Keep text</summary>\f",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u000d-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>\rKeep 中文 🧪\n\n\nSecond line\r</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u000d-outer",
+    "source": "\r<analysis>ignored</analysis>\n<summary>Keep text</summary>\r",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u0020-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u0020-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u00a0-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u00a0-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u1680-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u1680-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2000-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2000-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2001-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2001-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2002-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2002-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2003-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2003-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2004-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2004-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2005-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2005-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2006-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2006-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2007-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2007-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2008-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2008-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2009-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2009-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u200a-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u200a-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2028-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2028-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u2029-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u2029-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u202f-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u202f-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u205f-inner",
+    "source": "<analysis>ignored</analysis>\n<summary> Keep 中文 🧪\n\n\nSecond line </summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u205f-outer",
+    "source": " <analysis>ignored</analysis>\n<summary>Keep text</summary> ",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u3000-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>　Keep 中文 🧪\n\n\nSecond line　</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u3000-outer",
+    "source": "　<analysis>ignored</analysis>\n<summary>Keep text</summary>　",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "ufeff-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>﻿Keep 中文 🧪\n\n\nSecond line﻿</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "ufeff-outer",
+    "source": "﻿<analysis>ignored</analysis>\n<summary>Keep text</summary>﻿",
+    "expected": "Summary:\nKeep text"
+  },
+  {
+    "name": "u0085-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>Keep 中文 🧪\n\n\nSecond line</summary>",
+    "expected": "Summary:\nKeep 中文 🧪\n\nSecond line"
+  },
+  {
+    "name": "u0085-outer",
+    "source": "<analysis>ignored</analysis>\n<summary>Keep text</summary>",
+    "expected": "\nSummary:\nKeep text"
+  },
+  {
+    "name": "u200b-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>​Keep 中文 🧪\n\n\nSecond line​</summary>",
+    "expected": "Summary:\n​Keep 中文 🧪\n\nSecond line​"
+  },
+  {
+    "name": "u200b-outer",
+    "source": "​<analysis>ignored</analysis>\n<summary>Keep text</summary>​",
+    "expected": "​\nSummary:\nKeep text​"
+  },
+  {
+    "name": "u180e-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>᠎Keep 中文 🧪\n\n\nSecond line᠎</summary>",
+    "expected": "Summary:\n᠎Keep 中文 🧪\n\nSecond line᠎"
+  },
+  {
+    "name": "u180e-outer",
+    "source": "᠎<analysis>ignored</analysis>\n<summary>Keep text</summary>᠎",
+    "expected": "᠎\nSummary:\nKeep text᠎"
+  },
+  {
+    "name": "u2060-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>⁠Keep 中文 🧪\n\n\nSecond line⁠</summary>",
+    "expected": "Summary:\n⁠Keep 中文 🧪\n\nSecond line⁠"
+  },
+  {
+    "name": "u2060-outer",
+    "source": "⁠<analysis>ignored</analysis>\n<summary>Keep text</summary>⁠",
+    "expected": "⁠\nSummary:\nKeep text⁠"
+  },
+  {
+    "name": "u0000-inner",
+    "source": "<analysis>ignored</analysis>\n<summary>\u0000Keep 中文 🧪\n\n\nSecond line\u0000</summary>",
+    "expected": "Summary:\n\u0000Keep 中文 🧪\n\nSecond line\u0000"
+  },
+  {
+    "name": "u0000-outer",
+    "source": "\u0000<analysis>ignored</analysis>\n<summary>Keep text</summary>\u0000",
+    "expected": "\u0000\nSummary:\nKeep text\u0000"
+  },
+  {
+    "name": "multiple-tags",
+    "source": "<analysis>first</analysis><analysis>second</analysis>\n<summary> first </summary>\n<summary>second</summary>",
+    "expected": "<analysis>second</analysis>\nSummary:\nfirst\n<summary>second</summary>"
+  },
+  {
+    "name": "empty-summary-bom",
+    "source": "<summary>﻿</summary>",
+    "expected": "Summary:"
+  }
+]

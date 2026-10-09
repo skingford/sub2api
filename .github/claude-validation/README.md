@@ -516,3 +516,59 @@ Haiku 5.5 转换及原生传输配置。2.1.295 传输资格限定 Linux x64、S
 `backend/internal/pkg/claude/testdata/cch-2.1.295.json`，不以 Go 的输出生成预期。
 传输探针 auto 模式读取生产选择的 2.1.292 / 2.1.295 profile，最后必须用
 `verify_post_trace.py --strict-order` 同时验证正文、完整头值 / 头序、握手、日志及零丢包。
+
+## 修复提交后的深入审查
+
+CC-20261009-013 固定已推送的 `afb0c04a3`，结果见
+[逐项报告](../../docs/claude-postfix-audit-20261009.md)。生产代码保持不变；新发现按后续记录修复。
+
+- `postfix_edges_lab.py`：18 个三模型 schema、stop、缓存及 thinking / effort / token 组合；
+- `token_limit_lab.py`：三个原生模型实际发送 64 输出 token 上限；
+- `summary_edges_lab.py`：仅调整模拟压缩回复中摘要首尾的空格、BOM、NEL，CLI 二进制不变。
+
+三个采集器均复用 comprehensive 的版本哈希检查，沿用 network-none / tmpfs 方式并用
+`verify_comprehensive.py` 校验 PCAP。`--json-schema` 在本次环境走 StructuredOutput 工具，
+不能假定它总是 output_config.format；晚期 EXTRA_BODY 的字段还可能缺少对应 beta。
+
+将两个新 Go 文件通过 overlay 放入冻结快照的 `backend/internal/service/`：
+
+```bash
+# 六模型 × 三入口的默认值及显式约束观察，共 102 例（Responses 没有 stop 合同）。
+CLAUDE_POSTFIX_CONTROLS_OUTPUT=/output/entrypoints.json \
+  /opt/service.test -test.run='^TestPostfixEntrypointControls$' -test.v
+
+# 输入目录是上述 summary_edges 的完整原生捕获；逐次调用生产恢复管理。
+CLAUDE_POSTFIX_SUMMARY_INPUT=/captures \
+CLAUDE_POSTFIX_SUMMARY_OUTPUT=/output/summary-sequences.json \
+  /opt/service.test -test.run='^TestPostfixSummarySequence$' -test.v
+```
+
+这两个入口为观察工具，PASS 不表示协议一致。读取最终请求的 schema / stop / max_tokens，
+以及恢复序列中的 error；不得将模拟 200 写成官方接受或忽略有证据的字段差异。
+
+## 显式约束的强制验收
+
+[固定合同](../../docs/claude-validation-contract.md)将 schema / stop / token 上限和 Unicode
+摘要从观察改为失败即阻止验收的断言；修复记录为
+[CC-20261010-001](../../docs/claude-constraint-contract-20261010.md)。
+
+运行 `TestClaudeExplicitConstraintMatrix` 可设置 `CLAUDE_CONSTRAINT_EXPORT=/output/exports`，
+导出 192 个通过实际生产构建器生成的请求。将该目录挂到 `/inputs`，通过 network-none /
+tmpfs 运行 `constraint_wire_lab.py`，然后运行 `verify_encoding_policy.py` 核对 PCAP。
+该实验在接收端验证 schema、stop 和 max_tokens，并保留真实序列化与两种认证方式。
+模拟成功仅代表本地约束核验，不代表官方生成验收。
+
+将修复后的入口观察输出保存为 `entrypoint-controls.json`，两版摘要回放分别保存为
+`summary-sequences-292.json`、`summary-sequences-295.json`，执行：
+
+```bash
+python3 .github/claude-validation/validate_constraint_contract.py /absolute/path/to/results
+```
+
+该命令要求完整的 102 个入口观察及 36 个摘要请求，场景缺失、schema / stop 丢失、显式上限
+变化或续聊拒绝均退出非零。已用修复前证据验证失败、用修复后结果验证通过。
+永久 Go 回归还覆盖 192 个六模型 / 两账号 / 三入口组合、62 个独立 JS Unicode 向量、
+Schema 与 effort 叠加、无效参数、模型映射优先级、策略冲突和嵌套 Schema 的 billing 定位。
+
+不要在完整工程检查运行时继续改被测源码。先冻结快照及哈希，再运行 unit / integration /
+lint；最终校验工作区与快照一致。新增范围必须先补合同和来源证据，不能只沿用旧通过次数。

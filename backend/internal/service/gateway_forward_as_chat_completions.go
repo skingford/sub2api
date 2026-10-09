@@ -53,13 +53,7 @@ func (s *GatewayService) ForwardAsChatCompletions(
 	originalModel := ccReq.Model
 	clientStream := ccReq.Stream
 
-	// 2. Convert CC → Responses → Anthropic (chained conversion)
-	responsesReq, err := apicompat.ChatCompletionsToResponses(&ccReq)
-	if err != nil {
-		return nil, fmt.Errorf("convert chat completions to responses: %w", err)
-	}
-
-	// Resolve the final upstream model before model-specific conversion.
+	// Resolve the destination before applying protocol-specific constraints.
 	mappedModel := originalModel
 	if account.Type == AccountTypeAPIKey || account.Type == AccountTypeServiceAccount {
 		mappedModel = account.GetMappedModel(originalModel)
@@ -79,13 +73,12 @@ func (s *GatewayService) ForwardAsChatCompletions(
 		writeChatCompletionsError(c, http.StatusBadRequest, "invalid_request_error", err.Error())
 		return nil, err
 	}
-	responsesReq.Model = mappedModel
-	anthropicReq, err := apicompat.ResponsesToAnthropicRequest(responsesReq)
+	mappedRequest := ccReq
+	mappedRequest.Model = mappedModel
+	anthropicReq, err := apicompat.ChatCompletionsToAnthropicRequest(&mappedRequest)
 	if err != nil {
-		if isClaude55SignedThinkingModel(mappedModel) {
-			writeChatCompletionsError(c, http.StatusBadRequest, "invalid_request_error", err.Error())
-		}
-		return nil, fmt.Errorf("convert responses to anthropic: %w", err)
+		writeChatCompletionsError(c, http.StatusBadRequest, "invalid_request_error", err.Error())
+		return nil, fmt.Errorf("convert chat completions to anthropic: %w", err)
 	}
 
 	// 3. Force upstream streaming

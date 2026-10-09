@@ -333,6 +333,12 @@ func (s *GatewayService) buildUpstreamRequestAnthropicAPIKeyPassthrough(
 	if beta, ok := account.HeaderOverrideValue("anthropic-beta"); ok {
 		clientBeta = beta
 	}
+	structuredBeta, structuredErr := s.claudeOutputFormatBeta(ctx, c, account, body, targetURL, clientBeta, s.getBetaPolicyFilterSet(ctx, c, account, gjson.GetBytes(body, "model").String()))
+	if structuredErr != nil {
+		return nil, nil, structuredErr
+	}
+	structuredBetaChanged := structuredBeta != clientBeta
+	clientBeta = structuredBeta
 	if err := validateAnthropicSafeguardsCapability(c, body, clientBeta); err != nil {
 		return nil, nil, err
 	}
@@ -379,6 +385,9 @@ func (s *GatewayService) buildUpstreamRequestAnthropicAPIKeyPassthrough(
 	}
 
 	ensureAnthropicClientRequestID(req)
+	if structuredBetaChanged {
+		setHeaderRaw(req.Header, "anthropic-beta", clientBeta)
+	}
 
 	// 账号级请求头覆写（最终生效，覆盖上面所有来源的同名头）
 	account.ApplyHeaderOverrides(req.Header)

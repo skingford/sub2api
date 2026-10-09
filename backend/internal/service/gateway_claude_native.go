@@ -13,6 +13,7 @@ import (
 	requestbody "github.com/Wei-Shaw/sub2api/internal/pkg/httputil"
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 // prepareNativeClaudeTransport selects only the version/platform actually
@@ -159,6 +160,18 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 		}
 		return body, validateNativeClaudeBodyIntegrity(req.Context(), c, body)
 	}
+	originalBody := body
+	if claudeCompatibilityFromContext(req.Context()) != nil {
+		// The native checksum locates the first literal system array. Generated
+		// requests must not let a schema default/tool payload shadow their actual
+		// billing block. Preserve all field values and leave native bytes alone.
+		var err error
+		body, err = positionClaudeCompatibilitySystem(body)
+		if err != nil {
+			return nil, claudeCompatibilityError(c, "cannot serialize the structured Claude request")
+		}
+		billing = gjson.GetBytes(body, "system.0.text")
+	}
 	out, err := finalizeClaude2292Billing(body, billing)
 	if err != nil {
 		if c != nil {
@@ -166,12 +179,34 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 		}
 		return nil, err
 	}
-	if !bytes.Equal(out, body) {
+	if !bytes.Equal(out, originalBody) {
 		// Keep retries, Content-Length, debug snapshots and the actual wire body
 		// on the same final bytes. The closure owns an immutable snapshot.
 		setNativeClaudeWireBody(req, bytes.Clone(out))
 	}
 	return out, nil
+}
+
+func positionClaudeCompatibilitySystem(body []byte) ([]byte, error) {
+	system := gjson.GetBytes(body, "system")
+	if first := bytes.Index(body, []byte(`"system":[`)); first >= 0 && first+len(`"system":`) == system.Index {
+		return body, nil
+	}
+	remaining, err := sjson.DeleteBytes(body, "system")
+	if err != nil {
+		return nil, err
+	}
+	remaining = bytes.TrimSpace(remaining)
+	if len(remaining) < 2 || remaining[0] != '{' || remaining[len(remaining)-1] != '}' || !system.IsArray() {
+		return nil, fmt.Errorf("invalid Claude request object")
+	}
+	out := append([]byte(`{"system":`), system.Raw...)
+	inner := bytes.TrimSpace(remaining[1 : len(remaining)-1])
+	if len(inner) > 0 {
+		out = append(out, ',')
+		out = append(out, inner...)
+	}
+	return append(out, '}'), nil
 }
 
 func nativeClaudeHasChecksum(body []byte) bool {

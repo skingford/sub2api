@@ -200,3 +200,8 @@ request-traces/
 !docs/claude-source-runtime-audit-20261009.json
 !docs/claude-295-compatibility-fix-20261009.md
 !docs/claude-295-compatibility-fix-20261009.json
+!docs/claude-postfix-audit-20261009.md
+!docs/claude-postfix-audit-20261009.json
+!docs/claude-validation-contract.md
+!docs/claude-constraint-contract-20261010.md
+!docs/claude-constraint-contract-20261010.json

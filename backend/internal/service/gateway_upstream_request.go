@@ -131,6 +131,13 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	if beta, ok := account.HeaderOverrideValue("anthropic-beta"); ok {
 		finalBetaHeader, finalBetaShouldSet = beta, true
 	}
+	structuredBeta, structuredErr := s.claudeOutputFormatBeta(ctx, c, account, body, targetURL, finalBetaHeader, effectiveDropSet)
+	if structuredErr != nil {
+		return nil, nil, structuredErr
+	}
+	if structuredBeta != finalBetaHeader {
+		finalBetaHeader, finalBetaShouldSet = structuredBeta, true
+	}
 	finalBetaHeader = filterSonnet55ToolsetBeta(finalBetaHeader, body, modelID)
 	if err := validateAnthropicSafeguardsCapability(c, body, finalBetaHeader); err != nil {
 		return nil, nil, err
@@ -578,7 +585,7 @@ func (s *GatewayService) computeFinalAnthropicBeta(
 			// supports. Do not enable diagnostics on callers' behalf. Unknown
 			// client betas remain excluded, and policy drops still take precedence.
 			incomingBetas := make([]string, 0, 2)
-			for _, token := range []string{claude.BetaStructuredOutputs, claude.BetaCacheDiagnosis, claude.BetaMidConversationOutputConfig, claude.BetaMidConversationSystem, claude.BetaPerTurnControl, claude.BetaDangerousToolUse, claude.BetaThinkingDisplayUpdates, claude.BetaMidConversationSystemClear} {
+			for _, token := range []string{claude.BetaStructuredOutputs, claude.BetaStructuredOutputsNative, claude.BetaCacheDiagnosis, claude.BetaMidConversationOutputConfig, claude.BetaMidConversationSystem, claude.BetaPerTurnControl, claude.BetaDangerousToolUse, claude.BetaThinkingDisplayUpdates, claude.BetaMidConversationSystemClear} {
 				if containsBetaToken(clientBeta, token) {
 					incomingBetas = append(incomingBetas, token)
 				}

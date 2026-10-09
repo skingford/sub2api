@@ -18,6 +18,8 @@ const (
 	BetaFastMode                 = "fast-mode-2026-02-01"
 	// Legacy structured output compatibility; forwarded only when explicitly requested.
 	BetaStructuredOutputs = "structured-outputs-2025-11-13"
+	// output_config.format capability in the pinned 2.1.292 / 2.1.295 bundles.
+	BetaStructuredOutputsNative = "structured-outputs-2025-12-15"
 
 	// 新增（对齐官方 CLI 2.1.9x 以来的流量）
 	BetaPromptCachingScope          = "prompt-caching-scope-2026-01-05"

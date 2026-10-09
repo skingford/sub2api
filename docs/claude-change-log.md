@@ -427,3 +427,30 @@
 - 最终工程补记：不可变快照的 58 包 unit 全通过；integration 首轮 49 包通过，三个包在 Redis / PostgreSQL / Ryuk 启动阶段因本机 Docker 双栈发布端口选择失败。临时代理仅将这三个包新建 testcontainers 的端口绑定到 IPv4，保留所有原断言及真实数据库交互，复验全部通过，合计 52 包、未解决失败 0；原始命令退出 1 与环境诊断均保留。代理已停止，没有修改 Docker 全局配置或业务容器。golangci-lint 2.14.0 为 0 issues；模块校验、tidy diff 和差异空白检查通过。工作区 3,193 个 Go / SQL / 模块文件与最终快照一致，连同回归 JSON 共 3,332 个文件有 SHA-256 清单。
 
 - 2026-10-09 提交 / 推送补记：本条代码、回归样本及验证材料已提交为 [765a12ec4199dfeb490b60b0cfcc47db10bdff14](https://github.com/skingford/sub2api/commit/765a12ec4199dfeb490b60b0cfcc47db10bdff14)，带 `Claude-Change-ID: CC-20261009-012`，并按维护者授权推送到 `origin/codex/claude-source-runtime-audit-20261009`。通过 Git 提交归档逐文件重新核对，3,332 个源码 / 回归 JSON 与已验证快照完全一致；本轮提交后仅补充追溯记录，没有重跑相同源码的测试。没有新建 PR、合并 release 或部署。
+
+
+## CC-20261009-013：已推送修复后的再次逐项审查
+
+- 授权 / 基线：维护者要求再次依据反编译源码及 Docker 隔离 CLI 全面深入对比。固定 HEAD `afb0c04a361a10ac17dc55ea00a573f1b415fcc7`，运行时代码为 `765a12ec4199dfeb490b60b0cfcc47db10bdff14`；上游仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。本条只审查，生产源码未修改，保留 011 / 012 的既有记录。
+- 版本 / 来源：未修改 Linux x64 CLI 2.1.292 / 2.1.295，SDK 0.128.0、runtime v26.3.0，复用并重新校验 012 的固定二进制哈希；重新提取 2,260 / 2,340 个嵌入 JS 模块，与此前 4,600 个解码模块逐字节相同。新增定位结构化输出、停止条件及原生 Q6o 摘要归一化；原函数仅独立执行，不把它计作未修改 CLI。
+- 新发现 F1：六模型的 Responses.text.format / Chat.response_format 在最终转换中丢失 schema（12 例），Messages 的等价约束全部保留（6 例）；本地模拟请求均 200。原生 CLI --json-schema 使用 StructuredOutput 工具，另以 EXTRA_BODY 验证显式 format 字段，不混淆两种表示或推断真实生成成功。
+- 新发现 F2 / F3：六模型 Chat.stop 全部丢失，而 Messages.stop_sequences 保留；显式 max_tokens=64 经 Chat 转换变成 128，而 Messages / Responses 保持 64。三模型未修改 CLI 的 64 上限捕获与 PCAP 一致。前者是中间结构无 stop，后者是通用 Responses 128 下限被套用于最终 Anthropic 目标；两者所在 Chat 转换器与 release 基线相同，不列为 012 新增回归。
+- 新发现 F4：Go TrimSpace 与原生 JS trim 对 BOM / NEL 的处理相反，导致保存的摘要与 CLI 续聊包装不同。两版各三场景 / 18 原生请求，空格对照六轮通过，BOM / NEL 各在首次压缩后的第三条请求被生产恢复管理判为历史冲突；handler 源码映射 409。为原生捕获与生产管理器的两阶段回放，不冒充完整部署。该归一化函数在 release 与当前代码相同，补充此前未覆盖的 Unicode 边界。
+- 原生 / 传输：主捕获 228 场景 / 382 请求，错误回放 44 场景 / 116 请求，总计 272 场景 / 498 请求，PCAP 全匹配、零丢包。1,528 个生产 Forward 组合中 1,524 个正文 / wire 全同；四例是晚期 EXTRA_BODY 缺 thinking-display-updates beta，触发现有 display=omitted 清理并正确重算 CCH，明确列为策略差异。48 组四路径 / 日志开关的正文、完整头值 / 头序、归一化握手全同，24 组日志完整性与脱敏通过；605 个独立运行时 CCH 向量与 Go 全同。
+- 旧修复复验：普通恢复 292 三模型 / 12 会话 / 96 生成 / 24 计数、295 四模型 / 16 会话 / 128 生成 / 32 计数通过，混入 0。Haiku 5.5 默认值、显式 xhigh、签名往返和原生传输保持有效；错误归一化前后实际 CLI 请求次数、编码序列和退出状态全部一致。另列 Sonnet 5.5 默认 effort 及旧 55 模型 display 的跨入口字段差异，不凭客户端结果推断官方语义。
+- 工程 / 文件：service 专项 1,690 个通过事件、五组件包 389 个通过事件、CCH 606 个通过事件；后端 3,332 个源码 / 回归 JSON 文件与冻结快照一致。未重跑全仓库 unit / integration / lint，012 的历史工程结果不算本轮重跑。新增五份审查采集器 / Go overlay、README、[报告](claude-postfix-audit-20261009.md)及[结构化结果](claude-postfix-audit-20261009.json)，.gitignore 放行报告；完整本机材料位于 `claude-capture/postfix-audit-20261009-m7wo9q_4/`。
+- 提交 / 范围：本轮新审查尚未提交或推送，后续提交使用 `Claude-Change-ID: CC-20261009-013` 并补记引用；四项新发现未修复。所有模型交互为断网、假凭据及本地合成响应，不代表官方接受、真实签名、OAuth 订阅、计费或完整部署验收。
+
+
+## CC-20261010-001：显式约束、Unicode 摘要与固定验收合同
+
+- 授权 / 责任：维护者要求完整修复 013 的四项问题，并指出此前反复出现差异。此前覆盖偏重原生转发和常规场景，观察型 PASS 被过度概括；本条以固定断言、独立来源及明确策略边界纠正验收方式，不保证所有未知输入或未来版本等价。保留 013 的失败记录。
+- 基线 / 版本：基于 `afb0c04a361a10ac17dc55ea00a573f1b415fcc7`，上游仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`；CLI Linux x64 2.1.292 / 2.1.295，SDK 0.128.0、runtime v26.3.0，沿用 012 / 013 的已核验二进制及模块哈希。工作开始于 2026-10-09，最终记录于 2026-10-10。
+- F1：将 Responses / Chat 的 JSON Schema 转为原生 output_config.format，保留完整 schema，effort 分支不再覆盖 format；已知非法或不支持的模式明确返回 400。第一方转换请求声明源码中的 structured-outputs-2025-12-15，策略禁用 / 生效的 header 覆写移除能力则明确拒绝。原生声明、自定义 origin 及旧版 output_format 路径保持原合同。补查嵌套 schema.default.system 可遮蔽 CCH 定位，仅对需要的生成请求调整真实 system 位置，保留数据；三入口与独立原生运行时的完整字节相同。
+- F2 / F3：新增面向 Anthropic 的 Chat 转换器，在模型映射后转换；准确传递 stop 字符串 / 数组及正值输出上限，max_completion_tokens 优先。真正 OpenAI Responses 的旧 128 下限保留，Anthropic 目标不再被中间协议抬高。错误类型、非正上限和不支持的 format 在发送前报 400，不静默删除或改成缺省值。
+- F4：摘要内部及整体改用 ECMAScript 空白集合，BOM 去除、NEL 保留，摘要来源与历史完整性校验不变。62 个独立 Q6o JS 向量通过；重新运行两版未修改 CLI 的空格 / BOM / NEL 六场景 / 36 请求，PCAP 全匹配、零丢包，生产恢复序列全通过。
+- 固定验收：新增六模型 × 两账号 × 三入口的 192 个约束组合，覆盖 schema、schema+effort、1 / 64 token、单 / 多 stop；补充低上限边界、优先级、非法控制、策略冲突、映射顺序及嵌套 schema。新增硬性验收工具，已证实拒绝旧数据、通过修复后的 102 入口观察与 36 摘要请求。192 个导出请求经真实 HTTPUpstream / TLS 发送，在接收端检查约束并通过 PCAP；不是官方模型输出验收。
+- 旧行为回归：1,528 个原生转发组合中 1,524 个原字节相同，四例保留缺 display beta 的既有回退及 CCH 重算。普通恢复 292 12 会话 / 96 生成 / 24 计数、295 16 会话 / 128 生成 / 32 计数通过，跨会话混入 0；不以剔除策略差异的方式宣称全同。
+- 工程：最终冻结源码的 58 包 unit、52 包 integration 全通过，golangci-lint 2.14.0 为 0 issues；go mod verify、tidy diff、git diff --check 通过。本机 Docker 集成使用仅作用于新 testcontainers 的临时 IPv4 绑定代理，真实 PostgreSQL / Redis 和原断言保留；首轮一次 Redis 内部启动探测超时已记录，最终完整运行退出 0。代理已清理，未改 Docker 全局配置或业务容器。
+- 文件 / 证据：新增目的端约束转换、原生格式结构、结构化能力处理、JS trim、生成 billing 定位修复及永久回归 / 独立向量；新增强制验收和真实发送工具、README、[固定合同](claude-validation-contract.md)、[修复报告](claude-constraint-contract-20261010.md)和[结构化记录](claude-constraint-contract-20261010.json)。本机材料在 `claude-capture/constraint-fix-20261009-qvh78u69/`。准备中纠正一处未使用导入和一处将 API Key 头覆写资格误用于 OAuth 的测试假设，保留相应日志。
+- 提交 / 范围：当前未提交、推送、合并或部署；后续提交使用 `Claude-Change-ID: CC-20261010-001` 并补记引用。全部模型交互为隔离假凭据 / 合成响应，不声称官方接受、真实签名、订阅或计费验收；默认策略与未测平台范围见固定合同。

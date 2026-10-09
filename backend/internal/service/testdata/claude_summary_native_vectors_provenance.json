@@ -1,0 +1,16 @@
+{
+  "module": "chunk-53bsrq2x.js",
+  "module_sha256": "c3e5c11c221cebce2d6c3c6cc6f55d35c5306562437271b4702d453b5ac3571f",
+  "function": "Q6o",
+  "extracted_declarations_sha256": "bb56f362e32e931c56e63e0f42af845562fa534e6cee0ded606500bfcb014f5a",
+  "byte_offset": 2469533,
+  "method": "Exact extracted JS regex declarations and function, executed under Node; not an unmodified CLI capture",
+  "vectors": 62,
+  "cli_confirmed_boundaries": [
+    "U+0020",
+    "U+FEFF",
+    "U+0085"
+  ],
+  "baseline_cli_capture_root": "/Users/kingford/claude-capture/postfix-audit-20261009-m7wo9q_4",
+  "purpose": "Independent JS trim/summary outputs for permanent Go regression; not server acceptance"
+}

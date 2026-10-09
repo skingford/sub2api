@@ -108,9 +108,9 @@ func recoveryCompactionSummary(text string) string {
 		text = text[:at[0]] + text[at[1]:]
 	}
 	if at := recoverySummaryRE.FindStringSubmatchIndex(text); at != nil {
-		text = text[:at[0]] + "Summary:\n" + strings.TrimSpace(text[at[2]:at[3]]) + text[at[1]:]
+		text = text[:at[0]] + "Summary:\n" + strings.TrimFunc(text[at[2]:at[3]], claudeJSWhitespace) + text[at[1]:]
 	}
-	return strings.TrimSpace(recoveryBlankLinesRE.ReplaceAllString(text, "\n\n"))
+	return strings.TrimFunc(recoveryBlankLinesRE.ReplaceAllString(text, "\n\n"), claudeJSWhitespace)
 }
 
 func recoveryTextBlocks(raw json.RawMessage) ([]string, bool) {
