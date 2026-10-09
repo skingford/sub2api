@@ -129,5 +129,13 @@
       "deploy/export-request-trace.py": "2cf6728bddcc076e56714eb71758e98289d4861a95f0a1494ab429402250c490",
       "deploy/tests/test_export_request_trace.py": "c630bccc8fb8e21dd3e26a5dd767d537dc69dda157fbf0ccd1586356c3fe2297"
     }
+  },
+  "commit_follow_up": {
+    "revision": "be3642a6f6c421cb437424b5da1778aaa89d03b7",
+    "change_id": "CC-20261009-002",
+    "staged_source_hashes_verified": true,
+    "pushed": false,
+    "merged": false,
+    "deployed": false
   }
 }
