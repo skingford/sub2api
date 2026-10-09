@@ -1,0 +1,445 @@
+{
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "cli": "2.1.292",
+  "sdk": "0.128.0",
+  "cli_platform": "Linux x64",
+  "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "docker_image": "sha256:eb7d83c374af3c3a113387e520f7f0247719f733e4a8ed0e9da73c98a69a91b4",
+  "source_anchors": [
+    {
+      "module": "chunk-hy08191v.js",
+      "binary_offset": 209400178,
+      "size": 10403,
+      "sha256": "64d6e6c6172e3dba5e07f7cc7c8d94ab1c3a9dfbe26fef924a584ea9e2a09402"
+    },
+    {
+      "module": "chunk-47d8fnm7.js",
+      "binary_offset": 207221829,
+      "size": 9408,
+      "sha256": "0bfe82c8210f3f477a7e651910e9d5ea744cf914a9e4da1f64495bb3358c8043"
+    },
+    {
+      "module": "chunk-9yn9h839.js",
+      "binary_offset": 209661529,
+      "size": 936192,
+      "sha256": "14f68808b28960aa01cb7dc43c6e876964df322deda0242f744ef02b81b55f86"
+    }
+  ],
+  "change_id": "CC-20261009-009",
+  "start_commit": "0f628bcf44ef10d6dde3f7a9a9ecec6d2b0f6b5b",
+  "toolchain": "go1.27.2",
+  "evidence_root": "/Users/kingford/claude-capture/protocol-fix-20261009-kv1piehj",
+  "source_manifest_files": 3190,
+  "forwarding": {
+    "comparisons": 556,
+    "logical_equal": 556,
+    "wire_equal": 556,
+    "same_auth": 278,
+    "same_auth_header_equal": 276,
+    "remaining_same_auth_headers": [
+      {
+        "case": "capture-deep--gzip-version-empty",
+        "differences": [
+          {
+            "forwarded": "2023-06-01",
+            "header": "anthropic-version",
+            "native": ""
+          }
+        ]
+      },
+      {
+        "case": "capture-deep--gzip-version-empty",
+        "differences": [
+          {
+            "forwarded": "2023-06-01",
+            "header": "anthropic-version",
+            "native": ""
+          }
+        ]
+      }
+    ]
+  },
+  "policy_scenarios": 108,
+  "policy_wire": {
+    "requests": 16,
+    "original_gzip": 8,
+    "native_plaintext_cch": 8,
+    "pcap_match": true,
+    "kernel_drops": 0
+  },
+  "error_replays": [
+    {
+      "kind": "origin",
+      "case": "cf-ray-upstream",
+      "requests": 1,
+      "encodings": [
+        "gzip"
+      ],
+      "exit_code": 1
+    },
+    {
+      "kind": "origin",
+      "case": "cf-ray-downstream",
+      "requests": 1,
+      "encodings": [
+        "gzip"
+      ],
+      "exit_code": 1
+    },
+    {
+      "kind": "origin",
+      "case": "request-id-upstream",
+      "requests": 1,
+      "encodings": [
+        "gzip"
+      ],
+      "exit_code": 1
+    },
+    {
+      "kind": "origin",
+      "case": "request-id-downstream",
+      "requests": 1,
+      "encodings": [
+        "gzip"
+      ],
+      "exit_code": 1
+    },
+    {
+      "kind": "origin",
+      "case": "none-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 1
+    },
+    {
+      "kind": "origin",
+      "case": "none-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 1
+    },
+    {
+      "kind": "bad-json-object",
+      "case": "cf-ray-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-object",
+      "case": "cf-ray-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-object",
+      "case": "request-id-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-object",
+      "case": "request-id-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-text",
+      "case": "cf-ray-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-text",
+      "case": "cf-ray-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-text",
+      "case": "request-id-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-text",
+      "case": "request-id-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-standard",
+      "case": "cf-ray-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-standard",
+      "case": "cf-ray-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-standard",
+      "case": "request-id-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-standard",
+      "case": "request-id-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-escaped",
+      "case": "cf-ray-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-escaped",
+      "case": "cf-ray-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-escaped",
+      "case": "request-id-upstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    },
+    {
+      "kind": "bad-json-escaped",
+      "case": "request-id-downstream",
+      "requests": 3,
+      "encodings": [
+        "gzip",
+        "gzip",
+        "identity"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "checks": {
+    "unit": 58,
+    "integration": 52,
+    "lint_version": "2.14.0",
+    "lint_issues": 0
+  },
+  "scope_limits": [
+    "First-party CCH finalization remains limited to the measured 2.1.292 profile.",
+    "Unknown versions retain exact verified gzip or reject unsafe transcoding; no algorithm is inferred.",
+    "Custom origins do not gain the first-party CCH or TLS profile.",
+    "Synthetic error replay and provider smoke tests are distinct; no official entitlement or signature verification.",
+    "Production Forward and HTTPUpstream live tests are two-stage component tests, not a full deployed gateway."
+  ],
+  "native_service": {
+    "model_auth_cases": 6,
+    "conversations": 12,
+    "generation_requests": 96,
+    "count_requests": 24,
+    "cross_session_leaks": 0,
+    "test_binary_sha256": "dc23875ee1e3ed4bb64e9696cf4a7571775e0142e23e74f73ef9c664d11b82de"
+  },
+  "live_smoke": {
+    "model": "claude-haiku-4-5-20251001",
+    "model_list_bearer_status": 200,
+    "model_list_x_api_key_status": 401,
+    "generation_cases": [
+      {
+        "name": "raw-bearer",
+        "status": 200
+      },
+      {
+        "name": "raw-x-api-key",
+        "status": 200
+      },
+      {
+        "name": "native-cli-2.1.292",
+        "exit_code": 0
+      },
+      {
+        "name": "production-normal",
+        "status": 200
+      },
+      {
+        "name": "production-passthrough",
+        "status": 200
+      }
+    ],
+    "first_endpoint_model_list_status": 403,
+    "endpoint_and_credentials_omitted": true,
+    "temporary_egress_and_credential_removed": true
+  },
+  "remote_configuration": {
+    "cli": "2.1.295",
+    "user": "root",
+    "auth_status_logged_in": true,
+    "short_generation": "OK",
+    "onboarding_complete": true,
+    "file_mode": "0600",
+    "credential_committed": false,
+    "reusable_script": ".github/claude-validation/configure_claude_router.py"
+  },
+  "validation_notes": [
+    "Initial full unit run failed once in unchanged OpenAI cache refresh deduplication test; the same baseline test passed 100 isolated repetitions. Final full rerun retained separately.",
+    "An initial lint used 2.13.0 and could not decode Go 1.27.2 export data; final lint uses 2.14.0.",
+    "A first focused assertion incorrectly expected api_key query redaction from the existing sanitizer; corrected to the supported key parameter without changing global redaction.",
+    "Bounded canonical errors were added after the first snapshot to prevent JSON escape growth; final source manifest, Linux service lab and full checks reflect that update.",
+    "Policy wire and provider smoke probes preceded the final bounded-error shortening; their request/transport code is unchanged. Final Forward exports, error replay and managed service lab used the final service binary."
+  ],
+  "artifact_sha256": {
+    "analysis/unit-final.log": "c7b943adfd99f50431f3d02ceec70f4ece650ad49a8bb611c978e9ed469e9309",
+    "analysis/focused-final.log": "83ac1f56ead1dcefe00daba710c34e9117ccbba190b97e724cfe6115c9bf4860",
+    "analysis/lint-final.log": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+    "analysis/native-service-final.log": "74e3e8e0a8b90e860e69cd3e28648b2ec354ec020e0012d4393ce002eb92108d",
+    "analysis/integration-final.log": "7f93cd73d3af0b61743d07713520248784a40ae36777d434b423b39cdd1c064a",
+    "analysis/source-manifest-final.json": "026cdf609ba6e4c761fa64ff71d1c8b19393e4450a02ca5eda7c0bcfb0c16c0e",
+    "analysis/native-service-summary.json": "d29223bdf9e6af2f4ee3549d8202407788212057aab99561562a3c2018ebe190",
+    "analysis/final-checks.json": "f49a686b3a5a57010bfa23ea880524ce95734816f814a0a7128eae1739efbfdc",
+    "offline/forwarding.json": "53ef340636bdee98cf214d6a7522bb4c656131a85e003cb7150c81ad8c16b2cd",
+    "offline/policy/results.json": "08c277de5f4c083ac45b63ef5e5fd678aca74a8f02fe49743fe90aaaf48de828",
+    "offline/policy-wire/pcap-verification.json": "d7e2a6eaeb019230f5495723534ad04cbc4ac1d53b1169a657750277908ada47",
+    "offline/replay-bad-json-standard/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "offline/replay-bad-json-text/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "offline/replay-origin/pcap-verification.json": "7439776e95d14f17951233e4c3112b62850212700b5bde1d9bfe79005e6caebf",
+    "offline/replay-bad-json-escaped/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "offline/replay-bad-json-object/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "offline/replay-bad-json-standard/summary.json": "3a42df8a505708e2e36fd390ec6b13e083e881ebb57dd84077f4c4507993dc54",
+    "offline/replay-bad-json-text/summary.json": "3a42df8a505708e2e36fd390ec6b13e083e881ebb57dd84077f4c4507993dc54",
+    "offline/replay-origin/summary.json": "3a2828d0326ffdb576404f95d226ffef0d4755ad1bfdff427a5b0a848e358efa",
+    "offline/replay-bad-json-escaped/summary.json": "3a42df8a505708e2e36fd390ec6b13e083e881ebb57dd84077f4c4507993dc54",
+    "offline/replay-bad-json-object/summary.json": "3a42df8a505708e2e36fd390ec6b13e083e881ebb57dd84077f4c4507993dc54",
+    "analysis/remote-config-verification.json": "020fe6d7e76b914dc7a4de81392a3592395d1c3c39ffa0cb1e7c529d6b812b50"
+  },
+  "validation_tool_sha256": {
+    ".github/claude-validation/parameter_alignment_lab.py": "f7333592e88065a935d784dd0156853949e09a6bdacc3e04ea0f44b0f67e98a2",
+    ".github/claude-validation/transport_lab.py": "edd844f02ebed39a6e19ee25354f44e1c750087af3c3b5c6b319a46a9ab559ff",
+    ".github/claude-validation/configure_claude_router.py": "d30c4d3517e095c9d1e19bf3d1a910e243d73d667070e67ff89dc1cc477320f9",
+    ".github/claude-validation/gzip_fix_lab.py": "447960f0b6a8e46ac9595bb92bab1aaa71aed419873e900575c915c515d50b97",
+    ".github/claude-validation/extended_audit.py": "a52effc34e802b4e2fb1f099e5dace8f6fddb91fd00c8775a005ff26fb0e6072",
+    ".github/claude-validation/deep_response_header_audit_test.go": "d47b09aebddaa9a4c8c572c1d5f463c48623f7cfe5126564a64bff54c90fcd36",
+    ".github/claude-validation/run_alignment_lab.py": "a96add59165134d80e9dddab13f41608a88c9724e5bd669a8524857d32d86aae",
+    ".github/claude-validation/post_trace_transport_lab.py": "9713ec4ac7510a6073cb306bd87237218653600a8f78fbfc60ab1c9a33f484da",
+    ".github/claude-validation/prepare_cch_probe.py": "826897211af4fd15d2ce16c304efadc9ce3be35933b6a5e0bb2702b8a73ed359",
+    ".github/claude-validation/extended_audit_test.go": "62a6818c8cc75c857782ab91346fa2a1353b0f6b776ebb8d3a741b47f7e29f43",
+    ".github/claude-validation/verify_encoding_policy.py": "e39544f4986702526d8449c0c2ba5548fe250fb9b473d965a6d43733e10df0cd",
+    ".github/claude-validation/post_alignment_lab.py": "2dd6914576a86e2b6f6220431c7256f541d3c03c20b85802fc40a29a6e4c0c6c",
+    ".github/claude-validation/verify_cch_capture.py": "fa5b671e8d2ac9fe5bd418a268cc87f104e5de6abf9c354c047fc39c735f7fd8",
+    ".github/claude-validation/proxy_lab.py": "c23b6d014ba2a72ffb73ab9cbc5bf0ebf3ea8c059195f2247dd6a6f5974b1b34",
+    ".github/claude-validation/protocol_live_export_test.go": "eb8ed9eb613557e0953d547e3ee087501210be9483f583000229aafd8200e611",
+    ".github/claude-validation/post_alignment_audit_test.go": "9fd7e087e907e7dc475e60f14178144b88f88b9d01c2ef6fb0fde775ad53875c",
+    ".github/claude-validation/comprehensive_audit_test.go": "bed78954bf83666183f0c405c70a4424a1b565efe4b88a496b8a6cd7d74195f2",
+    ".github/claude-validation/deep_policy_audit_test.go": "8b4c260dca2cba61660e85a3d5b4355d31f0c5a7a05ebcce9f92730fa4952894",
+    ".github/claude-validation/verify_post_trace.py": "5402f668cd32ea2bef2d935e7413e70216db4c63b3256e0663a3c89db94bf8ae",
+    ".github/claude-validation/proxy_audit_lab.py": "cf66a8af21e7c00961f8ecc43dfa815eb9f8373ae1165e13df27f433b723a5e4",
+    ".github/claude-validation/deep_error_replay_lab.py": "a1a1d52f2642f68e250b8a3ab0c32eb0aee24a5db2b06f1064b947c04930c1ad",
+    ".github/claude-validation/restricted_egress_proxy.py": "9eb77ecea1f0fcd21e53f9e348c4d2b0b0f5744370a088398a82890a499e62e4",
+    ".github/claude-validation/live_transport_probe.go": "3d46e81c4d044f94bf1ab1b1eae2ceb7d3493ed974699415a537ec8e1c71fd3c",
+    ".github/claude-validation/deep_policy_wire_lab.py": "ecb2df41fa92fea41c4da70310c97f30cab5efd7b0905b9ee8ea9d08847690c0",
+    ".github/claude-validation/verify_gzip_wire.py": "1552cda9c45e836ee99b00c126668ad0db5a16d8a96db2759b6e03f900d04cf7",
+    ".github/claude-validation/ram_capture.py": "b01f00d261924b492f2a6467b78c396cb88acb26ff691c35830771d6ded39617",
+    ".github/claude-validation/verify_deep_runtime.py": "79c71989e52b2472aeb82d1ec8758f55a5cb3a663029291a443410d831e99a0d",
+    ".github/claude-validation/comprehensive_lab.py": "15cfef44326e957704aab5e11f4c2abfd3919f3c606568f9fb4aa699358d5a2e",
+    ".github/claude-validation/verify_native_hello.py": "6276dd551780540d32a43c7a3740a59e23328295c475dcf2beb969938c6dc8b2",
+    ".github/claude-validation/trace_transport_probe.go": "c57ec8a47231730fe3bc4f01ec9034836cf19a5ad62d0c28a224a1b62c27be83",
+    ".github/claude-validation/deep_native_lab.py": "9f64f5f854a48d1ef97f4d76132e2b0457eac6fe9a31f451a98054269cde1aa0",
+    ".github/claude-validation/encoding_policy_lab.py": "04e915bc6ccc337545b1cf7b5eca9d2d5e5d30c9be2b1901c8799e98c59ede12",
+    ".github/claude-validation/protocol_fix_wire_lab.py": "26bcdd68ed5af5c7129072fd946664945ccf5a05ec455010c0c9ed712ab27d41",
+    ".github/claude-validation/request_recheck_test.go": "949cfae8974ec8bf743c1cfd5b8aac7f6ad969ba08dd14471a3b5a10fb6e8cd4",
+    ".github/claude-validation/cch_runtime_lab.py": "da049c2883e5030a381d3358bf26c7553965a808b1e6df644faf769981c6ab0b",
+    ".github/claude-validation/lab.py": "8e6e1944abfd91376a3df47bcb666f6e0052db1cf7da78ec9666939952d9a5d3",
+    ".github/claude-validation/analyze.py": "82a2b566d6f00440fec0d7e7036e3930691cf2015798de45d78a5cf97cb9dc34",
+    ".github/claude-validation/verify_comprehensive.py": "418ff89d0f16dedc63028348c444121343d99056ddcd576d048ad277ffeedb3a",
+    ".github/claude-validation/validation.py": "c735b3dbd955739be0146b608316445296c3a5e051ee0a7ba7cbf3de3503bf2b",
+    ".github/claude-validation/cch_recheck_test.go": "d7e242b86adcc95f69907428224813723a421b7a7807aa0cbb6876761e49a6a7"
+  },
+  "commit_references": {
+    "code": "133c6b4212a7192a52ffb9ccf5dd9e508c6d87d2",
+    "pull_request": "https://github.com/skingford/sub2api/pull/6",
+    "pushed": true
+  }
+}

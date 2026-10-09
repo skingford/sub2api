@@ -120,7 +120,7 @@ func TestClaudeNativeGzipLegacyEncodingOverrides(t *testing.T) {
 func TestClaudeNativeCountGzipChangedBodyAndScope(t *testing.T) {
 	for _, scenario := range []string{"changed", "custom-origin", "unknown-version", "disabled-preservation", "unvalidated"} {
 		t.Run(scenario, func(t *testing.T) {
-			c, body, _ := nativeGzipFixtureRequest(t, "testdata/claude_code_2_1_292/gzip_alignment/gzip-count-3.json")
+			c, body, wire := nativeGzipFixtureRequest(t, "testdata/claude_code_2_1_292/gzip_alignment/gzip-count-3.json")
 			a := newClaude2292Account(AccountTypeAPIKey)
 			target := "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
 			if scenario == "custom-origin" {
@@ -148,12 +148,20 @@ func TestClaudeNativeCountGzipChangedBodyAndScope(t *testing.T) {
 			req.Header["CONTENT-ENCODING"] = []string{"identity"}
 			out, err := finalizeNativeClaudeRequest(req, c, a, body)
 			require.NoError(t, err)
-			for key := range req.Header {
-				require.False(t, strings.EqualFold(key, "content-encoding"))
-			}
 			actual, err := io.ReadAll(req.Body)
 			require.NoError(t, err)
-			require.Equal(t, out, actual)
+			if scenario == "unknown-version" {
+				require.Equal(t, wire, actual)
+				require.Equal(t, "gzip", getHeaderRaw(req.Header, "Content-Encoding"))
+				require.Equal(t, body, out)
+				require.NotContains(t, req.Header, "content-encoding")
+				require.NotContains(t, req.Header, "CONTENT-ENCODING")
+			} else {
+				for key := range req.Header {
+					require.False(t, strings.EqualFold(key, "content-encoding"))
+				}
+				require.Equal(t, out, actual)
+			}
 			require.False(t, claude.GzipUsesApplicationHeader2292(req.Context()))
 		})
 	}

@@ -169,6 +169,7 @@ func TestClaudeNativeCCHScopeAndUnknownVersionGuard(t *testing.T) {
 		{name: "known", version: "2.1.292", edit: true},
 		{name: "unknown_unchanged", version: "2.1.293"},
 		{name: "unknown_modified", version: "2.1.293", edit: true, wantError: true},
+		{name: "unknown_modified_legacy", version: "2.1.293", edit: true, disabled: true, wantError: true},
 		{name: "custom_unchanged", version: "2.1.292", target: "https://relay.invalid/v1/messages"},
 		{name: "custom_modified", version: "2.1.292", target: "https://relay.invalid/v1/messages", edit: true, wantError: true},
 		{name: "explicit_legacy", version: "2.1.292", edit: true, disabled: true},
@@ -202,7 +203,7 @@ func TestClaudeNativeCCHScopeAndUnknownVersionGuard(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			if tc.name == "known" {
+			if tc.name == "known" || tc.name == "explicit_legacy" {
 				require.NotEqual(t, body, out)
 			} else {
 				require.Equal(t, body, out)

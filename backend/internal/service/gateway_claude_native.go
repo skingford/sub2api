@@ -65,21 +65,15 @@ func withNativeClaudeBodyIntegrity(ctx context.Context, c *gin.Context, account 
 			}
 		}
 	}
-	if !preserveNativeClaudeRequest(ctx, c, account, body) {
+	// Opting out of native serialization cannot authorize a stale checksum.
+	// Known versions can still be finalized after edits; opaque ones cannot.
+	if account == nil || account.Platform != PlatformAnthropic || !isNativeClaudeInput(ctx, c, body) {
 		return ctx
 	}
 	if _, exists := ctx.Value(nativeClaudeBodyDigestKey{}).([sha256.Size]byte); exists {
 		return ctx
 	}
-	hasChecksum := false
-	gjson.GetBytes(body, "system").ForEach(func(_, block gjson.Result) bool {
-		text := block.Get("text").String()
-		if strings.HasPrefix(text, "x-anthropic-billing-header:") && strings.Contains(text, " cch=") {
-			hasChecksum = true
-		}
-		return true
-	})
-	if !hasChecksum {
+	if !nativeClaudeHasChecksum(body) {
 		return ctx
 	}
 	return context.WithValue(ctx, nativeClaudeBodyDigestKey{}, sha256.Sum256(body))
@@ -93,7 +87,7 @@ func validateNativeClaudeBodyIntegrity(ctx context.Context, c *gin.Context, body
 	if !exists || expected == sha256.Sum256(body) {
 		return nil
 	}
-	err := fmt.Errorf("native Claude request conflicts with a body-changing model or beta policy; adjust the caller request or explicitly disable claude_native_passthrough")
+	err := fmt.Errorf("native Claude request conflicts with a body-changing policy outside the verified CCH format; adjust the caller request or account policy")
 	if c != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"type": "error", "error": gin.H{"type": "invalid_request_error", "message": err.Error()}})
 	}
@@ -101,8 +95,8 @@ func validateNativeClaudeBodyIntegrity(ctx context.Context, c *gin.Context, body
 }
 
 // finalizeNativeClaudeRequest runs after body policy and final header overrides.
-// Only the measured native version is eligible; unknown versions retain the
-// opaque-body guard. Authentication and entitlement policy remain independent.
+// Opaque wire preservation, verified CCH generation and transport selection are
+// separate policies. Authentication and entitlement policy remain independent.
 func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Account, body []byte) ([]byte, error) {
 	if err := validateClaudeAccountIdentity(req.Context(), c, account, body); err != nil {
 		return nil, err
@@ -112,33 +106,37 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 	deleteHeaderAllForms(req.Header, "Content-Encoding")
 	u := req.URL
 	billing := gjson.GetBytes(body, "system.0.text")
-	known := account != nil && account.Platform == PlatformAnthropic &&
-		(preserveNativeClaudeRequest(req.Context(), c, account, body) || claudeCompatibilityFromContext(req.Context()) != nil) &&
+	firstParty := account != nil && account.Platform == PlatformAnthropic &&
 		req.Method == http.MethodPost && u != nil && u.Scheme == "https" && u.User == nil &&
 		strings.EqualFold(u.Hostname(), "api.anthropic.com") && (u.Port() == "" || u.Port() == "443") &&
 		(u.Path == "/v1/messages" || u.Path == "/v1/messages/count_tokens") &&
-		getHeaderRaw(req.Header, "anthropic-version") != "" &&
-		ExtractCLIVersion(getHeaderRaw(req.Header, "User-Agent")) == "2.1.292"
-	if !known {
+		getHeaderRaw(req.Header, "anthropic-version") != ""
+	if !firstParty {
 		return body, validateNativeClaudeBodyIntegrity(req.Context(), c, body)
 	}
-	// The measured native gzip path sends the billing sentinel unchanged. Keep
-	// its actual compressed bytes only while the final logical request is still
-	// identical. A mapped model, beta policy or managed identity rewrite instead
-	// follows the existing final-body checksum path below.
-	billingKnown := strings.HasPrefix(billing.String(), "x-anthropic-billing-header: cc_version=2.1.292.")
-	// Native count_tokens has no billing block. Its gzip bytes have the same
-	// request-local digest guard, independently of messages' CCH sentinel.
-	if c != nil && preserveNativeClaudeRequest(req.Context(), c, account, body) &&
-		(u.Path == "/v1/messages/count_tokens" || (billingKnown && strings.Contains(billing.String(), " cch=00000;"))) {
+	versionKnown := ExtractCLIVersion(getHeaderRaw(req.Header, "User-Agent")) == "2.1.292"
+	// Replaying CRC-verified, unchanged gzip does not interpret its checksum or
+	// infer a TLS profile. This also protects custom UAs and opaque CLI versions.
+	if c != nil && preserveNativeClaudeRequest(req.Context(), c, account, body) {
 		if originalEncoding, wire, ok := requestbody.OriginalRequestEncoding(c.Request, body); ok && originalEncoding == "gzip" {
 			setNativeClaudeWireBody(req, wire)
 			setHeaderRaw(req.Header, "Content-Encoding", "gzip")
-			*req = *req.WithContext(claude.WithGzipHeaderOrder2292(req.Context(), wire))
+			if versionKnown {
+				*req = *req.WithContext(claude.WithGzipHeaderOrder2292(req.Context(), wire))
+			}
 			return body, nil
 		}
 	}
-	if !billingKnown {
+	// CCH generation is independent of the native-passthrough switch. If policy
+	// selected plaintext, the final logical bytes need the measured checksum.
+	known := versionKnown &&
+		(isNativeClaudeInput(req.Context(), c, body) || claudeCompatibilityFromContext(req.Context()) != nil) &&
+		strings.HasPrefix(billing.String(), "x-anthropic-billing-header: cc_version=2.1.292.")
+	if !known {
+		if c != nil && requestbody.OriginalRequestEncodingName(c.Request) == "gzip" &&
+			isNativeClaudeInput(req.Context(), c, body) && nativeClaudeHasChecksum(body) {
+			return nil, claudeCompatibilityError(c, "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy")
+		}
 		return body, validateNativeClaudeBodyIntegrity(req.Context(), c, body)
 	}
 	out, err := finalizeClaude2292Billing(body, billing)
@@ -154,6 +152,16 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 		setNativeClaudeWireBody(req, bytes.Clone(out))
 	}
 	return out, nil
+}
+
+func nativeClaudeHasChecksum(body []byte) bool {
+	found := false
+	gjson.GetBytes(body, "system").ForEach(func(_, block gjson.Result) bool {
+		text := block.Get("text").String()
+		found = strings.HasPrefix(text, "x-anthropic-billing-header:") && strings.Contains(text, " cch=")
+		return !found
+	})
+	return found
 }
 
 // wire must be owned by this request and must not be changed after this call.
