@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -32,6 +33,7 @@ func main() {
 		Path    string            `json:"path"`
 		Headers map[string]string `json:"headers"`
 		Body    string            `json:"raw_body_utf8"`
+		Wire    string            `json:"wire_body_base64"`
 		Profile string            `json:"upstream_profile"`
 		Auth    string            `json:"synthetic_auth"`
 	}
@@ -44,7 +46,12 @@ func main() {
 		}
 		ctx = service.WithHTTPUpstreamProfile(ctx, service.HTTPUpstreamProfileClaude2292)
 	}
-	req, err := http.NewRequestWithContext(ctx, captured.Method, "https://api.anthropic.com"+captured.Path, bytes.NewBufferString(captured.Body))
+	wire := []byte(captured.Body)
+	if captured.Wire != "" {
+		wire, err = base64.StdEncoding.DecodeString(captured.Wire)
+		must(err)
+	}
+	req, err := http.NewRequestWithContext(ctx, captured.Method, "https://api.anthropic.com"+captured.Path, bytes.NewReader(wire))
 	must(err)
 	for key, value := range captured.Headers {
 		switch strings.ToLower(key) {

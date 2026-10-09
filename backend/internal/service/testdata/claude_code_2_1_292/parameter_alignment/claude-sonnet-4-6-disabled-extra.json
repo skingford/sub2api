@@ -1,0 +1,121 @@
+{
+  "case": {
+    "name": "claude-sonnet-4-6-disabled-extra",
+    "base": "api-arg",
+    "model": "claude-sonnet-4-6",
+    "env": {
+      "CLAUDE_CODE_EXTRA_BODY": "{\"thinking\": {\"type\": \"disabled\", \"display\": \"updates\", \"budget_tokens\": 2048}}"
+    },
+    "generic_controls": {
+      "thinking": {
+        "type": "disabled",
+        "display": "updates",
+        "budget_tokens": 2048
+      }
+    }
+  },
+  "requests": [
+    {
+      "case": "api-arg",
+      "method": "POST",
+      "path": "/v1/messages?beta=true",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "claude-cli/2.1.292 (external, sdk-cli)",
+        "X-Claude-Code-Session-Id": "1221024a-ae7e-45a9-9a54-6eb9e8a76f9e",
+        "X-Stainless-Arch": "x64",
+        "X-Stainless-Lang": "js",
+        "X-Stainless-OS": "Linux",
+        "X-Stainless-Package-Version": "0.128.0",
+        "X-Stainless-Retry-Count": "0",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0",
+        "X-Stainless-Timeout": "5",
+        "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+        "anthropic-dangerous-direct-browser-access": "true",
+        "anthropic-version": "2023-06-01",
+        "x-api-key": "local-container-key-not-a-real-credential",
+        "x-app": "cli",
+        "x-claude-code-prompt-id": "bc5582d9-9c8d-44ea-b703-2466a5601a1f",
+        "x-claude-code-request-class": "main",
+        "x-client-request-id": "2a696dfc-9f36-4bad-99a4-424412a6321e",
+        "Connection": "keep-alive",
+        "Host": "api.anthropic.com",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Content-Length": "1072"
+      },
+      "body": {
+        "model": "claude-sonnet-4-6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK.",
+                "cache_control": {
+                  "type": "ephemeral"
+                }
+              }
+            ]
+          }
+        ],
+        "system": [
+          {
+            "type": "text",
+            "text": "x-anthropic-billing-header: cc_version=2.1.292.652; cc_entrypoint=sdk-cli; cch=e5099; cc_prompt_id=bc5582d9-9c8d-44ea-b703-2466a5601a1f; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+          },
+          {
+            "type": "text",
+            "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          },
+          {
+            "type": "text",
+            "text": "Local synthetic protocol test. Reply OK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ],
+        "tools": [],
+        "metadata": {
+          "user_id": "{\"device_id\":\"edec83b2f9c353646fe736ebca241120a2d955f985e3f94b7062ef44b5b2b77e\",\"account_uuid\":\"\",\"session_id\":\"1221024a-ae7e-45a9-9a54-6eb9e8a76f9e\"}"
+        },
+        "max_tokens": 32000,
+        "thinking": {
+          "type": "disabled"
+        },
+        "context_management": {
+          "edits": [
+            {
+              "type": "clear_thinking_20251015",
+              "keep": "all"
+            }
+          ]
+        },
+        "output_config": {
+          "effort": "high"
+        },
+        "diagnostics": {
+          "previous_message_id": null
+        },
+        "stream": true
+      },
+      "raw_body_utf8": "{\"model\":\"claude-sonnet-4-6\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK.\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.292.652; cc_entrypoint=sdk-cli; cch=e5099; cc_prompt_id=bc5582d9-9c8d-44ea-b703-2466a5601a1f; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"Local synthetic protocol test. Reply OK.\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"edec83b2f9c353646fe736ebca241120a2d955f985e3f94b7062ef44b5b2b77e\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"1221024a-ae7e-45a9-9a54-6eb9e8a76f9e\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"disabled\"},\"context_management\":{\"edits\":[{\"type\":\"clear_thinking_20251015\",\"keep\":\"all\"}]},\"output_config\":{\"effort\":\"high\"},\"diagnostics\":{\"previous_message_id\":null},\"stream\":true}",
+      "raw_body_sha256": "867cc78b6c9c0d070022cf1585db795f3c92fdce23f52cc00d17e43d4e2f8d2b",
+      "tls_version": "TLSv1.3",
+      "cipher": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLSv1.3",
+        256
+      ],
+      "alpn": "http/1.1",
+      "wire_body_base64": "eyJtb2RlbCI6ImNsYXVkZS1zb25uZXQtNC02IiwibWVzc2FnZXMiOlt7InJvbGUiOiJ1c2VyIiwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiTE9DQUxfRVhURU5ERURfQVVESVQgaW5zcGVjdCBzeW50aGV0aWMgZml4dHVyZXMgYW5kIHJlcGx5IE9LLiIsImNhY2hlX2NvbnRyb2wiOnsidHlwZSI6ImVwaGVtZXJhbCJ9fV19XSwic3lzdGVtIjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJ4LWFudGhyb3BpYy1iaWxsaW5nLWhlYWRlcjogY2NfdmVyc2lvbj0yLjEuMjkyLjY1MjsgY2NfZW50cnlwb2ludD1zZGstY2xpOyBjY2g9ZTUwOTk7IGNjX3Byb21wdF9pZD1iYzU1ODJkOS05YzhkLTQ0ZWEtYjcwMy0yNDY2YTU2MDFhMWY7IGNjX3R1cm5fb3JpZ2luPXNkazsgY2NfcHJvbXB0X2luZGV4PTA7IGNjX3R1cm5faW5kZXg9MTsifSx7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IllvdSBhcmUgYSBDbGF1ZGUgYWdlbnQsIGJ1aWx0IG9uIEFudGhyb3BpYydzIENsYXVkZSBBZ2VudCBTREsuIiwiY2FjaGVfY29udHJvbCI6eyJ0eXBlIjoiZXBoZW1lcmFsIn19LHsidHlwZSI6InRleHQiLCJ0ZXh0IjoiTG9jYWwgc3ludGhldGljIHByb3RvY29sIHRlc3QuIFJlcGx5IE9LLiIsImNhY2hlX2NvbnRyb2wiOnsidHlwZSI6ImVwaGVtZXJhbCJ9fV0sInRvb2xzIjpbXSwibWV0YWRhdGEiOnsidXNlcl9pZCI6IntcImRldmljZV9pZFwiOlwiZWRlYzgzYjJmOWMzNTM2NDZmZTczNmViY2EyNDExMjBhMmQ5NTVmOTg1ZTNmOTRiNzA2MmVmNDRiNWIyYjc3ZVwiLFwiYWNjb3VudF91dWlkXCI6XCJcIixcInNlc3Npb25faWRcIjpcIjEyMjEwMjRhLWFlN2UtNDVhOS05YTU0LTZlYjllOGE3NmY5ZVwifSJ9LCJtYXhfdG9rZW5zIjozMjAwMCwidGhpbmtpbmciOnsidHlwZSI6ImRpc2FibGVkIn0sImNvbnRleHRfbWFuYWdlbWVudCI6eyJlZGl0cyI6W3sidHlwZSI6ImNsZWFyX3RoaW5raW5nXzIwMjUxMDE1Iiwia2VlcCI6ImFsbCJ9XX0sIm91dHB1dF9jb25maWciOnsiZWZmb3J0IjoiaGlnaCJ9LCJkaWFnbm9zdGljcyI6eyJwcmV2aW91c19tZXNzYWdlX2lkIjpudWxsfSwic3RyZWFtIjp0cnVlfQ==",
+      "wire_body_sha256": "867cc78b6c9c0d070022cf1585db795f3c92fdce23f52cc00d17e43d4e2f8d2b"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "cli": "2.1.292",
+  "sdk": "0.128.0",
+  "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "isolation": "network-none; synthetic credentials and local responder",
+  "captures": [
+    {
+      "name": "claude-haiku-4-5-20251001-disabled-control-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-haiku-4-5-20251001-disabled-control-extra/requests.json",
+      "source_sha256": "13b59785a7f25f7095170d545dd0cdb16d30b6bda250db848604f1e450eac967",
+      "sha256": "8561b84bf0b1afda51c46b5052b0da94a8a209f5ec6d233ff7bcd1036f889687"
+    },
+    {
+      "name": "claude-haiku-4-5-20251001-disabled-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-haiku-4-5-20251001-disabled-extra/requests.json",
+      "source_sha256": "d5f1950e9687f700d24e862725d8206a47d14c0f9531c2b5560a35df3724aa9d",
+      "sha256": "95758754aebd545e1b0f955bbc4dbcd7ad67f900328eecd3218d67329b25bf9a"
+    },
+    {
+      "name": "claude-haiku-4-5-20251001-temperature.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-haiku-4-5-20251001-temperature/requests.json",
+      "source_sha256": "40fa920216dccf3b66b2a2fddf7dc797461c93e00fadd59241a3a9f9ae41bf79",
+      "sha256": "a9199376901b3da9ff9201d763308a9fef47678d35db1d79e6fedb7acd517f4e"
+    },
+    {
+      "name": "claude-haiku-4-5-20251001-thinking-off.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-haiku-4-5-20251001-thinking-off/requests.json",
+      "source_sha256": "d47c69a5a96b780f24d9bb0816e111e1d11f3c9bdfaa35de385e56bef06eed76",
+      "sha256": "f22a98bcc3cd60c623e337cb85823840ec4dc419f0b20b739dbca8f8591f7efa"
+    },
+    {
+      "name": "claude-opus-4-6-disabled-control-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-4-6-disabled-control-extra/requests.json",
+      "source_sha256": "8c789604e79c963e132df9de7cf10ab71697580fe4a2987e746b3d77cd4a4e4c",
+      "sha256": "a5e1d434fe5c442c2009b06b01e52454104f34918e2d23126b3e81b8e6d9f05b"
+    },
+    {
+      "name": "claude-opus-4-6-disabled-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-4-6-disabled-extra/requests.json",
+      "source_sha256": "4caef918c235fe686665823fe08592d3bb5c977fdd15d6aaca8f6c5300573f57",
+      "sha256": "e1216e80e1645977741c91b1d3d68af34b0391b572f0b5c8b4895da13773ac0d"
+    },
+    {
+      "name": "claude-opus-4-6-temperature.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-4-6-temperature/requests.json",
+      "source_sha256": "7d3612be05367142d26464c201f3fe1884955b84b63050d54c6bd3841a6df368",
+      "sha256": "e3dce85db9c7adb40d4b4222bac614912677265958a83c400c86a9dc4e21898b"
+    },
+    {
+      "name": "claude-opus-4-6-thinking-off.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-4-6-thinking-off/requests.json",
+      "source_sha256": "524c84dcddffb6bd7f9e3ea383864d6ae6dfbac0f967cebedc13a2272dc11277",
+      "sha256": "0674aa7b5b6a9c8e55f1dd7812976f92ff6a9273e3a8e97b94ff3981cceb61ed"
+    },
+    {
+      "name": "claude-opus-5-5-disabled-control-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-5-5-disabled-control-extra/requests.json",
+      "source_sha256": "9b7edbc6e89f6a1a13617c1c928a04baa6e3e8d45cd4551d7063bee84819c2fb",
+      "sha256": "9550617b5efafc5f990f8bd19b8dabeb73d1e4f81c1c013cba762faf53b51d59"
+    },
+    {
+      "name": "claude-opus-5-5-disabled-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-5-5-disabled-extra/requests.json",
+      "source_sha256": "2315877e148ebc780a277f4e25da9dc5fbf6d7225b61addef1dc221429febd24",
+      "sha256": "ef5de5bd1610fae3151e86884f058f34d2a42c62c8ea957e84dccd05af6de239"
+    },
+    {
+      "name": "claude-opus-5-5-temperature.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-5-5-temperature/requests.json",
+      "source_sha256": "de77d74c4fe0cfe336cab157c05c43411ea13c5f81f4a88dbebc5a2945258b41",
+      "sha256": "973baeeea43f03ded6d77c0d64a4e7cd57f228e91a78c7cea889aed3534b5c83"
+    },
+    {
+      "name": "claude-opus-5-5-thinking-off.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-opus-5-5-thinking-off/requests.json",
+      "source_sha256": "f289d059ba2086e160fcf40272870aa366aea310deea8c6d13565f8b6405cbda",
+      "sha256": "ea8825ea23ccd5dc790b9ac821670dc18ab81c1e2520c6f1e20c38407de378d7"
+    },
+    {
+      "name": "claude-sonnet-4-6-disabled-control-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-4-6-disabled-control-extra/requests.json",
+      "source_sha256": "4664ceb102db03d8d364e1bdcb33c79616b181b5e2b6c75968c0c4f60930947a",
+      "sha256": "7b310f697256e684fcfb1661f7aa16d63e394d58b018ab9cba68a9d3f5e43522"
+    },
+    {
+      "name": "claude-sonnet-4-6-disabled-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-4-6-disabled-extra/requests.json",
+      "source_sha256": "4bd98b59949a8c7648febadda585c47535ae7ba71ac098333866a89eca9fe8a7",
+      "sha256": "3e89f0ead003f13b8ada1879125d5f9635ccc336c0f3cf9945ede1b8549dafe9"
+    },
+    {
+      "name": "claude-sonnet-4-6-temperature.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-4-6-temperature/requests.json",
+      "source_sha256": "e67ffffc8bed8c691be2465b814e3482016889daf4c061572dfdded7440cbb50",
+      "sha256": "f8d346d493e5f47fdb644f473745434ea91761d825cd25bff1bb8ab2648a270a"
+    },
+    {
+      "name": "claude-sonnet-4-6-thinking-off.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-4-6-thinking-off/requests.json",
+      "source_sha256": "b5353a34120b28f0a4b8cbad770505167f37e9df48094b6faa61510ef1e60ddc",
+      "sha256": "61c74c2671921644bf3fb41a1a22a5b181b1e56f63387e5b8f942d36b1e1a008"
+    },
+    {
+      "name": "claude-sonnet-5-5-disabled-control-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-5-5-disabled-control-extra/requests.json",
+      "source_sha256": "e5500dfbe34d60bb0dc4bbfca75d11d932b57f61f87d0b9af3c1a67ea051995a",
+      "sha256": "0573db2c07e271f3b952a66b795b85105a7ba7f33952141a742e9055bbe9ee4f"
+    },
+    {
+      "name": "claude-sonnet-5-5-disabled-extra.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-5-5-disabled-extra/requests.json",
+      "source_sha256": "8003c8c6c6f51723d7c352d327a72514ce03db9aab6bb52fac1dcd7e9ada1e0c",
+      "sha256": "773aa57a9811e7cc665659f725670a326e04039db015aad9721da37eda2113d4"
+    },
+    {
+      "name": "claude-sonnet-5-5-temperature.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-5-5-temperature/requests.json",
+      "source_sha256": "bd6b0c01a72e6076f43351cb87424cae62fa877b0dbb30984ece249096c8a8b3",
+      "sha256": "aa1856c0464fcbb3b15595a590455a5176d37b6c0cba8e951e509e2fa3342e7c"
+    },
+    {
+      "name": "claude-sonnet-5-5-thinking-off.json",
+      "source": "/Users/kingford/claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/capture/claude-sonnet-5-5-thinking-off/requests.json",
+      "source_sha256": "451c0c4d56bee1d8eaaf2848760fc459f44299f03837c68c8bc45e3eeaa55f7c",
+      "sha256": "f117ab6372d4a9e045cd7ad2c2c1260ed02107d43f1955f107c6f3f316fb0864"
+    },
+    {
+      "name": "native-gzip.json",
+      "source": "/Users/kingford/claude-capture/comprehensive-20261009-qlx_n3xe/capture/gzip-enabled/requests.json",
+      "source_sha256": "7c5837c5e834e90a7affd9282a0475016bfa241d79d9a2491388e49547c726f3",
+      "sha256": "61bab230dc631c1f22b6d91666dd6a399e67c12ec391cf635e4837c834f17bc0"
+    }
+  ]
+}

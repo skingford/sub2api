@@ -142,6 +142,12 @@ docs/*
 !docs/claude-extended-audit-20261008.json
 !docs/claude-alignment-fixes.md
 !docs/claude-alignment-validation.json
+!docs/claude-request-recheck-20261008.md
+!docs/claude-request-recheck-20261008.json
+!docs/claude-comprehensive-audit-20261009.md
+!docs/claude-comprehensive-audit-20261009.json
+!docs/claude-parameter-wire-alignment.md
+!docs/claude-parameter-wire-validation.json
 !docs/claude-2292-gap-audit.json
 !docs/claude-change-log.md
 !docs/PAYMENT.md

@@ -1,0 +1,4552 @@
+{
+  "change_id": "CC-20261008-011",
+  "date": "2026-10-08",
+  "scope": "Frozen local working tree; synthetic isolated native CLI versus production components, not a live-provider acceptance test",
+  "head": "93275632a6a66dfc2648e9504a7d16bcf32da5d7",
+  "release_base": "b4430850844263e3fd3d2d180f514099bffad04e",
+  "upstream_base": "3f1a2ea0",
+  "cli_version": "2.1.292",
+  "sdk_version": "0.128.0",
+  "platform": "Linux x64",
+  "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "snapshot_time": "2026-10-08T22:25:34.322591+08:00",
+  "raw_evidence_directory": "/Users/kingford/claude-capture/request-recheck-20261008-c0q5bkcy",
+  "snapshot_manifest_sha256": "2d060dc6e52074874f14033e5590f4407a5bd131a230e45899a6219c7d6befd7",
+  "snapshot_source_sha256": {
+    "backend/internal/pkg/claude/cch.go": "a89f54830c3fdef43d648cb3436b1aacdf43586ef95d4355b9cfec8f5b0cde58",
+    "backend/internal/service/gateway_billing_block.go": "83e7eff5a52035ec35068466f21b54d8d31273bacd38028a25007926a7ddc37f",
+    "backend/internal/service/gateway_claude_native.go": "2ec3fa570208f44d84fc4d3d3f2704b5faee3cb7b66911e6b9ac3ac29ab9d034",
+    "backend/internal/service/gateway_claude_2292_defaults.go": "52d9192671b84cb5a8fb24f0d9bf31def368ff473a8c00bea0e205fd4a9612bb",
+    "backend/internal/service/gateway_claude_oauth_body.go": "c90f3d568c2ceb6eb14590b7a8e9b4a9217aad91d0db46cfeceabe1a3bb05674",
+    "backend/internal/service/gateway_upstream_request.go": "eec8e32bef2b628a784bae3331b8d936040484d92a49cd91b3387987dac55589",
+    "backend/internal/service/gateway_service.go": "1350eeff9daadeea3e1954b9c56e2879507327bf6d38a2542f92dcf348c44369",
+    "backend/internal/service/gateway_count_tokens.go": "1ab037ee3ea37b695011e6e3bfa45f41951a28f621c335785153ad7169239069",
+    "backend/internal/service/gateway_request.go": "a49fa1d053c86f3bd7e4190ca1191da36cd466bddbe6073b0688e09328d18c6e",
+    "backend/internal/service/claude_recovery_history.go": "f391b0ed977ac5d2dafd7636e5228d9d5834bc1b578894b62979f73d78863747",
+    "backend/internal/service/claude_recovery_service.go": "c0b245f842b205a13eccab5bb03d3af1e8882808daa542135b0a2a6f11c64139",
+    "backend/internal/handler/gateway_claude_recovery.go": "2dc15cb46e1ecbfdcd6fa7e58fa8fe6767fb20da9c46f0801bee4fe5913ba0a2",
+    "backend/internal/repository/claude_native_transport.go": "b1803533b17ac9769877768e134b2cb3239b78c22525f769df9806f6971f4b4f",
+    "backend/internal/pkg/tlsfingerprint/claude_native.go": "7a16e4b995540586ce04c2961eb4c49f422f55d2f98d9b1205a91f38a89247df"
+  },
+  "working_tree_files_changed_after_snapshot": [
+    "backend/internal/handler/gateway_claude_recovery.go",
+    "backend/internal/pkg/claude/constants.go",
+    "backend/internal/repository/claude_recovery.go",
+    "backend/internal/service/claude_recovery_history.go",
+    "backend/internal/service/claude_recovery_native_lab_test.go",
+    "backend/internal/service/claude_recovery_response.go",
+    "backend/internal/service/claude_recovery_service.go",
+    "backend/internal/service/claude_recovery_types.go",
+    "backend/internal/service/gateway_claude_2292_defaults.go",
+    "backend/internal/service/gateway_claude_oauth_body.go",
+    "backend/internal/service/gateway_request.go"
+  ],
+  "summary": {
+    "scenarios": 17,
+    "native_requests": 27,
+    "message_requests": 24,
+    "count_requests": 3,
+    "production_combinations": 108,
+    "same_auth_combinations": 54,
+    "all_body_method_uri_length_getbody_checks_match": true,
+    "same_auth_application_headers_match": true,
+    "cross_auth_beta_additions": 48,
+    "native_cch_requests_recomputed": 24,
+    "cch_runtime_golden_vectors": 81,
+    "fingerprint_extracted_function_vectors": 10,
+    "normalized_client_hellos": 20,
+    "package_tests_passed": 4,
+    "passed_test_events_including_subtests": 394
+  },
+  "method_notes": [
+    "OAuth passthrough=true/false are configuration duplicates, not distinct upstream implementations.",
+    "Credentials are replaced by the gateway. Host, Connection and Content-Length header serialization are transport responsibilities; application-header comparison omits them.",
+    "An initial direct-service audit omitted the handler native validation context for count_tokens, creating a spurious UA difference. The final run uses NewClaudeCodeValidator and SetClaudeCodeClient; initial logs are retained.",
+    "Managed-service audit ran on the frozen snapshot before later compaction and model-profile edits; it is not an evaluation of those later edits."
+  ],
+  "production_requests": [
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "alias-sonnet",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07106904f7c2888c6a842f78f1f4635e514e11c7e3f01b262d7b1b3e515e8bf1",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "ecaae1e8e5f63041689d96b54999c9bc0314ce3d7b4299622bbb8b04ccb64f6c",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a486d1c1baa1c2619f1ee4e5db774861fc73cd6f4459dc0f83159f1cded650fa",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-stdin",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-stdin",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-stdin",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "api-stdin",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "07115ca5b72f775e8d9bfd5d336872455df2134b931ca234cd0ba8e9fe6a5845",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d54995ee5a886d91034b3aefc4350cd5d8d652473ac6dc3ef99476404a495118",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "022775d02c0547e24677e00beb4ae85005818869127300ac98efb34f29f3b560",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 4,
+      "input_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 4,
+      "input_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 4,
+      "input_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "compact",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 4,
+      "input_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "6edae1af9c4627f5516073ab0478f63fb04a73de48a48f9c5319f520a1a7c67e",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "0c51c79e035e3a77108f45b4d3313bde8a7e060c659397b47b46ec843c90f95c",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 4,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 4,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01"
+        }
+      ],
+      "index": 4,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "count-context",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01"
+        }
+      ],
+      "index": 4,
+      "input_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": null,
+      "output_sha256": "2a98e7aa27da01ef93be19517bd90492763ff25b929c862d453b99e31b48736b",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages/count_tokens?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "extra-metadata",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "95adb09bb09c9304ea0403603bdb686148edcbe92eb47bdf86fcad7deee5dcb0",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cfdf4afa49780710a04a829195937092f2211af0d0efff6578edc028f21a5ec3",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "image-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "d32c3083cc8d6a17ff092bc84d36561a45788340fad7b1ce64e1646fc03fe554",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-arg",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a4f5245e134d9199e8e18337875a541c704505df268eb86c5838c3c263ebdf2e",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-json",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "cc84bc03c1b3bcc37adc9bbb822e3886a713e36ba6b0039212dba4c483b33a46",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-stream",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-stream",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-stream",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "oauth-stream",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "358a479270bf83c8e19fe1f80365923877cf4a52bdf4df12a503b1172158e2af",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "7221a76dfc000a4f49af963d7692bf9f50adc510aee115b9a83a7a59acf36c49",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "parallel-read",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "60ec5da922b9c91d1b93d9e66f88609953e0831a38d1b3a18f317c2627facabe",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a95cd81d0ba2824b6271b4d63b0eed33fd615e32bf576e4cbc0eda5061197418",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 5,
+      "input_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 5,
+      "input_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 5,
+      "input_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "resume",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 5,
+      "input_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9bcff2f073c0ec37fdc734105f512beab291429a674c571ef8fdfa9a1848d186",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "retry-503",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a211fcab0f0d58130caed8184e58da71a02062e665a616bbfda41146c492bdc2",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "a80a418cd98f21328b7ead7f8360244fe963963f664062b2def963e38eb6fd2b",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "structured-output",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "0d57dbe4ebc89db47ca85cb2cd9c566750453a9fdf35855ea239db1e936e9015",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "bb265584285359a476181ce6bea0f1ade57b3235a093226f5846f387e7a119d3",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 3,
+      "input_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "thinking-tool",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 3,
+      "input_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "b0f4a6ad33079d92680664b71f31a46b7c65f15b1cb7b6c32e6992240c3e7925",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "unicode",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "apikey",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "unicode",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": null,
+      "index": 2,
+      "input_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": true,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "unicode",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "passthrough": false,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    },
+    {
+      "account": "oauth",
+      "auth_kind_correct": true,
+      "body_equal": true,
+      "calls": 1,
+      "case": "unicode",
+      "content_length_equal": true,
+      "get_body_equal": true,
+      "handler_validated_native": true,
+      "header_differences": [
+        {
+          "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+          "header": "anthropic-beta",
+          "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+        }
+      ],
+      "index": 2,
+      "input_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "method_equal": true,
+      "native_cch_recomputed_equal": true,
+      "output_sha256": "9f109311d1abe88c3df283e8e03cbdccfc877d0508dba570f01d83a91c8fafb0",
+      "passthrough": true,
+      "path_query_equal": true,
+      "profile": "claude_2_1_292_x64",
+      "same_auth_kind": false,
+      "status": 200,
+      "target": "https://api.anthropic.com/v1/messages?beta=true"
+    }
+  ],
+  "pcap_checks": [
+    {
+      "case": "/parallel-read",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prev-tool-durations",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/image-read",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prev-tool-durations",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/thinking-tool",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prev-tool-durations",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/compact",
+      "request_count": 3,
+      "decrypted_count": 3,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-cc-compaction-request",
+          "x-claude-code-compaction",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-cc-context-compacted",
+          "x-claude-code-context-compacted",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/resume",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        },
+        {
+          "tcp.stream": "5",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/alias-sonnet",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/extra-metadata",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/structured-output",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/api-json",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/oauth-json",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Authorization",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/oauth-stream",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Authorization",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/api-arg",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/oauth-arg",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Authorization",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/api-stdin",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/unicode",
+      "request_count": 1,
+      "decrypted_count": 1,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/count-context",
+      "request_count": 3,
+      "decrypted_count": 3,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        },
+        {
+          "tcp.stream": "3",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        },
+        {
+          "tcp.stream": "4",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "case": "/retry-503",
+      "request_count": 2,
+      "decrypted_count": 2,
+      "all_bodies_match": true,
+      "kernel_dropped_packets": 0,
+      "client_hellos": [
+        {
+          "tcp.stream": "2",
+          "tls.handshake.ja3": "1523504b38f0fae0d881d4b6554aac1b",
+          "tls.handshake.ja3_full": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43,4588-29-23-24,0",
+          "tls.handshake.extensions_alpn_str": "http/1.1",
+          "tls.handshake.ciphersuite": "0x1301,0x1302,0x1303,0xc02b,0xc02f,0xc02c,0xc030,0xcca9,0xcca8,0xc009,0xc013,0xc00a,0xc014,0x009c,0x009d,0x002f,0x0035",
+          "tls.handshake.extension.type": "0,23,65281,10,11,35,16,5,13,18,51,45,43"
+        }
+      ],
+      "header_order": [
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ],
+        [
+          "Accept",
+          "Content-Type",
+          "User-Agent",
+          "X-Claude-Code-Session-Id",
+          "X-Stainless-Arch",
+          "X-Stainless-Lang",
+          "X-Stainless-OS",
+          "X-Stainless-Package-Version",
+          "X-Stainless-Retry-Count",
+          "X-Stainless-Runtime",
+          "X-Stainless-Runtime-Version",
+          "X-Stainless-Timeout",
+          "anthropic-beta",
+          "anthropic-dangerous-direct-browser-access",
+          "anthropic-dispatch-id",
+          "anthropic-version",
+          "x-api-key",
+          "x-app",
+          "x-claude-code-prompt-id",
+          "x-claude-code-request-class",
+          "x-client-request-id",
+          "Connection",
+          "Host",
+          "Accept-Encoding",
+          "Content-Length"
+        ]
+      ],
+      "negotiated": [
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        },
+        {
+          "tls": "TLSv1.3",
+          "alpn": "http/1.1",
+          "cipher": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLSv1.3",
+            256
+          ]
+        }
+      ]
+    }
+  ],
+  "client_hello_checks": [
+    {
+      "case": "parallel-read",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "image-read",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "thinking-tool",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "compact",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "resume",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "resume",
+      "tcp_stream": "5",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "alias-sonnet",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "extra-metadata",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "structured-output",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "api-json",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "oauth-json",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "oauth-stream",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "api-arg",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "oauth-arg",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "api-stdin",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "unicode",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "count-context",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "count-context",
+      "tcp_stream": "3",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "count-context",
+      "tcp_stream": "4",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    },
+    {
+      "case": "retry-503",
+      "tcp_stream": "2",
+      "length": 1499,
+      "normalized_sha256": "8845ac2401a951ffc4acef2824c3422124c7883e0c9bc4b5f90d3c6be05da2f9",
+      "matches_go_golden": true
+    }
+  ],
+  "generic_profiles": [
+    {
+      "context_management": {
+        "converted": null,
+        "native": {
+          "edits": [
+            {
+              "keep": "all",
+              "type": "clear_thinking_20251015"
+            }
+          ]
+        }
+      },
+      "conversion_mode": "generic API to OAuth",
+      "converted_beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "max_tokens": {
+        "converted": 128000,
+        "native": 128000
+      },
+      "model": "claude-sonnet-5-5",
+      "native_beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,mid-conversation-system-2026-04-07,per-turn-control-2026-07-01,mid-conversation-system-clear-at-2026-08-21,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+      "output_config": {
+        "converted": null,
+        "native": {
+          "effort": "medium"
+        }
+      },
+      "reference_mode": "API key stream-json",
+      "status": 200,
+      "temperature": {
+        "converted": 1,
+        "native": null
+      },
+      "thinking": {
+        "converted": null,
+        "native": {
+          "display": "updates",
+          "type": "adaptive"
+        }
+      }
+    },
+    {
+      "context_management": {
+        "converted": {
+          "edits": [
+            {
+              "keep": "all",
+              "type": "clear_thinking_20251015"
+            }
+          ]
+        },
+        "native": {
+          "edits": [
+            {
+              "keep": "all",
+              "type": "clear_thinking_20251015"
+            }
+          ]
+        }
+      },
+      "conversion_mode": "generic API to OAuth",
+      "converted_beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "max_tokens": {
+        "converted": 32000,
+        "native": 32000
+      },
+      "model": "claude-sonnet-4-6",
+      "native_beta": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,cache-diagnosis-2026-04-07",
+      "output_config": {
+        "converted": {
+          "effort": "high"
+        },
+        "native": {
+          "effort": "high"
+        }
+      },
+      "reference_mode": "API key stream-json",
+      "status": 200,
+      "temperature": {
+        "converted": null,
+        "native": null
+      },
+      "thinking": {
+        "converted": {
+          "display": "omitted",
+          "type": "adaptive"
+        },
+        "native": {
+          "display": "updates",
+          "type": "adaptive"
+        }
+      }
+    }
+  ],
+  "explicit_display": [
+    {
+      "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,extended-cache-ttl-2025-04-11",
+      "explicit_beta": false,
+      "status": 200,
+      "thinking": {
+        "display": "updates",
+        "type": "adaptive"
+      }
+    },
+    {
+      "beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,thinking-display-updates-2026-08-18,extended-cache-ttl-2025-04-11",
+      "explicit_beta": true,
+      "status": 200,
+      "thinking": {
+        "display": "updates",
+        "type": "adaptive"
+      }
+    }
+  ],
+  "managed_service": [
+    {
+      "case": "parallel-read",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "parallel-read",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "image-read",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "image-read",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "thinking-tool",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "thinking-tool",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "compact",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "compact",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "begin_error": "history rewind, compaction or branch does not match the stored conversation: conversation history or identity conflicts with its recovery record",
+      "case": "compact",
+      "index": 4,
+      "kind": "managed_service"
+    },
+    {
+      "case": "resume",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "resume",
+      "index": 5,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "begin_error": "managed recovery requires a verified model profile",
+      "case": "alias-sonnet",
+      "index": 2,
+      "kind": "managed_service"
+    },
+    {
+      "case": "extra-metadata",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "structured-output",
+      "index": 2,
+      "kind": "managed_service",
+      "sent": true
+    },
+    {
+      "case": "structured-output",
+      "index": 3,
+      "kind": "managed_service",
+      "sent": true
+    }
+  ],
+  "validation_packages": [
+    {
+      "package": "github.com/Wei-Shaw/sub2api/internal/pkg/claude",
+      "status": "pass",
+      "seconds": 1.391
+    },
+    {
+      "package": "github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint",
+      "status": "pass",
+      "seconds": 2.014
+    },
+    {
+      "package": "github.com/Wei-Shaw/sub2api/internal/repository",
+      "status": "pass",
+      "seconds": 2.739
+    },
+    {
+      "package": "github.com/Wei-Shaw/sub2api/internal/service",
+      "status": "pass",
+      "seconds": 6.11
+    }
+  ],
+  "evidence_sha256": {
+    "capture/api-arg/requests.json": "7392f7d551369ce0f165d26a41752873d406597c2605b11f9d09915e490bc54e",
+    "capture/api-stdin/requests.json": "230d14332a764b4887a8e473c78fabf1aecf3718ac7b25c4bcc41dd98f18c3c5",
+    "capture/compact/requests.json": "518d0cf9341f4438c003f4e661decb2fa0b407f0744da7410c4bba2b539bbe02",
+    "capture/alias-sonnet/requests.json": "dc28d3a289135a40c6a72493979c012dbdd71b756e8b1c6bf463f4c47fb258e5",
+    "capture/api-json/requests.json": "4cacdf8d3e1ca23b594d98538b171e391772d881151647fe21b8e88c4945afd6",
+    "capture/image-read/requests.json": "a19547600b45a4888a6d744b13e1f9ef3faebe324eab0e2aed2fdd2107a26d1f",
+    "capture/oauth-stream/requests.json": "024066eb54d9ea7d9b08c70f5d77baefaa7e78679459ecd4b1080b09cfc2aefa",
+    "capture/resume/requests.json": "ee449895cdbf24f8135443c2330731566e3d8cdd436800474649286e6cd6d1b8",
+    "capture/parallel-read/requests.json": "31af1378afacf6766a087049bf7ea00930015495e06ed9045926020e95fc310f",
+    "capture/oauth-arg/requests.json": "0d5e8f0d4612ef441f3f861a5665c409a597ec48766444c0c635a068f8b72625",
+    "capture/oauth-json/requests.json": "f453c7e67093f9f5bf0b87473860b8789d587bd99f682335f5d66a0e9c1eccfb",
+    "capture/thinking-tool/requests.json": "d63141761e3a2e431c6afa4782b452ef14630c9a2bac4393ed343ed5d8d65eec",
+    "capture/structured-output/requests.json": "9dbec58ea8fcbc11bbb09cf01029cabd653d6982bb97b35f544aeb947280868a",
+    "capture/extra-metadata/requests.json": "f4daead9a33cfb3890a8d9a860251508f6f8ea1e7bed3759dab1cb4b8c1dec98",
+    "capture/api-arg/responses.json": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+    "capture/api-stdin/responses.json": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+    "capture/compact/responses.json": "161e0e68f520bfa0f10285f810f3faadcfde8775c5bd1d29a7b925bf3a0176f0",
+    "capture/alias-sonnet/responses.json": "7d6301d5d7bddaa82067c58eee36068d1053703b32fd672dccaea78b54bf401c",
+    "capture/api-json/responses.json": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+    "capture/image-read/responses.json": "8917bfece010f09b86d41dc706b563eafacbffbeb4831e14a38adeee6e8bbcf2",
+    "capture/oauth-stream/responses.json": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+    "capture/resume/responses.json": "1d895767aeda9120434ad2c2af00708c37033aaa3a04f202262fbdf9e81305da",
+    "capture/parallel-read/responses.json": "1cac431f8a5d74dc77cd97981334fb13261105970643daec99506ea41c0ccc9f",
+    "capture/oauth-arg/responses.json": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+    "capture/oauth-json/responses.json": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+    "capture/thinking-tool/responses.json": "189bd2caa87b763303e77941344e1cf9c14c7e15772d7cd62467959c1d751a69",
+    "capture/structured-output/responses.json": "510b64a4113a76e2da409e722f3580e741e3a2f83fee0418138d1c68915f88c7",
+    "capture/extra-metadata/responses.json": "da2ff57c922d2f2ed24c485700c848743795e7625f376359bae980643eb79d4a",
+    "capture/api-arg/capture.pcap": "4d21e640ee0444e7c30d096174d025db1b7542d10c4ba89bd27a825313c8c533",
+    "capture/api-stdin/capture.pcap": "f3bc1ce3691e34c19f0d737193c61fc43b14de13904520495635b90b975381fb",
+    "capture/compact/capture.pcap": "dff808ab75261d5160da3eec8d84b6f4e10b5b4dd62d61609c748c359ba9c4e9",
+    "capture/alias-sonnet/capture.pcap": "6eed838621f8717b334633b5f682921e095bd9dba59ccaf90102f2cf2ac9573d",
+    "capture/api-json/capture.pcap": "5ecbc3e13e430feb0b24436da0eb857c58457a87f9210b15d60555169b8a7aaa",
+    "capture/image-read/capture.pcap": "25bb0437b9d523fc35966d68ff86b2c19aa25afa8b61988bd78690d7420136f9",
+    "capture/oauth-stream/capture.pcap": "53d85a123f3dcd229d16ee4d3cc84f2464d0174d4a5e04a8067c073b294830f4",
+    "capture/resume/capture.pcap": "a5a4990325b7a94ed6396408dca6dec40d1d44887c77276089209b725016a72d",
+    "capture/parallel-read/capture.pcap": "4db6a1881b3e4a7d3e9be34d5aeb2f3d73367238dfafd37d92d4162e70322eed",
+    "capture/oauth-arg/capture.pcap": "6dca823d912ad7be3ecd7ebdd6f206d31a5de87a64e73c1c169f5d702881b9c5",
+    "capture/oauth-json/capture.pcap": "81053dc9614d840c5776cf68bdcbb8567259dc2ceeb3481e8aa5af6614fd2992",
+    "capture/thinking-tool/capture.pcap": "18a15551f29eb781870329ddd78da52f4a48bfd7c8e5c03285c0d52e17eff99b",
+    "capture/structured-output/capture.pcap": "2b4960c11840dcead2f64bb5b4cb86dc0fd830b2d21fc7c17d558c553b3d7e73",
+    "capture/extra-metadata/capture.pcap": "481006c1901878d41d8e8377331a9d1c4a442da4c72e4c25babe9f760cca8a9a",
+    "capture/api-arg/tcpdump.log": "5612641b0b7af221feb0a7bc171bbe5e8840c58a8a8a57f06ca5cb42a53b9d9e",
+    "capture/api-stdin/tcpdump.log": "5612641b0b7af221feb0a7bc171bbe5e8840c58a8a8a57f06ca5cb42a53b9d9e",
+    "capture/compact/tcpdump.log": "6cd8789f74931a22fed9ede992e0523691edbd9cd4dc431c2e842b22276a01c8",
+    "capture/alias-sonnet/tcpdump.log": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+    "capture/api-json/tcpdump.log": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+    "capture/image-read/tcpdump.log": "1dce51d200a272d1f7eba79a529289cbafca800139a737de332bdc0f7a50c90e",
+    "capture/oauth-stream/tcpdump.log": "5612641b0b7af221feb0a7bc171bbe5e8840c58a8a8a57f06ca5cb42a53b9d9e",
+    "capture/resume/tcpdump.log": "b915b9213d32649e7e606610735421f7b94f06666c277af730b86edd01167151",
+    "capture/parallel-read/tcpdump.log": "ecb7b1b5804036a5aa8a5c33c714f8c15d0ec6ac9890873c0cdb586379381fb7",
+    "capture/oauth-arg/tcpdump.log": "3929c88bca5c23f7aa6a39888c0babfede3d34daa2bf564d597e9c2932b4d10a",
+    "capture/oauth-json/tcpdump.log": "5612641b0b7af221feb0a7bc171bbe5e8840c58a8a8a57f06ca5cb42a53b9d9e",
+    "capture/thinking-tool/tcpdump.log": "f1643e511fb446c63b1335b4997b667ba785e24941dfd41aba5c55dd0473662e",
+    "capture/structured-output/tcpdump.log": "f1643e511fb446c63b1335b4997b667ba785e24941dfd41aba5c55dd0473662e",
+    "capture/extra-metadata/tcpdump.log": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+    "capture/api-arg/summary.json": "04c84cffc9ef8101dbe6211960e8cdc6b0d675817eb7f895cbd3c98ed3de94fc",
+    "capture/api-stdin/summary.json": "b774a578f37b3fc902130fc887d478e62512622f7f7f7e6f596d6d949e834a69",
+    "capture/compact/summary.json": "9917b2f3dea3ffb6e3f8ee2a69f8859c6a8a2773a63ee1da7e8a12f6f6dcbe2d",
+    "capture/alias-sonnet/summary.json": "ed8e806480a7e0d219c78fcaf180535010d468da05284785cd9effe29c98a031",
+    "capture/api-json/summary.json": "4079c8bd4ab575122c12bea4a5c9da4e7f2c1a36bc86a66709d37bac2356e38a",
+    "capture/image-read/summary.json": "5f563d4bd4090ad6952b8554aac085457e9e0733abc21302d8db389d83fd212e",
+    "capture/oauth-stream/summary.json": "1a4c88120e735b74e44b9d790fde053c9f71bf665caf306506bfbf95317264b2",
+    "capture/resume/summary.json": "4c0deb43a7a4e30b62e4382ab4be74440de5ca0dc87f75d385dfb434ff2dc6eb",
+    "capture/parallel-read/summary.json": "7e133c5ee5e9ef65cb64d5d431b18fac891125be18b0c0cff758570527d358d1",
+    "capture/oauth-arg/summary.json": "0750bd2780500cb2c4b4f244a794737551e7b2f95f6a3063a6fbc92b725abd21",
+    "capture/oauth-json/summary.json": "942e4e7a466568e9df9907180e6bc712a12c4d805519fbc4c5ae523e1ddb69c3",
+    "capture/thinking-tool/summary.json": "aaa837d84d8bcb982d0fc4bdf3d098944e87b03dfb2474408fd68bcda6d9845a",
+    "capture/structured-output/summary.json": "a4ec800c90ce4bed42df9809ed74083c502e0d3ca73e448a4f5eb35ef79a460a",
+    "capture/extra-metadata/summary.json": "3f722f7b4181970cf5f87fada4050a094c62a69d885393f26197e036b7dcb862",
+    "capture/api-arg/invocation.json": "3c1ad04dc19cfa704b68a93320d2e5a7a80d65216a9a532853e9e26d661e7914",
+    "capture/api-stdin/invocation.json": "073c6a116c174c617f656c66be7dffe9787afacc6727f0b5733fc1526f428a1f",
+    "capture/compact/invocation.json": "9b7c7da56758da8f2a9018ce904bef5b9ac517ac5a02e6c7e9675dc77dce6371",
+    "capture/alias-sonnet/invocation.json": "c4c6e0f65c4f9b62854fdb9c66941366514685622e769f4b2dc19d02f7a8512b",
+    "capture/api-json/invocation.json": "13acff055f7db4dec702844ddd135ea10bd2cba826eae2804072aa0bb00529ee",
+    "capture/image-read/invocation.json": "40fe1f53271f450974296e805e88595d42bd67e946b76408959009c7e0954484",
+    "capture/oauth-stream/invocation.json": "df7becc35af67064b2a2daef9c866c8cb14618c6a80398605fe50678ae0d4020",
+    "capture/resume/invocation.json": "f5721e02eb07176c63a16d758ea542faa964897200c17ab86b33d5230fe92b6c",
+    "capture/parallel-read/invocation.json": "40fe1f53271f450974296e805e88595d42bd67e946b76408959009c7e0954484",
+    "capture/oauth-arg/invocation.json": "df660379d376dd1edf4f0b139052506c67a5f65773bfa7bb16421eb2ff71b76a",
+    "capture/oauth-json/invocation.json": "c78f8395649f6a4ce0e58c58b709b8255fd9b0e997237418b48f7bdcba0f1021",
+    "capture/thinking-tool/invocation.json": "40fe1f53271f450974296e805e88595d42bd67e946b76408959009c7e0954484",
+    "capture/structured-output/invocation.json": "25762a1785690e67a202f48da223a1e3e731cb4e8cbe363125049b72dfb0a4db",
+    "capture/extra-metadata/invocation.json": "6780c89bbb4f40bdde747a82bff81c56e6ebe36affa0293d80f77298867933b5",
+    "baseline/unicode/requests.json": "0f94d0cd40d6f65d0e5919503895d21429d67cd506419cc66a6098bc8a50ed3d",
+    "baseline/retry-503/requests.json": "112cbd6c15b5fea633de44717a3a1b5e29a6715ff0d1a11127c816b9e1c46dae",
+    "baseline/count-context/requests.json": "3c31206aa7d9cc6cffbdb048d7f3f5befb3e89dacc61c9e4e0348e30e36a1bb2",
+    "baseline/unicode/capture.pcap": "a1d24c1d470ea25b3769bcf1cf9e68e1778172304fb6909f0c6fa326b7b9bd36",
+    "baseline/retry-503/capture.pcap": "ef1f8246cc924d292d015bac531051641276fc5a9324c3d8e3537f7ca1a09f01",
+    "baseline/count-context/capture.pcap": "a5f835956ec129c0c8ecbf1dbb5c896666c9abccf176b781f17c320185eb15a0",
+    "baseline/unicode/tcpdump.log": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+    "baseline/retry-503/tcpdump.log": "ecb7b1b5804036a5aa8a5c33c714f8c15d0ec6ac9890873c0cdb586379381fb7",
+    "baseline/count-context/tcpdump.log": "9ec9f41188c2f9da2efa814758b5d5203503d8e52b26805ee50c2b5ad8b61ca3",
+    "baseline/unicode/summary.json": "eadf56715ba628eb3d689898a397cee48ee08c23dceac75d3f79d72417ff7a65",
+    "baseline/retry-503/summary.json": "a6cabdfcad173d7fba390b21e34918ac53ed7a7a5ff8ec585355939b49428162",
+    "baseline/count-context/summary.json": "685106ba2e0c59707391c514d367568700fb90155ee23e2fb327dbec2023e0dd",
+    "baseline/unicode/invocation.json": "254144590677fc3898e00b522073f1aa4bb9ae9e275299a65466fbe82b6cd87a",
+    "baseline/retry-503/invocation.json": "aba371c9ae47ab3385cba839fd345cf3c6575aefcb68ca85d21d997a952dc2d9",
+    "baseline/count-context/invocation.json": "6810c5bdb082cbfe386ab0689084c1d3ba8225f573e7f54ecf546932041f6b3d",
+    "analysis/snapshot.patch": "794b8fdf5e5fa5b4abd9df4a20afd640cf9f0067401b261138ebb03f69f92ddf",
+    "analysis/source-manifest.json": "2d060dc6e52074874f14033e5590f4407a5bd131a230e45899a6219c7d6befd7",
+    "analysis/snapshot-regressions.jsonl": "bad546bcdd37c18c92696dc062fad1215fb8bb55ea7f68ab60fcab20e2192405",
+    "analysis/production-audit.jsonl": "0a97d1e462388f0988ae2617b4f27f91cf658aa93555918631eb46eb7636c83e",
+    "analysis/request-recheck-final.jsonl": "a3a76dbeda65d37239705b44c9747183b19fcd1c8b59949c6e864100625a00dc"
+  },
+  "not_verified": [
+    "later working-tree edits",
+    "real provider acceptance, billing or entitlements",
+    "auth refresh and real signed thinking",
+    "HTTP/2, TLS session resumption, ARM64",
+    "fresh all-proxy replay",
+    "complete deployed handler/database/upstream integration",
+    "full unit/integration/lint suite in this round"
+  ],
+  "audit_scripts_sha256": {
+    ".github/claude-validation/request_recheck_test.go": "a2a3dfcfdb98083c30f9115bd97e2fc09febb5b4c0f155235d4380ff7e4a0b33",
+    ".github/claude-validation/extended_audit_test.go": "62a6818c8cc75c857782ab91346fa2a1353b0f6b776ebb8d3a741b47f7e29f43",
+    ".github/claude-validation/verify_native_hello.py": "6276dd551780540d32a43c7a3740a59e23328295c475dcf2beb969938c6dc8b2"
+  }
+}

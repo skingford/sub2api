@@ -4,6 +4,7 @@ package service
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"errors"
@@ -41,6 +42,18 @@ func (u *claudeContractUpstream) Do(req *http.Request, _ string, _ int64, _ int)
 	if err != nil {
 		return nil, err
 	}
+	logical := u.body
+	if strings.EqualFold(getHeaderRaw(req.Header, "Content-Encoding"), "gzip") {
+		reader, err := gzip.NewReader(bytes.NewReader(u.body))
+		if err != nil {
+			return nil, err
+		}
+		logical, err = io.ReadAll(reader)
+		_ = reader.Close()
+		if err != nil {
+			return nil, err
+		}
+	}
 	status := u.status
 	if status == 0 {
 		status = 200
@@ -52,7 +65,7 @@ func (u *claudeContractUpstream) Do(req *http.Request, _ string, _ int64, _ int)
 	}
 	if status >= 400 {
 		payload = `{"type":"error","error":{"type":"permission_error","message":"Local synthetic refusal"}}`
-	} else if gjson.GetBytes(u.body, "stream").Bool() {
+	} else if gjson.GetBytes(logical, "stream").Bool() {
 		contentType = "text/event-stream"
 		payload = "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_contract\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-4-6\",\"content\":[],\"usage\":{\"input_tokens\":1,\"output_tokens\":0}}}\n\nevent: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\"},\"usage\":{\"output_tokens\":1}}\n\nevent: message_stop\ndata: {\"type\":\"message_stop\"}\n\n"
 	}

@@ -14,7 +14,8 @@ func claude2292VerifiedModel(model string) bool {
 }
 
 // Defaults are limited to models captured with the pinned official executable.
-// Explicit sampling, tool choice and thinking controls retain their semantics.
+// Explicit values win. Temperature is a late scalar override in the native CLI;
+// by itself it does not disable the model's default thinking configuration.
 func claude2292ModelDefaults(body []byte, model string) []byte {
 	maxTokens := 32000
 	if model == "claude-opus-4-6" {
@@ -27,7 +28,7 @@ func claude2292ModelDefaults(body []byte, model string) []byte {
 		body, _ = setJSONValueBytes(body, "max_tokens", maxTokens)
 	}
 	choice := gjson.GetBytes(body, "tool_choice.type").String()
-	if !gjson.GetBytes(body, "thinking").Exists() && !gjson.GetBytes(body, "temperature").Exists() &&
+	if !gjson.GetBytes(body, "thinking").Exists() &&
 		!gjson.GetBytes(body, "top_p").Exists() && !gjson.GetBytes(body, "top_k").Exists() &&
 		choice != "any" && choice != "tool" {
 		if model == "claude-haiku-4-5-20251001" {
@@ -39,7 +40,25 @@ func claude2292ModelDefaults(body []byte, model string) []byte {
 			body, _ = setJSONRawBytes(body, "thinking", []byte(`{"type":"adaptive","display":"omitted"}`))
 		}
 	}
-	if gjson.GetBytes(body, "thinking.type").String() == "adaptive" && !gjson.GetBytes(body, "output_config.effort").Exists() {
+	thinking := gjson.GetBytes(body, "thinking")
+	thinkingType := thinking.Get("type").String()
+	if thinkingType == "disabled" {
+		// Native _ur removes every extra property from disabled thinking. This
+		// is a direct thinking control, equivalent to MAX_THINKING_TOKENS=0;
+		// it must not silently retain an incompatible display or budget.
+		hasExtra := false
+		thinking.ForEach(func(key, _ gjson.Result) bool {
+			hasExtra = key.String() != "type"
+			return !hasExtra
+		})
+		if hasExtra {
+			body, _ = setJSONRawBytes(body, "thinking", []byte(`{"type":"disabled"}`))
+		}
+		if !isClaude55SignedThinkingModel(model) && !gjson.GetBytes(body, "temperature").Exists() {
+			body, _ = setJSONValueBytes(body, "temperature", 1)
+		}
+	}
+	if thinkingType != "" && model != "claude-haiku-4-5-20251001" && !gjson.GetBytes(body, "output_config.effort").Exists() {
 		effort := "high"
 		if isClaude55SignedThinkingModel(model) {
 			effort = "medium"

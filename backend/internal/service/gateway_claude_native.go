@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
+	requestbody "github.com/Wei-Shaw/sub2api/internal/pkg/httputil"
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 )
@@ -119,6 +120,21 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 	if !known {
 		return body, validateNativeClaudeBodyIntegrity(req.Context(), c, body)
 	}
+	// The measured native gzip path sends the billing sentinel unchanged. Keep
+	// its actual compressed bytes only while the final logical request is still
+	// identical. A mapped model, beta policy or managed identity rewrite instead
+	// follows the existing final-body checksum path below.
+	if u.Path == "/v1/messages" && c != nil && preserveNativeClaudeRequest(req.Context(), c, account, body) &&
+		strings.Contains(billing.String(), " cch=00000;") {
+		encoding := getHeaderRaw(req.Header, "Content-Encoding")
+		if encoding == "" || strings.EqualFold(encoding, "gzip") {
+			if originalEncoding, wire, ok := requestbody.OriginalRequestEncoding(c.Request, body); ok && originalEncoding == "gzip" {
+				setNativeClaudeWireBody(req, wire)
+				setHeaderRaw(req.Header, "Content-Encoding", "gzip")
+				return body, nil
+			}
+		}
+	}
 	out, err := finalizeClaude2292Billing(body, billing)
 	if err != nil {
 		if c != nil {
@@ -129,13 +145,17 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 	if !bytes.Equal(out, body) {
 		// Keep retries, Content-Length, debug snapshots and the actual wire body
 		// on the same final bytes. The closure owns an immutable snapshot.
-		snapshot := bytes.Clone(out)
-		req.Body = io.NopCloser(bytes.NewReader(snapshot))
-		req.ContentLength = int64(len(snapshot))
-		req.GetBody = func() (io.ReadCloser, error) { return io.NopCloser(bytes.NewReader(snapshot)), nil }
-		deleteHeaderAllForms(req.Header, "content-length")
+		setNativeClaudeWireBody(req, bytes.Clone(out))
 	}
 	return out, nil
+}
+
+// wire must be owned by this request and must not be changed after this call.
+func setNativeClaudeWireBody(req *http.Request, wire []byte) {
+	req.Body = io.NopCloser(bytes.NewReader(wire))
+	req.ContentLength = int64(len(wire))
+	req.GetBody = func() (io.ReadCloser, error) { return io.NopCloser(bytes.NewReader(wire)), nil }
+	deleteHeaderAllForms(req.Header, "content-length")
 }
 
 func finalizeClaude2292Billing(body []byte, billing gjson.Result) ([]byte, error) {

@@ -81,7 +81,7 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 		}
 		wireKey := key
 		switch lower {
-		case "accept", "authorization", "content-type", "user-agent", "accept-encoding":
+		case "accept", "authorization", "content-type", "content-encoding", "user-agent", "accept-encoding":
 			wireKey = http.CanonicalHeaderKey(lower)
 		}
 		h[wireKey] = append(h[wireKey], values...)
@@ -95,7 +95,7 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	var keys []string
 	for key := range h {
 		switch strings.ToLower(key) {
-		case "connection", "host", "accept-encoding", "content-length":
+		case "content-encoding", "connection", "host", "accept-encoding", "content-length":
 			continue
 		}
 		keys = append(keys, key)
@@ -103,6 +103,11 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	sort.Strings(keys)
 	for _, key := range keys {
 		h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], strings.ToLower(key))
+	}
+	// Bun adds request compression after sorting application headers. The
+	// native gzip capture places Content-Encoding immediately before Connection.
+	if _, exists := h["Content-Encoding"]; exists {
+		h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], "content-encoding")
 	}
 	h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], "connection", "host", "accept-encoding", "content-length")
 	return h
