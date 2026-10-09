@@ -138,6 +138,7 @@ GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service \
 - [维护开发指南](DEV_GUIDE.md)
 - [Claude 改动记录](docs/claude-change-log.md)
 - [Claude 请求对齐与验证范围](docs/claude-code-request-parity.md)
+- [Claude Code 遥测关闭与个人自用中转](docs/claude-code-telemetry.md)
 - [完整请求日志与 Claude 故障分析](docs/request-tracing.md)：默认保存 HTTP 全链路正文、账号与上游错误证据，支持按请求导出与完整性校验。
 - [插件开发](docs/PLUGIN_DEVELOPMENT.md)
 - [上游中文项目说明](https://github.com/Wei-Shaw/sub2api/blob/main/README_CN.md)

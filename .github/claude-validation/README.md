@@ -296,3 +296,28 @@ python3 /opt/verify_gzip_wire.py /evidence/transport-final /baseline.json /evide
 
 核对器需要同目录的 `verify_native_hello.py`。baseline 必须使用未修改 CLI 的独立原始捕获，
 不能拿 Go 自己生成的 gzip 当预期。结果和语义边界见 [参数与 gzip 修复说明](../../docs/claude-parameter-wire-alignment.md)。
+
+## 对齐后的日志与压缩边界复核
+
+`post_alignment_lab.py` 复用 comprehensive / extended 采集器，添加大系统提示、分块 gzip、
+压缩级别、Unicode、大 count_tokens 及 top_p / top_k 场景。大提示写入隔离目录中的文件，
+使用 CLI 的 system-prompt-file 参数，避免把超长参数塞入进程命令行。
+仍需固定 CLI 哈希、空输出目录、Docker `--network none` 及官方域名回环映射。
+
+将 `post_alignment_audit_test.go` 通过 overlay 注入 service 测试包，设
+`CLAUDE_ENCODING_POLICY_AUDIT` 输出路径，以及可选 `CLAUDE_ENCODING_POLICY_EXPORT` 导出目录，
+运行 `TestPostAlignmentEncodingPolicyAudit`。它记录完整大小写键变体；getter 的返回值不等于
+最终网络头，测试端口的 200 也不代表最终编码合法，需继续跑实际传输。
+
+`trace_transport_probe.go` 通过 overlay 替换编译路径
+`backend/internal/repository/testdata/claude_capture_probe.go`，仅在测试主函数初始化生产 recorder，
+不替换生产 HTTP 实现。`post_trace_transport_lab.py` 使用 `proxy_audit_lab.py` 的单线程 TLS relay，
+对普通、运行时 gzip、分块 gzip、Unicode gzip 做四路径 × 日志开关的 32 组传输。
+用 `verify_post_trace.py RESULTS INPUTS OUTPUT_JSON` 核对 PCAP 和日志；头序差异保留在输出，
+不能仅根据退出码认定完全一致。
+
+`encoding_policy_lab.py` 读取生产构建器导出的六类配置请求，用严格本地 gzip / JSON 解码器观察
+头体一致性，重复 identity 覆盖以检查大小写键冲突。用 `verify_encoding_policy.py RESULTS`
+核对全部发送字节。后者需要同目录的 `verify_post_trace.py` 和 `verify_native_hello.py`。
+
+结果及失败实验边界见 [对齐后综合复核](../../docs/claude-post-alignment-audit-20261009.md)。
