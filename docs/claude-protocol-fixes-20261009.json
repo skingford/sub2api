@@ -439,7 +439,7 @@
   },
   "commit_references": {
     "code": "133c6b4212a7192a52ffb9ccf5dd9e508c6d87d2",
-    "pull_request": null,
-    "pushed": false
+    "pull_request": "https://github.com/skingford/sub2api/pull/6",
+    "pushed": true
   }
 }
