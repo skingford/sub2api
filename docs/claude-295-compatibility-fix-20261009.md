@@ -122,3 +122,11 @@ GOTOOLCHAIN=go1.27.2 CI=true go test -p 1 -tags=integration ./...
 
 没有推送、合并或部署。所有模型交互使用 Docker 断网、假凭据和本地模拟响应；
 结果不代表真实官方接受、订阅资格、真实 thinking 签名或计费验收。
+
+
+## 提交与推送补记（2026-10-09）
+
+维护者授权“提交 推送”后，审查材料和修复代码已保存为 [765a12ec4](https://github.com/skingford/sub2api/commit/765a12ec4199dfeb490b60b0cfcc47db10bdff14)，
+并推送至 `origin/codex/claude-source-runtime-audit-20261009`。文中的未提交 / 未推送状态
+保留为此前验证时点的记录；本次没有新建 PR、合并或部署。提交内 3,332 个被测文件
+与最终验证快照逐字节相同，提交后的补记仅涉及文档。

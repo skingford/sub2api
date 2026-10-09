@@ -410,6 +410,8 @@
 - 提交 / 边界：当前审查尚未提交、推送、合并或部署；未来提交使用 `Claude-Change-ID: CC-20261009-011` 并补记引用。三项新版兼容缺口未修复，009 的历史修复结论由本条复验补充。全部模型交互使用隔离假凭据和模拟响应，不代表真实服务接受、OAuth 订阅、签名或计费验收。
 
 
+- 2026-10-09 提交 / 推送补记：维护者授权“提交 推送”后，011 的审查材料与 012 的修复一并保存为 [765a12ec4](https://github.com/skingford/sub2api/commit/765a12ec4199dfeb490b60b0cfcc47db10bdff14)，提交同时带两个 Claude-Change-ID trailer，并已推送至 `origin/codex/claude-source-runtime-audit-20261009`。被审 release 基线不变，未合并或部署；上文未提交状态保留为审查完成时点的记录。
+
 ## CC-20261009-012：完整修复 2.1.295 三项兼容缺口
 
 - 授权 / 基线：维护者要求“完全修复”011 的问题；在同一 `codex/claude-source-runtime-audit-20261009` 工作区完成，固定 release `7ce838ee33663b8b4dc93296a51fad25b2daa49c`，上游仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。保留 011 的原始审查记录，以本条更新当前状态。
@@ -423,3 +425,5 @@
 - 提交 / 边界：当前尚未提交、推送、合并或部署；后续提交携带 `Claude-Change-ID: CC-20261009-012` 并补记引用。本轮全部模型交互均为隔离假凭据 / 模拟响应；不代表官方接受、真实 thinking 签名验证、OAuth 订阅或计费验收。
 
 - 最终工程补记：不可变快照的 58 包 unit 全通过；integration 首轮 49 包通过，三个包在 Redis / PostgreSQL / Ryuk 启动阶段因本机 Docker 双栈发布端口选择失败。临时代理仅将这三个包新建 testcontainers 的端口绑定到 IPv4，保留所有原断言及真实数据库交互，复验全部通过，合计 52 包、未解决失败 0；原始命令退出 1 与环境诊断均保留。代理已停止，没有修改 Docker 全局配置或业务容器。golangci-lint 2.14.0 为 0 issues；模块校验、tidy diff 和差异空白检查通过。工作区 3,193 个 Go / SQL / 模块文件与最终快照一致，连同回归 JSON 共 3,332 个文件有 SHA-256 清单。
+
+- 2026-10-09 提交 / 推送补记：本条代码、回归样本及验证材料已提交为 [765a12ec4199dfeb490b60b0cfcc47db10bdff14](https://github.com/skingford/sub2api/commit/765a12ec4199dfeb490b60b0cfcc47db10bdff14)，带 `Claude-Change-ID: CC-20261009-012`，并按维护者授权推送到 `origin/codex/claude-source-runtime-audit-20261009`。通过 Git 提交归档逐文件重新核对，3,332 个源码 / 回归 JSON 与已验证快照完全一致；本轮提交后仅补充追溯记录，没有重跑相同源码的测试。没有新建 PR、合并 release 或部署。

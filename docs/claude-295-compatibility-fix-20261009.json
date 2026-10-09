@@ -207,5 +207,17 @@
     "proxy_source_sha256": "df653ce73b139d2b0e78132d5501f838634a0f18ea9fc76ff7aefad7701b74ab",
     "proxy_removed_after_checks": true,
     "docker_global_configuration_changed": false
+  },
+  "delivery": {
+    "code_commit": "765a12ec4199dfeb490b60b0cfcc47db10bdff14",
+    "commit_url": "https://github.com/skingford/sub2api/commit/765a12ec4199dfeb490b60b0cfcc47db10bdff14",
+    "remote": "origin",
+    "branch": "codex/claude-source-runtime-audit-20261009",
+    "pushed": true,
+    "merged": false,
+    "deployed": false,
+    "pull_request": null,
+    "committed_files_match_validated_snapshot": 3332,
+    "note": "The earlier published/deployed fields preserve status at validation completion; this follow-up records the authorized commit and push."
   }
 }
