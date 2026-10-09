@@ -230,7 +230,7 @@ func TestClaudeNativeGzipNeverRestoresChangedBody(t *testing.T) {
 func TestClaudeNativeGzipHonorsScopeAndHeaderPolicy(t *testing.T) {
 	for _, scenario := range []string{"custom-origin", "unknown-version", "disabled-preservation"} {
 		t.Run(scenario, func(t *testing.T) {
-			c, body, _ := nativeGzipRequest(t)
+			c, body, wire := nativeGzipRequest(t)
 			a := newClaude2292Account(AccountTypeOAuth)
 			ctx := withNativeClaudeBodyIntegrity(c.Request.Context(), c, a, body)
 			target := "https://api.anthropic.com/v1/messages?beta=true"
@@ -248,10 +248,21 @@ func TestClaudeNativeGzipHonorsScopeAndHeaderPolicy(t *testing.T) {
 			}
 			out, e := finalizeNativeClaudeRequest(req, c, a, body)
 			require.NoError(t, e)
-			require.NotEqual(t, "gzip", getHeaderRaw(req.Header, "Content-Encoding"))
 			actual, e := io.ReadAll(req.Body)
 			require.NoError(t, e)
-			require.Equal(t, out, actual)
+			if scenario == "unknown-version" {
+				require.Equal(t, "gzip", getHeaderRaw(req.Header, "Content-Encoding"))
+				require.Equal(t, wire, actual)
+				require.Equal(t, body, out)
+			} else {
+				require.NotEqual(t, "gzip", getHeaderRaw(req.Header, "Content-Encoding"))
+				require.Equal(t, out, actual)
+				if scenario == "disabled-preservation" {
+					expected, err := finalizeClaude2292Billing(body, gjson.GetBytes(body, "system.0.text"))
+					require.NoError(t, err)
+					require.Equal(t, expected, actual)
+				}
+			}
 		})
 	}
 }

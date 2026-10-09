@@ -169,6 +169,9 @@ func TestDeepClaudeErrorOriginSignals(t *testing.T) {
 				status = 400
 				headers.Set("Content-Type", "text/plain")
 				original = []byte("bad json: unexpected EOF")
+			case "bad-json-escaped":
+				status = 400
+				original = []byte(`{"type":"error","error":{"type":"invalid_request_error","message":"The request body is not valid JSON ` + strings.Repeat("<", 2000) + `"}}`)
 			case "bad-json-standard":
 				status = 400
 				original = []byte(`{"type":"error","error":{"type":"invalid_request_error","message":"The request body is not valid JSON"}}`)

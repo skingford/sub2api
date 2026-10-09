@@ -379,3 +379,15 @@
 - 提交 / PR：本轮审查使用 `Claude-Change-ID: CC-20261009-008`，提交后补记引用；尚未推送或新建 PR，没有部署。原 PR #5 已合入 release，仅作为被审基线。三项新缺陷尚未修复，不代表真实服务接受、订阅、签名或计费验证。
 
 - 2026-10-09 提交补记：深入审查工具、报告和结构化证据已保存为本地提交 `90db233293115cbc90429274797ac703322a84d2`，带 `Claude-Change-ID: CC-20261009-008`。累计 98 个未修改 CLI 场景 / 166 条请求的最终 PCAP 全部匹配且丢包 0；三项发现仍待修复。被审生产源码保持 release `9833384c6` 不变，未推送或部署。
+
+## CC-20261009-009：修复 gzip CCH 与两类错误恢复信号
+
+- 授权与起点：维护者要求修复 008 的三处协议差异，并授权隔离环境中使用指定中转地址 / 凭据测试。起点 `0f628bcf44ef10d6dde3f7a9a9ecec6d2b0f6b5b`，生产基线 release `9833384c65ddb574b2054d3c9e0a7dd83d359f5c`；上游基线仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。
+- 版本与依据：Claude Code 2.1.292 / SDK 0.128.0，复用 008 的固定二进制、反编译来源和独立 CCH oracle；Go 1.27.2。原生压缩错误分类依据 chunk-hy08191v.js 的来源标记、8192 字节探测和 schema 优先级，不以模拟响应推断官方接受规则。
+- 行为：原字节 gzip 保留不再依赖最终 UA 的已知版本判断；已知版本改成明文时独立重算 CCH，未知格式的不安全转换 / 改写返回 400。错误响应保留 cf-ray（含空值），将原生认可的非标准 JSON / 纯文本解析错误转换为短标准消息，同时防止 trim / 嵌套提取制造新重试信号。统一短消息还避免 JSON 转义后超过原生探测上限。
+- 文件：`internal/pkg/httputil/request_encoding*`、`gateway_claude_native*`、`gateway_claude_compatibility.go`、新增 `gateway_claude_error.go` / `gateway_claude_protocol_fix_test.go`，以及 gzip / parameter 回归、验证脚本和 [修复报告](claude-protocol-fixes-20261009.md) / [结构化记录](claude-protocol-fixes-20261009.json)。
+- 协议验证：556 组逻辑正文及原字节比较全部通过；108 个策略观察，16 个真实发送匹配原生 gzip 或独立 CCH oracle，PCAP 零丢包。22 个未修改 CLI 错误回放场景 / 58 条请求（40 条 gzip）均匹配 PCAP；cf-ray 403 不再额外降级重试，三种解析错误及转义扩展均正常恢复。最终服务联调覆盖 12 条对话、96 条生成、24 条计数，跨会话串入 0。
+- 真实接口：首个地址在模型列表阶段被 403 拒绝。更换地址 / 新凭据后，模型列表 Bearer 成功；消息接口两种认证、原生 CLI、生产 Forward + HTTPUpstream 两阶段 normal / passthrough 共 5 个短生成用例成功。独立记录真实与合成结果，不把中转返回 200 视为官方 CCH、订阅或完整部署验收；专用网络、代理和本地临时凭据已清理。
+- 配置复用：按维护者后续请求，在远端 root 的 Claude Code 2.1.295 配置自定义地址、Bearer 凭据和 `hasCompletedOnboarding`，认证检查及短请求成功。新增无内置凭据的 `configure_claude_router.py`，备份旧配置并以 600 权限原子保存；提供交互式隐藏输入及私有 key-file 两种方式，步骤见验证 README。远端 2.1.295 的配置测试不扩大 2.1.292 算法兼容声明。
+- 工程验证：最终全量 unit 58 包、integration 52 包通过，golangci-lint 2.14.0 为 0 issues，详见结构化记录；首轮全量单测出现一次未修改 OpenAI 缓存刷新去重用例失败，同基线隔离重复 100 次通过，保留失败日志及最终复跑记录。lint 使用匹配工具链的 2.14.0。
+- 边界与提交：空 anthropic-version 补默认值、身份冲突保护、自定义 origin 和成功响应头过滤边界仍保留。本条使用 `Claude-Change-ID: CC-20261009-009`，提交后补记哈希；没有合并或部署网关代码。保留 008 的历史问题记录，由本条链接修正其当前状态。

@@ -15,6 +15,17 @@ type originalRequestEncoding struct {
 	digest   [sha256.Size]byte
 }
 
+// OriginalRequestEncodingName reports only successfully verified ingress
+// encoding, even after logical-body edits. It does not authorize replay;
+// OriginalRequestEncoding must still check the final body's digest for that.
+func OriginalRequestEncodingName(req *http.Request) string {
+	if req == nil {
+		return ""
+	}
+	value, _ := req.Context().Value(originalRequestEncodingKey{}).(originalRequestEncoding)
+	return value.encoding
+}
+
 // Remember the successfully decoded wire body per request, not per client or
 // account. Middleware may replace Body with a PrereadBody; context survives it.
 func retainRequestEncoding(req *http.Request, encoding string, raw, decoded []byte) {

@@ -381,3 +381,80 @@ request-id-downstream：gzip 始终返回导出的错误，明文由既有 SSE �
 标准 Anthropic 格式是对照，所有结果仍需 PCAP 核验；不代表真实官方接受。
 `deep_response_header_audit_test.go` 可通过 overlay 放入 util/responseheaders 包，设
 `CLAUDE_HEADER_POLICY_OUTPUT`，观察默认和显式 additional_allowed 下的成功响应头过滤。
+
+## 三处协议差异修复复验
+
+修复后的 `protocol_fix_wire_lab.py` 使用相同的 16 个第一方策略导出：gzip 请求逐字节对照
+`/fixtures` 中原生 runtime / blocks 捕获，明文请求逐字节对照 `/oracle/records.json` 中独立
+原生运行时的 CCH 结果。挂载生产请求到 `/inputs`、新版传输探针到 `/opt/trace-transport-probe`，
+通过 `ram_capture.py` 在断网 tmpfs 中运行，再用 `verify_encoding_policy.py` 验证 PCAP。
+保留旧 `deep_policy_wire_lab.py`，用于复现 CC-20261009-008 的历史明文缺陷。
+
+错误回放同时选择 cf-ray 和 request-id 的 upstream / downstream 场景。持续 403 的有标记场景
+应各发一次，无标记对照各发三次；三种 bad-json 400 及 `bad-json-escaped` 转义扩展用例，
+在启用明文成功模拟响应时均应各发三次并
+正常结束。SDK 重试保持关闭，分别比较请求编码序列与 CLI 退出状态，不能只检查 Go 测试 PASS。
+
+真实中转接口测试必须单独运行。`protocol_live_export_test.go` 通过 overlay 加入 service 包，
+设置 `CLAUDE_LIVE_REQUEST_EXPORT`，导出生产 Forward 的 normal / passthrough 合成短请求。
+将 `live_transport_probe.go` overlay 到 repository/testdata/claude_capture_probe.go 编译 Linux
+探针，使用生产 HTTPUpstream 发送；这属于两阶段组件联调，不是完整部署或官方源站验收。
+
+客户端仅接入 Docker internal 网络；另一个 CONNECT 代理同时接入该网络和出口网络，使用
+`restricted_egress_proxy.py`，其 `ALLOWED_HOST` 必须等于用户授权的主机。探针设置相同的
+`SUB2API_LIVE_AUTHORIZED_HOST`，只挂载只读 `/run/secrets/relay-key` 与合成输入，不挂载用户
+登录目录。代理别名为 `egress`，监听 8080，不发布宿主端口、不解密 TLS 或记录认证头。
+探针只请求 `/v1/messages`，没有自动重试，输入限制为 64 输出 token；凭据不写入参数或报告。
+测试结束后清理专用代理、网络及临时凭据文件。真实返回结果与上述模拟 / 抓包结果分开记录。
+
+## 原生 CLI 配置中转地址并跳过登录引导
+
+已在远端 Claude Code 2.1.295 验证。使用该 SSH 用户的全局配置，不需要浏览器登录。
+这里的“跳过登录”是使用中转 API 凭据并完成首次引导标记。
+
+远端已安装脚本时，直接运行，按提示输入 API Key（输入不会显示）：
+
+```bash
+ssh -t sub2api 'python3 ~/.local/bin/configure-claude-router.py'
+```
+
+换地址时添加 `--base-url https://你的中转地址`。配置其他主机时，先从本仓库安装脚本：
+
+```bash
+ssh sub2api 'mkdir -p ~/.local/bin'
+scp .github/claude-validation/configure_claude_router.py sub2api:.local/bin/configure-claude-router.py
+ssh sub2api 'chmod 700 ~/.local/bin/configure-claude-router.py'
+ssh -t sub2api 'python3 ~/.local/bin/configure-claude-router.py'
+```
+
+脚本保留其他配置，先备份到 `~/.claude/config-backups/`，再原子更新两个文件，权限均为 `600`。
+自动化时可用 `--key-file /安全位置/key`，不要把密钥直接放在命令参数或仓库文件中。
+
+`~/.claude/settings.json` 中的关键配置如下（示例值必须替换）：
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://anyrouter.top",
+    "ANTHROPIC_AUTH_TOKEN": "替换为你的API_KEY"
+  }
+}
+```
+
+这里使用 `ANTHROPIC_AUTH_TOKEN` 让 CLI 发送 Bearer 认证，已用该中转实际验证；避免在同一配置中
+同时设置 `ANTHROPIC_API_KEY`。`~/.claude.json` 保留原有内容并添加：
+
+```json
+{
+  "hasCompletedOnboarding": true
+}
+```
+
+验证认证，再发一个短请求；示例模型已在该接口验证，不会修改默认模型：
+
+```bash
+ssh sub2api 'claude auth status'
+ssh sub2api 'claude -p "Reply with exactly OK." --model claude-haiku-4-5-20251001 --tools "" --no-session-persistence'
+```
+
+认证状态应显示 `loggedIn: true`，短请求返回 `OK`。修改配置后重新启动已有的 Claude 会话。

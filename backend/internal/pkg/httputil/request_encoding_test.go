@@ -36,6 +36,9 @@ func TestOriginalRequestEncodingSurvivesPrereadAndOwnsBytes(t *testing.T) {
 	if !bytes.Equal(restored, compressed.Bytes()) {
 		t.Fatal("returned buffer modified stored evidence")
 	}
+	if OriginalRequestEncodingName(req) != "gzip" {
+		t.Fatal("verified encoding fact lost")
+	}
 	if _, _, ok := OriginalRequestEncoding(req, append(body, ' ')); ok {
 		t.Fatal("changed logical bytes restored old wire body")
 	}
@@ -61,6 +64,9 @@ func TestOriginalRequestEncodingRejectsCorruptOrOversizedGzip(t *testing.T) {
 	var tooLarge *http.MaxBytesError
 	if !errors.As(err, &tooLarge) {
 		t.Fatalf("expected decoded size limit, got %v", err)
+	}
+	if OriginalRequestEncodingName(req) != "" {
+		t.Fatal("unverified encoding retained")
 	}
 	if _, _, ok := OriginalRequestEncoding(req, nil); ok {
 		t.Fatal("truncated body retained for replay")

@@ -172,6 +172,24 @@ func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.C
 	if message == "" {
 		message = "Claude upstream rejected the request"
 	}
+	errorType := gjson.GetBytes(body, "error.type").String()
+	if errorType == "" {
+		errorType = "api_error"
+	}
+	if resp.StatusCode == http.StatusBadRequest {
+		if claudeInvalidJSONRejection(body) {
+			// Preserve the native recovery category without reflecting arbitrary
+			// plaintext, parser snippets or nested JSON back to the caller. Keep
+			// the complete response within the CLI's 8192-byte probe even when
+			// JSON escaping would expand the upstream message or error type.
+			message = claudeInvalidJSONMessage
+			errorType = "invalid_request_error"
+		} else if claudeInvalidJSONMessagePrefix(message) {
+			// Trimming, nested-message extraction or a malformed original schema
+			// must not invent a native compression-retry signal.
+			message = "Upstream error: " + message
+		}
+	}
 	setOpsUpstreamError(c, resp.StatusCode, message, "")
 	appendOpsUpstreamError(c, OpsUpstreamErrorEvent{
 		Platform: account.Platform, AccountID: account.ID, UpstreamStatusCode: resp.StatusCode,
@@ -182,11 +200,16 @@ func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.C
 			c.Header(key, value)
 		}
 	}
-	MarkResponseCommitted(c)
-	errorType := gjson.GetBytes(body, "error.type").String()
-	if errorType == "" {
-		errorType = "api_error"
+	// Native compression fallback uses presence (including an empty value) of
+	// cf-ray to distinguish an origin refusal from an intermediary's rejection.
+	for key, values := range resp.Header {
+		if strings.EqualFold(key, "cf-ray") && len(values) > 0 {
+			deleteHeaderAllForms(c.Writer.Header(), "cf-ray")
+			c.Writer.Header()["Cf-Ray"] = append([]string(nil), values...)
+			break
+		}
 	}
+	MarkResponseCommitted(c)
 	// Preserve status/retry signals while retaining gateway error redaction.
 	c.JSON(resp.StatusCode, gin.H{"type": "error", "error": gin.H{"type": errorType, "message": message}})
 	return fmt.Errorf("claude upstream returned HTTP %d", resp.StatusCode)
