@@ -102,7 +102,7 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	// Keep the advertised version consistent during legacy conversion.
 	mimicUserAgent := claude.DefaultUserAgent()
 	if state := claudeCompatibilityFromContext(ctx); state != nil {
-		mimicUserAgent = "claude-cli/" + state.Version + " (external, cli)"
+		mimicUserAgent = "claude-cli/" + claudeCompatibilityModelVersion(state.Version, modelID) + " (external, cli)"
 	}
 
 	// Mimicry may override the cached User-Agent later, even without a fingerprint.

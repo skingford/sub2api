@@ -1,0 +1,60 @@
+{
+  "version": "2.1.295",
+  "binary_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+  "auth": "synthetic-only",
+  "provider_acceptance": false,
+  "fixtures": [
+    {
+      "fixture": "native-plain.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/capture-2.1.295-comprehensive/claude-sonnet-4-6-api-arg/requests.json",
+      "source_sha256": "6d3d4053e1ef39761667bf084844f7c2d81f9355da093424da6027e8bef2553c",
+      "wire_sha256": "7fe2ea4b3e79c4acc3316b89995980d835c41672b5179a7650a65ad4ef766b0e"
+    },
+    {
+      "fixture": "native-gzip.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/capture-2.1.295-comprehensive/gzip-enabled/requests.json",
+      "source_sha256": "98158e5bf2dac3c2ec49b188c583d47c697b1f0bbfe34b6a7c39ba3615314b24",
+      "wire_sha256": "c642b139457f61f374493f420b42905ba014d1e456f6e8a8d186290f9fcf3ef9"
+    },
+    {
+      "fixture": "native-blocks.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/capture-2.1.295-deep_native/blocks-level-2/requests.json",
+      "source_sha256": "eb99379298b64121cdac752d19f1c75ed60c4ab25e95e0211bf6b8e05f15b275",
+      "wire_sha256": "a60a151f2112c5f3414e41c13313b222a740288ec6e15c894920fb459b55b6bb"
+    },
+    {
+      "fixture": "haiku55-default.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/capture-2.1.295-version_edges/model-claude-haiku-5-5/requests.json",
+      "source_sha256": "77b7e115d537f30ee02dd95ab4e3f9caae688a5ed386c15b08f574d31c85acad",
+      "wire_sha256": "35d86b684ffdd362c3f32af86a6e38a39f69974ef626a1c79411fbe4c22462f4"
+    },
+    {
+      "fixture": "haiku55-effort-xhigh.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/capture-2.1.295-version_edges/haiku55-effort-xhigh/requests.json",
+      "source_sha256": "3c401b39f12676459cde242635034d21f6d71058ea63bbbceafc78e650f3ba35",
+      "wire_sha256": "03c25972d11847d390469429a297256cae87b71c69be69ed7e24a7bb5687f411"
+    },
+    {
+      "fixture": "haiku55-temperature.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/capture-2.1.295-version_edges/haiku55-temperature/requests.json",
+      "source_sha256": "28e859abfa0112c28c506a6fad9e059b3f5b70a761f6fbfa3412f4cf679d0ddf",
+      "wire_sha256": "d81846f082e166fa3206b84f0c8ad643b8dc904ff9ad4bcf305a346da63bc0df"
+    },
+    {
+      "fixture": "compact-first.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/analysis/recovery-2.1.295/claude-sonnet-4-6/apikey/first-rejected-body.json",
+      "sha256": "5ceb5e33634e0f22269d5d45ed9f98b9f8b1b6a2872adc2b8e2862939e18e6fe"
+    },
+    {
+      "fixture": "compact-retained.json",
+      "source": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p/analysis/recovery-gate-control/claude-sonnet-4-6/apikey/first-rejected-body.json",
+      "sha256": "bc418b7133f4a7d5394765586ac1cacbdbb2cbd2dcebfc7d626c5af3aa35928e"
+    },
+    {
+      "fixture": "haiku55-updates.json",
+      "source": "/Users/kingford/claude-capture/compatibility-fix-20261009-yvk8ocrl/haiku295-captures/haiku55-oauth-stream/requests.json",
+      "source_sha256": "96293f3567fa03d2939e084b1b8a1d6afcb8c3536d0ba160db403c55d8dc6107",
+      "wire_sha256": "e1e2b5eec0f98f8587fd0d569404178a7ef0d2d469006ab6dc8d8ce6ab49907f"
+    }
+  ]
+}

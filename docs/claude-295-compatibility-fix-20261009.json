@@ -1,0 +1,211 @@
+{
+  "change_id": "CC-20261009-012",
+  "date": "2026-10-09",
+  "base": "7ce838ee33663b8b4dc93296a51fad25b2daa49c",
+  "upstream": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "evidence_root": "/Users/kingford/claude-capture/compatibility-fix-20261009-yvk8ocrl",
+  "cli_versions": {
+    "2.1.292": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "2.1.295": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358"
+  },
+  "sdk": "0.128.0",
+  "runtime": "v26.3.0",
+  "scope": "2.1.292 existing scope; 2.1.295 Linux x64; offline synthetic responses only",
+  "fixes": {
+    "F1": "Exact 295 unclassified compaction inference and retained suffix; historical integrity checks remain; migration retains version",
+    "F2": "Haiku 5.5 defaults, effort, OAuth beta order, coherent 295 identity and CCH; OpenAI adapters preserve adaptive thinking and opaque signatures",
+    "F3": "Version-specific Linux x64 transport and separate pool identity; original wire bytes and encoding header position"
+  },
+  "forwarding": {
+    "comparisons": 1276,
+    "logical_equal": 1276,
+    "wire_equal": 1276,
+    "errors": 0
+  },
+  "transport": {
+    "combinations": 48,
+    "final_forwarded_inputs_match_verified_transport_inputs": true,
+    "wire_bytes_equal": 48,
+    "logical_body_equal": 48,
+    "header_values_equal": 48,
+    "header_order_equal": 48,
+    "normalized_hello_equal": 48,
+    "zero_drops": 48,
+    "trace_combinations": 24,
+    "trace_complete": 24,
+    "trace_credentials_redacted": 24
+  },
+  "recovery": {
+    "2.1.292": {
+      "model_auth_combinations": 6,
+      "sessions": 12,
+      "generation_requests": 96,
+      "count_requests": 24,
+      "cross_session_leaks": 0,
+      "cli_unmodified": true,
+      "storage_and_upstream": "test implementations; production recovery and forwarding"
+    },
+    "2.1.295": {
+      "model_auth_combinations": 8,
+      "sessions": 16,
+      "generation_requests": 128,
+      "count_requests": 32,
+      "cross_session_leaks": 0,
+      "cli_unmodified": true,
+      "storage_and_upstream": "test implementations; production recovery and forwarding"
+    }
+  },
+  "cch": {
+    "version": "2.1.295",
+    "existing_boundary_vectors": 593,
+    "new_captured_body_mutation_vectors": 12,
+    "go_comparison_passed": true,
+    "native_prefix_unchanged": true,
+    "probe_provenance": {
+      "official_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+      "probe_sha256": "b7493fb718106db884074d61f06e5ba7550899f8bf64eb4f9adbbfa252d27c38",
+      "entry_source_offset": 206411989,
+      "entry_source_length": 23970,
+      "bytecode_record_offset": 255900721,
+      "native_prefix_unchanged": true,
+      "native_prefix_sha256": "b9ffcbf2acf0687927765d3adc9383a87dd051a81631a23226f86580dda66744"
+    },
+    "boundary_pcap": {
+      "requests": 593,
+      "pcap_raw_bytes_equal": true,
+      "golden_vectors_checked": 0,
+      "kernel_drops": 0,
+      "new_vectors_use_independent_runtime_observations": true
+    },
+    "mutation_pcap": {
+      "requests": 12,
+      "pcap_raw_bytes_equal": true,
+      "golden_vectors_checked": 0,
+      "kernel_drops": 0,
+      "new_vectors_use_independent_runtime_observations": true
+    }
+  },
+  "haiku_native_capture": {
+    "cases": 11,
+    "requests": 21,
+    "pcap_all_match": true,
+    "kernel_drops": 0
+  },
+  "engineering": {
+    "status": "complete",
+    "go": "1.27.2",
+    "lint": "2.14.0",
+    "go_mod_verify": true,
+    "go_mod_tidy_diff_empty": true,
+    "unit": {
+      "packages_passed": 58,
+      "failures": 0,
+      "source": "immutable snapshot",
+      "log": "analysis/verified-unit.jsonl"
+    },
+    "lint_result": "0 issues",
+    "integration": {
+      "packages_passed_total": 52,
+      "default_environment_passed": 49,
+      "ipv4_environment_passed": 3,
+      "initial_command_exit": 1,
+      "ipv4_retry_exit": 0,
+      "unresolved_failures": 0,
+      "initial_failed_packages": [
+        "github.com/Wei-Shaw/sub2api/internal/middleware",
+        "github.com/Wei-Shaw/sub2api/internal/repository",
+        "github.com/Wei-Shaw/sub2api/internal/server/routes"
+      ],
+      "initial_failed_tests": [
+        "TestRateLimiterFixesMissingTTL",
+        "TestAuthRegisterRateLimitThresholdHitReturns429"
+      ],
+      "logs": [
+        "analysis/verified-integration.jsonl",
+        "analysis/integration-ipv4.jsonl"
+      ],
+      "adaptation": "Temporary Docker API proxy binds only new testcontainers ports to 127.0.0.1; original tests/assertions and production source unchanged; normal database containers remain untouched"
+    },
+    "lint_log": "analysis/verified-lint.log",
+    "git_diff_check": true,
+    "current_source_matches_snapshot": true,
+    "openai_compatible_entrypoints_log": "analysis/openai-entrypoints.jsonl"
+  },
+  "published": false,
+  "deployed": false,
+  "provider_acceptance_verified": false,
+  "parameter_observations": [
+    {
+      "case": "haiku55-api-arg",
+      "status": 200,
+      "differences": {}
+    },
+    {
+      "case": "haiku55-effort-low",
+      "status": 200,
+      "differences": {}
+    },
+    {
+      "case": "haiku55-effort-xhigh",
+      "status": 200,
+      "differences": {}
+    },
+    {
+      "case": "haiku55-max4096",
+      "status": 200,
+      "differences": {}
+    },
+    {
+      "case": "haiku55-oauth-arg",
+      "status": 200,
+      "differences": {}
+    },
+    {
+      "case": "haiku55-oauth-stream",
+      "status": 200,
+      "differences": {
+        "thinking": {
+          "converted": {
+            "display": "omitted",
+            "type": "adaptive"
+          },
+          "native": {
+            "display": "updates",
+            "type": "adaptive"
+          }
+        }
+      }
+    },
+    {
+      "case": "haiku55-temperature",
+      "status": 200,
+      "differences": {}
+    }
+  ],
+  "explicit_verbose_regression": "haiku55-updates fixture tests explicit display=updates and exact OAuth beta header; unspecified generic display remains omitted",
+  "preparation_corrections": [
+    "Removed an invalid OAuth model-mapping test assumption",
+    "count_tokens correctly omits invented billing system blocks; test assertion corrected",
+    "One integration run mixed dependency/caller revisions during bridge completion; retained failure and reran all checks from immutable snapshot"
+  ],
+  "source_manifest": {
+    "files_with_regression_json": 3332,
+    "go_sql_modules": 3193,
+    "sha256": "92e75852c5677d7ab6f9fc87a194da3a957bd2753753238a4666263f41068750"
+  },
+  "environment_evidence": {
+    "observed_port_bindings": {
+      "0.0.0.0": "55148",
+      "::": "55147"
+    },
+    "ipv4_tcp_probe": {
+      "55148": "reachable",
+      "55147": "connection refused"
+    },
+    "testcontainers_version": "0.40.0",
+    "mapped_port_implementation": "docker.go MappedPort selects first published binding without address-family qualification",
+    "proxy_source_sha256": "df653ce73b139d2b0e78132d5501f838634a0f18ea9fc76ff7aefad7701b74ab",
+    "proxy_removed_after_checks": true,
+    "docker_global_configuration_changed": false
+  }
+}

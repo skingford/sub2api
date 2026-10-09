@@ -21,6 +21,14 @@ func ClaudeCode2292() *Profile {
 	}
 }
 
+// ClaudeCode2295 uses the same measured cold handshake as 2.1.292, qualified
+// separately for Linux x64. A distinct name keeps connection pools independent.
+func ClaudeCode2295() *Profile {
+	p := ClaudeCode2292()
+	p.Name = "Claude Code 2.1.295 Linux x64"
+	return p
+}
+
 // Clone freezes the profile used by a pooled transport. Later cache/configuration
 // updates must not change handshakes on an already-created client.
 func (p *Profile) Clone() *Profile {

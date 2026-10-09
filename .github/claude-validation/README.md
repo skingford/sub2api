@@ -458,3 +458,61 @@ ssh sub2api 'claude -p "Reply with exactly OK." --model claude-haiku-4-5-2025100
 ```
 
 认证状态应显示 `loggedIn: true`，短请求返回 `OK`。修改配置后重新启动已有的 Claude 会话。
+
+## 两个固定版本的源码与运行时复核
+
+`comprehensive_lab.py` 及复用它的 deep / gzip / error 采集器，默认仍校验 2.1.292。
+显式设置 `CLAUDE_LAB_CLI_VERSION=2.1.295`，并只读挂载已核验的官方 2.1.295 Linux x64
+二进制到 `/opt/claude`，才允许测试新版；不接受任意版本或自动跳过哈希校验。
+2.1.295 SHA-256 为 `4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358`。
+Dockerfile 仍固定构建 2.1.292，挂载只影响实验容器。
+
+`version_edges_lab.py` 增加十个别名和 Haiku 5.5 参数场景。示例：
+
+```bash
+cli_binary=/absolute/path/to/verified/2.1.295/claude
+version_results=$(mktemp -d)
+docker run --rm --network none --add-host api.anthropic.com:127.0.0.1 \
+  --tmpfs /work:rw,size=256m \
+  --mount "type=bind,src=$version_results,dst=/output" \
+  --mount "type=bind,src=$cli_binary,dst=/opt/claude,readonly" \
+  --mount "type=bind,src=$PWD/.github/claude-validation,dst=/audit,readonly" \
+  -e PYTHONPATH=/audit:/opt -e CLAUDE_LAB_CLI_VERSION=2.1.295 \
+  --entrypoint python3 claude-validation:2.1.292-20261008 \
+  /audit/ram_capture.py /audit/version_edges_lab.py
+docker run --rm --network none \
+  --mount "type=bind,src=$version_results,dst=/evidence" \
+  --mount "type=bind,src=$PWD/.github/claude-validation,dst=/audit,readonly" \
+  --entrypoint python3 claude-validation:2.1.292-20261008 \
+  /audit/verify_comprehensive.py /evidence /evidence/pcap-verification.json
+```
+
+`extract_cli_sources.py BINARY NEW_OUTPUT_DIRECTORY` 只读提取两版的嵌入 JS 并记录来源偏移 / 哈希。
+2.1.295 的三个 Zstd 模块要求 Python 3.14 的 `compression.zstd` 或已安装的 `zstandard`。
+它不执行源码、不恢复原始 TypeScript、不覆盖已有目录。不要提交完整提取代码或二进制。
+
+新增审查结果见 [源码与运行时报告](../../docs/claude-source-runtime-audit-20261009.md)。
+2.1.295 原生正文保留不表示模型转换、托管压缩和 TLS 全部兼容。报告中的压缩实验 overlay
+仅用于原因对照，未修改生产代码。错误回放的非零 CLI 退出、未知版本改写保护及默认头过滤
+均须逐项解释，不能只以测试进程 PASS / FAIL 推断一致性。
+
+## 2.1.295 修复回归
+
+[CC-20261009-012](../../docs/claude-295-compatibility-fix-20261009.md)修复新版托管压缩、
+Haiku 5.5 转换及原生传输配置。2.1.295 传输资格限定 Linux x64、SDK 0.128.0 和 runtime v26.3.0；
+不因版本号较新而自动接受其他组合。默认转换版本仍为 2.1.292，Haiku 5.5 使用已验证的 2.1.295。
+
+`haiku295_lab.py` 必须显式设置 `CLAUDE_LAB_CLI_VERSION=2.1.295`，运行 11 个模型 / 认证 /
+参数 / 压缩 / 计数场景，沿用上一节的断网容器、固定二进制、tmpfs 和 PCAP 校验。
+生产转发回放仍使用 `request_recheck_test.go` / `comprehensive_audit_test.go`；普通调用方要求
+`thinking.display=updates` 时需显式传入该字段，不能把原生 verbose 行为当作所有请求的默认值。
+
+`TestClaudeAlignmentNativeCLILab` 支持通过 `CLAUDE_RECOVERY_LAB_MODELS` 传入逗号分隔的已验证
+模型列表；2.1.295 可额外加入 `claude-haiku-5-5`，默认保留旧三模型实验。连续三次压缩、账号迁移、
+两种认证及两条隔离会话均由该入口执行。未知模型会失败，不能用跳过断言替代支持。
+
+`prepare_cch_probe.py` 现支持两个固定 SHA-256。2.1.295 的原生运行时 oracle 与 2.1.292 算法
+相同，但入口替换后的探针仍不是未修改 CLI。新增 12 个实际新版正文及改写向量保存于
+`backend/internal/pkg/claude/testdata/cch-2.1.295.json`，不以 Go 的输出生成预期。
+传输探针 auto 模式读取生产选择的 2.1.292 / 2.1.295 profile，最后必须用
+`verify_post_trace.py --strict-order` 同时验证正文、完整头值 / 头序、握手、日志及零丢包。

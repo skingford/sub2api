@@ -7,13 +7,14 @@ import (
 
 func claude2292VerifiedModel(model string) bool {
 	switch model {
-	case "claude-sonnet-4-6", "claude-opus-4-6", "claude-haiku-4-5-20251001", "claude-sonnet-5-5", "claude-opus-5-5":
+	case "claude-sonnet-4-6", "claude-opus-4-6", "claude-haiku-4-5-20251001", "claude-sonnet-5-5", "claude-opus-5-5", "claude-haiku-5-5":
 		return true
 	}
 	return false
 }
 
-// Defaults are limited to models captured with the pinned official executable.
+// Defaults are limited to captured models: the original 2.1.292 set, plus
+// Haiku 5.5 measured with 2.1.295. Its compatibility identity selects 2.1.295.
 // Explicit values win. Temperature is a late scalar override in the native CLI;
 // by itself it does not disable the model's default thinking configuration.
 func claude2292ModelDefaults(body []byte, model string) []byte {
@@ -85,6 +86,14 @@ func claude2292CompatibilityBetas(model string, body []byte, countTokens bool) [
 		betas = []string{claude.BetaOAuth, claude.BetaInterleavedThinking, claude.BetaThinkingTokenCount,
 			claude.BetaContextManagement, claude.BetaPromptCachingScope, claude.BetaClaudeCode,
 			claude.BetaThinkingBindingControls, claude.BetaExtendedCacheTTL}
+	}
+	if claude.IsHaiku55(model) {
+		// Preserve the 2.1.295 OAuth capability order from the native capture.
+		betas = []string{claude.BetaOAuth, claude.BetaInterleavedThinking, claude.BetaThinkingTokenCount,
+			claude.BetaContextManagement, claude.BetaPromptCachingScope, claude.BetaMidConversationSystem,
+			claude.BetaClaudeCode, claude.BetaPerTurnControl, claude.BetaMidConversationToolChanges,
+			claude.BetaMidConversationSystemClear, claude.BetaEffort, claude.BetaThinkingBindingControls,
+			claude.BetaExtendedCacheTTL}
 	}
 	if gjson.GetBytes(body, "thinking.display").String() == "updates" {
 		// Native CLI adds this capability only when updates are requested. Keep

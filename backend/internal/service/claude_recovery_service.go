@@ -100,8 +100,8 @@ func (m *ClaudeRecoveryService) Begin(ctx context.Context, g *GatewayService, sc
 	if m.initErr != nil || m.store == nil {
 		return nil, fmt.Errorf("managed recovery is not correctly configured")
 	}
-	if claude.EffectiveCLIVersion() != claudeCompatibilityVersion {
-		return nil, fmt.Errorf("managed recovery requires the verified 2.1.292 profile")
+	if !verifiedClaudeCompatibilityVersion(claude.EffectiveCLIVersion()) {
+		return nil, fmt.Errorf("managed recovery requires a verified 2.1.292 or 2.1.295 profile")
 	}
 	if len(key) > 128 {
 		return nil, fmt.Errorf("idempotency key is too long")

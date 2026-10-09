@@ -44,6 +44,7 @@ type AnthropicOutputConfig struct {
 type AnthropicThinking struct {
 	Type         string `json:"type"`                    // "enabled" | "adaptive" | "disabled" | "between_tools"
 	BudgetTokens int    `json:"budget_tokens,omitempty"` // max thinking tokens
+	Display      string `json:"display,omitempty"`
 }
 
 // AnthropicMessage is a single message in the Anthropic conversation.

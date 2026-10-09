@@ -572,7 +572,7 @@ func StripEmptyTextBlocks(body []byte) []byte {
 // isClaude55SignedThinkingModel identifies models whose default thinking mode
 // requires signed history to survive protocol conversion and request filtering.
 func isClaude55SignedThinkingModel(model string) bool {
-	return claude.IsOpus55(model) || claude.IsSonnet55(model)
+	return claude.RequiresSignedThinking(model)
 }
 
 // validateClaude55Request rejects settings that the upstream cannot honor.
@@ -582,15 +582,21 @@ func validateClaude55Request(body []byte, model string) error {
 		return nil
 	}
 	isSonnet55 := claude.IsSonnet55(model)
+	modelName := "claude-opus-5-5"
+	if isSonnet55 {
+		modelName = "claude-sonnet-5-5"
+	} else if claude.IsHaiku55(model) {
+		modelName = "claude-haiku-5-5"
+	}
 	switch gjson.GetBytes(body, "thinking.type").String() {
 	case "disabled", "enabled":
 		if isSonnet55 {
 			return fmt.Errorf("claude-sonnet-5-5 requires adaptive thinking or thinking.type=between_tools; omit thinking or use one of those modes")
 		}
-		return fmt.Errorf("claude-opus-5-5 requires adaptive thinking; omit thinking or use thinking.type=adaptive and output_config.effort")
+		return fmt.Errorf("%s requires adaptive thinking; omit thinking or use thinking.type=adaptive and output_config.effort", modelName)
 	case "between_tools":
 		if !isSonnet55 {
-			return fmt.Errorf("claude-opus-5-5 requires adaptive thinking; thinking.type=between_tools is unsupported")
+			return fmt.Errorf("%s requires adaptive thinking; thinking.type=between_tools is unsupported", modelName)
 		}
 		effort := gjson.GetBytes(body, "output_config.effort").String()
 		if effort == "xhigh" || effort == "max" {
@@ -601,10 +607,6 @@ func validateClaude55Request(body []byte, model string) error {
 				return fmt.Errorf("claude-sonnet-5-5 thinking.type=between_tools does not support %s", field)
 			}
 		}
-	}
-	modelName := "claude-opus-5-5"
-	if isSonnet55 {
-		modelName = "claude-sonnet-5-5"
 	}
 	if gjson.GetBytes(body, "tool_choice").String() == "required" {
 		return fmt.Errorf("%s does not support forced tool_choice; use auto or none", modelName)

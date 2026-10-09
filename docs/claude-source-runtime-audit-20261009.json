@@ -1,0 +1,1965 @@
+{
+  "change_id": "CC-20261009-011",
+  "date": "2026-10-09",
+  "baseline": {
+    "release": "7ce838ee33663b8b4dc93296a51fad25b2daa49c",
+    "workspace_head": "f5188a2e64e8f13b236579fb15fbccf4eae1f8a2",
+    "upstream": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+    "root": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p",
+    "source_files": 3190
+  },
+  "evidence_root": "/Users/kingford/claude-capture/source-runtime-crosscheck-20261009-333q2v1p",
+  "production_changes": false,
+  "toolchain": "go1.27.2",
+  "docker_image": "sha256:eb7d83c374af3c3a113387e520f7f0247719f733e4a8ed0e9da73c98a69a91b4",
+  "versions": {
+    "2.1.292": {
+      "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+      "embedded_js_modules": 2260,
+      "zstd_modules": 3,
+      "captures": {
+        "cases": 95,
+        "requests": 149,
+        "gzip_requests": 44,
+        "all_pcap_match": true
+      },
+      "forwarding": {
+        "comparisons": 596,
+        "logical_equal": 596,
+        "wire_equal": 596,
+        "same_auth_comparisons": 298,
+        "same_auth_headers_equal": 296,
+        "method_path_length_replay_auth_all_equal": true,
+        "profile_counts": {
+          "claude_2_1_292_x64": 592,
+          "": 4
+        },
+        "same_auth_header_differences": [
+          {
+            "case": "gzip-version-empty",
+            "account": "apikey",
+            "passthrough": false,
+            "header_differences": [
+              {
+                "forwarded": "2023-06-01",
+                "header": "anthropic-version",
+                "native": ""
+              }
+            ]
+          },
+          {
+            "case": "gzip-version-empty",
+            "account": "apikey",
+            "passthrough": true,
+            "header_differences": [
+              {
+                "forwarded": "2023-06-01",
+                "header": "anthropic-version",
+                "native": ""
+              }
+            ]
+          }
+        ]
+      },
+      "generic": {
+        "observations": 32,
+        "different_rows": 12,
+        "differences": [
+          {
+            "case": "claude-haiku-4-5-20251001-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "budget_tokens": 31999,
+                  "display": "omitted",
+                  "type": "enabled"
+                },
+                "native": {
+                  "budget_tokens": 31999,
+                  "display": "updates",
+                  "type": "enabled"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-opus-4-6-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-opus-5-5-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-sonnet-4-6-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-sonnet-5-5-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "disabled-extra-fields",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "top-k-extra",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "high"
+                }
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "top-p-extra",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "high"
+                }
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "haiku55-effort-xhigh",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "max_tokens": {
+                "converted": 128000,
+                "native": 32000
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "haiku55-temperature",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "max_tokens": {
+                "converted": 128000,
+                "native": 32000
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "high"
+                }
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "haiku55-thinking-off",
+            "fields": {
+              "max_tokens": {
+                "converted": 128000,
+                "native": 32000
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "high"
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              },
+              "thinking": {
+                "converted": {
+                  "type": "disabled"
+                },
+                "native": null
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "model-claude-haiku-5-5",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "max_tokens": {
+                "converted": 128000,
+                "native": 32000
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "high"
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          }
+        ]
+      },
+      "policy": {
+        "observations": 108,
+        "status_counts": {
+          "200": 104,
+          "400": 4
+        },
+        "refusals": [
+          {
+            "name": "runtime-oauth-normal-native-off",
+            "status": 400,
+            "error": "conflicting Claude conversation identifiers"
+          },
+          {
+            "name": "runtime-oauth-passthrough-native-off",
+            "status": 400,
+            "error": "conflicting Claude conversation identifiers"
+          },
+          {
+            "name": "blocks-oauth-normal-native-off",
+            "status": 400,
+            "error": "conflicting Claude conversation identifiers"
+          },
+          {
+            "name": "blocks-oauth-passthrough-native-off",
+            "status": 400,
+            "error": "conflicting Claude conversation identifiers"
+          }
+        ]
+      },
+      "transport": {
+        "combinations": 24,
+        "wire_bytes_equal": 24,
+        "logical_body_equal": 24,
+        "header_values_equal": 24,
+        "header_order_equal": 24,
+        "normalized_hello_equal": 24,
+        "zero_drops": 24,
+        "trace_combinations": 12,
+        "trace_bytes_equal": 12,
+        "trace_credentials_redacted": 12
+      },
+      "errors": {
+        "cases": 22,
+        "requests": 58,
+        "gzip_requests": 40,
+        "all_pcap_match": true,
+        "details": [
+          {
+            "kind": "origin",
+            "case": "cf-ray-upstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "cf-ray-downstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "request-id-upstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "request-id-downstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "none-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "none-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          }
+        ]
+      },
+      "sdk": "0.128.0",
+      "runtime": "v26.3.0"
+    },
+    "2.1.295": {
+      "binary_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+      "embedded_js_modules": 2340,
+      "zstd_modules": 3,
+      "captures": {
+        "cases": 95,
+        "requests": 149,
+        "gzip_requests": 44,
+        "all_pcap_match": true
+      },
+      "forwarding": {
+        "comparisons": 596,
+        "logical_equal": 596,
+        "wire_equal": 596,
+        "same_auth_comparisons": 298,
+        "same_auth_headers_equal": 296,
+        "method_path_length_replay_auth_all_equal": true,
+        "profile_counts": {
+          "": 592,
+          "claude_2_1_292_x64": 4
+        },
+        "same_auth_header_differences": [
+          {
+            "case": "gzip-version-empty",
+            "account": "apikey",
+            "passthrough": false,
+            "header_differences": [
+              {
+                "forwarded": "2023-06-01",
+                "header": "anthropic-version",
+                "native": ""
+              }
+            ]
+          },
+          {
+            "case": "gzip-version-empty",
+            "account": "apikey",
+            "passthrough": true,
+            "header_differences": [
+              {
+                "forwarded": "2023-06-01",
+                "header": "anthropic-version",
+                "native": ""
+              }
+            ]
+          }
+        ]
+      },
+      "generic": {
+        "observations": 32,
+        "different_rows": 13,
+        "differences": [
+          {
+            "case": "claude-haiku-4-5-20251001-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "budget_tokens": 31999,
+                  "display": "omitted",
+                  "type": "enabled"
+                },
+                "native": {
+                  "budget_tokens": 31999,
+                  "display": "updates",
+                  "type": "enabled"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-opus-4-6-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-opus-5-5-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-sonnet-4-6-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "claude-sonnet-5-5-oauth-stream",
+            "fields": {
+              "thinking": {
+                "converted": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                },
+                "native": {
+                  "display": "updates",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "disabled-extra-fields",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "top-k-extra",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "high"
+                }
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "top-p-extra",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "high"
+                }
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "haiku55-effort-xhigh",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "haiku55-temperature",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "medium"
+                }
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "haiku55-thinking-off",
+            "fields": {
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "medium"
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              },
+              "thinking": {
+                "converted": {
+                  "type": "disabled"
+                },
+                "native": null
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "model-claude-haiku-5-5",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "medium"
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          },
+          {
+            "case": "model-haiku",
+            "fields": {
+              "context_management": {
+                "converted": null,
+                "native": {
+                  "edits": [
+                    {
+                      "keep": "all",
+                      "type": "clear_thinking_20251015"
+                    }
+                  ]
+                }
+              },
+              "output_config": {
+                "converted": null,
+                "native": {
+                  "effort": "medium"
+                }
+              },
+              "temperature": {
+                "converted": 1,
+                "native": null
+              },
+              "thinking": {
+                "converted": null,
+                "native": {
+                  "display": "omitted",
+                  "type": "adaptive"
+                }
+              }
+            },
+            "error": null
+          }
+        ]
+      },
+      "policy": {
+        "observations": 108,
+        "status_counts": {
+          "200": 96,
+          "400": 12
+        },
+        "refusals": [
+          {
+            "name": "runtime-apikey-normal-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "runtime-apikey-normal-model-map",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "runtime-apikey-passthrough-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "runtime-apikey-passthrough-model-map",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "runtime-oauth-normal-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "runtime-oauth-passthrough-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "blocks-apikey-normal-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "blocks-apikey-normal-model-map",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "blocks-apikey-passthrough-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "blocks-apikey-passthrough-model-map",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "blocks-oauth-normal-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          },
+          {
+            "name": "blocks-oauth-passthrough-native-off",
+            "status": 400,
+            "error": "native Claude gzip cannot be converted to plaintext outside the verified CCH format; preserve the original request or adjust the account policy"
+          }
+        ]
+      },
+      "transport": {
+        "combinations": 24,
+        "wire_bytes_equal": 24,
+        "logical_body_equal": 24,
+        "header_values_equal": 0,
+        "header_order_equal": 0,
+        "normalized_hello_equal": 0,
+        "zero_drops": 24,
+        "trace_combinations": 12,
+        "trace_bytes_equal": 12,
+        "trace_credentials_redacted": 12
+      },
+      "errors": {
+        "cases": 22,
+        "requests": 58,
+        "gzip_requests": 40,
+        "all_pcap_match": true,
+        "details": [
+          {
+            "kind": "origin",
+            "case": "cf-ray-upstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "cf-ray-downstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "request-id-upstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "request-id-downstream",
+            "requests": 1,
+            "encodings": [
+              "gzip"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "none-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "origin",
+            "case": "none-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 1,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-object",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-text",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-standard",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "cf-ray-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "cf-ray-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "request-id-upstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          },
+          {
+            "kind": "bad-json-escaped",
+            "case": "request-id-downstream",
+            "requests": 3,
+            "encodings": [
+              "gzip",
+              "gzip",
+              "identity"
+            ],
+            "outcomes": [
+              {
+                "exit_code": 0,
+                "timed_out": false
+              }
+            ]
+          }
+        ]
+      },
+      "sdk": "0.128.0",
+      "runtime": "v26.3.0"
+    }
+  },
+  "cch_292": {
+    "requests": 593,
+    "pcap_raw_bytes_equal": true,
+    "golden_vectors_checked": 81,
+    "kernel_drops": 0,
+    "new_vectors_use_independent_runtime_observations": true,
+    "go_vectors_equal": 593,
+    "unmodified_cli": false
+  },
+  "fingerprint": {
+    "unique_vectors": 394,
+    "extracted_292_and_295_functions_equal": true,
+    "go_matches_both": true,
+    "batches_of_10": 40,
+    "padding_duplicate_vectors": 6,
+    "unmodified_cli": false
+  },
+  "recovery": {
+    "2.1.292": {
+      "runtime_production_unchanged": true,
+      "passed": true,
+      "models_auth_completed": 6,
+      "session_count": 12,
+      "requests": {
+        "generation": 96,
+        "count_tokens": 24
+      },
+      "cross_session_leaks": 0,
+      "failed_subtests": []
+    },
+    "2.1.295": {
+      "runtime_production_unchanged": true,
+      "passed": false,
+      "models_auth_completed": 0,
+      "session_count": 0,
+      "requests": {},
+      "cross_session_leaks": null,
+      "failed_subtests": [
+        "TestClaudeAlignmentNativeCLILab/claude-sonnet-4-6/apikey (61.96s)",
+        "TestClaudeAlignmentNativeCLILab/claude-sonnet-4-6/oauth (61.30s)",
+        "TestClaudeAlignmentNativeCLILab/claude-sonnet-5-5/apikey (62.42s)",
+        "TestClaudeAlignmentNativeCLILab/claude-sonnet-5-5/oauth (60.74s)",
+        "TestClaudeAlignmentNativeCLILab/claude-opus-5-5/apikey (61.29s)",
+        "TestClaudeAlignmentNativeCLILab/claude-opus-5-5/oauth (63.00s)"
+      ]
+    },
+    "gate-control": {
+      "runtime_production_unchanged": false,
+      "passed": false,
+      "models_auth_completed": 0,
+      "session_count": 0,
+      "requests": {},
+      "cross_session_leaks": null,
+      "failed_subtests": [
+        "TestClaudeAlignmentNativeCLILab/claude-sonnet-4-6/apikey (61.46s)"
+      ]
+    },
+    "wrapper-control": {
+      "runtime_production_unchanged": false,
+      "passed": true,
+      "models_auth_completed": 6,
+      "session_count": 12,
+      "requests": {
+        "generation": 96,
+        "count_tokens": 24
+      },
+      "cross_session_leaks": 0,
+      "failed_subtests": []
+    }
+  },
+  "tests": {
+    "service_pass_events": 1663,
+    "component_packages": 6,
+    "component_pass_events": 322,
+    "full_repository_unit_integration_lint_rerun": false
+  },
+  "source_unchanged": {
+    "files": 3190,
+    "all_current_backend_files_equal": true
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "priority": "high",
+      "title": "2.1.295 managed compaction compatibility",
+      "locations": [
+        "backend/internal/service/claude_recovery_compaction.go:48",
+        "backend/internal/service/claude_recovery_compaction.go:208"
+      ],
+      "production_fixed": false,
+      "causes": [
+        "Unclassified custom-origin compaction inference pinned to 2.1.292",
+        "New retained-message suffix not accepted"
+      ],
+      "evidence": "six version-295 baseline model/auth subtests fail; gate-only control fails at second compaction; gate plus exact captured suffix control passes six model/auth subtests"
+    },
+    {
+      "id": "F2",
+      "priority": "medium",
+      "title": "Haiku 5.5 generic conversion lacks native defaults",
+      "location": "backend/internal/service/gateway_claude_2292_defaults.go:8",
+      "production_fixed": false
+    },
+    {
+      "id": "F3",
+      "priority": "medium",
+      "title": "2.1.295 uses default Go transport",
+      "location": "backend/internal/service/gateway_claude_native.go:35",
+      "production_fixed": false,
+      "evidence": "24 of 24 bytes equal, zero native HTTP header-order/TLS matches; Connection keep-alive omitted; application header values unchanged after case normalization"
+    }
+  ],
+  "source_anchors_292": [
+    {
+      "topic": "attribution",
+      "module": "chunk-9yn9h839.js",
+      "module_sha256": "14f68808b28960aa01cb7dc43c6e876964df322deda0242f744ef02b81b55f86",
+      "offset": 820816,
+      "excerpt_start": 820516,
+      "excerpt_sha256": "ee060cbb879234675c1b41b9ffeb952da516ac5aa8d251ef55562e2cb3370749",
+      "needle": "var yne=",
+      "binary_offset": 210482345,
+      "reextracted_verified": true,
+      "decoded_character_offset": 820816,
+      "decoded_byte_offset": 820816
+    },
+    {
+      "topic": "billing",
+      "module": "chunk-9cgz7jx3.js",
+      "module_sha256": "c3d8c40daa0c83345367ce86639ef7f58dcbc56372c80f636b22aa98337a3a5a",
+      "offset": 3671,
+      "excerpt_start": 3371,
+      "excerpt_sha256": "64073ec570cdaa89a7d5c865a0582e3e889d0b1bf222ccb4ecb88979cefcc158",
+      "needle": "x-anthropic-billing-header:",
+      "binary_offset": 207234909,
+      "reextracted_verified": true,
+      "decoded_character_offset": 3671,
+      "decoded_byte_offset": 3671
+    },
+    {
+      "topic": "sdk_headers",
+      "module": "chunk-9yn9h839.js",
+      "module_sha256": "14f68808b28960aa01cb7dc43c6e876964df322deda0242f744ef02b81b55f86",
+      "offset": 183581,
+      "excerpt_start": 183281,
+      "excerpt_sha256": "aa9b6f27f339e464a64340538dfbbd377bef35a80c1fea59cdbd712ec77ef03d",
+      "needle": "buildHeaders({",
+      "binary_offset": 209845110,
+      "reextracted_verified": true,
+      "decoded_character_offset": 183581,
+      "decoded_byte_offset": 183581
+    },
+    {
+      "topic": "sdk_retry",
+      "module": "chunk-9yn9h839.js",
+      "module_sha256": "14f68808b28960aa01cb7dc43c6e876964df322deda0242f744ef02b81b55f86",
+      "offset": 181909,
+      "excerpt_start": 181609,
+      "excerpt_sha256": "e2cd837797fbf76cedd216371cc4b35cd7ebbfc3813597b17df66a4a66ff9989",
+      "needle": "async shouldRetry(",
+      "binary_offset": 209843438,
+      "reextracted_verified": true,
+      "decoded_character_offset": 181909,
+      "decoded_byte_offset": 181909
+    },
+    {
+      "topic": "retry_delay",
+      "module": "chunk-9yn9h839.js",
+      "module_sha256": "14f68808b28960aa01cb7dc43c6e876964df322deda0242f744ef02b81b55f86",
+      "offset": 182315,
+      "excerpt_start": 182015,
+      "excerpt_sha256": "56ee8fbb18130d36c0dda2f09c7301f24333d191679c2fe08dae1ed1b527e4b7",
+      "needle": "async retryRequest(",
+      "binary_offset": 209843844,
+      "reextracted_verified": true,
+      "decoded_character_offset": 182315,
+      "decoded_byte_offset": 182315
+    },
+    {
+      "topic": "thinking_cleanup",
+      "module": "chunk-br6ckz11.js",
+      "module_sha256": "42f85428e81dc925bdafda3711f29ed5daf434b1fc3182218c62bb2d84c01b9e",
+      "offset": 2702388,
+      "excerpt_start": 2702088,
+      "excerpt_sha256": "0500570d2982ab2d6c508fdb9cbb29e78e90d1c2c75eac097c7232fc7bdf6259",
+      "needle": "function _ur(",
+      "binary_offset": 214143778,
+      "reextracted_verified": true,
+      "decoded_character_offset": 2702388,
+      "decoded_byte_offset": 2702388
+    },
+    {
+      "topic": "cache_switches",
+      "module": "chunk-br6ckz11.js",
+      "module_sha256": "42f85428e81dc925bdafda3711f29ed5daf434b1fc3182218c62bb2d84c01b9e",
+      "offset": 2701405,
+      "excerpt_start": 2701105,
+      "excerpt_sha256": "d69fa5f81b8d0dd823e97893ce79a509aae2360d83e5107332cda322d1db14b5",
+      "needle": "function BZ(",
+      "binary_offset": 214142795,
+      "reextracted_verified": true,
+      "decoded_character_offset": 2701405,
+      "decoded_byte_offset": 2701405
+    },
+    {
+      "topic": "model_limits",
+      "module": "chunk-b8z199dv.js",
+      "module_sha256": "d7d06d87166e4155bb6de8638804d051a3958156093ddcc3239384e01a6c768b",
+      "offset": 383680,
+      "excerpt_start": 383380,
+      "excerpt_sha256": "c0b449be68c62c77cd03fcfdfa0d9eee109b3c3456eb3df416015eff4569e867",
+      "needle": "function pne(",
+      "binary_offset": 206256667,
+      "reextracted_verified": true,
+      "decoded_character_offset": 383680,
+      "decoded_byte_offset": 383680
+    },
+    {
+      "topic": "thinking_env",
+      "module": "chunk-b8z199dv.js",
+      "module_sha256": "d7d06d87166e4155bb6de8638804d051a3958156093ddcc3239384e01a6c768b",
+      "offset": 389148,
+      "excerpt_start": 388848,
+      "excerpt_sha256": "40cae25f64a8d65d7e7f81057852d5dbd421fb535c06c16d16347d9369a8a198",
+      "needle": "function Gso(",
+      "binary_offset": 206262135,
+      "reextracted_verified": true,
+      "decoded_character_offset": 389148,
+      "decoded_byte_offset": 389148
+    },
+    {
+      "topic": "effort",
+      "module": "chunk-az075kqs.js",
+      "module_sha256": "4faa52b90e1a92817db955e064a9f0e3ef0dc2f5a02822becb621b9e87cba7e7",
+      "offset": 8967,
+      "excerpt_start": 8667,
+      "excerpt_sha256": "5bc61d3025adedb3d8ceb4b9a65b9bd109e15b94757eb1a003741b8e2fcdeccf",
+      "needle": "function wN(",
+      "binary_offset": 207293003,
+      "reextracted_verified": true,
+      "decoded_character_offset": 8967,
+      "decoded_byte_offset": 8967
+    },
+    {
+      "topic": "gzip_gate",
+      "module": "chunk-hy08191v.js",
+      "module_sha256": "64d6e6c6172e3dba5e07f7cc7c8d94ab1c3a9dfbe26fef924a584ea9e2a09402",
+      "offset": 2053,
+      "excerpt_start": 1753,
+      "excerpt_sha256": "21904536cfe3a6e0ae64df553896e4187e7d3f5de30f29527790a1f76c50a5f4",
+      "needle": "function ovt(",
+      "binary_offset": 209402231,
+      "reextracted_verified": true,
+      "decoded_character_offset": 2053,
+      "decoded_byte_offset": 2053
+    },
+    {
+      "topic": "gzip_retry",
+      "module": "chunk-hy08191v.js",
+      "module_sha256": "64d6e6c6172e3dba5e07f7cc7c8d94ab1c3a9dfbe26fef924a584ea9e2a09402",
+      "offset": 3777,
+      "excerpt_start": 3477,
+      "excerpt_sha256": "9105e03464acd704552dfe99c293de0ba56199badcb359b2561fad15b3ea04a4",
+      "needle": "async function h(",
+      "binary_offset": 209403955,
+      "reextracted_verified": true,
+      "decoded_character_offset": 3777,
+      "decoded_byte_offset": 3777
+    },
+    {
+      "topic": "compression_headers",
+      "module": "chunk-br6ckz11.js",
+      "module_sha256": "42f85428e81dc925bdafda3711f29ed5daf434b1fc3182218c62bb2d84c01b9e",
+      "offset": 864699,
+      "excerpt_start": 864399,
+      "excerpt_sha256": "b9bb3160d35ebe787afaf3c24f7e88d36d1c7493c8e2eb1a6695d8747e2f34c0",
+      "needle": "var bCt=",
+      "binary_offset": 212306089,
+      "reextracted_verified": true,
+      "decoded_character_offset": 864699,
+      "decoded_byte_offset": 864699
+    },
+    {
+      "topic": "thinking_heal",
+      "module": "chunk-br6ckz11.js",
+      "module_sha256": "42f85428e81dc925bdafda3711f29ed5daf434b1fc3182218c62bb2d84c01b9e",
+      "offset": 2742270,
+      "excerpt_start": 2741970,
+      "excerpt_sha256": "16c87d2e8fbebb9767c4725af5c3400cc1369d026c66dc24a9dc7795c65b9937",
+      "needle": "retry:thinking-display-updates-unclaimed",
+      "binary_offset": 214183660,
+      "reextracted_verified": true,
+      "decoded_character_offset": 2742270,
+      "decoded_byte_offset": 2742270
+    },
+    {
+      "topic": "betas",
+      "module": "chunk-a5ae142n.js",
+      "module_sha256": "8c5a12875a6d9d6cba91ee0acb8624f4f3ebdfd767d1a695474e0281e3cb3f0e",
+      "offset": 155557,
+      "excerpt_start": 155257,
+      "excerpt_sha256": "86929905314409affddd1228f86baf67cac35badef18d3672ffb64cd8978e0db",
+      "needle": "server-side-fallback-2026-06-01",
+      "binary_offset": 204801595,
+      "reextracted_verified": true,
+      "decoded_character_offset": 155557,
+      "decoded_byte_offset": 155557
+    },
+    {
+      "topic": "request_body",
+      "module": "chunk-br6ckz11.js",
+      "module_sha256": "42f85428e81dc925bdafda3711f29ed5daf434b1fc3182218c62bb2d84c01b9e",
+      "offset": 2756488,
+      "excerpt_start": 2756188,
+      "excerpt_sha256": "b95f9f0ae62419b1caa1a4dd35aa9f3243895a226214bf15cf068e5821efe8cb",
+      "needle": "context_management:",
+      "binary_offset": 214197878,
+      "reextracted_verified": true,
+      "decoded_character_offset": 2756488,
+      "decoded_byte_offset": 2756488
+    }
+  ],
+  "source_anchors_295": [
+    {
+      "topic": "attribution",
+      "module": "chunk-hxcdx1tp.js",
+      "decoded_offset": 582169,
+      "decoded_sha256": "ff1c669d3d6c276fdc09a612842b478eda617e70487f3f17ece51f9a0fc27a03"
+    },
+    {
+      "topic": "billing",
+      "module": "chunk-xktvtwq6.js",
+      "decoded_offset": 3724,
+      "decoded_sha256": "3876bbe529e6266fc6f4d4c19e2a6a8baa79a4807149b9b55f7caf8b747db8a2"
+    },
+    {
+      "topic": "sdk_retry",
+      "module": "chunk-75cm4bmg.js",
+      "decoded_offset": 175252,
+      "decoded_sha256": "2b792485cb95a165feec83c775234f62b730575cd0cfcf181162e264dbe804f8"
+    },
+    {
+      "topic": "sdk_headers",
+      "module": "chunk-75cm4bmg.js",
+      "decoded_offset": 177222,
+      "decoded_sha256": "2b792485cb95a165feec83c775234f62b730575cd0cfcf181162e264dbe804f8"
+    },
+    {
+      "topic": "gzip",
+      "module": "chunk-pyntn09z.js",
+      "decoded_offset": 1258,
+      "decoded_sha256": "6683e1608d20b8c593704f7c7b1dbdc3986bcb83a902f069a5a1037733a9de8c"
+    },
+    {
+      "topic": "haiku55",
+      "module": "chunk-bps84pg6.js",
+      "decoded_offset": 3632,
+      "decoded_sha256": "c7c4b47701defc9ba8ea4bced19456b8503c52d889f8de17c6d0a8534340b589"
+    },
+    {
+      "topic": "retained_summary_tail",
+      "module": "chunk-53bsrq2x.js",
+      "decoded_offset": 2471003,
+      "decoded_sha256": "c3e5c11c221cebce2d6c3c6cc6f55d35c5306562437271b4702d453b5ac3571f"
+    },
+    {
+      "topic": "beta",
+      "module": "chunk-8ejb9ca1.js",
+      "decoded_offset": 156061,
+      "decoded_sha256": "8ecb60df6e3ad1df47b26f06b2a0b6fa0661dc2d84ec9fdd8a30caebf138f5ac"
+    }
+  ],
+  "tool_verification": {
+    "extractor_modules_match_prior_decoded_bytes": true,
+    "python_syntax": true,
+    "smoke": {
+      "2.1.292": [
+        {
+          "case": "model-haiku",
+          "requests": 1,
+          "compressed_requests": 0,
+          "wire_bytes_match": true,
+          "logical_bytes_match": true,
+          "kernel_drops": 0
+        }
+      ],
+      "2.1.295": [
+        {
+          "case": "model-haiku",
+          "requests": 1,
+          "compressed_requests": 0,
+          "wire_bytes_match": true,
+          "logical_bytes_match": true,
+          "kernel_drops": 0
+        }
+      ]
+    }
+  },
+  "audit_preparation_corrections": [
+    "Runner Path/string concatenation corrected before version-295 capture",
+    "Compressed modules decoded before JS analysis; final extractor confirms three Zstd modules in EACH version",
+    "Nonmatching fingerprint test selector replaced with 40 actual batches covering 394 unique vectors",
+    "Source character offsets distinguished from source byte offsets"
+  ]
+}

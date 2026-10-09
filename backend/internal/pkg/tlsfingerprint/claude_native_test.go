@@ -17,6 +17,13 @@ import (
 // not from serializing the profile under test. Only per-connection randomness
 // (random, session ID and ephemeral public keys) is excluded.
 func TestClaudeNativeClientHelloGolden(t *testing.T) {
+	for _, profile := range []*Profile{ClaudeCode2292(), ClaudeCode2295()} {
+		t.Run(profile.Name, func(t *testing.T) { checkClaudeNativeClientHello(t, profile) })
+	}
+}
+
+func checkClaudeNativeClientHello(t *testing.T, profile *Profile) {
+	t.Helper()
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
 	require.NoError(t, err)
 	defer func() { _ = listener.Close() }()
@@ -25,7 +32,7 @@ func TestClaudeNativeClientHelloGolden(t *testing.T) {
 	require.NoError(t, tcpListener.SetDeadline(time.Now().Add(5*time.Second)))
 	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
 	defer cancel()
-	dialer := NewDialer(ClaudeCode2292(), func(ctx context.Context, network, addr string) (net.Conn, error) {
+	dialer := NewDialer(profile, func(ctx context.Context, network, addr string) (net.Conn, error) {
 		return (&net.Dialer{}).DialContext(ctx, network, listener.Addr().String())
 	})
 	result := make(chan error, 1)
@@ -81,6 +88,7 @@ func TestClaudeNativeClientHelloGolden(t *testing.T) {
 }
 
 func TestClaudeNativeProfileSnapshot(t *testing.T) {
+	require.NotEqual(t, ClaudeCode2292().CacheKey(), ClaudeCode2295().CacheKey())
 	original := ClaudeCode2292()
 	snapshot := original.Clone()
 	key := snapshot.CacheKey()

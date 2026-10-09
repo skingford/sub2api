@@ -31,19 +31,35 @@ func prepareNativeClaudeTransport(req *http.Request, c *gin.Context, account *Ac
 		!strings.EqualFold(u.Hostname(), "api.anthropic.com") || (u.Port() != "" && u.Port() != "443") {
 		return
 	}
-	h := req.Header
-	if ExtractCLIVersion(getHeaderRaw(h, "User-Agent")) != "2.1.292" ||
-		(getHeaderRaw(h, "X-Stainless-OS") != "Linux" && getHeaderRaw(h, "X-Stainless-OS") != "MacOS") || getHeaderRaw(h, "X-Stainless-Arch") != "x64" ||
-		getHeaderRaw(h, "X-Stainless-Package-Version") != "0.128.0" || getHeaderRaw(h, "X-Stainless-Runtime-Version") != "v26.3.0" {
-		return
+	if profile := nativeClaudeTransportProfile(req.Header); profile != HTTPUpstreamProfileDefault {
+		*req = *req.WithContext(WithHTTPUpstreamProfile(req.Context(), profile))
 	}
-	*req = *req.WithContext(WithHTTPUpstreamProfile(req.Context(), HTTPUpstreamProfileClaude2292))
+}
+
+func nativeClaudeTransportProfile(h http.Header) HTTPUpstreamProfile {
+	if getHeaderRaw(h, "X-Stainless-Arch") != "x64" ||
+		getHeaderRaw(h, "X-Stainless-Package-Version") != "0.128.0" ||
+		getHeaderRaw(h, "X-Stainless-Runtime-Version") != "v26.3.0" {
+		return HTTPUpstreamProfileDefault
+	}
+	platform := getHeaderRaw(h, "X-Stainless-OS")
+	switch ExtractCLIVersion(getHeaderRaw(h, "User-Agent")) {
+	case "2.1.292":
+		if platform == "Linux" || platform == "MacOS" {
+			return HTTPUpstreamProfileClaude2292
+		}
+	case "2.1.295":
+		if platform == "Linux" {
+			return HTTPUpstreamProfileClaude2295
+		}
+	}
+	return HTTPUpstreamProfileDefault
 }
 
 type nativeClaudeBodyDigestKey struct{}
 
 // Keep the mutation guard for versions or destinations without a verified CCH
-// implementation. The measured 2.1.292 first-party path is finalized below.
+// implementation. The measured 2.1.292 / Linux 2.1.295 paths are finalized below.
 func withNativeClaudeBodyIntegrity(ctx context.Context, c *gin.Context, account *Account, body []byte) context.Context {
 	if ctx == nil {
 		ctx = context.Background()
@@ -114,14 +130,18 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 	if !firstParty {
 		return body, validateNativeClaudeBodyIntegrity(req.Context(), c, body)
 	}
-	versionKnown := ExtractCLIVersion(getHeaderRaw(req.Header, "User-Agent")) == "2.1.292"
+	version := ExtractCLIVersion(getHeaderRaw(req.Header, "User-Agent"))
+	versionKnown := verifiedClaudeCompatibilityVersion(version)
+	if version == "2.1.295" && (getHeaderRaw(req.Header, "X-Stainless-OS") != "Linux" || getHeaderRaw(req.Header, "X-Stainless-Arch") != "x64") {
+		versionKnown = false
+	}
 	// Replaying CRC-verified, unchanged gzip does not interpret its checksum or
 	// infer a TLS profile. This also protects custom UAs and opaque CLI versions.
 	if c != nil && preserveNativeClaudeRequest(req.Context(), c, account, body) {
 		if originalEncoding, wire, ok := requestbody.OriginalRequestEncoding(c.Request, body); ok && originalEncoding == "gzip" {
 			setNativeClaudeWireBody(req, wire)
 			setHeaderRaw(req.Header, "Content-Encoding", "gzip")
-			if versionKnown {
+			if nativeClaudeTransportProfile(req.Header) != HTTPUpstreamProfileDefault {
 				*req = *req.WithContext(claude.WithGzipHeaderOrder2292(req.Context(), wire))
 			}
 			return body, nil
@@ -131,7 +151,7 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 	// selected plaintext, the final logical bytes need the measured checksum.
 	known := versionKnown &&
 		(isNativeClaudeInput(req.Context(), c, body) || claudeCompatibilityFromContext(req.Context()) != nil) &&
-		strings.HasPrefix(billing.String(), "x-anthropic-billing-header: cc_version=2.1.292.")
+		strings.HasPrefix(billing.String(), "x-anthropic-billing-header: cc_version="+version+".")
 	if !known {
 		if c != nil && requestbody.OriginalRequestEncodingName(c.Request) == "gzip" &&
 			isNativeClaudeInput(req.Context(), c, body) && nativeClaudeHasChecksum(body) {
@@ -174,7 +194,7 @@ func setNativeClaudeWireBody(req *http.Request, wire []byte) {
 
 func finalizeClaude2292Billing(body []byte, billing gjson.Result) ([]byte, error) {
 	badLayout := func() ([]byte, error) {
-		return nil, fmt.Errorf("native Claude 2.1.292 billing layout is outside the verified CCH format")
+		return nil, fmt.Errorf("native Claude billing layout is outside the verified CCH format")
 	}
 	if !gjson.ValidBytes(body) || billing.Type != gjson.String || billing.Index <= 0 {
 		return badLayout()

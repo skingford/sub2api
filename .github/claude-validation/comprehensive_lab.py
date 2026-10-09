@@ -1,4 +1,4 @@
-"""Source-guided 2.1.292 request branches; unmodified CLI in network-none Docker.
+"""Source-guided pinned CLI request branches in network-none Docker.
 
 Reuses the synthetic TLS responder and process isolation from extended_audit.
 The wrapper changes only documented CLI arguments/environment and mock replies.
@@ -15,6 +15,10 @@ import extended_audit as audit
 import lab
 
 ROOT = Path('/work')
+CLI_PINS = {
+    '2.1.292': 'a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3',
+    '2.1.295': '4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358',
+}
 MODELS = ['claude-sonnet-4-6', 'claude-opus-4-6', 'claude-haiku-4-5-20251001',
           'claude-sonnet-5-5', 'claude-opus-5-5']
 CASES = []
@@ -117,7 +121,8 @@ def main():
     lab.ROOT = ROOT
     lab.write_json(ROOT / 'isolation.json', lab.verify_isolation())
     digest = hashlib.sha256(Path('/opt/claude').read_bytes()).hexdigest()
-    assert digest == 'a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3'
+    version = os.environ.get('CLAUDE_LAB_CLI_VERSION', '2.1.292')
+    assert version in CLI_PINS and digest == CLI_PINS[version], (version, digest)
     subprocess.run(['openssl', 'req', '-x509', '-newkey', 'rsa:2048', '-sha256', '-nodes',
                     '-keyout', str(ROOT / 'server.key'), '-out', str(ROOT / 'server.pem'), '-days', '2',
                     '-subj', '/CN=api.anthropic.com', '-addext', 'subjectAltName=DNS:api.anthropic.com,IP:127.0.0.1'],
@@ -141,7 +146,7 @@ def main():
         lab.write_json(ROOT / case['name'] / 'case.json', case)
         result['case'] = case['name']
         results.append(result)
-        lab.write_json(ROOT / 'summary.json', {'binary_sha256': digest, 'cases': results})
+        lab.write_json(ROOT / 'summary.json', {'cli_version': version, 'binary_sha256': digest, 'cases': results})
 
 
 if __name__ == '__main__':

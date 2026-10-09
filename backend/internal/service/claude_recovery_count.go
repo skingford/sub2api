@@ -17,12 +17,17 @@ import (
 )
 
 func recoveryRewriteAttribution(body []byte) ([]byte, error) {
-	replacement := "cc_version=" + claudeCompatibilityVersion + "." + computeClaudeCodeFingerprint(body, claudeCompatibilityVersion)
 	for i, block := range gjson.GetBytes(body, "system").Array() {
 		text := block.Get("text").String()
 		if !strings.HasPrefix(text, "x-anthropic-billing-header:") {
 			continue
 		}
+		version := claudeCompatibilityVersion
+		if strings.TrimPrefix(ccVersionInBillingRe.FindString(text), "cc_version=") == "2.1.295" {
+			version = "2.1.295"
+		}
+		version = claudeCompatibilityModelVersion(version, gjson.GetBytes(body, "model").String())
+		replacement := "cc_version=" + version + "." + computeClaudeCodeFingerprint(body, version)
 		if ccVersionWithFingerprintInBillingRe.MatchString(text) {
 			text = ccVersionWithFingerprintInBillingRe.ReplaceAllString(text, replacement)
 		} else {

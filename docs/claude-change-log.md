@@ -395,3 +395,31 @@
 - 2026-10-09 提交补记：三项协议修复、最终回归与复用配置脚本已提交为 `133c6b4212a7192a52ffb9ccf5dd9e508c6d87d2`，带 `Claude-Change-ID: CC-20261009-009`。提交内 3190 个 Go / SQL / 模块文件与最终验证清单一致；58 包 unit、52 包 integration、0 issues lint 均通过。尚未推送、合并或部署网关代码；远端 CLI 配置为维护者单独授权的操作。
 
 - 2026-10-09 发布跟踪：维护者授权推送并合入 release；008 / 009 所在分支已推送，关联 [PR #6](https://github.com/skingford/sub2api/pull/6)，目标为 `release`。上文“尚未推送 / 合并”保留为各提交时点的历史记录，合并状态以本 PR 为准；未部署网关代码。
+
+## CC-20261009-011：反编译来源与两个隔离 CLI 版本逐项复核
+
+- 授权 / 基线：维护者要求依据反编译源码与 Docker 隔离 CLI 全面深入逐项核对。固定 release `7ce838ee33663b8b4dc93296a51fad25b2daa49c`，上游仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`；从 release 建立 `codex/claude-source-runtime-audit-20261009`。原 `codex/claude-router-model-alias` 的 `f5188a2e6` 及其 CC-20261009-010 记录保留在原分支，本轮不改写或合并它。
+- 版本 / 来源：Go 1.27.2，未修改 Linux x64 CLI 2.1.292 / 2.1.295，SDK 均为 0.128.0、runtime v26.3.0。前者 SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`；后者 `4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358`，核对固定官方 manifest。重新提取 2,260 / 2,340 个嵌入 JS 模块，两版各 3 个 Zstd 模块只读解压。来源偏移、压缩前后哈希和关键函数锚点留档，不冒充原始 TypeScript。
+- 原生转发：两版各 95 个新 CLI 场景 / 149 请求，合计 1,192 个认证 / passthrough 组合，逻辑及发送字节全部一致；每版同认证头值 296/298 一致，两例差异仍是空 anthropic-version 补默认值。方法、路径、长度、GetBody 和认证方式全通过。OAuth passthrough 的配置重复不算独立实现。
+- 新版缺口 F1：2.1.295 托管恢复的三模型 × 两种账号六组全部在压缩后续聊失败。自定义 origin 无分类头的推断仅允许 2.1.292；仅在实验 overlay 放开版本后，首次压缩继续而第二次仍被新版保留消息摘要尾文拒绝。实验副本同时适配精确尾文后，六组通过：12 会话、96 生成、24 计数，跨会话混入 0。原始 2.1.292 同序列通过。没有将实验修正写入生产代码。
+- 新版缺口 F2：Haiku 5.5 普通 API 转换没有进入已验证模型默认值分支，缺 thinking / 默认 effort / context_management，且补 temperature=1；原生 CLI 直通仍保留。2.1.295 裸 haiku 实际解析为 5.5，2.1.292 为 4.5；完整模型及显式控制逐字段记录。
+- 新版缺口 F3：2.1.295 常规请求不选择 2.1.292 原生传输配置。两版各 24 组四路径 / 日志开关实际发送：正文全部一致、零丢包；2.1.292 的头值 / 头序 / ClientHello 全同，2.1.295 的头序及握手均不同，Connection keep-alive 省略，其他应用头值忽略大小写后相同。两版原生握手各 5 条控制均匹配既有黄金摘要，不据此声称官方拒绝或封禁。
+- 既有修复复验：两版各 22 个错误回放场景 / 58 请求，原始与生产转换响应的请求次数、编码序列和结束状态相同；cf-ray 和三类 bad-json 及转义扩展恢复没有复发。合计主捕获与错误回放 234 场景 / 414 请求，正式 PCAP 全匹配、零丢包。两版各 108 组策略保留身份冲突、未知 CCH 改写保护和自定义 origin 的明确边界。
+- 算法 / 工程：593 个独立原生运行时 CCH 向量与 Go 一致；两版提取后缀函数的 394 个唯一向量与 Go 一致，探针和提取函数分别计数。service 专项 1,663 个通过事件，六个组件包 322 个通过事件，CCH / 成功头策略 595 个通过事件；完整后端 3,190 个源码文件与固定 release 快照一致。没有重跑全仓库 unit / integration / lint。
+- 文件 / 复现：新增 [深入报告](claude-source-runtime-audit-20261009.md)和[结构化结果](claude-source-runtime-audit-20261009.json)、只读嵌入源码提取器及版本边界场景，公共采集器增加显式的两个版本哈希白名单；更新验证 README 和 .gitignore 的报告白名单。本机材料位于 `claude-capture/source-runtime-crosscheck-20261009-333q2v1p/`。最终工具另跑两个版本单场景 smoke 和 PCAP，不与主审查重复计数；提取器重建的 4,600 个模块解码字节全部一致。
+- 提交 / 边界：当前审查尚未提交、推送、合并或部署；未来提交使用 `Claude-Change-ID: CC-20261009-011` 并补记引用。三项新版兼容缺口未修复，009 的历史修复结论由本条复验补充。全部模型交互使用隔离假凭据和模拟响应，不代表真实服务接受、OAuth 订阅、签名或计费验收。
+
+
+## CC-20261009-012：完整修复 2.1.295 三项兼容缺口
+
+- 授权 / 基线：维护者要求“完全修复”011 的问题；在同一 `codex/claude-source-runtime-audit-20261009` 工作区完成，固定 release `7ce838ee33663b8b4dc93296a51fad25b2daa49c`，上游仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。保留 011 的原始审查记录，以本条更新当前状态。
+- 版本 / 来源：未修改 Linux x64 CLI 2.1.292 / 2.1.295，SDK 0.128.0、runtime v26.3.0，使用 011 中的二进制 SHA-256 和嵌入模块锚点；新增 Haiku 5.5 的 11 场景 / 21 请求及 PCAP 核对。独立 2.1.295 CCH 探针仅替换 JS 入口并禁用入口 bytecode，原生机器码前缀保持不变；605 个向量与 Go 一致，含 12 个真实新版正文及模型 / token / Unicode 改写向量，正式捕获零丢包。
+- F1 修复：精确放行 2.1.295 无分类头的压缩识别及已观测保留消息尾文；仍校验已保存摘要、保留历史、system 帧和工具状态。拒绝伪造、追加及重复尾文。迁移归因保留 2.1.295。原生恢复 2.1.292 三模型 × 两种账号通过 12 会话 / 96 生成 / 24 计数；2.1.295 加入 Haiku 5.5 后四模型 × 两种账号通过 16 会话 / 128 生成 / 32 计数，跨会话混入均为 0。
+- F2 修复：Haiku 5.5 的 128000 token、adaptive / omitted、medium effort、context_management 和 OAuth beta 顺序与捕获一致；显式 token、temperature、effort、display 保留。普通转换为该模型选择已验证 2.1.295 身份，保证 UA / billing / CCH 一致；count_tokens 不添加生成参数或 billing block。支持配置选择精确 292 / 295 版本，未知版本仍拒绝。补查并修复 Responses / Chat Completions 的旧 thinking 分支和丢弃签名问题；共享模型能力判断，保留 xhigh、opaque thinking / redacted_thinking 及工具回填，模型描述同步 1M 上下文及 effort，未修改价格。
+- F3 修复：增加独立的 `claude_2_1_295_linux_x64` profile / 连接池键；仅允许已测 Linux x64、SDK / runtime 组合。保留 gzip 编码、两种 Content-Encoding 头位置、TLS 校验、四种代理路径与日志行为。两版合计 48 组真实传输的正文、完整头值 / 头序、归一化 ClientHello 全同、零丢包；24 组日志字节、摘要、完整性、脱敏通过。未扩大到 295 MacOS、ARM、HTTP/2 或任意未来版本。
+- 转发 / 回归：旧捕获 1,192 组合与新增 Haiku 捕获 84 组合，合计 1,276 个生产 Forward 组合正文及 wire 全同。新增捕获、归因、CCH、版本 / 平台、精确摘要、显式参数、OpenAI 兼容入口及签名往返永久回归。既有空版本补值、身份冲突和成功头过滤等显式策略保留。
+- 工程检查：最终使用不可变源码快照完成全量 unit / integration / lint；实际结果在完成后补记，并保存于下方结构化结果。准备中两处错误测试假设已纠正；在补齐兼容入口时一次旧集成构建混用修订导致 helper 未定义，保留失败并以冻结快照重跑，不当作产品运行时失败。
+- 文件 / 证据：恢复 compaction / count / service、CLI 兼容与默认参数、CCH 最终处理、Haiku 能力表、Responses 适配器、HTTPUpstream / TLS profile 及测试；新增 `testdata/claude_code_2_1_295`、12 个 CCH oracle 样本、Haiku 隔离采集器，扩展双版本运行时 / 传输探针及 README / .gitignore。[修复说明](claude-295-compatibility-fix-20261009.md)、[结构化结果](claude-295-compatibility-fix-20261009.json)；完整材料在本机 `claude-capture/compatibility-fix-20261009-yvk8ocrl/`。
+- 提交 / 边界：当前尚未提交、推送、合并或部署；后续提交携带 `Claude-Change-ID: CC-20261009-012` 并补记引用。本轮全部模型交互均为隔离假凭据 / 模拟响应；不代表官方接受、真实 thinking 签名验证、OAuth 订阅或计费验收。
+
+- 最终工程补记：不可变快照的 58 包 unit 全通过；integration 首轮 49 包通过，三个包在 Redis / PostgreSQL / Ryuk 启动阶段因本机 Docker 双栈发布端口选择失败。临时代理仅将这三个包新建 testcontainers 的端口绑定到 IPv4，保留所有原断言及真实数据库交互，复验全部通过，合计 52 包、未解决失败 0；原始命令退出 1 与环境诊断均保留。代理已停止，没有修改 Docker 全局配置或业务容器。golangci-lint 2.14.0 为 0 issues；模块校验、tidy diff 和差异空白检查通过。工作区 3,193 个 Go / SQL / 模块文件与最终快照一致，连同回归 JSON 共 3,332 个文件有 SHA-256 清单。

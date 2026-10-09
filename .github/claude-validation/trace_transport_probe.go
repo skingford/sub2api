@@ -44,10 +44,10 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 	if strings.HasPrefix(os.Args[2], "auto") {
-		if captured.Profile != string(service.HTTPUpstreamProfileClaude2292) {
+		if captured.Profile != string(service.HTTPUpstreamProfileClaude2292) && captured.Profile != string(service.HTTPUpstreamProfileClaude2295) {
 			panic("auto mode requires a profile selected by the service capture")
 		}
-		ctx = service.WithHTTPUpstreamProfile(ctx, service.HTTPUpstreamProfileClaude2292)
+		ctx = service.WithHTTPUpstreamProfile(ctx, service.HTTPUpstreamProfile(captured.Profile))
 	}
 	if dir := os.Getenv("CLAUDE_CAPTURE_TRACE_DIR"); dir != "" {
 		recorder, err := requesttrace.New(config.RequestTraceConfig{Enabled: true, Directory: dir, MaxSizeMB: 10, MaxBackups: 2, MaxAgeDays: 1})

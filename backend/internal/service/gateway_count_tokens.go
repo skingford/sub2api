@@ -577,7 +577,7 @@ func (s *GatewayService) buildCountTokensRequest(ctx context.Context, c *gin.Con
 	// User-Agent 头共用这一个字符串（同 buildUpstreamRequest）。
 	ctMimicUserAgent := claude.DefaultUserAgent()
 	if state := claudeCompatibilityFromContext(ctx); state != nil {
-		ctMimicUserAgent = "claude-cli/" + state.Version + " (external, cli)"
+		ctMimicUserAgent = "claude-cli/" + claudeCompatibilityModelVersion(state.Version, modelID) + " (external, cli)"
 	}
 	if billingUA := effectiveBillingUserAgent(ctMimicUserAgent, tokenType, mimicClaudeCode, billingFingerprint); billingUA != "" {
 		body = syncBillingHeaderVersion(body, billingUA)

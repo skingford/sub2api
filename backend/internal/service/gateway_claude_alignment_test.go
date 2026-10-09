@@ -353,7 +353,12 @@ func TestClaudeAlignmentNativeCLILab(t *testing.T) {
 	if binary == "" {
 		t.Skip("requires unmodified CLI in network-none Docker")
 	}
-	for _, model := range []string{"claude-sonnet-4-6", "claude-sonnet-5-5", "claude-opus-5-5"} {
+	models := []string{"claude-sonnet-4-6", "claude-sonnet-5-5", "claude-opus-5-5"}
+	if selected := os.Getenv("CLAUDE_RECOVERY_LAB_MODELS"); selected != "" {
+		models = strings.Split(selected, ",")
+	}
+	for _, model := range models {
+		require.True(t, claude2292VerifiedModel(model), "unsupported recovery lab model: %s", model)
 		for _, kind := range []string{AccountTypeAPIKey, AccountTypeOAuth} {
 			t.Run(model+"/"+kind, func(t *testing.T) { runClaudeRecoveryNativeCLILab(t, binary, kind, model) })
 		}

@@ -10,6 +10,8 @@ import (
 // CCH2292 replaces the native placeholder in the serialized body. Callers must
 // enforce the version, endpoint and anthropic-version header gates. This is a
 // checksum, not a credential or a provider-issued thinking signature.
+// The independent 2.1.295 native-runtime oracle also matches this implementation;
+// the historical function name identifies the algorithm, not a version wildcard.
 //
 // The raw-byte scan intentionally retains native quirks: no JSON reserialization,
 // exact compact key spellings, and a 300-byte search window starting at system.

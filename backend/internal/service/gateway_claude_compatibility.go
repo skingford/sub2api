@@ -17,6 +17,19 @@ const claudeCompatibilityVersion = "2.1.292"
 const claudeConversationHeader = "X-Sub2API-Session-Id"
 const claudeCompatibilityGinKey = "claudeCompatibilityState"
 
+func verifiedClaudeCompatibilityVersion(version string) bool {
+	return version == "2.1.292" || version == "2.1.295"
+}
+
+// Haiku 5.5's measured defaults belong to 2.1.295. Keep other models on the
+// request's frozen configured profile; never use an unverified version.
+func claudeCompatibilityModelVersion(version, model string) string {
+	if version == "2.1.292" && claude.IsHaiku55(model) {
+		return "2.1.295"
+	}
+	return version
+}
+
 type claudeCompatibilityKey struct{}
 type nativeClaudeOriginKey struct{}
 
@@ -49,8 +62,9 @@ func prepareClaudeCompatibility(ctx context.Context, c *gin.Context, body []byte
 	if state := claudeCompatibilityFromContext(ctx); state != nil {
 		return ctx, nil
 	}
-	if claude.EffectiveCLIVersion() != claudeCompatibilityVersion {
-		return ctx, claudeCompatibilityError(c, "unsupported Claude compatibility version; select the verified 2.1.292 profile")
+	version := claude.EffectiveCLIVersion()
+	if !verifiedClaudeCompatibilityVersion(version) {
+		return ctx, claudeCompatibilityError(c, "unsupported Claude compatibility version; select a verified 2.1.292 or 2.1.295 profile")
 	}
 	if c != nil {
 		if value, exists := c.Get(claudeCompatibilityGinKey); exists {
@@ -84,7 +98,8 @@ func prepareClaudeCompatibility(ctx context.Context, c *gin.Context, body []byte
 	} else {
 		session = uuid.NewString()
 	}
-	state := &claudeCompatibilityState{Version: claudeCompatibilityVersion, SessionID: session, PromptID: uuid.NewString()}
+	version = claudeCompatibilityModelVersion(version, gjson.GetBytes(body, "model").String())
+	state := &claudeCompatibilityState{Version: version, SessionID: session, PromptID: uuid.NewString()}
 	if c != nil {
 		if prompt := strings.TrimSpace(c.GetHeader("x-claude-code-prompt-id")); prompt != "" {
 			id, err := uuid.Parse(prompt)

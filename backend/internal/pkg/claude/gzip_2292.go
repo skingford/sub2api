@@ -8,7 +8,7 @@ import (
 type gzipApplicationHeader2292Key struct{}
 
 // WithGzipHeaderOrder2292 records the encoding-header position for an unchanged,
-// fully decoded/CRC-verified native 2.1.292 gzip request. Callers must establish
+// fully decoded/CRC-verified native 2.1.292 or Linux 2.1.295 gzip request. Callers must establish
 // that scope first; the framing is not an authentication or version signal.
 //
 // The pinned CLI's oos/Sto (chunk-47d8fnm7.js) construction concatenates

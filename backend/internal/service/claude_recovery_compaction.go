@@ -45,7 +45,10 @@ func WithClaudeRecoveryRequest(ctx context.Context, h http.Header) (context.Cont
 	if (kind != "" && class != "compaction") || (class == "compaction" && kind == "") {
 		return ctx, ErrRecoveryConflict
 	}
-	return context.WithValue(ctx, recoveryCompactionKey{}, recoveryCompactionRequest{kind: kind, infer: class == "" && ExtractCLIVersion(h.Get("User-Agent")) == "2.1.292"}), nil
+	version := ExtractCLIVersion(h.Get("User-Agent"))
+	// Only infer the unclassified custom-origin format captured in these CLIs.
+	infer := class == "" && (version == "2.1.292" || version == "2.1.295")
+	return context.WithValue(ctx, recoveryCompactionKey{}, recoveryCompactionRequest{kind: kind, infer: infer}), nil
 }
 
 func recoveryCompactionKind(ctx context.Context) string {
@@ -88,6 +91,10 @@ func recoveryCompactionContinuation(old, next RecoveryHistory) bool {
 const recoveryCompactionPrompt = "CRITICAL: Respond with TEXT ONLY. Do NOT call any tools."
 const recoveryCompactionIntro = "This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.\n\n"
 const recoveryCompactionFollowup = "\nContinue the conversation from where it left off without asking the user any further questions. Resume directly — do not acknowledge the summary, do not recap what was happening, do not preface with \"I'll continue\" or similar. Pick up the last task as if the break never happened."
+
+// RZt / DZt in the captured 2.1.295 bundle append this exact explanation when
+// retaining recent messages. It does not authorize changing those messages.
+const recoveryCompactionRetained295 = "The messages after this summary are the most recent messages from before compaction, kept verbatim. The summary was written without seeing them, so something it says has not happened yet may already have happened in them."
 
 var recoveryAnalysisRE = regexp.MustCompile(`(?s)<analysis>.*?</analysis>`)
 var recoverySummaryRE = regexp.MustCompile(`(?s)<summary>(.*?)</summary>`)
@@ -206,6 +213,7 @@ func recoveryCompactionWrapper(text, summary string) bool {
 		return false
 	}
 	tail := strings.TrimSuffix(strings.TrimPrefix(text, prefix), "\n")
+	tail = strings.TrimSuffix(tail, "\n\n"+recoveryCompactionRetained295)
 	if tail == "" || tail == recoveryCompactionFollowup {
 		return true
 	}
