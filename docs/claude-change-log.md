@@ -391,3 +391,5 @@
 - 配置复用：按维护者后续请求，在远端 root 的 Claude Code 2.1.295 配置自定义地址、Bearer 凭据和 `hasCompletedOnboarding`，认证检查及短请求成功。新增无内置凭据的 `configure_claude_router.py`，备份旧配置并以 600 权限原子保存；提供交互式隐藏输入及私有 key-file 两种方式，步骤见验证 README。远端 2.1.295 的配置测试不扩大 2.1.292 算法兼容声明。
 - 工程验证：最终全量 unit 58 包、integration 52 包通过，golangci-lint 2.14.0 为 0 issues，详见结构化记录；首轮全量单测出现一次未修改 OpenAI 缓存刷新去重用例失败，同基线隔离重复 100 次通过，保留失败日志及最终复跑记录。lint 使用匹配工具链的 2.14.0。
 - 边界与提交：空 anthropic-version 补默认值、身份冲突保护、自定义 origin 和成功响应头过滤边界仍保留。本条使用 `Claude-Change-ID: CC-20261009-009`，提交后补记哈希；没有合并或部署网关代码。保留 008 的历史问题记录，由本条链接修正其当前状态。
+
+- 2026-10-09 提交补记：三项协议修复、最终回归与复用配置脚本已提交为 `133c6b4212a7192a52ffb9ccf5dd9e508c6d87d2`，带 `Claude-Change-ID: CC-20261009-009`。提交内 3190 个 Go / SQL / 模块文件与最终验证清单一致；58 包 unit、52 包 integration、0 issues lint 均通过。尚未推送、合并或部署网关代码；远端 CLI 配置为维护者单独授权的操作。

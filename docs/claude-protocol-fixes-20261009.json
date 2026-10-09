@@ -438,7 +438,7 @@
     ".github/claude-validation/cch_recheck_test.go": "d7e242b86adcc95f69907428224813723a421b7a7807aa0cbb6876761e49a6a7"
   },
   "commit_references": {
-    "code": null,
+    "code": "133c6b4212a7192a52ffb9ccf5dd9e508c6d87d2",
     "pull_request": null,
     "pushed": false
   }
