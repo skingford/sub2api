@@ -361,3 +361,4 @@
 - 提交 / PR：本条工作区修复尚未提交或推送；后续提交应使用 `Claude-Change-ID: CC-20261009-007` 并补记哈希与 PR。并行 gzip 任务已自行提交为 `3b9b984f` / `4dbbd949`；本条没有将其改动纳入安全修复提交，最终验证针对包含这些提交的工作区。未部署；本地测试不代表真实 Claude 上游接受、订阅或计费验证。
 
 - 2026-10-09 交付授权：维护者要求提交全部当前改动、推送并合入 `release`，随后删除本次开发分支。安全修复随 [PR #5](https://github.com/skingford/sub2api/pull/5) 交付，使用 merge commit 保留各项实现与证据提交的原始引用；最终提交后补记哈希。
+- 2026-10-09 提交补记：安全修复代码与验证记录提交为 `c142e67ece6383119eddf7413269e9b78576732e`，带 `Claude-Change-ID: CC-20261009-007`；随 [PR #5](https://github.com/skingford/sub2api/pull/5) 合入 `release`。上述 58 包 unit、52 包 integration、0 issues lint 和 Linux govulncheck 结果对应本提交的运行时代码；本次补记仅增加提交引用。
