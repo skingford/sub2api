@@ -979,6 +979,7 @@ const (
 
 // GatewayConfig API网关相关配置
 type GatewayConfig struct {
+	RequestTrace   RequestTraceConfig   `mapstructure:"request_trace"`
 	ClaudeRecovery ClaudeRecoveryConfig `mapstructure:"claude_recovery"`
 	// 等待上游响应头的超时时间（秒），0表示无超时
 	// 注意：这不影响流式数据传输，只控制等待响应头的时间
@@ -2417,6 +2418,12 @@ func setDefaults() {
 	viper.SetDefault("idempotency.cleanup_batch_size", 500)
 
 	// Gateway
+	viper.SetDefault("gateway.request_trace.enabled", true)
+	viper.SetDefault("gateway.request_trace.directory", "")
+	viper.SetDefault("gateway.request_trace.max_size_mb", 100)
+	viper.SetDefault("gateway.request_trace.max_backups", 100)
+	viper.SetDefault("gateway.request_trace.max_age_days", 30)
+	viper.SetDefault("gateway.request_trace.max_body_bytes", int64(0))
 	viper.SetDefault("gateway.claude_recovery.enabled", false)
 	viper.SetDefault("gateway.claude_recovery.group_ids", []int64{})
 	viper.SetDefault("gateway.claude_recovery.encryption_key", "")
@@ -2719,6 +2726,9 @@ func setEnvReachableDefaults() {
 }
 
 func (c *Config) Validate() error {
+	if err := c.Gateway.RequestTrace.Validate(); err != nil {
+		return err
+	}
 	if err := c.Gateway.ClaudeRecovery.Validate(); err != nil {
 		return err
 	}

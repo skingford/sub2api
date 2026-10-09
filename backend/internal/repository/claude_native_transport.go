@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Wei-Shaw/sub2api/internal/pkg/requesttrace"
 	fhttp "github.com/bogdanfinn/fhttp"
 )
 
@@ -43,7 +44,7 @@ func (t *nativeClaudeHTTP1Transport) RoundTrip(req *http.Request) (*http.Respons
 		Header: nativeClaudeHeaders(req), Body: req.Body, GetBody: req.GetBody,
 		ContentLength: req.ContentLength, TransferEncoding: append([]string(nil), req.TransferEncoding...),
 		Close: req.Close, Host: req.Host, Trailer: fhttp.Header(req.Trailer.Clone()),
-	}).WithContext(req.Context())
+	}).WithContext(requesttrace.NativeContext(req.Context()))
 	if req.GetBody != nil {
 		fr.GetBody = func() (io.ReadCloser, error) {
 			body, err := req.GetBody()
@@ -56,6 +57,7 @@ func (t *nativeClaudeHTTP1Transport) RoundTrip(req *http.Request) (*http.Respons
 	if req.Body == http.NoBody {
 		fr.Body = fhttp.NoBody
 	}
+	requesttrace.NativeHeaders(req, http.Header(fr.Header))
 	r, err := t.transport.RoundTrip(fr)
 	if err != nil {
 		return nil, err

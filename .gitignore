@@ -178,3 +178,11 @@ issues/
 .vite/
 # 本地闭源插件开发目录及构建产物不进入 Sub2API 仓库
 /plugins/
+
+# Private gateway request evidence and exports
+requests*.jsonl
+request-traces/
+/deploy/__pycache__/
+/deploy/tests/__pycache__/
+!docs/request-tracing.md
+!docs/request-tracing-validation.json

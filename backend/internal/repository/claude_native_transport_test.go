@@ -10,10 +10,14 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/Wei-Shaw/sub2api/internal/config"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/requesttrace"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint"
 	"github.com/Wei-Shaw/sub2api/internal/service"
 	"github.com/stretchr/testify/require"
@@ -68,12 +72,22 @@ func TestNativeClaudeHTTP1WireOrderAndReuse(t *testing.T) {
 	transport := newNativeClaudeHTTP1Transport(&http.Transport{MaxIdleConns: 2, MaxIdleConnsPerHost: 2, IdleConnTimeout: time.Second})
 	t.Cleanup(transport.CloseIdleConnections)
 	client := &http.Client{Transport: transport, Timeout: 3 * time.Second}
-	for range 2 {
+	traceDir := t.TempDir()
+	recorder, err := requesttrace.New(config.RequestTraceConfig{Enabled: true, Directory: traceDir, MaxSizeMB: 1, MaxBackups: 1, MaxAgeDays: 1})
+	require.NoError(t, err)
+	t.Cleanup(func() { require.NoError(t, recorder.Close()) })
+	for attempt := range 2 {
 		req, err := http.NewRequest(http.MethodPost, "http://"+listener.Addr().String()+"/v1/messages", bytes.NewBufferString(`{"message":"hello"}`))
 		require.NoError(t, err)
 		req.Header = http.Header{"x-app": {"cli"}, "content-type": {"application/json"}, "User-Agent": {"claude-cli/2.1.292 (external, sdk-cli)"}, "Accept": {"application/json"}, "authorization": {"Bearer synthetic"}}
 		original := req.Header.Clone()
-		resp, err := client.Do(req)
+		// Same pooled connection: tracing on the second send must preserve the
+		// original wire bytes/header order and connection reuse from the first.
+		if attempt == 1 {
+			ctx, _ := recorder.Start(req.Context())
+			req = req.WithContext(ctx)
+		}
+		resp, err := requesttrace.InstrumentClient(client, req).Do(req)
 		require.NoError(t, err)
 		payload, err := io.ReadAll(resp.Body)
 		require.NoError(t, err)
@@ -91,6 +105,10 @@ func TestNativeClaudeHTTP1WireOrderAndReuse(t *testing.T) {
 		require.Contains(t, lines, "Connection: keep-alive")
 	}
 	require.NoError(t, <-serverDone)
+	traceData, err := os.ReadFile(filepath.Join(traceDir, "requests.jsonl"))
+	require.NoError(t, err)
+	require.Contains(t, string(traceData), `"reused":true`)
+	require.NotContains(t, string(traceData), "Bearer synthetic")
 }
 
 func TestNativeClaudeHTTP1Cancellation(t *testing.T) {
