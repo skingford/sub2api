@@ -62,3 +62,5 @@ Go 1.27.0 依赖，升级改动和它的记录继续留在工作区；不将本�
 runner 锁，后一次报告直接传入 nil Context 的测试断言和超时。删除该断言，复跑 Claude 包后，
 `golangci-lint run --allow-serial-runners --timeout 20m` 完整通过（2.13.0，Go 1.27.0，0 issues）。
 3,186 个 Go/SQL 文件中，生产代码与全量测试时完全一致，仅这一处测试断言在之后调整；最终哈希已记录。
+
+修复与证据已提交为 `3b9b984f9432e4eb1218f9f884d521064de8f173`（`Claude-Change-ID: CC-20261009-006`）；未推送或部署。
