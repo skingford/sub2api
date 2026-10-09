@@ -196,3 +196,169 @@
 - 验证：完整 unit 57 个包、integration 51 个包通过；全量 lint 0 issues。最后追加绑定竞争失败的槽位清理后，会话 / 身份设置 / 请求契约专项再次通过；SQL 最终版本的 32 路并发及持久性检查再次通过。最终受影响包 lint 复验 0 issues；[结构化验证记录](claude-session-validation.json) 保存命令对应日志摘要与最终源码 SHA-256。
 - 回归说明：旧身份改写中改变 session ID 的组合改为验证本地拒绝；计数接口检查会话头，不强制添加原生不存在的 metadata。首次全量集成检查出现本地 Redis 测试容器启动失败，后续完整重跑通过；测试夹具补上持久会话存储模拟，并修正作用域以同时支持 unit / integration / lint。全部验证使用本地模拟服务 / 数据库，不执行真实模型请求。
 - 关联：[调用与部署约定](claude-code-gap-fixes.md#账号绑定)，[PR #4](https://github.com/skingford/sub2api/pull/4)，提交使用 `Claude-Change-ID: CC-20261008-007`。
+
+## CC-20261008-008：托管恢复、双层会话与隔离
+
+- 授权：维护者要求完整实现检查点与受控迁移，强调不同 session_id 的内容、身份和状态不能串传。
+- 基线：release `b4430850844263e3fd3d2d180f514099bffad04e`；上游 `3f1a2ea0`。新分支 `codex/claude-managed-recovery`，目标 release。
+- 版本：默认严格模式不变；托管模式仅接受已验证的 CLI 2.1.292 与三个已覆盖模型。
+- 实现：认证用户 / 分组 / 客户端 UUID 隔离逻辑对话，独立上游 UUID 永久绑定账号；数据库处理权、代次和发送前状态转换阻止串传与不确定重放。固定恢复前缀，核对真实响应、消息边界及 thinking 来源。
+- 检查点：AES-GCM 绑定身份和用途；后台持久队列、增量摘要、原文引用校验、用户指令与内联附件保留；过期删除内容，保留归属 / 操作墓碑。摘要费用与未知用量独立记录并设日调用上限。
+- 协议：Messages、Chat Completions、Responses 和计数入口接入；恢复后对同一账号 / session 的实际正文计数；身份、归因与最终 cch 一起更新。未验证层次、无法匹配历史、未闭合工具回合及不确定响应均停止自动迁移。
+- 文件：配置、迁移 243、事务仓储、恢复服务、协议入口 / 请求构建、响应记录、摘要客户端、测试与文档。
+- 验证：完整 unit 57 个包、integration 51 个包通过；完整 / 受影响包 lint 0 issues。最后的保留清理启动、幂等键哈希及审计入口调整后，会话与审计专项再次通过。
+- 原生实验：未修改的 Linux x64 2.1.292，Docker --network none；API Key / OAuth 各两条独立 CLI 对话，合计 8 次生成、4 次计数。客户端 ID 保持，上游 ID 分别更新，跨会话标记混入为 0；实验使用测试存储端口，PostgreSQL 行为单独在真实容器验证。
+- 修正记录：首次原生 OAuth 实验的模拟上游用 Header.Get 读取原始小写头，导致断言错误，改用大小写兼容访问后通过；入口包装导致既有静态审计测试找不到原函数，改为原入口 defer 完成处理并增加恢复准备的审计顺序断言。没有修改旧测试以跳过保护。
+- 证据：[验证摘要](claude-managed-recovery-validation.json)，本机 claude-capture/managed-recovery-20261008/ 保存日志和原生实验。没有真实模型请求、没有启用生产配置。
+- 说明：[托管恢复配置与边界](claude-managed-recovery.md)。提交使用 `Claude-Change-ID: CC-20261008-008`，不代表已部署或真实服务端接受。
+
+## CC-20261008-009：扩展 CLI 流程与剩余差异复核
+
+- 基线：当前主题分支 `93275632a6a66dfc2648e9504a7d16bcf32da5d7`；release `b4430850`，上游 `3f1a2ea0`。接续 006、007、008，不覆盖或改写历史结论。
+- 版本：未修改的官方 Linux x64 CLI 2.1.292，SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`；SDK 0.128.0。Docker 断网、独立配置、假凭证及回环 TLS 模拟器。
+- 方法：14 个场景、21 条模型请求，PCAP 原始字节核对一致且丢包 0；通过 Go overlay 调用不变的生产 Forward 和恢复服务，持久层及网络边界使用测试端口。
+- 结果：60 个转发组合正文相同；新确认两个 x-cc 压缩头丢失、显式 thinking.display=updates 与被过滤的 beta 不配套、托管接受 compact 后拒绝续聊、5.5 模型配置覆盖不足。额外 metadata 是托管明确限制；普通输出和 verbose 的 thinking 默认差异单独记录，不误判默认 omitted 为错误。
+- 正向补证：并行 Read、图片回填、合成 thinking 工具回合和简单 resume 通过生产托管历史核对。结构化输出场景未证明 schema 完成；没有真实签名、订阅、官方接受或风控验证。
+- 文件：新增扩展 Docker 采集器、审查 overlay、复现说明、[报告](claude-code-extended-audit.md)与[证据摘要](claude-extended-audit-20261008.json)。生产实现和依赖未修改。
+- 验证：审查、普通 profile、显式 beta 专项通过，Python 语法 / Go 格式及文档差异检查；未重复全量 unit / integration / lint。原始材料保存在本机 `claude-capture/extended-audit-20261008/`。
+- 提交 / PR：本轮尚未提交、推送或创建新 PR；当前审查对象的托管恢复实现关联 PR #5。本记录后续提交使用 `Claude-Change-ID: CC-20261008-009`。
+
+## CC-20261008-011：固定快照的请求参数与算法复核
+
+- 基线：HEAD `93275632a6a66dfc2648e9504a7d16bcf32da5d7`、release `b4430850`、上游 `3f1a2ea0`；2026-10-08 22:25:34（Asia/Shanghai）保存完整源码快照，包含当时未提交的部分修复。后续工作区修改不属于本次验收对象。
+- 版本 / 证据：未修改官方 CLI 2.1.292 / SDK 0.128.0 / Linux x64，二进制 SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`；17 个隔离场景、27 条模型 / 计数请求，PCAP 字节一致且丢包 0。
+- 结果：108 个生产转发组合正文、方法、路径与 query、长度及 GetBody 一致；同认证类型 54 个组合应用头一致，跨认证增加 OAuth beta 单列。新捕获 24 条 cch 复算、81 个既有原生运行时向量和 10 个归因原函数向量通过；20 个原生连接的非随机 ClientHello 匹配 Go 黄金摘要。
+- 差异：快照的两个压缩头、显式 thinking beta 已修复；快照仍缺普通 5.5 默认配置并在托管 compact 后拒绝续聊。随后针对这些行为的新修改未纳入本轮，不以旧快照判定新实现失败。
+- 方法修正：最初计数审查漏设 handler 原生校验上下文，导致假 UA 差异；采集器使用生产校验器和上下文后对全部场景重跑，最终无该差异。保留初始记录。
+- 文件：新增 `.github/claude-validation/request_recheck_test.go`、`verify_native_hello.py`，补充验证 README、[复核报告](claude-request-recheck-20261008.md)和[结构化证据](claude-request-recheck-20261008.json)，在 `.gitignore` 放行这两份报告。本轮没有修改生产实现。
+- 验证：固定快照 4 个包专项通过，394 个通过事件（含子测试）；两阶段采集与重放、Python 语法、Go 格式、文档差异检查。未重复全量 unit / integration / lint，未验证真实服务端接受、权限或计费。
+- 提交 / PR：未提交、推送或创建新 PR，审查基线关联 PR #5；后续提交使用 `Claude-Change-ID: CC-20261008-011`。原始证据及完整快照保存在本机 `claude-capture/request-recheck-20261008-c0q5bkcy/`；保留 CC-20261008-009 历史记录。
+
+## CC-20261008-010：修复扩展流程差异并支持已验证原生压缩
+
+- 授权：维护者要求完整修复 CC-20261008-009 确认的差异；在 `codex/claude-managed-recovery` 的 `93275632` 上继续，release `b4430850`、上游 `3f1a2ea0` 未更新。编号 011 是另一轮固定快照审查，不作为本次最终修复验收。
+- 版本：未修改官方 Linux x64 CLI 2.1.292 / SDK 0.128.0，SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`。全部实验使用断网 Docker、独立配置、假凭证和本地服务。
+- 转发：补齐两个 x-cc 压缩头及原始大小写；显式 thinking.display=updates 配套 beta，并在管理员过滤后按原生方式回退 omitted；保留实测旧版 fallback beta 对应的原生字段，不默认生成 fallback。
+- 模型与 metadata：补充 Sonnet / Opus 5.5 的完整默认参数和 beta 配置，纳入托管范围；修改上游身份时保留普通扩展字段，继续拒绝 parent_session_id / tk 等分支身份。5.5 消息级控制字段进入历史哈希。
+- 压缩：验证摘要输入对应本会话历史前缀，记录完整摘要响应，再核对压缩后前缀与保留回复；事务清除旧检查点、取消旧摘要租约并清理过期恢复前缀。不同用户 / 分组 / session 的材料不能混用，旧 UUID 不改绑。
+- 实时补充：自定义 API 地址的 CLI 会省略压缩分类头。新增固定版本完整指令形态与已记录历史的联合识别；同时保留真实请求 / 回复的普通续聊分支，避免把用户引用该指令误判成必须压缩。
+- 样本：新补 34 条 5.5 模型 / 计数请求，PCAP 字节一致、丢包 0；连同既有 15 条扩展样本，共 196 个转发配置回归。连续压缩与历史篡改、显示策略、模型默认值和 metadata 专项通过。
+- 持久与实时验证：PostgreSQL 检查旧摘要不能回写、恢复前缀原子清理及不可改绑；未修改 CLI 直接调用生产恢复 / Forward 服务，三个模型 × 两种上游认证 × 两条会话共 72 次生成、12 次计数，连续压缩后迁移通过，跨会话混入 0。实时实验采用测试存储 / 上游，数据库单独验证，不冒充完整部署。
+- 范围：请求头、beta / 模型默认值、托管历史与事务保存、原生实验、永久回归、样本与说明。无新增依赖或数据库迁移。详见 [修复报告](claude-alignment-fixes.md)；原始材料在本机 `claude-capture/alignment-fixes-20261008/`。
+- 验证过程：首次实时实验暴露自定义 origin 的缺头分支，保留失败记录后完成修复；测试清理顺序及模拟响应 ID 同时修正。系统默认 lint 因构建 Go 版本过旧无法运行，改用已有 Go 1.27 兼容工具。最终全量结果见下方补记。
+- 提交 / PR：本轮尚未提交、推送或合并；原实现关联 PR #5，后续提交使用 `Claude-Change-ID: CC-20261008-010`。未部署、未访问真实官方模型服务，不代表真实签名、订阅或风控验证。
+
+- 最终补记：完整 unit 57 个包、integration 51 个包通过，golangci-lint 2.13.0 / Go 1.27.0 检查 0 issues。首次全量唯一失败为旧 Opus 5.5 断言要求省略 effort；依据新原生样本改为 medium，保留全部签名历史断言后完整重跑通过。
+- 迁移后补证：实时矩阵进一步覆盖迁移后再次压缩，最终 12 条会话、96 次生成、24 次计数全部通过，跨会话混入 0。最终检查期间 3170 个后端源码 / 测试 / SQL 文件哈希保持一致；[验证与源码记录](claude-alignment-validation.json)保留命令、日志哈希、模型样本与运行边界。
+- 2026-10-09 提交补记：审查与修复已保存为本地提交 `719ceb3522dfcab8035d2552a6ff620554eeb94b`（CC-20261008-009、CC-20261008-010），包含代码、回归样本、复现脚本和验证记录。提交内容与已通过全量检查的源码哈希一致；未推送、合并或部署。
+
+## CC-20261009-001：归档遥测关闭与个人自用中转分析
+
+- 授权 / 范围：维护者要求将对话结论整理到项目文档。场景是自己的订阅经自己的 Sub2API 转 API 自用管理，不描述为代他人转发；本轮只归档文档和证据摘要。
+- 基线：HEAD `93275632a6a66dfc2648e9504a7d16bcf32da5d7`；release `b4430850844263e3fd3d2d180f514099bffad04e`；上游 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。工作区其他未提交修复不属于本轮验收对象。
+- 版本 / 来源：未修改官方 Linux x64 CLI 2.1.292 / SDK 0.128.0，二进制 SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`。依据该二进制内嵌 JavaScript、2026-10-08 的六组 Docker 断网采集及当日核对的官方数据说明。
+- 结果：仅改中转 base 仍产生官方域名事件上报；关闭指标和错误报告后仍有启动配置请求；仅必要流量的中转短场景只观察到模型请求，而假 OAuth 场景仍请求 settings / policy_limits。当前旧事件路由不等于拦截所有客户端遥测。模型 metadata 身份字段仍保留。
+- 方法边界：假凭据、独立配置、空工具和 MCP、短 print 模式；所有场景均预先关闭自动更新和市场安装。HEAD 探活由 PCAP 补回，保留原始 GET/POST 摘要；验证端点与次数，不冒充全部正文逐字节验证或所有出站尝试覆盖。没有真实订阅、上游接受或风控验证。
+- 文件：新增 [使用与风险说明](claude-code-telemetry.md)、[结构化证据](claude-telemetry-validation.json)；README 增加入口，`.gitignore` 精确放行两份文档，本记录追加留痕。原始执行器、PCAP、来源模块与说明快照留在本机 `claude-capture/telemetry-audit-20261008/`，不提交 TLS 私钥、原始正文或完整提取源码。
+- 验证：归档时核对六组已记录请求与 PCAP 端点计数、零内核丢包、CLI 退出码、metadata 结构及来源 SHA-256；JSON 解析、文档相对链接和 `git diff --check`。本轮未重跑 CLI、unit / integration / lint，没有更改生产行为或用户遥测设置。
+- 提交 / PR：本轮未提交、推送或新建 PR。所在分支原实现关联 PR #5，不能将其视为本轮文档已经发布；后续提交使用 `Claude-Change-ID: CC-20261009-001`，PR 目标为 release。
+- 2026-10-09 提交补记：维护者要求提交全部改动后，本记录的遥测文档与结构化摘要已随本地提交 `08a37c23a25347f8d7e82055cab8066075a28f86` 归档；未修改用户遥测配置，未推送或部署。
+
+## CC-20261009-003：基于嵌入源码、机器码和隔离运行的全面对比
+
+- 授权：维护者要求结合反编译源码和 Docker 隔离环境再次全面对比。审查固定在 2026-10-09 07:50:41 的源码快照；后端文件集合及内容与后来提交的 `719ceb35` / `fee18477` 一致。release `b4430850`、上游 `3f1a2ea0` 未更新，随后未提交的请求追踪改动另列为未验证。
+- 版本：未修改官方 Linux x64 CLI 2.1.292 / SDK 0.128.0，SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`。只读提取 2,260 个嵌入 JavaScript 模块、定位关键协议分支，并重新反汇编 Linux cch seed / 扫描函数；不宣称恢复全部原始 TypeScript。
+- 捕获与转发：51 个场景、89 条请求，PCAP 原始字节一致且丢包 0；356 个转发组合中，未压缩的 348 个正文一致，gzip 的 8 个因解压和 cch 重算不同；方法、URL、最终长度与 GetBody 均一致。同认证应用头 174/178 一致，剩余为 gzip 编码头删除。
+- 算法与传输：337 个 cch 独立原生运行时对照通过（含固定种子新增 256 个）；138 个提取原函数归因向量通过；60 个原生 ClientHello 非随机内容一致，四条自动选择的实际传输路径正文、完整头值、头序及握手均一致。原生运行时修改入口与未修改 CLI 抓包分别标识。
+- 差异：新增确认请求 gzip 分支、普通 API 显式关闭 thinking、disabled thinking 额外字段清理、显式 temperature 与自动 thinking 的组合策略不同。均与常规原生转发分开，不推断真实服务端拒绝。旧 5.5 默认值和托管 compact 缺口在本次实现中已通过复验。
+- 恢复与持久性：未修改 CLI 直接调用生产恢复 / Forward 服务，12 会话、96 生成、24 计数，连续压缩、迁移及迁移后压缩通过，跨会话混入 0；7 个 PostgreSQL 集成测试通过，测试存储与数据库证据分开。
+- 实验纠正：目录重名后补抓缺失四组；effort 参数最初放在 `--` 后，独立重抓替换该组；补全 gzip 原始 PCAP 字段读取及缺失代理 helper 挂载。保留失败记录，不将接线错误算成产品缺陷。最终集合和报告不使用错误 effort 样本。
+- 文件：新增 comprehensive 采集器、参数与 cch overlay 审查、PCAP 核对器；扩展 request_recheck 的真实解压入口；补充 README、`.gitignore`、[完整报告](claude-comprehensive-audit-20261009.md)及[结构化证据](claude-comprehensive-audit-20261009.json)。未修改生产实现。
+- 验证：component 专项 148 个、service 专项 351 个通过事件（含子测试）、数据库 7 个通过；算法和实验结果另计。无 CLI 路径时两个原生实验入口跳过，扩展入口另在专门容器通过。未重跑全仓库 unit / integration / lint，不代表官方接受、真实签名、订阅、计费或风控验证。
+- 提交 / PR：本轮审查未提交、推送、合并或部署；被审实现关联 PR #5。后续提交使用 `Claude-Change-ID: CC-20261009-003`，原始材料及快照保存在本机 `claude-capture/comprehensive-20261009-qlx_n3xe/`。保留 010、011 的历史范围和结论。
+
+
+## CC-20261009-002：完整网关请求证据日志
+
+- 授权：维护者要求尽可能完整记录请求，尤其是 Claude，供账号异常后分析；本次实现独立、默认开启、不采样的应用层 HTTP 证据日志。
+- 基线：当前工作分支 `codex/claude-managed-recovery` 的 HEAD `fee184776`（接续 `719ceb35`）；release `b4430850`，上游 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。保留同时存在的审查与遥测文档改动，不合入 main、不修改远端。
+- 版本 / 来源：现有 Claude Code 2.1.292 / SDK 0.128.0 的原生传输和网关入口；依据本仓库请求构建、HTTPUpstream、解压及流式处理实现。此次不更新协议 profile，也不以日志替代既有原生 PCAP 对照。
+- 行为：记录原始入站、共享 HTTPUpstream 的最终请求、原始及显式解压响应、客户端实收正文；关联请求、用户、Key、分组、账号、代理、传输与状态。Claude 增加账号调度快照和结果用量。原生 transport 记录有效应用头与头序并桥接连接 / 首字节回调；不改变请求头或正文。
+- 完整性 / 保留：逐片 base64、偏移、SHA-256、EOF / 提前关闭 / 截断标记、写入失败计数；默认不截断，100 MiB × 100 历史文件并设置 30 天轮转条件。目录 0700、文件 0600；凭据头、Cookie、代理 userinfo 和敏感 query 脱敏，对话正文保留。磁盘错误显式报告；导出校验材料缺失，不把缺日志当成功。
+- 文件：`internal/config/request_trace*`、`internal/pkg/requesttrace/*`、网关路由 / 追踪中间件、`repository/http_upstream*` / `claude_native_transport.go`、Claude 消息 / count_tokens 结果日志、Compose / 配置样例、`deploy/export-request-trace.py` 及测试、[使用说明](request-tracing.md)。无数据库迁移或新增依赖。
+- 覆盖边界：HTTP 网关及共享上游客户端；不捕获后台独立任务、专用客户端的出站或 WebSocket 帧。只记录实际读取 / 写出的字节，不主动排空。是应用层日志，不证明网络交付、官方接受或封禁原因；未部署或访问真实官方模型服务。
+- 验证：新增本地模拟测试覆盖正文 / SSE 字节一致、压缩 403 双份证据、凭据脱敏、重定向、原生头与连接回调、并发隔离、轮转 / 权限、磁盘失败、配置关闭、导出跨文件重建及缺失检测。完整检查实际结果待本轮下方补记；未将旧快照审查当作本次验收。
+- 提交 / PR：尚未提交、推送或创建 PR；后续提交使用 `Claude-Change-ID: CC-20261009-002`，PR 目标 release。工作区已有其他任务的未提交文档与实验，不属于本次代码交付。
+
+
+### CC-20261009-002 验证补记
+
+- 完整 unit 58 个包、完整 integration 52 个包通过；integration 最终使用 `go test -p 1 -tags=integration ./...` 串行执行。完整 golangci-lint 2.13.0 / Go 1.27.0 检查 0 issues。
+- 日志包 / 中间件 / 仓储专项及 race 检测通过；原生 HTTP 同连接的第二次请求开启日志，正文、完整头序、凭据透传与连接复用原有断言全部保持通过。Python 导出器 3 项检查、Compose 环境透传、格式与文档链接检查通过。
+- 保留执行过程：初次全量检查撞上 NativeContext 新文件加入时的编译快照不一致，以及旧路由源码断言；修正后重跑。首次集成因 Docker reaper 名称 / 启动冲突失败，串行完整重跑通过。最后仅按 staticcheck 作等价布尔简化，日志包 race 与全量 lint 再次通过。
+- 验证边界：同时进行的 gzip / Claude 参数修复随后修改了 `internal/pkg/httputil/body.go`、新增 `request_encoding.go` 并修改 `gateway_claude_native.go`；不把本轮结果视为那些并行变更或之后整个工作区的验收，也未覆盖其后续改动。原始失败 / 成功日志与本次文件哈希见 [验证摘要](request-tracing-validation.json)。
+- 仍为未提交、未推送、未部署的代码；没有真实上游请求、封禁验证或订阅资格验证。
+
+- 2026-10-09 提交前复核：在 `01e75d9feeb26c54b47646343a97e2d42c915ba1` 上保存日志实现；28 个已记录文件中，仅原生传输文件因已提交的 CC-20261009-004 gzip 头序改动与原验证哈希不同。日志 / 配置 / 中间件 / 仓储 4 包相关回归再次通过，含原生 HTTP 字节、连接复用与取消检查；结果及本次源码哈希追加到验证摘要。没有为提交重复全量检查，未推送或部署。
+
+- 2026-10-09 提交补记：完整请求日志实现、配置、回归与证据已保存为本地提交 `be3642a6f6c421cb437424b5da1778aaa89d03b7`，包含 `Claude-Change-ID: CC-20261009-002`。实际暂存的 28 个源码 / 测试 / 部署文件与提交前复核哈希完全一致；未纳入遥测归档文档修改。尚未推送、合并或部署。
+
+## CC-20261009-004：对齐参数控制与原生 gzip 请求
+
+- 授权：维护者要求开始对齐 CC-20261009-003 的四类差异；在 `fee18477` / `719ceb35` 上继续。release `b4430850`、上游 `3f1a2ea0` 未更新。保留共存的请求追踪改动，完整检查覆盖当前工作树，不将那些改动列为本轮实现。
+- 版本 / 依据：固定未修改官方 Linux x64 CLI 2.1.292 / SDK 0.128.0，SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`。沿用独立原生 gzip 捕获，新增五模型 × 四场景共 20 条参数捕获，PCAP 字节一致、丢包 0。
+- gzip：入口保留请求独占的原压缩字节及逻辑正文摘要；仅在已验证第一方 messages 路径且最终正文未改时恢复 gzip、原 cch sentinel、长度与 GetBody。模型 / beta / 托管身份改写不能恢复旧正文。Content-Encoding 移至已排序应用头之后；最终四条真实传输路径的压缩字节、正文、完整头值及顺序和 ClientHello 非随机部分均与原生一致。
+- 解压边界：读取现有 64 MiB 上限加一，超限显式失败，CRC 损坏不保留可重放数据；防止把只解析了前缀的整个压缩包向上游发送。回归覆盖独立请求、预读 / clone、返回切片修改、正文变化、版本 / origin / 头策略。
+- 参数：支持模型的直接 disabled 控制补温度 / effort，清理所有额外 thinking 键；单独显式 temperature 保留模型默认 thinking 和关联字段，显式合法值优先。5.5 既有限制保留，不以模拟成功放宽非法组合。
+- 语义边界：CLI 的 EXTRA_BODY 是更晚的覆盖入口，同一个 disabled 对象可能保留不同上下文 / 温度缺省值。普通 API 按直接控制解释，不推断隐藏入口；旧审查 EXTRA_BODY-only 样本的两项缺省值差异仍单列，未宣称已完全消失。原生完整请求可按原生路径保留。
+- 验证：原 89 条请求的 356 个组合，逻辑 JSON、实际发送字节、长度、GetBody 全部一致；178 个同认证组合应用头一致。12 条原生托管会话、96 生成、24 计数通过，跨会话混入 0；使用测试存储与上游，不冒充完整真实部署。
+- 工程：完整 unit 58 个包、integration 52 个包通过；最后的 gzip 头序改动后 repository 集成包再通过；最终 lint 0 issues，Go 源码在最终 unit 期间保持不变。首轮旧 disabled 温度断言按新证据修正；显式值保留断言未删除。首轮宿主 lint 工具链不匹配，固定 Go 1.27.0 后通过，保留失败记录。
+- 文件：httputil 解压 / 原压缩快照、网关 native finalizer、2.1.292 默认参数、原生传输排序、回归与采集样本、transport probe、采集 / 核对脚本、维护说明及 .gitignore。详见 [实现与边界](claude-parameter-wire-alignment.md)、[验证及源码哈希](claude-parameter-wire-validation.json)。
+- 提交 / PR：本轮未提交、推送、合并或部署，所在分支关联 PR #5；后续提交使用 `Claude-Change-ID: CC-20261009-004`。原始材料在本机 `claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/`。未访问真实官方模型服务，不代表官方接受、真实签名、订阅或计费验证。
+- 提交隔离验证：从实际暂存内容导出独立源码快照，排除并行请求追踪实现，httputil / service / repository 三个包相关回归通过。结构化验证记录保留共享工作树全量检查与独立暂存回归的不同源码哈希，不混用验证范围。
+- 2026-10-09 提交补记：对齐实现与关联的 CC-20261008-011 / CC-20261009-003 审查证据已保存为本地提交 `5447bd74bada937d165bf77f211f43895e044340`；三个记录的 trailer 随提交保留。提交前独立暂存快照回归通过，源码与已验证暂存内容一致。尚未推送、合并或部署。
+
+
+## CC-20261009-005：对齐后压缩、头策略和日志的综合复核
+
+- 授权：维护者要求再次全面对比，并在进行中明确要求提交全部代码。固定审查提交 `c20ac40a`（参数 / gzip `5447bd74`、日志 `be3642a6`）；release `b4430850`，上游 `3f1a2ea0`。生产实现保持不变。
+- 版本 / 依据：未修改官方 Linux x64 CLI 2.1.292 / SDK 0.128.0，SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`；固定二进制中的 JS 压缩分支、Docker 断网、独立配置与假凭据。
+- 捕获：重跑原 51 组并增加 8 组，共 59 场景、99 请求、8 条压缩请求，PCAP 字节一致且丢包 0。396 个转发组合逻辑 JSON 全部一致，392 个原字节一致；198 个同认证组合中 196 个头值一致。
+- 新差异：大型 count_tokens 使用 gzip 时仍被解压发送；JS 分块 gzip 的编码头应在应用头排序中，现有统一后置规则不匹配；账号编码头覆写存在大小写查找 / 重复键问题，可生成头体不匹配。后者的 22 次实际发送全部与 PCAP 核对，不以模拟服务端 400 冒充官方拒绝。
+- 日志与传输：更换独立回环代理后完成 32 组真实传输；正文、头值、非随机 ClientHello 均一致，8 个分块 gzip 组合头序不同。16 个日志开启组合正文、偏移、摘要、完整标记与实际字节一致，凭据脱敏、写入失败 0。
+- 其他验证：component 6 包 149 个通过事件，service 374 个通过事件，repository 9 个集成测试通过；12 托管会话、96 生成、24 计数通过，跨会话混入 0。次数含子测试，未重跑全仓库 unit / integration / lint 或全部原生算法探针。
+- 实验边界：初次 policy 测试漏挂 testdata 后补跑；首版观测器沿用大小写受限 getter，最终改为记录全部变体并以实际网络为准。旧双线程本地 HTTPS 代理发生一次 TLS 解码错误，未单独定责；每连接单线程非阻塞代理复验 32 组通过，保留原始失败材料。未修改生产网络实现以绕过失败。
+- 文件：新增边界采集器、编码策略 overlay、带日志的传输探针、单线程回环代理及核对器、复现说明、[报告](claude-post-alignment-audit-20261009.md)和[证据摘要](claude-post-alignment-audit-20261009.json)。此前已明确的 EXTRA_BODY / 普通 API 语义边界保留，不将其重新归为新回归。
+- 提交 / PR：维护者已授权提交全部当前改动；本轮审查使用 `Claude-Change-ID: CC-20261009-005`，提交后补记哈希。所在分支关联 PR #5，未推送、合并或部署；原始材料在本机 `claude-capture/post-align-audit-20261009-rkgawtwu/`。不代表真实官方接受、签名、订阅或风控验证。
+- 2026-10-09 提交补记：本轮审查工具、报告和证据已保存为本地提交 `08a37c23a25347f8d7e82055cab8066075a28f86`，并按维护者要求纳入此前未提交的文档。该提交不修改生产实现；三项新发现仍待修复。未推送、合并或部署。
+
+## CC-20261009-006：完整修复原生 gzip 计数、分块头序和编码覆写
+
+- 授权：维护者要求完全修复 CC-20261009-005 的三项发现，并沿用此前提交全部改动的要求。在 `37289d73` 上继续，release `b4430850844263e3fd3d2d180f514099bffad04e`、上游 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469` 未更新。
+- 版本 / 来源：固定未修改 Linux x64 CLI 2.1.292 / SDK 0.128.0，二进制 SHA-256 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3`。只读提取 `chunk-47d8fnm7.js` 的 oos/Sto 封装及 `chunk-9yn9h839.js` 的 aM/dee 分支，保存文件哈希和二进制偏移；重新运行断网 Docker、空配置和假凭据采集。
+- 修复：count_tokens 原压缩字节恢复独立于 messages 的 billing / cch 条件，仍需目标 / 版本 / 原生识别与最终正文摘要相等；分块 gzip 用完整固定封装头和同步刷新 / 空终止块识别，在请求 context 中选择应用头排序，运行时 gzip 保持后置；前后端禁止静态 Content-Encoding 覆写，过滤旧配置，清理所有大小写变体并由最终正文确定编码。
+- 边界：封装判断仅用于已完整解码并通过 CRC、摘要校验的已知原生请求，不能作为任意 gzip 来源或身份认证。模型 / 身份 / 策略改写不得恢复旧正文，未知版本及自定义 origin 保留原有适用范围。无数据库迁移、新运行时依赖或默认配置开关。
+- 原生补证：12 组新场景、20 请求，其中 18 条 gzip，PCAP 原字节全部相等、丢包 0；覆盖级别 1 / 6 / 9、Unicode、count_tokens、mode 1 首轮运行时压缩到下一轮分块复用，以及 mode 2 两轮压缩。18 个压缩样本纳入永久回归，头序预期来自独立捕获。
+- 综合转发：结合旧 99 条样本，共 119 条请求、476 个配置组合，逻辑正文 / 实际字节 / 方法 / URL / 长度 / GetBody 全部一致；238 个同认证组合应用头一致。12 托管会话、96 生成、24 计数通过，连续压缩、迁移与迁移后再压缩 / 续聊无跨会话混入；测试存储 / 本地上游与数据库集成证据分开。
+- 工程与真实传输：152 组发送的原字节、完整头值 / 头序、ClientHello 非随机部分全部一致；76 组日志原文 / 摘要 / 完整性 / 脱敏通过，写入失败 0。22 次编码策略发送全部为合法 JSON，PCAP 一致、丢包 0。完整 unit 58 个包、integration 52 个包、前端 70 项通过；最终固定快照 lint 0 issues。最后删除一处触发 SA1012 的 nil Context 测试断言，Claude 包复跑通过，生产代码与全量测试时一致。
+- 并行边界：全量测试完成后出现 CC-20261009-007 的 Go 1.27.2 / 依赖升级，保留该组工作区改动，本提交采用已暂存 Go 1.27.0 快照；不混用两轮依赖的验收。原共享树 lint 主动终止，隔离首试遇到进程锁，后一次发现上述测试写法并超时；修正后延长上限重跑完整 lint 通过。最终 3,186 个 Go/SQL 文件的差异和完整来源哈希见验证摘要。
+- 文件：native finalizer、原生传输头序、claude gzip context、raw header 工具、账号覆写后端与前端验证、永久回归 / gzip 样本、采集与严格头序核对脚本；详见 [修复报告](claude-gzip-complete-fix-20261009.md)及[结构化验证](claude-gzip-complete-fix-20261009.json)。原始材料在本机 `claude-capture/encoding-complete-fix-20261009-_n_icwx2/`。
+- 提交 / PR：本轮代码提交使用 `Claude-Change-ID: CC-20261009-006`，提交后补记哈希；所在分支关联 PR #5。未推送、合并或部署，没有真实官方接受、签名、订阅、计费或风控验证。保留 CC-20261009-004 / 005 的历史适用范围。
+- 2026-10-09 提交补记：本轮修复、18 个原生压缩样本、回归脚本与验证记录已保存为本地提交 `3b9b984f9432e4eb1218f9f884d521064de8f173`，带 `Claude-Change-ID: CC-20261009-006`。提交中的 41 个实现 / 样本 / 复现输入文件与最终固定快照 SHA-256 一致，采用 Go 1.27.0 依赖。CC-20261009-007 的并行升级仍单独保留，未纳入本提交；未推送、合并或部署。
+
+
+## CC-20261009-007：修复后端 Go / HTTP/2 安全扫描告警
+
+- 基线：上游 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`，release `b4430850844263e3fd3d2d180f514099bffad04e`；在工作分支 `codex/claude-managed-recovery` 的 `37289d73e35fb6d356c163244ed830087344c4c3` 及已有暂存改动上修复，不同步上游或改写历史。
+- 原因 / 依据：[backend-security 失败日志](https://github.com/skingford/sub2api/actions/runs/37888055342/job/113682424457) 报告 12 个代码可达漏洞编号；`pluginapi.Serve → plugin.Serve → http2.Framer.WriteContinuation` 是 [GO-2026-6617 / CVE-2026-97032](https://pkg.go.dev/vuln/GO-2026-6617) 的示例调用链，根因是 HTTP/2 服务端 HPACK 编码器并发修改可能导致崩溃。官方 [Go 漏洞数据库](https://vuln.go.dev/ID/GO-2026-6617.json) 指定 Go 1.27.2 与 `golang.org/x/net v0.60.0` 为当前版本分支的修复下限。
+- 版本 / 范围：Go 1.27.0 → 1.27.2，`x/net` 0.58.0 → 0.60.0；通过 `go get` / `go mod tidy` 同步其最低版本依赖 `x/crypto`、`x/mod`、`x/sync`、`x/sys`、`x/term`、`x/text`、`x/tools`。Claude CLI 2.1.292 / SDK 0.128.0 的现有兼容目标保持不变；本条升级共用工具链和网络依赖，并迁移 HTTP/2 客户端保活配置；没有新增 Claude 请求、认证或协议实现。
+- 工具兼容性：首轮 unit / integration 的 `TestAuthIdentityFoundationSchemas` 失败，原因是 `x/tools v0.49.0` 不能读取 Go 1.27.2 的 V5 导出数据。依据官方 [V5 读取器修复](https://github.com/golang/tools/commit/89ed5c340cb6d4a9437f801cfc718ac5980c938d)，将 `x/tools` 固定为 v0.51.0 后该测试通过；CI 同步升级为含 V5 读取器的 golangci-lint v2.14.0，避免 v2.13 系列内置 v0.49.0 的兼容问题。未删除或弱化 schema 测试。
+- HTTP/2 兼容：`x/net v0.60.0` 将旧配置 API 标记为弃用。客户端保活改用 `http.Transport.Protocols` / `HTTP2Config`，保留两种模式原有 PING 超时、代理和 HTTP/1.1 回退，并补充真实 TLS 回退回归。服务端仍使用已修补的兼容适配器，原因是标准库单一 `Server.IdleTimeout` 无法保留当前 HTTP/1 与 H2C 分别配置的空闲超时；该调用和旧 `GoAwayError` 兼容判断仅按位置豁免 SA1019 并注明理由，未关闭安全扫描或全局弃用检查。
+- 文件：`backend/go.mod` / `go.sum`、三个 Dockerfile、backend-ci / security-scan / release 工作流的 Go 校验、CI 的 golangci-lint 版本、开发指南、三份 README 和 `.github/claude-validation/README.md` 中现行验证命令；`http_upstream.go` / HTTP2 keepalive 测试、server `http.go` / ingress 测试、Codex models service 及其错误兼容测试。历史实验报告中的 Go 版本和结果保留。
+- 最终安全验证：Go 1.27.2、govulncheck v1.8.0，`GOOS=linux GOARCH=amd64 govulncheck ./...` 退出 0：代码可达漏洞 0、导入包漏洞 0；仍有 7 个依赖模块级提示，扫描未发现调用路径，不宣称整个依赖树不存在漏洞。此前 macOS 扫描也通过；GitHub 原失败运行未重跑，最终修复尚未推送。
+- 最终工程验证：`GOTOOLCHAIN=go1.27.2 go test -p 2 -tags=unit ./...` 58 个包通过；`GOTOOLCHAIN=go1.27.2 CI=true go test -p 1 -tags=integration ./...` 52 个包通过（使用真实本地 PostgreSQL / Redis 测试容器）。HTTP/2 / 旧错误兼容针对性测试 3 个包通过；最终补充弃用注释后 server unit 再次通过。官方 golangci-lint v2.14.0 二进制经 SHA-256 核验，使用独立缓存及 `--allow-parallel-runners --concurrency=2 --timeout=30m ./...` 完整检查 0 issues；首次进程锁冲突、旧工具导出格式问题和弃用告警均保留为检查过程记录。
+- 构建配置验证：`go mod verify`、`go mod tidy -diff`、`git diff --check` 通过；官方 `golang:1.27.2-alpine` 标签存在，workflow 校验、go.mod 与三个构建镜像版本一致。未执行完整 Docker 镜像构建或真实上游请求。
+- 提交 / PR：本条工作区修复尚未提交或推送；后续提交应使用 `Claude-Change-ID: CC-20261009-007` 并补记哈希与 PR。并行 gzip 任务已自行提交为 `3b9b984f` / `4dbbd949`；本条没有将其改动纳入安全修复提交，最终验证针对包含这些提交的工作区。未部署；本地测试不代表真实 Claude 上游接受、订阅或计费验证。
+
+- 2026-10-09 交付授权：维护者要求提交全部当前改动、推送并合入 `release`，随后删除本次开发分支。安全修复随 [PR #5](https://github.com/skingford/sub2api/pull/5) 交付，使用 merge commit 保留各项实现与证据提交的原始引用；最终提交后补记哈希。
+- 2026-10-09 提交补记：安全修复代码与验证记录提交为 `c142e67ece6383119eddf7413269e9b78576732e`，带 `Claude-Change-ID: CC-20261009-007`；随 [PR #5](https://github.com/skingford/sub2api/pull/5) 合入 `release`。上述 58 包 unit、52 包 integration、0 issues lint 和 Linux govulncheck 结果对应本提交的运行时代码；本次补记仅增加提交引用。

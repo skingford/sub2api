@@ -26,6 +26,9 @@ const (
 	BetaContextManagement           = "context-management-2025-06-27"
 	BetaThinkingBindingControls     = "thinking-binding-controls-2026-08-01"
 	BetaThinkingTokenCount          = "thinking-token-count-2026-05-13"
+	BetaThinkingDisplayUpdates      = "thinking-display-updates-2026-08-18"
+	BetaMidConversationSystemClear  = "mid-conversation-system-clear-at-2026-08-21"
+	BetaMidConversationToolChanges  = "mid-conversation-tool-changes-2026-07-01"
 	BetaMidConversationOutputConfig = "mid-conversation-output-config-2026-07-01"
 	BetaExtendedCacheTTL            = "extended-cache-ttl-2025-04-11"
 
@@ -46,9 +49,10 @@ const (
 	// 仅用于 sanitize 的条件判断（strip-or-keep），禁止加入
 	// FullClaudeCodeMimicryBetas / DefaultBetaHeader / APIKeyBetaHeader /
 	// Bedrock 白名单：server-side fallback 会换模型、改计费，不能默认打开。
-	BetaServerSideFallback   = "server-side-fallback-2026-07-01"
-	BetaFallbackCredit       = "fallback-credit-2026-07-01"
-	BetaFallbackCreditLegacy = "fallback-credit-2026-06-01"
+	BetaServerSideFallback       = "server-side-fallback-2026-07-01"
+	BetaServerSideFallbackLegacy = "server-side-fallback-2026-06-01"
+	BetaFallbackCredit           = "fallback-credit-2026-07-01"
+	BetaFallbackCreditLegacy     = "fallback-credit-2026-06-01"
 )
 
 // DroppedBetas 是转发时需要从 anthropic-beta header 中移除的 beta token 列表。

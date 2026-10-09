@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
+	requestbody "github.com/Wei-Shaw/sub2api/internal/pkg/httputil"
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 )
@@ -106,6 +107,9 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 	if err := validateClaudeAccountIdentity(req.Context(), c, account, body); err != nil {
 		return nil, err
 	}
+	// Builders supply decoded JSON. Encoding is a property of the final bytes,
+	// never a static header policy (including legacy/mixed-case overrides).
+	deleteHeaderAllForms(req.Header, "Content-Encoding")
 	u := req.URL
 	billing := gjson.GetBytes(body, "system.0.text")
 	known := account != nil && account.Platform == PlatformAnthropic &&
@@ -114,9 +118,27 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 		strings.EqualFold(u.Hostname(), "api.anthropic.com") && (u.Port() == "" || u.Port() == "443") &&
 		(u.Path == "/v1/messages" || u.Path == "/v1/messages/count_tokens") &&
 		getHeaderRaw(req.Header, "anthropic-version") != "" &&
-		ExtractCLIVersion(getHeaderRaw(req.Header, "User-Agent")) == "2.1.292" &&
-		strings.HasPrefix(billing.String(), "x-anthropic-billing-header: cc_version=2.1.292.")
+		ExtractCLIVersion(getHeaderRaw(req.Header, "User-Agent")) == "2.1.292"
 	if !known {
+		return body, validateNativeClaudeBodyIntegrity(req.Context(), c, body)
+	}
+	// The measured native gzip path sends the billing sentinel unchanged. Keep
+	// its actual compressed bytes only while the final logical request is still
+	// identical. A mapped model, beta policy or managed identity rewrite instead
+	// follows the existing final-body checksum path below.
+	billingKnown := strings.HasPrefix(billing.String(), "x-anthropic-billing-header: cc_version=2.1.292.")
+	// Native count_tokens has no billing block. Its gzip bytes have the same
+	// request-local digest guard, independently of messages' CCH sentinel.
+	if c != nil && preserveNativeClaudeRequest(req.Context(), c, account, body) &&
+		(u.Path == "/v1/messages/count_tokens" || (billingKnown && strings.Contains(billing.String(), " cch=00000;"))) {
+		if originalEncoding, wire, ok := requestbody.OriginalRequestEncoding(c.Request, body); ok && originalEncoding == "gzip" {
+			setNativeClaudeWireBody(req, wire)
+			setHeaderRaw(req.Header, "Content-Encoding", "gzip")
+			*req = *req.WithContext(claude.WithGzipHeaderOrder2292(req.Context(), wire))
+			return body, nil
+		}
+	}
+	if !billingKnown {
 		return body, validateNativeClaudeBodyIntegrity(req.Context(), c, body)
 	}
 	out, err := finalizeClaude2292Billing(body, billing)
@@ -129,13 +151,17 @@ func finalizeNativeClaudeRequest(req *http.Request, c *gin.Context, account *Acc
 	if !bytes.Equal(out, body) {
 		// Keep retries, Content-Length, debug snapshots and the actual wire body
 		// on the same final bytes. The closure owns an immutable snapshot.
-		snapshot := bytes.Clone(out)
-		req.Body = io.NopCloser(bytes.NewReader(snapshot))
-		req.ContentLength = int64(len(snapshot))
-		req.GetBody = func() (io.ReadCloser, error) { return io.NopCloser(bytes.NewReader(snapshot)), nil }
-		deleteHeaderAllForms(req.Header, "content-length")
+		setNativeClaudeWireBody(req, bytes.Clone(out))
 	}
 	return out, nil
+}
+
+// wire must be owned by this request and must not be changed after this call.
+func setNativeClaudeWireBody(req *http.Request, wire []byte) {
+	req.Body = io.NopCloser(bytes.NewReader(wire))
+	req.ContentLength = int64(len(wire))
+	req.GetBody = func() (io.ReadCloser, error) { return io.NopCloser(bytes.NewReader(wire)), nil }
+	deleteHeaderAllForms(req.Header, "content-length")
 }
 
 func finalizeClaude2292Billing(body []byte, billing gjson.Result) ([]byte, error) {

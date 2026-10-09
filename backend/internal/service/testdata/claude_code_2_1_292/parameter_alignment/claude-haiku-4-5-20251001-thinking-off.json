@@ -1,0 +1,109 @@
+{
+  "case": {
+    "name": "claude-haiku-4-5-20251001-thinking-off",
+    "base": "api-arg",
+    "model": "claude-haiku-4-5-20251001",
+    "env": {
+      "MAX_THINKING_TOKENS": "0"
+    },
+    "generic_controls": {
+      "thinking": {
+        "type": "disabled"
+      }
+    }
+  },
+  "requests": [
+    {
+      "case": "api-arg",
+      "method": "POST",
+      "path": "/v1/messages?beta=true",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "claude-cli/2.1.292 (external, sdk-cli)",
+        "X-Claude-Code-Session-Id": "0fdf5bab-071a-4d0e-a121-af7825c74297",
+        "X-Stainless-Arch": "x64",
+        "X-Stainless-Lang": "js",
+        "X-Stainless-OS": "Linux",
+        "X-Stainless-Package-Version": "0.128.0",
+        "X-Stainless-Retry-Count": "0",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0",
+        "X-Stainless-Timeout": "5",
+        "anthropic-beta": "interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,cache-diagnosis-2026-04-07",
+        "anthropic-dangerous-direct-browser-access": "true",
+        "anthropic-version": "2023-06-01",
+        "x-api-key": "local-container-key-not-a-real-credential",
+        "x-app": "cli",
+        "x-claude-code-prompt-id": "f8d17756-40a3-4f30-9710-41fc1756a3f2",
+        "x-claude-code-request-class": "main",
+        "x-client-request-id": "ac7b2041-daa8-43ae-b590-32e26b482aec",
+        "Connection": "keep-alive",
+        "Host": "api.anthropic.com",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Content-Length": "981"
+      },
+      "body": {
+        "model": "claude-haiku-4-5-20251001",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK.",
+                "cache_control": {
+                  "type": "ephemeral"
+                }
+              }
+            ]
+          }
+        ],
+        "system": [
+          {
+            "type": "text",
+            "text": "x-anthropic-billing-header: cc_version=2.1.292.652; cc_entrypoint=sdk-cli; cch=ccc24; cc_prompt_id=f8d17756-40a3-4f30-9710-41fc1756a3f2; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+          },
+          {
+            "type": "text",
+            "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          },
+          {
+            "type": "text",
+            "text": "Local synthetic protocol test. Reply OK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ],
+        "tools": [],
+        "metadata": {
+          "user_id": "{\"device_id\":\"847f92dd4a0792f338ec5f03150fa41707d14498706e6025428a7ca7f159a6ed\",\"account_uuid\":\"\",\"session_id\":\"0fdf5bab-071a-4d0e-a121-af7825c74297\"}"
+        },
+        "max_tokens": 32000,
+        "thinking": {
+          "type": "disabled"
+        },
+        "temperature": 1,
+        "diagnostics": {
+          "previous_message_id": null
+        },
+        "stream": true
+      },
+      "raw_body_utf8": "{\"model\":\"claude-haiku-4-5-20251001\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK.\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.292.652; cc_entrypoint=sdk-cli; cch=ccc24; cc_prompt_id=f8d17756-40a3-4f30-9710-41fc1756a3f2; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"Local synthetic protocol test. Reply OK.\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"847f92dd4a0792f338ec5f03150fa41707d14498706e6025428a7ca7f159a6ed\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"0fdf5bab-071a-4d0e-a121-af7825c74297\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"disabled\"},\"temperature\":1,\"diagnostics\":{\"previous_message_id\":null},\"stream\":true}",
+      "raw_body_sha256": "758c5b7bff1c85e4860a61c768fa33bf8021bc00160ee92b1924639afb645ed9",
+      "tls_version": "TLSv1.3",
+      "cipher": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLSv1.3",
+        256
+      ],
+      "alpn": "http/1.1",
+      "wire_body_base64": "eyJtb2RlbCI6ImNsYXVkZS1oYWlrdS00LTUtMjAyNTEwMDEiLCJtZXNzYWdlcyI6W3sicm9sZSI6InVzZXIiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJMT0NBTF9FWFRFTkRFRF9BVURJVCBpbnNwZWN0IHN5bnRoZXRpYyBmaXh0dXJlcyBhbmQgcmVwbHkgT0suIiwiY2FjaGVfY29udHJvbCI6eyJ0eXBlIjoiZXBoZW1lcmFsIn19XX1dLCJzeXN0ZW0iOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IngtYW50aHJvcGljLWJpbGxpbmctaGVhZGVyOiBjY192ZXJzaW9uPTIuMS4yOTIuNjUyOyBjY19lbnRyeXBvaW50PXNkay1jbGk7IGNjaD1jY2MyNDsgY2NfcHJvbXB0X2lkPWY4ZDE3NzU2LTQwYTMtNGYzMC05NzEwLTQxZmMxNzU2YTNmMjsgY2NfdHVybl9vcmlnaW49c2RrOyBjY19wcm9tcHRfaW5kZXg9MDsgY2NfdHVybl9pbmRleD0xOyJ9LHsidHlwZSI6InRleHQiLCJ0ZXh0IjoiWW91IGFyZSBhIENsYXVkZSBhZ2VudCwgYnVpbHQgb24gQW50aHJvcGljJ3MgQ2xhdWRlIEFnZW50IFNESy4iLCJjYWNoZV9jb250cm9sIjp7InR5cGUiOiJlcGhlbWVyYWwifX0seyJ0eXBlIjoidGV4dCIsInRleHQiOiJMb2NhbCBzeW50aGV0aWMgcHJvdG9jb2wgdGVzdC4gUmVwbHkgT0suIiwiY2FjaGVfY29udHJvbCI6eyJ0eXBlIjoiZXBoZW1lcmFsIn19XSwidG9vbHMiOltdLCJtZXRhZGF0YSI6eyJ1c2VyX2lkIjoie1wiZGV2aWNlX2lkXCI6XCI4NDdmOTJkZDRhMDc5MmYzMzhlYzVmMDMxNTBmYTQxNzA3ZDE0NDk4NzA2ZTYwMjU0MjhhN2NhN2YxNTlhNmVkXCIsXCJhY2NvdW50X3V1aWRcIjpcIlwiLFwic2Vzc2lvbl9pZFwiOlwiMGZkZjViYWItMDcxYS00ZDBlLWExMjEtYWY3ODI1Yzc0Mjk3XCJ9In0sIm1heF90b2tlbnMiOjMyMDAwLCJ0aGlua2luZyI6eyJ0eXBlIjoiZGlzYWJsZWQifSwidGVtcGVyYXR1cmUiOjEsImRpYWdub3N0aWNzIjp7InByZXZpb3VzX21lc3NhZ2VfaWQiOm51bGx9LCJzdHJlYW0iOnRydWV9",
+      "wire_body_sha256": "758c5b7bff1c85e4860a61c768fa33bf8021bc00160ee92b1924639afb645ed9"
+    }
+  ]
+}

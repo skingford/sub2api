@@ -138,6 +138,20 @@ docs/*
 !docs/claude-code-cch-2.1.292.md
 !docs/claude-code-remaining-differences.md
 !docs/claude-code-gap-fixes.md
+!docs/claude-code-extended-audit.md
+!docs/claude-extended-audit-20261008.json
+!docs/claude-alignment-fixes.md
+!docs/claude-alignment-validation.json
+!docs/claude-request-recheck-20261008.md
+!docs/claude-request-recheck-20261008.json
+!docs/claude-comprehensive-audit-20261009.md
+!docs/claude-comprehensive-audit-20261009.json
+!docs/claude-parameter-wire-alignment.md
+!docs/claude-parameter-wire-validation.json
+!docs/claude-post-alignment-audit-20261009.md
+!docs/claude-post-alignment-audit-20261009.json
+!docs/claude-code-telemetry.md
+!docs/claude-telemetry-validation.json
 !docs/claude-2292-gap-audit.json
 !docs/claude-change-log.md
 !docs/PAYMENT.md
@@ -168,3 +182,13 @@ issues/
 .vite/
 # 本地闭源插件开发目录及构建产物不进入 Sub2API 仓库
 /plugins/
+
+# Private gateway request evidence and exports
+requests*.jsonl
+request-traces/
+/deploy/__pycache__/
+/deploy/tests/__pycache__/
+!docs/request-tracing.md
+!docs/request-tracing-validation.json
+!docs/claude-gzip-complete-fix-20261009.md
+!docs/claude-gzip-complete-fix-20261009.json

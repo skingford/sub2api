@@ -1,0 +1,560 @@
+{
+  "change_id": "CC-20261009-006",
+  "base": "37289d73e35fb6d356c163244ed830087344c4c3",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "release_base": "b4430850844263e3fd3d2d180f514099bffad04e",
+  "cli": "2.1.292",
+  "sdk": "0.128.0",
+  "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "evidence_root": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2",
+  "source_modules": [
+    {
+      "module": "chunk-47d8fnm7.js",
+      "sha256": "0bfe82c8210f3f477a7e651910e9d5ea744cf914a9e4da1f64495bb3358c8043",
+      "offset": 207221829,
+      "size": 9408
+    },
+    {
+      "module": "chunk-9yn9h839.js",
+      "sha256": "14f68808b28960aa01cb7dc43c6e876964df322deda0242f744ef02b81b55f86",
+      "offset": 209661529,
+      "size": 936192
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture": "gzip-blocks1-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks1/requests.json",
+      "request_index": 2,
+      "capture_sha256": "c5276868d5202a68ef78ba0bec4735cdb6d7c8a856df6dfc5b9ee2df3afcdf73",
+      "wire_sha256": "31e100a03e9804c5d3c9fd319955c127d488eb068a03ee35aa97dbaaa4575c5b",
+      "application_encoding": false
+    },
+    {
+      "fixture": "gzip-blocks1-multi-level1-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks1-multi-level1/requests.json",
+      "request_index": 2,
+      "capture_sha256": "24e64c3ae25c2e851029b34aeb5b850abc37b2642cdc18a67574467454c956a8",
+      "wire_sha256": "e807836ef292f5a141f5c7d13f6bc4cacaa34032d2da283e4af8caf77f64fea2",
+      "application_encoding": false
+    },
+    {
+      "fixture": "gzip-blocks1-multi-level1-3.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks1-multi-level1/requests.json",
+      "request_index": 3,
+      "capture_sha256": "24e64c3ae25c2e851029b34aeb5b850abc37b2642cdc18a67574467454c956a8",
+      "wire_sha256": "9c91587de5dae65c6c7d71e0a3f0f95fc1b3149f1a33f1cb69eb082cb920adc6",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks1-multi-level6-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks1-multi-level6/requests.json",
+      "request_index": 2,
+      "capture_sha256": "67e1c51e0c9f8bd351a0e4a88994ecf99bafe3c98c41ab50545ab9bc9cb87d52",
+      "wire_sha256": "5279fcc72e301f11dfa49449b5c0d27eb841cebd2487b8ce82f76e497893ace9",
+      "application_encoding": false
+    },
+    {
+      "fixture": "gzip-blocks1-multi-level6-3.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks1-multi-level6/requests.json",
+      "request_index": 3,
+      "capture_sha256": "67e1c51e0c9f8bd351a0e4a88994ecf99bafe3c98c41ab50545ab9bc9cb87d52",
+      "wire_sha256": "7b8581dc5414a4afa25cf0ad73e15f51e6c81eea3e875b253ebac433ca27f387",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks1-multi-level9-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks1-multi-level9/requests.json",
+      "request_index": 2,
+      "capture_sha256": "ffe7a30b102222a39e158b388ae4b83b55888c4bf645c7a182a6de9a39655116",
+      "wire_sha256": "2ee321410f186784bfbc3b48e284fe610bb2753ea4ec86e2366c9ae38ad70c18",
+      "application_encoding": false
+    },
+    {
+      "fixture": "gzip-blocks1-multi-level9-3.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks1-multi-level9/requests.json",
+      "request_index": 3,
+      "capture_sha256": "ffe7a30b102222a39e158b388ae4b83b55888c4bf645c7a182a6de9a39655116",
+      "wire_sha256": "95ff1f1522563c6116529b0bca32bdd8db5c9a5c237d1ff599aea21489d4cb09",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks2-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks2/requests.json",
+      "request_index": 2,
+      "capture_sha256": "3150082be1766328c97ad1cfb60533e44f1b7cdf30615d22bb4746ec229e1723",
+      "wire_sha256": "35df4f9a7659465f943155802c53cfb7f82dbd2ff1bccba227eb3a7ee0672998",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks2-multi-level1-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks2-multi-level1/requests.json",
+      "request_index": 2,
+      "capture_sha256": "b3ad010e6a3ca15a42f4a373eea82973a9dd484ff766f8ed4e825babc3c1054b",
+      "wire_sha256": "57336654f3b51232453fd6948f5969dc5d18879bf0d82fb4a919e2aaaeec1350",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks2-multi-level1-3.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks2-multi-level1/requests.json",
+      "request_index": 3,
+      "capture_sha256": "b3ad010e6a3ca15a42f4a373eea82973a9dd484ff766f8ed4e825babc3c1054b",
+      "wire_sha256": "b50bdb140572d7a7684f3b9d2b0ebed05ad9671ace1ce5b8f6a6a4830bd82701",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks2-multi-level6-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks2-multi-level6/requests.json",
+      "request_index": 2,
+      "capture_sha256": "ad0e889fdf49cdf511296da3fe466505c0f3750c676fb580f60bb0f5f6b62c2f",
+      "wire_sha256": "71b5fe378daa418e97c16fbd9828ad220e27233a1ec8c26a329ba1a7bd9b18cf",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks2-multi-level6-3.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks2-multi-level6/requests.json",
+      "request_index": 3,
+      "capture_sha256": "ad0e889fdf49cdf511296da3fe466505c0f3750c676fb580f60bb0f5f6b62c2f",
+      "wire_sha256": "735a124af200109979ad13acbf1ad976a4df40aa3a5c7ab110c0565db0f05aa6",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks2-multi-level9-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks2-multi-level9/requests.json",
+      "request_index": 2,
+      "capture_sha256": "5cdc4467abfb5c10236d6fead93b5f361850417fcdf29b1e4394d6950b1276ff",
+      "wire_sha256": "d566b8e582eb66b100d5e1b3c9582d2890ed9efd21b80e654136aa5b26661b05",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-blocks2-multi-level9-3.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-blocks2-multi-level9/requests.json",
+      "request_index": 3,
+      "capture_sha256": "5cdc4467abfb5c10236d6fead93b5f361850417fcdf29b1e4394d6950b1276ff",
+      "wire_sha256": "ac9e52604cf48dcb50a914e9eb6d51c0e000ebc876b917bdadd6dde16c3d2315",
+      "application_encoding": true
+    },
+    {
+      "fixture": "gzip-count-3.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-count/requests.json",
+      "request_index": 3,
+      "capture_sha256": "01042ee239ca592bf9d1846f47bc8d6f25c1af089388ebbd8e6b4d0575442719",
+      "wire_sha256": "f7c696d621894273f6da3f42e2ef33e8640e2849f0d128146ca3f8d513a7022b",
+      "application_encoding": false
+    },
+    {
+      "fixture": "gzip-level1-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-level1/requests.json",
+      "request_index": 2,
+      "capture_sha256": "6a91bb509e3edd02df233cecd1f9bf7a07e986722feb52f35fe601da558bd86a",
+      "wire_sha256": "e33e34bef72d62cbb03cb44178a84686777d44f7e6d5e7c5c4280d4c420a528b",
+      "application_encoding": false
+    },
+    {
+      "fixture": "gzip-level9-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-level9/requests.json",
+      "request_index": 2,
+      "capture_sha256": "524e38af4923336006f1e10d98a6746434f450892a70c6dbd7a9ccab0fcafa15",
+      "wire_sha256": "c7580de6c314c3ecdbe29c00e592c3581a00cd329282a261147b6e1b27f24939",
+      "application_encoding": false
+    },
+    {
+      "fixture": "gzip-unicode-2.json",
+      "capture": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/capture/gzip-unicode/requests.json",
+      "request_index": 2,
+      "capture_sha256": "125ffffa084805705e9c66e909e915c5ceb3ddea77eb0e250ba047e72d745a27",
+      "wire_sha256": "e0184c9561bbd79f238c9a67393be6d9fbc65ba48cb49e2d3263fe6a4cf7c9d1",
+      "application_encoding": false
+    }
+  ],
+  "new_native_capture": {
+    "cases": 12,
+    "requests": 20,
+    "gzip_requests": 18,
+    "pcap_verified": true
+  },
+  "forwarding": {
+    "requests": 119,
+    "combinations": 476,
+    "body_equal": 476,
+    "wire_body_equal": 476,
+    "same_auth_headers_equal": 238
+  },
+  "native_service": {
+    "conversations": 12,
+    "messages": 96,
+    "count_tokens": 24,
+    "cross_session_leaks": 0
+  },
+  "validation_boundary": [
+    "Unmodified fixed CLI; isolated Docker network, empty config and fake credentials.",
+    "Forward/service experiments use test storage and local upstream; PostgreSQL persistence checked separately.",
+    "Framing detection is scoped to CRC-verified unchanged native 2.1.292 gzip, not arbitrary encoders or authentication.",
+    "No live provider acceptance, entitlement, signature, billing or risk-control validation."
+  ],
+  "experiment_corrections": [
+    "Initial frontend invocation lacked installed dependencies; installed the unchanged frozen lockfile and reran successfully.",
+    "Initial audit overlay paths contained a duplicated backend segment. Test-list inspection caught missing injected tests; rebuilt with absolute repository paths and ran both audit tests explicitly."
+  ],
+  "transport": {
+    "combinations": 152,
+    "inputs": 19,
+    "routes": [
+      "direct",
+      "http-proxy",
+      "https-proxy",
+      "socks5-proxy"
+    ],
+    "checks": {
+      "wire_bytes_equal": 152,
+      "logical_body_equal": 152,
+      "header_values_equal": 152,
+      "header_order_equal": 152,
+      "normalized_hello_equal": 152,
+      "zero_drops": 152
+    },
+    "traced": 76,
+    "trace_checks": {
+      "trace_body_matches_wire": 76,
+      "trace_digest_matches": 76,
+      "trace_body_complete": 76,
+      "trace_credentials_redacted": 76
+    },
+    "trace_write_failures": 0,
+    "tls_normalization": "Random, session ID, temporary key bytes removed; remaining full 1499-byte ClientHello compared."
+  },
+  "encoding_policy_wire": {
+    "requests": 22,
+    "valid_json": 22,
+    "decode_errors": 0,
+    "pcap_verified": true,
+    "local_responder_only": true
+  },
+  "frontend": {
+    "command": "pnpm exec vitest run src/components/account/__tests__/credentialsBuilder.spec.ts",
+    "passed": 70,
+    "eslint_changed_files_exit_code": 0
+  },
+  "evidence_sha256": {
+    "analysis/native-source.json": "95e6c2f6248ab629e387519f8b5683193f6c171aa39f87717732b7841c775cee",
+    "analysis/pcap-native.json": "eab9a9565f4046259d166b5d55e3c4e25dcb34a5ccc7166034aa4d87b5167e7d",
+    "analysis/fixture-provenance.json": "6c70d79ac70102786d24de72490b36c7e5bad1c1d3f9f1e82a6ce81c299ffa58",
+    "analysis/forwarding.json": "6a833cc2083b21d9d06198b021f75d32b25f277ee254705c031f81d8c1c2790b",
+    "analysis/transport-verification.json": "bf37e399a089c12e06fabd2e25f58f02a4da76c886f2bb39808c848f495bca8e",
+    "analysis/policy.json": "c4f3eb269394a646630c747ccbfa90ff89951998d708153d2273ad6572c33277",
+    "policy-wire/records.json": "7d3c47fbb12d5021487a7a8c3d81f6010204796b2b9a870d9272f8ea5a906139",
+    "policy-wire/pcap-verification.json": "36929341f737c31b7098b798ede6be8d61fc21802f14c45d2280eb8f66e61bbf",
+    "analysis/frontend.log": "4f5c1bad451b0a0a585048dcf0d1aa2c9aae2beb3b03fe5e3c6e4352091ae3ab",
+    "analysis/frontend-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "analysis/fixture-forwarding.log": "9dce9d681dd7b23ebfcd52ab8615eba97f7f7509245a2a7c44613188a3405977",
+    "analysis/native-service.log": "5d6e20d448f5991e5bb3ec8375bfe4a4833180d378989873d8d44be8527a5041",
+    "analysis/staged-lint.log": "9c6b9e12b6b2a88acd31f1450579d7621d687a639b2813b947a1a2816e24d8ba",
+    "analysis/lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "analysis/staged-lint-final.log": "cb6f870b264310f4bb75bc69e0b21822d58a969e2f46236fd4d819d3f9f5e3d7",
+    "analysis/staged-lint-recheck.log": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+    "analysis/staged-claude-test.log": "096ad2074b60d3df060abcb304866e4b2f51b2bab28852ddb2189cb60e5ed869",
+    "analysis/source-before.json": "1b8acd43c502c36bf155f3c08667167225085a5ef76b7f7b66fad82cba5dfa94",
+    "analysis/source-final.json": "8c6055d1351b2d3a99cbe804d562e70978d9037a132629bce678cd35fcaf4e66",
+    "analysis/staged-source-final.json": "7ef1b38938cff6995a24ab7e0fbdf7fb208860db185da8225c60f32076e66a45"
+  },
+  "backend_checks": [
+    {
+      "name": "unit",
+      "command": [
+        "go",
+        "test",
+        "-tags=unit",
+        "./...",
+        "-count=1",
+        "-json"
+      ],
+      "exit_code": 0,
+      "seconds": 334.744108915329,
+      "counts": {
+        "skip_packages": 52,
+        "pass_tests": 22610,
+        "pass_packages": 58,
+        "skip_tests": 20
+      },
+      "conditional_skips": [
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/handler",
+          "test": "TestDingTalkOAuthStart_Disabled"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint",
+          "test": "TestDialerBasicConnection"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint",
+          "test": "TestJA3Fingerprint"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint",
+          "test": "TestAllProfiles"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/pkg/xai",
+          "test": "TestCLIUserAgentMatchesOfficialInteractiveCapture"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditConfigCASSecretRoundTripInvalidationAndTTL"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestRedisPayloadStoreRoundTripTTLNamespaceAndDelete"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptRuntimeAggregatesConfigWorkersQueueRedisEndpointsAndGuardMetrics"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditMigrationSchemaAndLeakageGate"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditDatabasePersistsFullPromptOnEventsOnly"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditRepositoryAdmissionClaimFencingAndEventTransaction"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditRepositoryForeignKeysFiltersAndStableIdentitySnapshots"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditRepositoryHighWaterAndSafeDeletion"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditServiceConfirmationKeepsPostPreviewEventsAndConcurrentDeletesAreSafe"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestAuthPendingIdentityService_UpsertAdoptionDecision_ClearsLegacyNullSessionReference"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestClaudeRecoveryNativeCLILab"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestContentModerationTypeSafeLive"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestClaudeAlignmentNativeCLILab"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestEstimateOpenAIInputTokens_CompareWithOpenAIAPI"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestPluginRuntimeIntegration"
+        }
+      ],
+      "log_sha256": "200c43f5f2687877b317ea7c793078a7e56da8acaa96e856918d9145fa441485"
+    },
+    {
+      "name": "integration",
+      "command": [
+        "go",
+        "test",
+        "-p",
+        "1",
+        "-tags=integration",
+        "./...",
+        "-count=1",
+        "-json"
+      ],
+      "exit_code": 0,
+      "seconds": 538.8612992763519,
+      "counts": {
+        "pass_tests": 13688,
+        "pass_packages": 52,
+        "skip_packages": 58,
+        "skip_tests": 16
+      },
+      "conditional_skips": [
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/handler",
+          "test": "TestDingTalkOAuthStart_Disabled"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint",
+          "test": "TestDialerAgainstCaptureServer"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/pkg/xai",
+          "test": "TestCLIUserAgentMatchesOfficialInteractiveCapture"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/repository",
+          "test": "TestConcurrencyCacheSuite/TestGetAccountsLoadBatch"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditConfigCASSecretRoundTripInvalidationAndTTL"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestRedisPayloadStoreRoundTripTTLNamespaceAndDelete"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptRuntimeAggregatesConfigWorkersQueueRedisEndpointsAndGuardMetrics"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditMigrationSchemaAndLeakageGate"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditDatabasePersistsFullPromptOnEventsOnly"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditRepositoryAdmissionClaimFencingAndEventTransaction"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditRepositoryForeignKeysFiltersAndStableIdentitySnapshots"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditRepositoryHighWaterAndSafeDeletion"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/securityaudit",
+          "test": "TestPromptAuditServiceConfirmationKeepsPostPreviewEventsAndConcurrentDeletesAreSafe"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestContentModerationTypeSafeLive"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestEstimateOpenAIInputTokens_CompareWithOpenAIAPI"
+        },
+        {
+          "package": "github.com/Wei-Shaw/sub2api/internal/service",
+          "test": "TestPluginRuntimeIntegration"
+        }
+      ],
+      "log_sha256": "419e8a29a3153bf3fe8e2e7fb51bea68fd98e13af8cafbbd00794c2e1908dcde"
+    }
+  ],
+  "static_analysis": {
+    "command": "GOTOOLCHAIN=go1.27.0 golangci-lint run --allow-serial-runners --timeout 20m",
+    "tool_version": "2.13.0 built with go1.27.0",
+    "exit_code": 0,
+    "issues": 0,
+    "directory": "/Users/kingford/claude-capture/encoding-complete-fix-20261009-_n_icwx2/staged-snapshot/backend",
+    "log_sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47"
+  },
+  "final_test_adjustment": {
+    "files": [
+      "backend/internal/pkg/claude/gzip_2292_test.go"
+    ],
+    "reason": "Remove a direct nil Context assertion rejected by staticcheck SA1012; no production code changed after full suites.",
+    "followup_command": "GOTOOLCHAIN=go1.27.0 go test ./internal/pkg/claude -count=1",
+    "exit_code": 0,
+    "log_sha256": "096ad2074b60d3df060abcb304866e4b2f51b2bab28852ddb2189cb60e5ed869"
+  },
+  "source_snapshot": {
+    "go_sql_files": 3186,
+    "production_matches_full_suites": true,
+    "before_manifest_sha256": "1b8acd43c502c36bf155f3c08667167225085a5ef76b7f7b66fad82cba5dfa94",
+    "final_manifest_sha256": "8c6055d1351b2d3a99cbe804d562e70978d9037a132629bce678cd35fcaf4e66",
+    "changed_inputs_sha256": {
+      ".github/claude-validation/README.md": "ef9a9a357b481ca888c4309700d7171462ffca93c89cc6d8a2df06bc971b042c",
+      ".github/claude-validation/comprehensive_lab.py": "15cfef44326e957704aab5e11f4c2abfd3919f3c606568f9fb4aa699358d5a2e",
+      ".github/claude-validation/extended_audit.py": "a52effc34e802b4e2fb1f099e5dace8f6fddb91fd00c8775a005ff26fb0e6072",
+      ".github/claude-validation/gzip_fix_lab.py": "447960f0b6a8e46ac9595bb92bab1aaa71aed419873e900575c915c515d50b97",
+      ".github/claude-validation/post_alignment_audit_test.go": "9fd7e087e907e7dc475e60f14178144b88f88b9d01c2ef6fb0fde775ad53875c",
+      ".github/claude-validation/post_trace_transport_lab.py": "9713ec4ac7510a6073cb306bd87237218653600a8f78fbfc60ab1c9a33f484da",
+      ".github/claude-validation/trace_transport_probe.go": "c57ec8a47231730fe3bc4f01ec9034836cf19a5ad62d0c28a224a1b62c27be83",
+      ".github/claude-validation/verify_post_trace.py": "5402f668cd32ea2bef2d935e7413e70216db4c63b3256e0663a3c89db94bf8ae",
+      ".gitignore": "2ea1fe3258198104c36aa32e2b1ee691da2cb96932829adc0186603412a3e830",
+      "backend/internal/pkg/claude/gzip_2292.go": "83053af3673a64633969a1dd04ae0dd007f073dfbaab9e3322e6840d38ca69b7",
+      "backend/internal/pkg/claude/gzip_2292_test.go": "433e7cb2e96d09e5ab26092514a09d947f34ca010eef507559954fe26d47f5a2",
+      "backend/internal/repository/claude_native_gzip_test.go": "1d29b4d63d7e3e042a2478ad1088d8e20310836adb6de10b0e573880377386a3",
+      "backend/internal/repository/claude_native_transport.go": "036d3ae5b48cf4576d3291374756a5f5fb2a07a892e68dd3a6e8c098e97c8a44",
+      "backend/internal/repository/testdata/claude_capture_probe.go": "e6490b18e8b86025a5c7385803f1d00011bc7d44d8b1e8977d4f6b5f4fc69e7a",
+      "backend/internal/service/account_header_override.go": "205301d33e01d27b18b57fe2bcfc1d1f0d16be9ad13b0771f7129ab1399518db",
+      "backend/internal/service/account_header_override_test.go": "97d86640547e151a1dc720c45ec7990b3aa848f790c380c25ec2a7103e8927a8",
+      "backend/internal/service/gateway_claude_gzip_fix_test.go": "8059230e3e32ad2252128ea7e453f1b54847584bbf61675307e86ac43e9fe2a8",
+      "backend/internal/service/gateway_claude_native.go": "90be47639fa63d52ccd06747e175a2aaae1033dd2edfb179ce38de144c9884fb",
+      "backend/internal/service/gateway_claude_parameter_wire_test.go": "32582278a1c24de580d1c80feb3f090620cc592f0172abe744c516e96408c881",
+      "backend/internal/service/header_util.go": "a8cf5ed81327b648507b4191a2d796605483b6a3e2130e25e93967025befe1e2",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/README.md": "4c88b0d9417edf035d3f64fdc5367886539c40f48896a142dbb6479c9011d159",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks1-2.json": "a936cef589bd9f2c97f2afef051a3ef708f2b3eb6f0905ec8b792f4454484521",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks1-multi-level1-2.json": "8da7125b5900b9fbb951f129571e3d07e0cad5239888b0a4c2aff5cd940b0c9b",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks1-multi-level1-3.json": "dcd4d5878481fd5a7ce9da9f993f89cfcc017bbe0d3ce5b39d7164f4fff48a1f",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks1-multi-level6-2.json": "5dfabc0c2b5d6bf971553587a16902bad2033f9e654cf95d40b5727ad2dd99f4",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks1-multi-level6-3.json": "f0196698a8853968cac534a137f3f5240ec4ca45f5239b9c083816eafd7d4d53",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks1-multi-level9-2.json": "e1cd5ba6b7be71feed836394ecdaf21f4ef13e0810ea7dfdaf3155c52d577ecd",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks1-multi-level9-3.json": "4766704753f6e265e57c2099fee341199baf20cba2280e1bbf963126600388e3",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks2-2.json": "9c7f4e4172f59e464a0166e784188191cdf8ac3d94e4df190cf22d0c24b8ee00",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks2-multi-level1-2.json": "97e577fc96e1a6b1a5f1b8e8544f575bcc62599e44382f60d0f804ae48906102",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks2-multi-level1-3.json": "c36e29807a972f210570d35a539f53add2d345c3e82a7f69c668ab58048cd3d3",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks2-multi-level6-2.json": "0ed7a6188923222120574c609f77666a8cfdc3a8e1232424001e12a34726e571",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks2-multi-level6-3.json": "fb35fcd07beb5d3ec4216af1c3c49b59d2b0402046e5e2fb425736533b2cc60d",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks2-multi-level9-2.json": "42417b1e7a7b4a55452cbebad91b06910615bc62c32214f94c521a99b7af20c5",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-blocks2-multi-level9-3.json": "486c249754e8c8ae0c694bed8516529d8379a5cbc2dc9b0ea32e60541a7c509f",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-count-3.json": "cecbcdf86ebfab8f646ae1405dc88d9bcfc03f187de46bdfb3c1e9964728dd35",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-level1-2.json": "e741c140878214e86ff2f4a1c29e61303027c9631697f4105406f59678a4cc6d",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-level9-2.json": "05c37e8df2ade7aa8aab58f52cbcbb6fda14f612c34ad0af9a9906f5920b5e7b",
+      "backend/internal/service/testdata/claude_code_2_1_292/gzip_alignment/gzip-unicode-2.json": "558b7899088befd8166547de11b437f8385ffb1321769a4e8c5b60fa5d4f466a",
+      "frontend/src/components/account/__tests__/credentialsBuilder.spec.ts": "eb9dd94750134036ffb12d503a34021b5e4c9621bef23c717326ddaf21a1e688",
+      "frontend/src/components/account/credentialsBuilder.ts": "a0aedaca3c6f7f7d435adf709befc2654e6fa18cd100dcd8e812d7780d14c82e"
+    },
+    "dependencies": {
+      "go.mod": "cc2c1e4cc7ea87ec46bd9489426b5f7653d3f098a8367a6be71d9b3085038e9b",
+      "go.sum": "517094f22d7a952a83dbd7a2e18eae9bfa35a28937c0d9ee5984dfdbd127e4a5"
+    }
+  },
+  "concurrent_work": {
+    "record": "CC-20261009-007",
+    "description": "Go 1.27.2 and dependency/CI/documentation upgrade appeared after the full unit and integration commands completed.",
+    "unit_completed": "2026-10-09T13:34:39+08:00",
+    "integration_completed": "2026-10-09T13:43:38+08:00",
+    "go_mod_change_observed_mtime": "2026-10-09T13:44:18+08:00",
+    "included_in_this_change": false,
+    "validation_scope": "This repair uses the original staged Go 1.27.0 manifests, not the concurrent upgrade."
+  },
+  "lint_attempts": [
+    {
+      "name": "lint",
+      "command": [
+        "/Users/kingford/claude-capture/tools/golangci-lint",
+        "run",
+        "--timeout",
+        "10m"
+      ],
+      "exit_code": -15,
+      "seconds": 316.2882523536682,
+      "reason": "Stopped our shared-tree lint after concurrent dependency changes; not an accepted result."
+    },
+    {
+      "log": "analysis/staged-lint.log",
+      "exit_code": 3,
+      "reason": "Existing runner lock; reran serially."
+    },
+    {
+      "log": "analysis/staged-lint-final.log",
+      "exit_code": 4,
+      "reason": "SA1012 in the nil Context test assertion and analysis timeout; corrected test and reran with a longer limit."
+    }
+  ],
+  "commit_references": {
+    "code": "3b9b984f9432e4eb1218f9f884d521064de8f173",
+    "related_pr": 5,
+    "pushed": false
+  }
+}

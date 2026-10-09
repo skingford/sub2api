@@ -204,7 +204,13 @@ func TestClaudeCode2286NormalizationPreservesExplicitTemperature(t *testing.T) {
 	for _, thinking := range []string{``, `,"thinking":{"type":"disabled"}`} {
 		body := []byte(`{"model":"claude-sonnet-4-6"` + thinking + `}`)
 		out, _ := normalizeClaudeOAuthRequestBody(body, "claude-sonnet-4-6", claudeOAuthNormalizeOptions{})
-		require.False(t, gjson.GetBytes(out, "temperature").Exists(), "verified defaults do not invent temperature")
+		if thinking == "" {
+			require.False(t, gjson.GetBytes(out, "temperature").Exists(), "active default thinking omits temperature")
+		} else {
+			// 2.1.292 MAX_THINKING_TOKENS=0 captures explicitly send 1;
+			// parameter_alignment retains the independent native evidence.
+			require.Equal(t, float64(1), gjson.GetBytes(out, "temperature").Float())
+		}
 	}
 }
 

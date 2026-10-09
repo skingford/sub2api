@@ -1,0 +1,398 @@
+{
+  "change_id": "CC-20261009-001",
+  "documented_on": "2026-10-09",
+  "experiment_date": "2026-10-08",
+  "timezone": "Asia/Shanghai",
+  "scope": "Personal subscription through the owner's own Sub2API; offline CLI observations, not upstream authorization or ban-risk validation.",
+  "repository_baseline": {
+    "head": "93275632a6a66dfc2648e9504a7d16bcf32da5d7",
+    "release": "b4430850844263e3fd3d2d180f514099bffad04e",
+    "upstream": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+    "gateway_executed": false,
+    "unrelated_worktree_changes_validated": false
+  },
+  "cli": {
+    "version": "2.1.292",
+    "sdk": "0.128.0",
+    "platform": "linux-x64",
+    "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "unmodified": true
+  },
+  "evidence_root": "/Users/kingford/claude-capture/telemetry-audit-20261008",
+  "isolation": {
+    "interfaces": [
+      "ip6tnl0",
+      "lo",
+      "tunl0"
+    ],
+    "interface_details": [
+      {
+        "name": "ip6tnl0",
+        "flags": "0x80",
+        "state": "down",
+        "ipv4": null
+      },
+      {
+        "name": "lo",
+        "flags": "0x9",
+        "state": "unknown",
+        "ipv4": "127.0.0.1"
+      },
+      {
+        "name": "tunl0",
+        "flags": "0x80",
+        "state": "down",
+        "ipv4": null
+      }
+    ],
+    "ipv4_routes": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+    "ipv6_addresses": "",
+    "api_anthropic_com_resolves_to": [
+      "127.0.0.1"
+    ],
+    "external_documentation_address_probe": "ENETUNREACH",
+    "real_credentials_mounted": false
+  },
+  "common_cli_argv": [
+    "/opt/claude",
+    "--model",
+    "claude-sonnet-4-6",
+    "--tools",
+    "",
+    "--permission-mode",
+    "default",
+    "--strict-mcp-config",
+    "--mcp-config",
+    "{\"mcpServers\":{}}",
+    "--setting-sources",
+    "",
+    "--disable-slash-commands",
+    "--system-prompt",
+    "Local synthetic test.",
+    "--no-session-persistence",
+    "--max-turns",
+    "1",
+    "--output-format",
+    "json",
+    "-p",
+    "--",
+    "Reply OK."
+  ],
+  "common_environment": {
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL": "1",
+    "API_TIMEOUT_MS": "5000",
+    "TERM": "dumb",
+    "LANG": "C.UTF-8"
+  },
+  "mock_responses": {
+    "flags": "empty features object",
+    "event_ingestion": "synthetic success",
+    "metrics_enabled": true,
+    "unimplemented_get": "404",
+    "model": "synthetic OK response",
+    "head_hello": "default HTTP handler; not recorded in requests.json"
+  },
+  "cases": [
+    {
+      "name": "api-default",
+      "auth": "synthetic-api-key",
+      "base_url": "https://api.anthropic.com",
+      "privacy_environment": {},
+      "exit_code": 0,
+      "model_requests": 1,
+      "pcap_endpoint_counts": {
+        "HEAD api.anthropic.com/api/hello": 1,
+        "GET api.anthropic.com/api/claude_code/settings": 1,
+        "GET api.anthropic.com/api/claude_code/policy_limits": 1,
+        "POST api.anthropic.com/api/eval/sdk-zAZezfDKGoZuXXKe": 1,
+        "GET api.anthropic.com/api/claude_cli/bootstrap?entrypoint=sdk-cli&model=claude-sonnet-4-6": 1,
+        "GET api.anthropic.com/api/claude_code_penguin_mode": 1,
+        "POST api.anthropic.com/v1/messages?beta=true": 1,
+        "GET api.anthropic.com/api/claude_code/organizations/metrics_enabled": 1,
+        "POST api.anthropic.com/api/claude_code/metrics": 1,
+        "POST api.anthropic.com/api/event_logging/v2/batch": 2
+      },
+      "handler_unrecorded_requests": {
+        "HEAD api.anthropic.com/api/hello": 1
+      },
+      "kernel_drops": 0,
+      "metadata_keys": [
+        "device_id",
+        "account_uuid",
+        "session_id"
+      ],
+      "account_uuid_empty": true,
+      "source_sha256": {
+        "invocation.json": "e50d6977c8c842e145b42846fb6d9e9e8c72dbed14697f16452113e7112343e0",
+        "requests.json": "5d0a7bf34e67e0f278426f29284419a6aeb73e5232ebc89f903a8d17af78498d",
+        "capture.pcap": "eac766b0fca3f43ffd983a009b3916cbb4956598401a0933bdcf58e009702c41",
+        "tcpdump.log": "98bddac9fab0942be7cf3541f476a0ef4e27d174a20068406717da57c78055f2",
+        "summary.json": "f143eb8887d9687e0aad361e8e6b427fb2a3b6fd0ce882c9e7dddb41e812a4b0"
+      }
+    },
+    {
+      "name": "relay-default",
+      "auth": "synthetic-api-key",
+      "base_url": "https://relay.local.test",
+      "privacy_environment": {},
+      "exit_code": 0,
+      "model_requests": 1,
+      "pcap_endpoint_counts": {
+        "HEAD relay.local.test/api/hello": 1,
+        "POST api.anthropic.com/api/eval/sdk-zAZezfDKGoZuXXKe": 1,
+        "GET api.anthropic.com/api/claude_cli/bootstrap?entrypoint=sdk-cli&model=claude-sonnet-4-6": 1,
+        "GET api.anthropic.com/api/claude_code_penguin_mode": 1,
+        "POST relay.local.test/v1/messages?beta=true": 1,
+        "POST api.anthropic.com/api/event_logging/v2/batch": 1
+      },
+      "handler_unrecorded_requests": {
+        "HEAD relay.local.test/api/hello": 1
+      },
+      "kernel_drops": 0,
+      "metadata_keys": [
+        "device_id",
+        "account_uuid",
+        "session_id"
+      ],
+      "account_uuid_empty": true,
+      "source_sha256": {
+        "invocation.json": "222702fbc8d00a9270ba941936d3f6129b4c4b32242d7bb54990693852a7ff7f",
+        "requests.json": "9547bbe0649221824e9d1bab04eba62f60bdbc86b3a21351eacd5b03070e2286",
+        "capture.pcap": "285f20d91b4201871f181864a51edbd39393d83c7312342778983b77d680b0f5",
+        "tcpdump.log": "4eafa2dc1a1a1bb8f6387bbb5a7b0c7ff88bc544a6f44e7d60e8335c123b7e0c",
+        "summary.json": "3b122be465f566d6a6ea29158abe0794bcda334ea9c86ca82f90421f47f5ae31"
+      },
+      "event_sample": {
+        "batch_event_count": 103,
+        "first_event_data_keys": [
+          "event_name",
+          "client_timestamp",
+          "model",
+          "session_id",
+          "user_type",
+          "betas",
+          "env",
+          "entrypoint",
+          "is_interactive",
+          "client_type",
+          "process",
+          "additional_metadata",
+          "event_id",
+          "device_id"
+        ],
+        "authorization_present": false,
+        "api_key_present": false
+      }
+    },
+    {
+      "name": "relay-no-telemetry",
+      "auth": "synthetic-api-key",
+      "base_url": "https://relay.local.test",
+      "privacy_environment": {
+        "DISABLE_TELEMETRY": "1",
+        "DISABLE_ERROR_REPORTING": "1"
+      },
+      "exit_code": 0,
+      "model_requests": 1,
+      "pcap_endpoint_counts": {
+        "HEAD relay.local.test/api/hello": 1,
+        "GET api.anthropic.com/api/claude_cli/bootstrap?entrypoint=sdk-cli&model=claude-sonnet-4-6": 1,
+        "GET api.anthropic.com/api/claude_code_penguin_mode": 1,
+        "POST relay.local.test/v1/messages?beta=true": 1
+      },
+      "handler_unrecorded_requests": {
+        "HEAD relay.local.test/api/hello": 1
+      },
+      "kernel_drops": 0,
+      "metadata_keys": [
+        "device_id",
+        "account_uuid",
+        "session_id"
+      ],
+      "account_uuid_empty": true,
+      "source_sha256": {
+        "invocation.json": "69e1a3de86ef244ca53babd08934e328b4dbab8162138df20439c6977690a70a",
+        "requests.json": "a1ff49c5fe1c29b64dcaec6a8e9cdcbbd3d93de355f2f399d0ac8bca0738ab3a",
+        "capture.pcap": "6a1d12e26d7cfd21e44d1a5a38c6a3942a116d3852ae8f175b19de24c246371a",
+        "tcpdump.log": "01564d7af816fc7b1df1cb006839b2e25a4b3ff01ab6b8cc9d1cf1ab7251977d",
+        "summary.json": "3c50f507aba437b1d9eb2012823d1fc9631e8cf4106dd509ef298b6f7cab6af6"
+      }
+    },
+    {
+      "name": "relay-essential",
+      "auth": "synthetic-api-key",
+      "base_url": "https://relay.local.test",
+      "privacy_environment": {
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+        "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+      },
+      "exit_code": 0,
+      "model_requests": 1,
+      "pcap_endpoint_counts": {
+        "POST relay.local.test/v1/messages?beta=true": 1
+      },
+      "handler_unrecorded_requests": {},
+      "kernel_drops": 0,
+      "metadata_keys": [
+        "device_id",
+        "account_uuid",
+        "session_id"
+      ],
+      "account_uuid_empty": true,
+      "source_sha256": {
+        "invocation.json": "a4dbb148d1f90bab427323a71b8b2b4cb5aa6e0d9a2bc35fe9028a9570202be4",
+        "requests.json": "6c82646399a50b7122eb997cdcf69fd85ef14b111e6e9dee7cc0fb356a136c6c",
+        "capture.pcap": "10de063d4a2cebfd88177c82b3282340d1d252dbdf5278f69e4719794c38cfc5",
+        "tcpdump.log": "412d551315404cf3f1f148e136cce41797b23ab4a72bf135cab62e2c24e533f6",
+        "summary.json": "dab9cc3e96ef6972aa437be3988c0a15454710ad72a7f49d22557a65e63642c9"
+      }
+    },
+    {
+      "name": "oauth-default",
+      "auth": "synthetic-oauth-env",
+      "base_url": "https://api.anthropic.com",
+      "privacy_environment": {},
+      "exit_code": 0,
+      "model_requests": 1,
+      "pcap_endpoint_counts": {
+        "HEAD api.anthropic.com/api/hello": 1,
+        "GET api.anthropic.com/api/claude_code/settings": 1,
+        "GET api.anthropic.com/api/claude_code/policy_limits": 1,
+        "POST api.anthropic.com/api/eval/sdk-zAZezfDKGoZuXXKe": 1,
+        "GET api.anthropic.com/api/claude_cli/bootstrap?entrypoint=sdk-cli&model=claude-sonnet-4-6": 1,
+        "POST api.anthropic.com/v1/messages?beta=true": 1,
+        "POST api.anthropic.com/api/event_logging/v2/batch": 1
+      },
+      "handler_unrecorded_requests": {
+        "HEAD api.anthropic.com/api/hello": 1
+      },
+      "kernel_drops": 0,
+      "metadata_keys": [
+        "device_id",
+        "account_uuid",
+        "session_id"
+      ],
+      "account_uuid_empty": true,
+      "source_sha256": {
+        "invocation.json": "34d66b5b3681915735e51c233616a27097c1bacd070e7227d611d9f64d7ba489",
+        "requests.json": "846c08180dfd5e2d8c3c9dadffd6c16c2d86b4019d9656825f11339236a82e8e",
+        "capture.pcap": "0dfdbf479b51e7610e5c78102baab60f83f13f94c4f0a2de6e2e0fa884cf8ddf",
+        "tcpdump.log": "83b6be1167f68cbd67a060efdd0f4ad465e9853ebb7b26808859d7020e1a1d2d",
+        "summary.json": "45bb0ea6016fc3b461157920d34f56f5ad3ba576f41fe10588c181a72655c7f4"
+      }
+    },
+    {
+      "name": "oauth-essential",
+      "auth": "synthetic-oauth-env",
+      "base_url": "https://api.anthropic.com",
+      "privacy_environment": {
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+        "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+      },
+      "exit_code": 0,
+      "model_requests": 1,
+      "pcap_endpoint_counts": {
+        "GET api.anthropic.com/api/claude_code/settings": 1,
+        "GET api.anthropic.com/api/claude_code/policy_limits": 1,
+        "POST api.anthropic.com/v1/messages?beta=true": 1
+      },
+      "handler_unrecorded_requests": {},
+      "kernel_drops": 0,
+      "metadata_keys": [
+        "device_id",
+        "account_uuid",
+        "session_id"
+      ],
+      "account_uuid_empty": true,
+      "source_sha256": {
+        "invocation.json": "5ffe12de3fed75219adaa363c861fccc15ff7f85b0fdc9a29a699372a8af6433",
+        "requests.json": "2d4fed9b766bd46379aaa674f7e2285afef320bff558b080257c20d696ed9fa2",
+        "capture.pcap": "096cef633a795d9c70bee39cbaa1c3af246b2eae49e5ac917484ab888c569162",
+        "tcpdump.log": "5c8f051dba5d3b706e74c3a548dbfcbe1d8438ac537f45e2de9d9e6f82415508",
+        "summary.json": "3e4e2daac8c07153b17e3b68a80dcddc26d3049c74c7c5672acffc2d9f7d29f8"
+      }
+    }
+  ],
+  "pcap_validation": {
+    "scope": "HTTP request method, Host, URI and counts; original GET/POST records are a subset of PCAP because HEAD was not recorded by the custom handler.",
+    "raw_body_byte_equality_verified": false,
+    "capture_filter": "loopback TCP 443",
+    "includes_all_network_attempts": false,
+    "note": "Strict comparison exposed HEAD /api/hello handled by BaseHTTPRequestHandler without custom recording. Complete counts below come from PCAP; original summaries are preserved. The HEAD follows the configured model base URL."
+  },
+  "static_sources": [
+    {
+      "name": "chunk-b8z199dv.js",
+      "sha256": "d7d06d87166e4155bb6de8638804d051a3958156093ddcc3239384e01a6c768b",
+      "linux_binary_offset": 205872987,
+      "length": 723225,
+      "finding": "first-party event default endpoint",
+      "locator": "/api/event_logging/v2/batch",
+      "locator_byte_offset_in_module": 486401
+    },
+    {
+      "name": "chunk-hg6t0e9b.js",
+      "sha256": "1fcbfa974e594a673e18206907c8ef15144e9e1071822332c91174139b7648c7",
+      "linux_binary_offset": 210643177,
+      "length": 15099,
+      "finding": "Datadog metrics destination",
+      "locator": "http-intake.logs.us5.datadoghq.com",
+      "locator_byte_offset_in_module": 1822
+    },
+    {
+      "name": "chunk-tbk2dvx3.js",
+      "sha256": "b8f4da13b92295245926a76fd9782934c4f6d48c1974550772d3aca512ce20c5",
+      "linux_binary_offset": 210658277,
+      "length": 3209,
+      "finding": "Datadog error destination",
+      "locator": "browser-intake-us5-datadoghq.com",
+      "locator_byte_offset_in_module": 1048
+    },
+    {
+      "name": "chunk-0qmr0kpd.js",
+      "sha256": "8e3631a265d88677f1a911b55dfd750c72de05a347066b42f3058e88b36d0349",
+      "linux_binary_offset": 236919696,
+      "length": 51800,
+      "finding": "independent OTel enable gate",
+      "locator": "CLAUDE_CODE_ENABLE_TELEMETRY",
+      "locator_byte_offset_in_module": 40451
+    },
+    {
+      "name": "chunk-kkezy7cj.js",
+      "sha256": "1b5bd7a0b0ca140f0c108b32a4fb3712544aab35a69708faccf9bbfcd253fd46",
+      "linux_binary_offset": 203660544,
+      "length": 21005,
+      "finding": "privacy gates",
+      "locator": "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
+      "locator_byte_offset_in_module": 14152
+    }
+  ],
+  "source_files_sha256": {
+    "telemetry_lab.py": "15ca82af1ca6de7a9ae723d4455fd6e6a3d48f34786ffc14bc60013134f725f7",
+    "summary.json": "397e5ecc144da183c2b26bcd99242d5ecececb05ac5997e139ca8b99afcaa54c",
+    "pcap-verification.json": "f56b6add64dce443a3c9dd6bf78e7ad96cb81c41c6893a62c8f8ca83c3ffb45f",
+    "isolation.json": "dda05645318a96095e238ab269c6c7a5847bcea7e7858df801a2f7426174fe53",
+    "source-provenance.json": "b3560474f04b178a4005217bb4445078bd89092b3ad04ab1c0a9513cb4fa5b04",
+    "official-data-usage.json": "d1fafdd4db0a1553cc974820bb9f37ac50b3ac9081c381835c326e2255acf8cf"
+  },
+  "official_reference": {
+    "url": "https://code.claude.com/docs/en/data-usage",
+    "checked_on": "2026-10-08",
+    "reread_online_during_archival": false
+  },
+  "limitations": [
+    "Synthetic credentials, empty feature flags and local mock responses only.",
+    "Short noninteractive print mode; no real account profile or production error conditions.",
+    "Updater and official marketplace auto-install disabled in every case.",
+    "No tools, MCP, IDE, Remote Control or custom OTel exporter exercised.",
+    "No live login/refresh, entitlement, billing, upstream acceptance or ban-risk validation.",
+    "Historical captures were checked during archival; CLI and application tests were not rerun."
+  ],
+  "repository_source": {
+    "path": "backend/internal/server/routes/common.go",
+    "sha256": "9dda148e1d69179f9430a96cd9bcdc3f0b2180d93291f18dd0c31dd9caf1311a",
+    "route": "POST /api/event_logging/batch",
+    "response_status": 200
+  }
+}

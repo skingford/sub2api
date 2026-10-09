@@ -3,6 +3,9 @@
 更新：2026-10-08。关联 `CC-20261008-006`、`CC-20261008-007`，接续 `CC-20261008-005` 的审查。
 实现基于 release `ee2f9fea`，在 PR #4 中继续维护。历史审查结果保持原样。
 
+后续 CC-20261008-010 补齐压缩头、显式 thinking 显示能力，以及 Sonnet / Opus 5.5 的已测配置；
+托管恢复的压缩与 metadata 扩展同步修复，见 [扩展对齐修复](claude-alignment-fixes.md)。下文保留本轮原始范围与证据。
+
 ## 修复范围
 
 | 审查项目 | 当前处理 |
@@ -49,7 +52,9 @@ Haiku 的 beta 顺序与 Sonnet / Opus 分开处理，不再无条件添加 effo
 消息级 output_config 等条件能力只在相应字段或显式请求存在时添加。
 
 - 显式 max_tokens、temperature、top_p、top_k、thinking、effort 和强制 tool_choice 保留调用方语义。
-- 指定采样参数或强制工具选择时，不自动加入可能冲突的 thinking。
+- 2026-10-09 补证后，单独指定 temperature 会保留模型默认 thinking，与原生后置温度覆盖一致；
+  top_p / top_k 与强制工具选择仍按原有规则处理。显式 disabled 清理额外键，按直接控制补齐
+  支持模型的温度 / effort 缺省值。见 [参数与 gzip 对齐](claude-parameter-wire-alignment.md)。
 - Haiku 的自动 thinking budget 不超过 max_tokens；额度不足以形成合法 budget 时不强加。
 - count_tokens 不使用生成参数默认值。
 - Chat Completions / Responses 适配器的内部兜底值不等于调用方显式 max_tokens；调用方未指定时，

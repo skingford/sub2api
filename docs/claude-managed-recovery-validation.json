@@ -1,0 +1,112 @@
+{
+  "change_id": "CC-20261008-008",
+  "base_release": "b4430850844263e3fd3d2d180f514099bffad04e",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "cli_version": "2.1.292",
+  "cli_binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "native_docker_network": "none",
+  "real_provider_model_requests": false,
+  "native_lab_storage": "test port; PostgreSQL correctness separately covered by real container integration tests",
+  "native_results": {
+    "oauth": {
+      "client_sessions": 2,
+      "requests": 6,
+      "count_requests": 2,
+      "generation_requests": 4,
+      "cross_session_marker_leaks": 0,
+      "sha256": "c6e97e30c6171581581aafbee6f56bf23ed15337a407c1c6d703c8faa7a30163"
+    },
+    "apikey": {
+      "client_sessions": 2,
+      "requests": 6,
+      "count_requests": 2,
+      "generation_requests": 4,
+      "cross_session_marker_leaks": 0,
+      "sha256": "53c3095f9ae38de0f47ea8f0299f0607c7368c0da58218a61a4595893e7d7eda"
+    }
+  },
+  "checks": {
+    "full-unit2": {
+      "log": "sub2api-managed-full-unit2.log",
+      "sha256": "9dcab9b90fc99fa274729667bc10ca3129957a5a0e789400461bf58ad1e79a8c",
+      "passed_packages": 57,
+      "exit_code": 0
+    },
+    "full-integration": {
+      "log": "sub2api-managed-full-integration.log",
+      "sha256": "53cb4c8f9ab84194fc23715a37f23babcc01b4f01ccf49de1354839dd5395fbd",
+      "passed_packages": 51,
+      "exit_code": 0
+    },
+    "unit-final": {
+      "log": "sub2api-managed-unit-final.log",
+      "sha256": "8b7e15bb0c68bc05243045c591ef551c06b70fd56d2a07b7a9840e92e98aed04",
+      "passed_packages": 3,
+      "exit_code": 0
+    },
+    "handler-final": {
+      "log": "sub2api-managed-handler-final.log",
+      "sha256": "615bf6302e193ea5832f9febcc289de7595a2e3d405066da23cf94835044934b",
+      "passed_packages": 1,
+      "exit_code": 0
+    },
+    "final-followup2": {
+      "log": "sub2api-managed-final-followup2.log",
+      "sha256": "87af26b9845411acae5e17c109b1f50decec0f39181e0c30ac749367f379bd8b",
+      "passed_packages": 2,
+      "exit_code": 0
+    },
+    "lint2": {
+      "log": "sub2api-managed-lint2.log",
+      "sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+      "passed_packages": 0,
+      "exit_code": 0,
+      "issues": 0
+    },
+    "lint-final": {
+      "log": "sub2api-managed-lint-final.log",
+      "sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+      "passed_packages": 0,
+      "exit_code": 0,
+      "issues": 0
+    },
+    "native-run2": {
+      "log": "sub2api-managed-native-run2.log",
+      "sha256": "8f62866e9c8a4842910aa6d32fb5fb4bad41c507409a934fdd833c18d92ef3e2",
+      "passed_packages": 0,
+      "exit_code": 0
+    }
+  },
+  "validation_sequence": "Complete unit/integration passed. Native Docker scenarios passed for API Key and OAuth. Final scoped follow-up covers subsequent retention startup, idempotency hashing and audit-gate placement; affected-package lint passed before the final idempotency hash-only adjustment.",
+  "source_sha256": {
+    "backend/internal/config/claude_recovery.go": "f53dc1be1ec400e4a2bf4c37e89d0b8723e776b50adb053ae04a5c69c729a2a6",
+    "backend/internal/config/config.go": "a82a58f5bbd2f9ad015a80a46251268ca0c34bf523569f2b47590c29c7b8f21c",
+    "backend/internal/handler/gateway_claude_recovery.go": "2dc15cb46e1ecbfdcd6fa7e58fa8fe6767fb20da9c46f0801bee4fe5913ba0a2",
+    "backend/internal/handler/gateway_claude_recovery_test.go": "6a153fff159b6ad3f9878b5950643bb4ce5369a5eb426939b1ebf2af8e85dec4",
+    "backend/internal/handler/gateway_handler.go": "9b6ecd097bcb6f7cf35feeb3f28f9d098e5c0d4a6dfa4e9c9357293458f559a0",
+    "backend/internal/handler/gateway_handler_chat_completions.go": "beeb32905431f2118eaa0de269d7d05a8c25bebacf4a8144cf0caf21be71e3e7",
+    "backend/internal/handler/gateway_handler_responses.go": "5e3b522fbc95f5f47501ef763d2c5c88b323d9489407ef4e5d5a801ca214a708",
+    "backend/internal/handler/security_audit_order_test.go": "f009740ab829046b4fe84564dbc41a0239b691cf15d748b27260d176c539bfbd",
+    "backend/internal/repository/claude_recovery.go": "5bedb101493d927c738aba44aca8e8c0b42505c2354c4a6f83d036d9c5c0d6b8",
+    "backend/internal/repository/claude_recovery_integration_test.go": "7806e16e82ff20031858fbba9264fadaced75f8922903b19717b6a7f51ab7864",
+    "backend/internal/service/claude_recovery_count.go": "4c77179387b4b55980f29d320094c8f753c6f1db9857a7a53ea81321b2d80871",
+    "backend/internal/service/claude_recovery_history.go": "dde06110e67fdb740002fb16af704fdcf973031c6054b747389f5192b5c3d5d8",
+    "backend/internal/service/claude_recovery_json.go": "bff068f3286f600f05c962e125e6e5082551a4f76ec94e377c5a5db4170f4dd5",
+    "backend/internal/service/claude_recovery_native_lab_test.go": "41ec2c78615b5ee7e1d9c19313384ee04ea5f766ec5c3d2bdd8e77a30e259e39",
+    "backend/internal/service/claude_recovery_response.go": "916516eba9052ba3991b4a31153a5fb23851874ee72ce1db0b88f128c6814613",
+    "backend/internal/service/claude_recovery_service.go": "53a5e999182854a6e0c0744339cf8a98be93d06e5b2512564672e82b0a8d478a",
+    "backend/internal/service/claude_recovery_summary.go": "c90bebde73320710da8d85a1b8470aaf940ad3f62330d02467cdc38e55c96544",
+    "backend/internal/service/claude_recovery_test.go": "a712b7fa757a105b655060e11a8ad132416612891db4cc4294b844ca609d9878",
+    "backend/internal/service/claude_recovery_types.go": "271d70e7e710cfc7273b3bd00b0314c684348c9d2157ac766697628b581be0e6",
+    "backend/internal/service/gateway_anthropic_passthrough.go": "e25299d6b4020ab97be8261603981395ceee54ca6183b415ee8f17ba4848004a",
+    "backend/internal/service/gateway_claude_compatibility.go": "ff42cb54bfbdf5553a8b24b8c0431ba37f9f968923d22103a8b8969847a9dd5c",
+    "backend/internal/service/gateway_claude_session.go": "4f408bbff44cad14dcd251acaf42bd8bcdd6d6db413a5f2c03bb70b57d036987",
+    "backend/internal/service/gateway_count_tokens.go": "1ab037ee3ea37b695011e6e3bfa45f41951a28f621c335785153ad7169239069",
+    "backend/internal/service/gateway_forward.go": "f9fb606229ed340dddfd0e1785fb1526ef4cbc457eeebd53fa9999b98a3b953e",
+    "backend/internal/service/gateway_forward_as_chat_completions.go": "21265ca6b42efb962493054c260204c04bd56c055f50e9067b5213ff4f07ecdc",
+    "backend/internal/service/gateway_forward_as_responses.go": "13de28ffa0c0bf2f791842a46b6c9e6b73b8a9c44ded6137f01259eafb018086",
+    "backend/internal/service/gateway_scheduling.go": "794b6213cf4e3963db53885d430c52947c7ecd4628780235575b677e3efece65",
+    "backend/internal/service/gateway_service.go": "f77a9046fb6a197657332443f1933f0cc84fa4046a3b44c453a674552d8e0504",
+    "backend/migrations/243_claude_managed_recovery.sql": "70cb602ff56343e7646b19debda45a8bbe0afa6cc74bfeba1d206f34bf88d446"
+  }
+}

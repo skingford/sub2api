@@ -21,6 +21,7 @@ import (
 // This converts Responses API requests to Anthropic format, forwards to Anthropic
 // upstream, and converts responses back to Responses format.
 func (h *GatewayHandler) Responses(c *gin.Context) {
+	defer h.finishClaudeRecovery(c, c.Request, c.Writer)
 	streamStarted := false
 
 	requestStart := time.Now()
@@ -178,6 +179,10 @@ func (h *GatewayHandler) Responses(c *gin.Context) {
 		UserAgent: c.GetHeader("User-Agent"),
 		APIKeyID:  apiKey.ID,
 	}
+	if !h.prepareClaudeRecovery(c, parsedReq, &body, "responses", false) {
+		return
+	}
+	requestCtx = c.Request.Context()
 	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
 		return
 	}

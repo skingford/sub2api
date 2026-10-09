@@ -25,11 +25,11 @@ import (
 	"github.com/andybalholm/brotli"
 	"github.com/klauspost/compress/zstd"
 	"golang.org/x/mod/semver"
-	"golang.org/x/net/http2"
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/proxyurl"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/proxyutil"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/requesttrace"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/servertiming"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/xai"
@@ -201,10 +201,14 @@ func NewHTTPUpstream(cfg *config.Config) service.HTTPUpstream {
 // 注意:
 //   - 调用方必须关闭 resp.Body，否则会导致 inFlight 计数泄漏
 //   - inFlight > 0 的客户端不会被淘汰，确保活跃请求不被中断
-func (s *httpUpstreamService) Do(req *http.Request, proxyURL string, accountID int64, accountConcurrency int) (*http.Response, error) {
+func (s *httpUpstreamService) Do(req *http.Request, proxyURL string, accountID int64, accountConcurrency int) (_ *http.Response, resultErr error) {
 	if req != nil && req.URL != nil && req.URL.Scheme == "https" && service.HTTPUpstreamProfileFromContext(req.Context()) == service.HTTPUpstreamProfileClaude2292 {
 		return s.DoWithTLS(req, proxyURL, accountID, accountConcurrency, tlsfingerprint.ClaudeCode2292())
 	}
+	if req != nil {
+		req = requesttrace.WithUpstream(req, accountID, accountConcurrency, proxyURL, string(service.HTTPUpstreamProfileFromContext(req.Context())))
+	}
+	defer func() { requesttrace.DispatchError(req, resultErr) }()
 	applyGrokCLIProxyHeaders(req)
 	if err := s.validateRequestHost(req); err != nil {
 		return nil, err
@@ -222,6 +226,7 @@ func (s *httpUpstreamService) Do(req *http.Request, proxyURL string, accountID i
 
 	// 执行请求
 	client := s.httpClientForUpstreamRequest(entry.client, req)
+	client = requesttrace.InstrumentClient(client, req)
 	client = httpClientWithGrokAccessDeniedFallback(client)
 	resp, err := doUpstreamRequest(client, req)
 	if err != nil {
@@ -247,7 +252,7 @@ func (s *httpUpstreamService) Do(req *http.Request, proxyURL string, accountID i
 //
 // profile 为 nil 时不启用 TLS 指纹，行为与 Do 方法相同。
 // profile 非 nil 时使用指定的 Profile 进行 TLS 指纹伪装。
-func (s *httpUpstreamService) DoWithTLS(req *http.Request, proxyURL string, accountID int64, accountConcurrency int, profile *tlsfingerprint.Profile) (*http.Response, error) {
+func (s *httpUpstreamService) DoWithTLS(req *http.Request, proxyURL string, accountID int64, accountConcurrency int, profile *tlsfingerprint.Profile) (_ *http.Response, resultErr error) {
 	if req != nil && req.URL != nil && req.URL.Scheme == "https" &&
 		service.HTTPUpstreamProfileFromContext(req.Context()) == service.HTTPUpstreamProfileClaude2292 {
 		profile = tlsfingerprint.ClaudeCode2292()
@@ -260,6 +265,8 @@ func (s *httpUpstreamService) DoWithTLS(req *http.Request, proxyURL string, acco
 	if req != nil && req.URL != nil && strings.EqualFold(req.URL.Scheme, "http") {
 		return s.Do(req, proxyURL, accountID, accountConcurrency)
 	}
+	req = requesttrace.WithUpstream(req, accountID, accountConcurrency, proxyURL, profile.Name)
+	defer func() { requesttrace.DispatchError(req, resultErr) }()
 	applyGrokCLIProxyHeaders(req)
 	upstreamProfile := service.HTTPUpstreamProfileDefault
 	if req != nil {
@@ -287,6 +294,7 @@ func (s *httpUpstreamService) DoWithTLS(req *http.Request, proxyURL string, acco
 	}
 
 	client := s.httpClientForUpstreamRequest(entry.client, req)
+	client = requesttrace.InstrumentClient(client, req)
 	client = httpClientWithGrokAccessDeniedFallback(client)
 	resp, err := doUpstreamRequest(client, req)
 	if err != nil {
@@ -313,7 +321,9 @@ func doUpstreamRequest(client *http.Client, req *http.Request) (*http.Response, 
 		cancel()
 		return resp, err
 	}
+	rawBody := resp.Body
 	decompressResponseBody(resp)
+	requesttrace.CaptureDecodedResponse(resp, rawBody)
 	resp.Body = &cancelOnCloseBody{ReadCloser: resp.Body, cancel: cancel}
 	return resp, nil
 }
@@ -1404,9 +1414,7 @@ func buildUpstreamTransport(settings poolSettings, proxyURL *url.URL, protocolMo
 		transport.ForceAttemptHTTP2 = true
 		// 显式配置 http2 并启用 PING 健康探测，剔除代理/NAT 静默掐断的死连接，
 		// 避免请求挂在死连接上直到 TCP 重传超时（分钟级）。
-		if _, err := enableHTTP2KeepAlive(transport, protocolMode); err != nil {
-			return nil, err
-		}
+		enableHTTP2KeepAlive(transport, protocolMode)
 	case upstreamProtocolModeOpenAIH1:
 		transport.ForceAttemptHTTP2 = false
 		transport.TLSNextProto = make(map[string]func(string, *tls.Conn) http.RoundTripper)
@@ -1422,23 +1430,26 @@ func buildUpstreamTransport(settings poolSettings, proxyURL *url.URL, protocolMo
 }
 
 // enableHTTP2KeepAlive 在 http.Transport 上显式配置 HTTP/2 并启用连接健康探测。
-// Go 默认惰性配置 http2 且 ReadIdleTimeout=0（不发健康 PING），无法检测被代理/NAT
-// 静默掐断的死连接。此处主动设置 ReadIdleTimeout/PingTimeout，让死连接被提前 PING
-// 出并关闭，请求得以重建连接而非挂到 TCP 重传超时。返回底层 *http2.Transport 便于测试。
-func enableHTTP2KeepAlive(transport *http.Transport, protocolMode string) (*http2.Transport, error) {
-	h2, err := http2.ConfigureTransports(transport)
-	if err != nil {
-		return nil, err
+// Go 默认 SendPingTimeout=0（不发健康 PING），无法检测被代理/NAT 静默掐断的死连接。
+// 使用标准库配置提前探测并关闭死连接，同时保留 HTTP/1.1 回退。
+func enableHTTP2KeepAlive(transport *http.Transport, protocolMode string) {
+	if transport.TLSClientConfig == nil {
+		transport.TLSClientConfig = &tls.Config{}
 	}
-	if h2 != nil {
-		h2.ReadIdleTimeout = longStreamHTTP2ReadIdleTimeout
-		h2.PingTimeout = longStreamHTTP2PingTimeout
-		if protocolMode == upstreamProtocolModeOpenAIH2 {
-			h2.ReadIdleTimeout = openAIHTTP2ReadIdleTimeout
-			h2.PingTimeout = openAIHTTP2PingTimeout
-		}
+	if transport.Protocols == nil {
+		transport.Protocols = new(http.Protocols)
+		transport.Protocols.SetHTTP1(true)
 	}
-	return h2, nil
+	transport.Protocols.SetHTTP2(true)
+	if transport.HTTP2 == nil {
+		transport.HTTP2 = new(http.HTTP2Config)
+	}
+	transport.HTTP2.SendPingTimeout = longStreamHTTP2ReadIdleTimeout
+	transport.HTTP2.PingTimeout = longStreamHTTP2PingTimeout
+	if protocolMode == upstreamProtocolModeOpenAIH2 {
+		transport.HTTP2.SendPingTimeout = openAIHTTP2ReadIdleTimeout
+		transport.HTTP2.PingTimeout = openAIHTTP2PingTimeout
+	}
 }
 
 // buildUpstreamTransportWithTLSFingerprint 构建带 TLS 指纹伪装的 Transport

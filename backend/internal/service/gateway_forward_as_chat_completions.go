@@ -33,6 +33,13 @@ func (s *GatewayService) ForwardAsChatCompletions(
 	body []byte,
 	parsed *ParsedRequest,
 ) (*ForwardResult, error) {
+	if ClaudeRecoveryFromContext(ctx) != nil {
+		var e error
+		body, e = applyClaudeRecoveryIdentity(ctx, account, body)
+		if e != nil {
+			return nil, e
+		}
+	}
 	if metadata := ParseMetadataUserID(gjson.GetBytes(body, "metadata.user_id").String()); metadata != nil {
 		ctx = context.WithValue(ctx, claudeOriginalSessionKey{}, metadata.SessionID)
 	}
@@ -147,7 +154,7 @@ func (s *GatewayService) ForwardAsChatCompletions(
 	reasoningEffort = ApplyThinkingEnabledFallback(reasoningEffort, forwardedBody, mappedModel)
 
 	// 11. Send request
-	resp, err := s.httpUpstream.DoWithTLS(upstreamReq, proxyURL, account.ID, account.Concurrency, s.tlsFPProfileService.ResolveTLSProfile(account))
+	resp, err := s.doClaudeHTTP(upstreamReq, proxyURL, account, s.tlsFPProfileService.ResolveTLSProfile(account))
 	if err != nil {
 		if resp != nil && resp.Body != nil {
 			_ = resp.Body.Close()

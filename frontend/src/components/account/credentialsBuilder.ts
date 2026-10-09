@@ -61,6 +61,7 @@ const HEADER_OVERRIDE_BLOCKED_NAMES = new Set([
   'host',
   'content-length',
   'content-type',
+  'content-encoding',
   'transfer-encoding',
   'connection',
   'keep-alive',

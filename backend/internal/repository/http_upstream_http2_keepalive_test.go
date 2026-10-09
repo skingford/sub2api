@@ -24,9 +24,7 @@ func http2KeepAliveTestPoolSettings() poolSettings {
 }
 
 // requireHTTP2Configured 断言 http2 已显式挂到 http.Transport 上。
-// x/net/http2 在 go1.27 && !http2legacy 下是标准库 HTTP/2 的包装：ConfigureTransports 通过
-// Transport.RegisterProtocol("http/2") 注册配置并打开 Protocols.HTTP2（TLSNextProto 不承载 h2 入口），
-// ReadIdleTimeout/PingTimeout 在建连时映射为 http.HTTP2Config.SendPingTimeout/PingTimeout。
+// Go 1.27 通过 Protocols 和 HTTP2Config 显式配置协议与 PING 超时。
 func requireHTTP2Configured(t *testing.T, tr *http.Transport, msg string) {
 	t.Helper()
 	require.NotNil(t, tr.Protocols, msg)
@@ -49,12 +47,35 @@ func TestEnableHTTP2KeepAlive_EnablesPingHealthCheck(t *testing.T) {
 	} {
 		t.Run(tc.mode, func(t *testing.T) {
 			tr := &http.Transport{}
-			h2, err := enableHTTP2KeepAlive(tr, tc.mode)
-			require.NoError(t, err)
-			require.NotNil(t, h2, "必须返回已配置的 *http2.Transport")
-			require.Equal(t, tc.readIdleTimeout, h2.ReadIdleTimeout)
-			require.Equal(t, tc.pingTimeout, h2.PingTimeout, "各模式应使用独立的 PING 应答期限")
+			enableHTTP2KeepAlive(tr, tc.mode)
+			require.NotNil(t, tr.HTTP2, "必须配置标准库 HTTP/2 健康探测")
+			require.Equal(t, tc.readIdleTimeout, tr.HTTP2.SendPingTimeout)
+			require.Equal(t, tc.pingTimeout, tr.HTTP2.PingTimeout, "各模式应使用独立的 PING 应答期限")
 			requireHTTP2Configured(t, tr, "http2 必须已挂到底层 http.Transport 上")
+		})
+	}
+}
+
+func TestBuildUpstreamTransport_HTTP2FallsBackToHTTP1(t *testing.T) {
+	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer srv.Close()
+	for _, mode := range []string{upstreamProtocolModeOpenAIH2, upstreamProtocolModeLongStreamH2} {
+		t.Run(mode, func(t *testing.T) {
+			tr, err := buildUpstreamTransport(http2KeepAliveTestPoolSettings(), nil, mode)
+			require.NoError(t, err)
+			defer tr.CloseIdleConnections()
+			roots := x509.NewCertPool()
+			roots.AddCert(srv.Certificate())
+			tr.TLSClientConfig.RootCAs = roots
+			req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, srv.URL, nil)
+			require.NoError(t, err)
+			resp, err := tr.RoundTrip(req)
+			require.NoError(t, err)
+			require.NoError(t, resp.Body.Close())
+			require.Equal(t, http.StatusOK, resp.StatusCode)
+			require.Equal(t, 1, resp.ProtoMajor)
 		})
 	}
 }

@@ -97,6 +97,11 @@ func NewGatewayHandler(
 		umqHelper = NewUserMsgQueueHelper(userMsgQueueService, SSEPingFormatClaude, pingInterval)
 	}
 
+	if gatewayService != nil {
+		if recovery := gatewayService.ClaudeRecovery(); recovery != nil {
+			recovery.Start()
+		}
+	}
 	return &GatewayHandler{
 		gatewayService:            gatewayService,
 		openAIGatewayService:      openAIGatewayService,
@@ -121,6 +126,7 @@ func NewGatewayHandler(
 // Messages handles Claude API compatible messages endpoint
 // POST /v1/messages
 func (h *GatewayHandler) Messages(c *gin.Context) {
+	defer h.finishClaudeRecovery(c, c.Request, c.Writer)
 	// 从context获取apiKey和user（ApiKeyAuth中间件已设置）
 	apiKey, ok := middleware2.GetAPIKeyFromContext(c)
 	if !ok {
@@ -288,6 +294,9 @@ func (h *GatewayHandler) Messages(c *gin.Context) {
 		ClientIP:  ip.GetClientIP(c),
 		UserAgent: c.GetHeader("User-Agent"),
 		APIKeyID:  apiKey.ID,
+	}
+	if !h.prepareClaudeRecovery(c, parsedReq, &body, "messages", false) {
+		return
 	}
 	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
 		return
@@ -2128,6 +2137,7 @@ func (h *GatewayHandler) errorResponseWithCode(c *gin.Context, status int, errTy
 // POST /v1/messages/count_tokens
 // 特点：校验订阅/余额，但不计算并发、不记录使用量
 func (h *GatewayHandler) CountTokens(c *gin.Context) {
+	defer h.finishClaudeRecovery(c, c.Request, c.Writer)
 	// 从context获取apiKey和user（ApiKeyAuth中间件已设置）
 	apiKey, ok := middleware2.GetAPIKeyFromContext(c)
 	if !ok {
@@ -2216,6 +2226,9 @@ func (h *GatewayHandler) CountTokens(c *gin.Context) {
 		ClientIP:  ip.GetClientIP(c),
 		UserAgent: c.GetHeader("User-Agent"),
 		APIKeyID:  apiKey.ID,
+	}
+	if !h.prepareClaudeRecovery(c, parsedReq, &body, "messages", true) {
+		return
 	}
 	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
 		return

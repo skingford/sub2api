@@ -1,0 +1,118 @@
+{
+  "case": {
+    "name": "claude-haiku-4-5-20251001-disabled-extra",
+    "base": "api-arg",
+    "model": "claude-haiku-4-5-20251001",
+    "env": {
+      "CLAUDE_CODE_EXTRA_BODY": "{\"thinking\": {\"type\": \"disabled\", \"display\": \"updates\", \"budget_tokens\": 2048}}"
+    },
+    "generic_controls": {
+      "thinking": {
+        "type": "disabled",
+        "display": "updates",
+        "budget_tokens": 2048
+      }
+    }
+  },
+  "requests": [
+    {
+      "case": "api-arg",
+      "method": "POST",
+      "path": "/v1/messages?beta=true",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "claude-cli/2.1.292 (external, sdk-cli)",
+        "X-Claude-Code-Session-Id": "412f3c97-c939-42e7-a55b-423e4007e7cd",
+        "X-Stainless-Arch": "x64",
+        "X-Stainless-Lang": "js",
+        "X-Stainless-OS": "Linux",
+        "X-Stainless-Package-Version": "0.128.0",
+        "X-Stainless-Retry-Count": "0",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0",
+        "X-Stainless-Timeout": "5",
+        "anthropic-beta": "interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+        "anthropic-dangerous-direct-browser-access": "true",
+        "anthropic-version": "2023-06-01",
+        "x-api-key": "local-container-key-not-a-real-credential",
+        "x-app": "cli",
+        "x-claude-code-prompt-id": "b0d4b95a-d4b1-46d7-97d1-dbdacf668f68",
+        "x-claude-code-request-class": "main",
+        "x-client-request-id": "31566bdc-5ed3-428a-b5dc-812d540f6324",
+        "Connection": "keep-alive",
+        "Host": "api.anthropic.com",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Content-Length": "1046"
+      },
+      "body": {
+        "model": "claude-haiku-4-5-20251001",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK.",
+                "cache_control": {
+                  "type": "ephemeral"
+                }
+              }
+            ]
+          }
+        ],
+        "system": [
+          {
+            "type": "text",
+            "text": "x-anthropic-billing-header: cc_version=2.1.292.652; cc_entrypoint=sdk-cli; cch=de708; cc_prompt_id=b0d4b95a-d4b1-46d7-97d1-dbdacf668f68; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;"
+          },
+          {
+            "type": "text",
+            "text": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          },
+          {
+            "type": "text",
+            "text": "Local synthetic protocol test. Reply OK.",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ],
+        "tools": [],
+        "metadata": {
+          "user_id": "{\"device_id\":\"f6401c99bbf7fafc0045682037772f73ea63ec609ecbad54088a0e255e3009ae\",\"account_uuid\":\"\",\"session_id\":\"412f3c97-c939-42e7-a55b-423e4007e7cd\"}"
+        },
+        "max_tokens": 32000,
+        "thinking": {
+          "type": "disabled"
+        },
+        "context_management": {
+          "edits": [
+            {
+              "type": "clear_thinking_20251015",
+              "keep": "all"
+            }
+          ]
+        },
+        "diagnostics": {
+          "previous_message_id": null
+        },
+        "stream": true
+      },
+      "raw_body_utf8": "{\"model\":\"claude-haiku-4-5-20251001\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"LOCAL_EXTENDED_AUDIT inspect synthetic fixtures and reply OK.\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.292.652; cc_entrypoint=sdk-cli; cch=de708; cc_prompt_id=b0d4b95a-d4b1-46d7-97d1-dbdacf668f68; cc_turn_origin=sdk; cc_prompt_index=0; cc_turn_index=1;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"Local synthetic protocol test. Reply OK.\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"f6401c99bbf7fafc0045682037772f73ea63ec609ecbad54088a0e255e3009ae\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"412f3c97-c939-42e7-a55b-423e4007e7cd\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"disabled\"},\"context_management\":{\"edits\":[{\"type\":\"clear_thinking_20251015\",\"keep\":\"all\"}]},\"diagnostics\":{\"previous_message_id\":null},\"stream\":true}",
+      "raw_body_sha256": "5cb108d9733916f35f809d2138ec41acb715e134a7a072d6eedf931baf4cfe62",
+      "tls_version": "TLSv1.3",
+      "cipher": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLSv1.3",
+        256
+      ],
+      "alpn": "http/1.1",
+      "wire_body_base64": "eyJtb2RlbCI6ImNsYXVkZS1oYWlrdS00LTUtMjAyNTEwMDEiLCJtZXNzYWdlcyI6W3sicm9sZSI6InVzZXIiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJMT0NBTF9FWFRFTkRFRF9BVURJVCBpbnNwZWN0IHN5bnRoZXRpYyBmaXh0dXJlcyBhbmQgcmVwbHkgT0suIiwiY2FjaGVfY29udHJvbCI6eyJ0eXBlIjoiZXBoZW1lcmFsIn19XX1dLCJzeXN0ZW0iOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IngtYW50aHJvcGljLWJpbGxpbmctaGVhZGVyOiBjY192ZXJzaW9uPTIuMS4yOTIuNjUyOyBjY19lbnRyeXBvaW50PXNkay1jbGk7IGNjaD1kZTcwODsgY2NfcHJvbXB0X2lkPWIwZDRiOTVhLWQ0YjEtNDZkNy05N2QxLWRiZGFjZjY2OGY2ODsgY2NfdHVybl9vcmlnaW49c2RrOyBjY19wcm9tcHRfaW5kZXg9MDsgY2NfdHVybl9pbmRleD0xOyJ9LHsidHlwZSI6InRleHQiLCJ0ZXh0IjoiWW91IGFyZSBhIENsYXVkZSBhZ2VudCwgYnVpbHQgb24gQW50aHJvcGljJ3MgQ2xhdWRlIEFnZW50IFNESy4iLCJjYWNoZV9jb250cm9sIjp7InR5cGUiOiJlcGhlbWVyYWwifX0seyJ0eXBlIjoidGV4dCIsInRleHQiOiJMb2NhbCBzeW50aGV0aWMgcHJvdG9jb2wgdGVzdC4gUmVwbHkgT0suIiwiY2FjaGVfY29udHJvbCI6eyJ0eXBlIjoiZXBoZW1lcmFsIn19XSwidG9vbHMiOltdLCJtZXRhZGF0YSI6eyJ1c2VyX2lkIjoie1wiZGV2aWNlX2lkXCI6XCJmNjQwMWM5OWJiZjdmYWZjMDA0NTY4MjAzNzc3MmY3M2VhNjNlYzYwOWVjYmFkNTQwODhhMGUyNTVlMzAwOWFlXCIsXCJhY2NvdW50X3V1aWRcIjpcIlwiLFwic2Vzc2lvbl9pZFwiOlwiNDEyZjNjOTctYzkzOS00MmU3LWE1NWItNDIzZTQwMDdlN2NkXCJ9In0sIm1heF90b2tlbnMiOjMyMDAwLCJ0aGlua2luZyI6eyJ0eXBlIjoiZGlzYWJsZWQifSwiY29udGV4dF9tYW5hZ2VtZW50Ijp7ImVkaXRzIjpbeyJ0eXBlIjoiY2xlYXJfdGhpbmtpbmdfMjAyNTEwMTUiLCJrZWVwIjoiYWxsIn1dfSwiZGlhZ25vc3RpY3MiOnsicHJldmlvdXNfbWVzc2FnZV9pZCI6bnVsbH0sInN0cmVhbSI6dHJ1ZX0=",
+      "wire_body_sha256": "5cb108d9733916f35f809d2138ec41acb715e134a7a072d6eedf931baf4cfe62"
+    }
+  ]
+}

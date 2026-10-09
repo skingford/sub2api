@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/requesttrace"
 	fhttp "github.com/bogdanfinn/fhttp"
 )
 
@@ -43,7 +45,7 @@ func (t *nativeClaudeHTTP1Transport) RoundTrip(req *http.Request) (*http.Respons
 		Header: nativeClaudeHeaders(req), Body: req.Body, GetBody: req.GetBody,
 		ContentLength: req.ContentLength, TransferEncoding: append([]string(nil), req.TransferEncoding...),
 		Close: req.Close, Host: req.Host, Trailer: fhttp.Header(req.Trailer.Clone()),
-	}).WithContext(req.Context())
+	}).WithContext(requesttrace.NativeContext(req.Context()))
 	if req.GetBody != nil {
 		fr.GetBody = func() (io.ReadCloser, error) {
 			body, err := req.GetBody()
@@ -56,6 +58,7 @@ func (t *nativeClaudeHTTP1Transport) RoundTrip(req *http.Request) (*http.Respons
 	if req.Body == http.NoBody {
 		fr.Body = fhttp.NoBody
 	}
+	requesttrace.NativeHeaders(req, http.Header(fr.Header))
 	r, err := t.transport.RoundTrip(fr)
 	if err != nil {
 		return nil, err
@@ -73,6 +76,7 @@ func (t *nativeClaudeHTTP1Transport) RoundTrip(req *http.Request) (*http.Respons
 // the captures: credentials, request IDs and body length remain request-specific.
 func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	h := make(fhttp.Header, len(req.Header)+4)
+	applicationEncoding := claude.GzipUsesApplicationHeader2292(req.Context())
 	for key, values := range req.Header {
 		lower := strings.ToLower(key)
 		if lower == "host" || lower == "content-length" || lower == "connection" ||
@@ -81,7 +85,7 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 		}
 		wireKey := key
 		switch lower {
-		case "accept", "authorization", "content-type", "user-agent", "accept-encoding":
+		case "accept", "authorization", "content-type", "content-encoding", "user-agent", "accept-encoding":
 			wireKey = http.CanonicalHeaderKey(lower)
 		}
 		h[wireKey] = append(h[wireKey], values...)
@@ -95,6 +99,10 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	var keys []string
 	for key := range h {
 		switch strings.ToLower(key) {
+		case "content-encoding":
+			if !applicationEncoding {
+				continue
+			}
 		case "connection", "host", "accept-encoding", "content-length":
 			continue
 		}
@@ -103,6 +111,11 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	sort.Strings(keys)
 	for _, key := range keys {
 		h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], strings.ToLower(key))
+	}
+	// Runtime gzip appends this field; CLI precompressed blocks set it before
+	// fetch, making it part of the sorted application headers instead.
+	if _, exists := h["Content-Encoding"]; exists && !applicationEncoding {
+		h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], "content-encoding")
 	}
 	h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], "connection", "host", "accept-encoding", "content-length")
 	return h

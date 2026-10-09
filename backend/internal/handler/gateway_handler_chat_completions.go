@@ -21,6 +21,7 @@ import (
 // This converts Chat Completions requests to Anthropic format (via Responses format chain),
 // forwards to Anthropic upstream, and converts responses back to Chat Completions format.
 func (h *GatewayHandler) ChatCompletions(c *gin.Context) {
+	defer h.finishClaudeRecovery(c, c.Request, c.Writer)
 	streamStarted := false
 
 	requestStart := time.Now()
@@ -173,6 +174,9 @@ func (h *GatewayHandler) ChatCompletions(c *gin.Context) {
 		ClientIP:  ip.GetClientIP(c),
 		UserAgent: c.GetHeader("User-Agent"),
 		APIKeyID:  apiKey.ID,
+	}
+	if !h.prepareClaudeRecovery(c, parsedReq, &body, "chat", false) {
+		return
 	}
 	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
 		return

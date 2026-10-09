@@ -1,0 +1,141 @@
+{
+  "change_id": "CC-20261009-002",
+  "date": "2026-10-09",
+  "timezone": "Asia/Shanghai",
+  "base_revision": "fee18477636cd23eb99b2c5a49caf7acd2d3d250",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "cli_version": "2.1.292",
+  "sdk_version": "0.128.0",
+  "scope": "Application HTTP request tracing; local synthetic upstreams only. No deployment or live provider validation.",
+  "checks": {
+    "unit": {
+      "command": "GOTOOLCHAIN=go1.27.0 go test -tags=unit ./...",
+      "exit_code": 0,
+      "passed_packages": 58,
+      "log_sha256": "95113aa59fb95891fdd9397713e55dfcca48023f4c8652d933a533c1209c5f45"
+    },
+    "integration": {
+      "command": "GOTOOLCHAIN=go1.27.0 go test -p 1 -tags=integration ./...",
+      "exit_code": 0,
+      "passed_packages": 52,
+      "log_sha256": "066ee0309570ceb76fb6842b42e65d816217c2d5fdf3d7c2aeaf7f91aab51871"
+    },
+    "lint": {
+      "command": "GOTOOLCHAIN=go1.27.0 /Users/kingford/claude-capture/tools/golangci-lint run ./...",
+      "exit_code": 0,
+      "passed_packages": 0,
+      "log_sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47"
+    },
+    "race": {
+      "command": "GOTOOLCHAIN=go1.27.0 go test -race ./internal/pkg/requesttrace ./internal/server/middleware ./internal/repository -run TestRequestTrace -count=1",
+      "exit_code": 0,
+      "passed_packages": 3,
+      "log_sha256": "caa336851f5cd0c4d4107525d0d0a1f7d537a087a86fc9fa4f75ec019ac75af1"
+    },
+    "native_wire_and_focused": {
+      "command": "GOTOOLCHAIN=go1.27.0 go test ./internal/repository ./internal/pkg/requesttrace ./internal/server/middleware -run 'Test(RequestTrace|NativeClaudeHTTP1WireOrderAndReuse)' -count=1",
+      "exit_code": 0,
+      "passed_packages": 3,
+      "log_sha256": "e215569c9f1ecafc1de05327c563b29db3cfc4cb7e6c77a89b099f29c816757a"
+    },
+    "final_redaction_race": {
+      "command": "GOTOOLCHAIN=go1.27.0 go test -race ./internal/pkg/requesttrace -count=1",
+      "exit_code": 0,
+      "passed_packages": 1,
+      "log_sha256": "7055607ed93259098ef532eacf516e4551dd24ce9fc699a4e85fd5423d0f7f8e"
+    }
+  },
+  "additional_checks": {
+    "python_exporter": "3 unittest cases passed",
+    "compose_environment": "deploy/tests/docker-compose-gateway-env-test.sh passed",
+    "format_and_links": "gofmt, git diff --check, relative documentation links passed"
+  },
+  "execution_notes": [
+    "Initial unit run overlapped addition of NativeContext and reported a stale package build; the old root-route source assertion was updated to retain auth-before-allowlist-before-rewrite ordering with tracing added.",
+    "Initial integration had testcontainers reaper name/start conflicts; complete serial (-p 1) integration rerun passed.",
+    "Final native wire regression strengthens the existing byte/header-order assertions by enabling tracing for the second request on the same pooled connection.",
+    "Last production edit was a semantics-preserving boolean simplification requested by staticcheck. Final requesttrace race tests and full lint were rerun after it.",
+    "Other tasks concurrently changed internal/pkg/httputil/body.go, added internal/pkg/httputil/request_encoding.go, and changed internal/service/gateway_claude_native.go. Those changes and their subsequent edits are outside this validation. Results do not certify the entire later shared workspace."
+  ],
+  "source_sha256": {
+    "backend/internal/config/config.go": "14e98a9fd5bb460f92a31097fb5afc56e326f2eb309a26bd7a3440272374e722",
+    "backend/internal/config/request_trace.go": "f6fbc20ba23b48d054768a8315bc1be1ac5355d7fd0c83235139ca19eeb9e1f6",
+    "backend/internal/config/request_trace_test.go": "bf0258268b1b1e405524e2eebaf530a358942fdb4e1f44c74b2cdf89df871a72",
+    "backend/internal/pkg/requesttrace/body.go": "4fe9ecb0947e336710b820d3e419d072940c403d3032ab8c4188f06af93d4db8",
+    "backend/internal/pkg/requesttrace/native.go": "b02d469922fece88391d5ad541c8aa2681b955aaa97366a701af129e32a53f82",
+    "backend/internal/pkg/requesttrace/recorder.go": "784b900b2a76c6f7f0b8a41353bdd578a394e7ad6d65002b264b7fa77542c75d",
+    "backend/internal/pkg/requesttrace/recorder_test.go": "7efa0099256207fd0bf88b9ad54fd122d053e3b44f5b2b5208fd0d2487751bcc",
+    "backend/internal/pkg/requesttrace/redact.go": "bf8fc617f922f8ed795395509c6c3e2e17b0121938d0abf6b05e961804a55a89",
+    "backend/internal/pkg/requesttrace/transport.go": "53da945bda73cfa1d3bbafeed41fde19f8f5faee8917950b9b9138cc4d1d8511",
+    "backend/internal/repository/claude_native_transport.go": "ed68c1e0e425f52bf582dbad85b60f62b1681c114c7171869f1680c1c9c40588",
+    "backend/internal/repository/claude_native_transport_test.go": "42fb5c3fd198dedb9bc531be9dd1c694e0899ee1fe661dddc52fa84d031b6ed9",
+    "backend/internal/repository/http_upstream.go": "e157085a44430dc58d513e43431853e0687b107594e5d5b968d3a84441ef312e",
+    "backend/internal/repository/http_upstream_trace_test.go": "476478612c162746d7bde751787cdc7dbc307461dcd3f54a7de7a0923a523887",
+    "backend/internal/server/middleware/request_trace.go": "30fcb2505dc65f437f2e6c3d521dda212d7cd400c7546ecc9bb5d9f16e4f692c",
+    "backend/internal/server/middleware/request_trace_test.go": "625e851184c79bfaf836f732e4156b5e02b9c33916e9bbab59f04955fb87f8cf",
+    "backend/internal/server/routes/gateway.go": "22d8b5afc1028bb138a8ca950247474dafcf50e356aa45a3809391f6e3235751",
+    "backend/internal/server/routes/gateway_model_allowlist_test.go": "5da86af62c931fa0cd9df9ccfb068cff882f48c71fa793a22317541cbb49816b",
+    "backend/internal/service/gateway_count_tokens.go": "1cd221a583525c7a4b2c90e56abfbde5a5e45f17dc9db08b40de2b8b921dd5d1",
+    "backend/internal/service/gateway_forward.go": "d443abbbc826bdd1d59f6090a825ebb962f918f5093665a79de945b76efbcfa1",
+    "backend/internal/service/gateway_request_trace.go": "346da6d6e20c16e379e546c6241cea3cc58ad719c8b332882898549ed36cc0e7",
+    "deploy/.env.example": "9924421a69120de71586568aedf34c73616c449e10c031eaf12e825e750fcd66",
+    "deploy/config.example.yaml": "af80afd60658ecd1c52eda31af2f5f95574bd7feebdce8121a47ef2fe7bf36d5",
+    "deploy/docker-compose.dev.yml": "555cb36bea2b3903f9eaac26f47d30465ab8837f2cf4114a3d24a59acee12ddf",
+    "deploy/docker-compose.local.yml": "09e89cbb7ec158357d5a79e191aefa9bda4d969a8672c45df109372d53381525",
+    "deploy/docker-compose.standalone.yml": "4125b4068c65a11324baf849bde283ada8787eb783214bc75275e0b4eaf0d72c",
+    "deploy/docker-compose.yml": "b59bcbee96b2ef221e7392ca6509ce90e793cc2da49ba8c76fe730a0e60cf3db",
+    "deploy/export-request-trace.py": "2cf6728bddcc076e56714eb71758e98289d4861a95f0a1494ab429402250c490",
+    "deploy/tests/test_export_request_trace.py": "c630bccc8fb8e21dd3e26a5dd767d537dc69dda157fbf0ccd1586356c3fe2297"
+  },
+  "local_evidence_directory": "/Users/kingford/claude-capture/request-tracing-20261009-dkflghhg",
+  "commit_and_pr": "Uncommitted; no new PR, push or deployment. Future commit trailer Claude-Change-ID: CC-20261009-002; target release.",
+  "commit_preparation": {
+    "parent_revision": "01e75d9feeb26c54b47646343a97e2d42c915ba1",
+    "changed_since_original_validation": [
+      "backend/internal/repository/claude_native_transport.go"
+    ],
+    "reason": "Committed CC-20261009-004 added gzip header ordering; logging changes remain scoped to NativeContext and NativeHeaders hooks.",
+    "command": "GOTOOLCHAIN=go1.27.0 go test ./internal/pkg/requesttrace ./internal/config ./internal/server/middleware ./internal/repository -run 'Test(RequestTrace|NativeClaudeHTTP1)' -count=1",
+    "exit_code": 0,
+    "passed_packages": 4,
+    "log_sha256": "ee0e4e32fbdfbca2470b9efe2f35a89a40dad4a42ae30e20f8853d96754a4f19",
+    "source_sha256": {
+      "backend/internal/config/config.go": "14e98a9fd5bb460f92a31097fb5afc56e326f2eb309a26bd7a3440272374e722",
+      "backend/internal/config/request_trace.go": "f6fbc20ba23b48d054768a8315bc1be1ac5355d7fd0c83235139ca19eeb9e1f6",
+      "backend/internal/config/request_trace_test.go": "bf0258268b1b1e405524e2eebaf530a358942fdb4e1f44c74b2cdf89df871a72",
+      "backend/internal/pkg/requesttrace/body.go": "4fe9ecb0947e336710b820d3e419d072940c403d3032ab8c4188f06af93d4db8",
+      "backend/internal/pkg/requesttrace/native.go": "b02d469922fece88391d5ad541c8aa2681b955aaa97366a701af129e32a53f82",
+      "backend/internal/pkg/requesttrace/recorder.go": "784b900b2a76c6f7f0b8a41353bdd578a394e7ad6d65002b264b7fa77542c75d",
+      "backend/internal/pkg/requesttrace/recorder_test.go": "7efa0099256207fd0bf88b9ad54fd122d053e3b44f5b2b5208fd0d2487751bcc",
+      "backend/internal/pkg/requesttrace/redact.go": "bf8fc617f922f8ed795395509c6c3e2e17b0121938d0abf6b05e961804a55a89",
+      "backend/internal/pkg/requesttrace/transport.go": "53da945bda73cfa1d3bbafeed41fde19f8f5faee8917950b9b9138cc4d1d8511",
+      "backend/internal/repository/claude_native_transport.go": "3e46eaaea33d8c408520effad3596826fd3b9f5f8fcc1654dc42cbbab0e41b2d",
+      "backend/internal/repository/claude_native_transport_test.go": "42fb5c3fd198dedb9bc531be9dd1c694e0899ee1fe661dddc52fa84d031b6ed9",
+      "backend/internal/repository/http_upstream.go": "e157085a44430dc58d513e43431853e0687b107594e5d5b968d3a84441ef312e",
+      "backend/internal/repository/http_upstream_trace_test.go": "476478612c162746d7bde751787cdc7dbc307461dcd3f54a7de7a0923a523887",
+      "backend/internal/server/middleware/request_trace.go": "30fcb2505dc65f437f2e6c3d521dda212d7cd400c7546ecc9bb5d9f16e4f692c",
+      "backend/internal/server/middleware/request_trace_test.go": "625e851184c79bfaf836f732e4156b5e02b9c33916e9bbab59f04955fb87f8cf",
+      "backend/internal/server/routes/gateway.go": "22d8b5afc1028bb138a8ca950247474dafcf50e356aa45a3809391f6e3235751",
+      "backend/internal/server/routes/gateway_model_allowlist_test.go": "5da86af62c931fa0cd9df9ccfb068cff882f48c71fa793a22317541cbb49816b",
+      "backend/internal/service/gateway_count_tokens.go": "1cd221a583525c7a4b2c90e56abfbde5a5e45f17dc9db08b40de2b8b921dd5d1",
+      "backend/internal/service/gateway_forward.go": "d443abbbc826bdd1d59f6090a825ebb962f918f5093665a79de945b76efbcfa1",
+      "backend/internal/service/gateway_request_trace.go": "346da6d6e20c16e379e546c6241cea3cc58ad719c8b332882898549ed36cc0e7",
+      "deploy/.env.example": "9924421a69120de71586568aedf34c73616c449e10c031eaf12e825e750fcd66",
+      "deploy/config.example.yaml": "af80afd60658ecd1c52eda31af2f5f95574bd7feebdce8121a47ef2fe7bf36d5",
+      "deploy/docker-compose.dev.yml": "555cb36bea2b3903f9eaac26f47d30465ab8837f2cf4114a3d24a59acee12ddf",
+      "deploy/docker-compose.local.yml": "09e89cbb7ec158357d5a79e191aefa9bda4d969a8672c45df109372d53381525",
+      "deploy/docker-compose.standalone.yml": "4125b4068c65a11324baf849bde283ada8787eb783214bc75275e0b4eaf0d72c",
+      "deploy/docker-compose.yml": "b59bcbee96b2ef221e7392ca6509ce90e793cc2da49ba8c76fe730a0e60cf3db",
+      "deploy/export-request-trace.py": "2cf6728bddcc076e56714eb71758e98289d4861a95f0a1494ab429402250c490",
+      "deploy/tests/test_export_request_trace.py": "c630bccc8fb8e21dd3e26a5dd767d537dc69dda157fbf0ccd1586356c3fe2297"
+    }
+  },
+  "commit_follow_up": {
+    "revision": "be3642a6f6c421cb437424b5da1778aaa89d03b7",
+    "change_id": "CC-20261009-002",
+    "staged_source_hashes_verified": true,
+    "pushed": false,
+    "merged": false,
+    "deployed": false
+  }
+}

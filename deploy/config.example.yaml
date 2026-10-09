@@ -217,6 +217,17 @@ security:
 # 网关配置
 # =============================================================================
 gateway:
+  # Private, unsampled HTTP request/response evidence; see docs/request-tracing.md.
+  # 完整网关 HTTP 日志包含对话、工具、附件和模型回复；认证头和 Cookie 脱敏。
+  request_trace:
+    enabled: true
+    # 空值使用 ${DATA_DIR:-/app/data}/logs/request-traces；每个进程独立目录。
+    directory: ""
+    max_size_mb: 100
+    max_backups: 100
+    max_age_days: 30
+    # 0 = 不截断已读/已写正文；正数 = 每条 body stream 的记录上限（字节）。
+    max_body_bytes: 0
   # Timeout for waiting upstream response headers (seconds)
   # 等待上游响应头超时时间（秒）
   response_header_timeout: 600
