@@ -442,7 +442,7 @@
     "Network-none Docker, fake credentials, loopback synthetic upstream. No live entitlement, signature, billing or provider-acceptance claims."
   ],
   "commit_references": {
-    "audit": "pending; Claude-Change-ID: CC-20261009-008",
+    "audit": "90db233293115cbc90429274797ac703322a84d2",
     "new_pr": null,
     "pushed": false
   },
