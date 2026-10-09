@@ -10229,5 +10229,6 @@
       "backend/internal/repository/claude_native_gzip_test.go": "551da112da765476c570b0a2ad98c7ebe2282e7cd886575ec44a1b86ad5d03de",
       "backend/internal/repository/testdata/claude_capture_probe.go": "7984862eec35394afe233455a7ac38a47fcded824c3188fe54ccb23b0b304573"
     }
-  }
+  },
+  "implementation_commit": "5447bd74bada937d165bf77f211f43895e044340"
 }

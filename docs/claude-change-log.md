@@ -279,3 +279,4 @@
 - 文件：httputil 解压 / 原压缩快照、网关 native finalizer、2.1.292 默认参数、原生传输排序、回归与采集样本、transport probe、采集 / 核对脚本、维护说明及 .gitignore。详见 [实现与边界](claude-parameter-wire-alignment.md)、[验证及源码哈希](claude-parameter-wire-validation.json)。
 - 提交 / PR：本轮未提交、推送、合并或部署，所在分支关联 PR #5；后续提交使用 `Claude-Change-ID: CC-20261009-004`。原始材料在本机 `claude-capture/parameter-wire-alignment-20261009-c0k0t5v2/`。未访问真实官方模型服务，不代表官方接受、真实签名、订阅或计费验证。
 - 提交隔离验证：从实际暂存内容导出独立源码快照，排除并行请求追踪实现，httputil / service / repository 三个包相关回归通过。结构化验证记录保留共享工作树全量检查与独立暂存回归的不同源码哈希，不混用验证范围。
+- 2026-10-09 提交补记：对齐实现与关联的 CC-20261008-011 / CC-20261009-003 审查证据已保存为本地提交 `5447bd74bada937d165bf77f211f43895e044340`；三个记录的 trailer 随提交保留。提交前独立暂存快照回归通过，源码与已验证暂存内容一致。尚未推送、合并或部署。
