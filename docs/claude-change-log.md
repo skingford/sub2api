@@ -345,3 +345,19 @@
 - 文件：native finalizer、原生传输头序、claude gzip context、raw header 工具、账号覆写后端与前端验证、永久回归 / gzip 样本、采集与严格头序核对脚本；详见 [修复报告](claude-gzip-complete-fix-20261009.md)及[结构化验证](claude-gzip-complete-fix-20261009.json)。原始材料在本机 `claude-capture/encoding-complete-fix-20261009-_n_icwx2/`。
 - 提交 / PR：本轮代码提交使用 `Claude-Change-ID: CC-20261009-006`，提交后补记哈希；所在分支关联 PR #5。未推送、合并或部署，没有真实官方接受、签名、订阅、计费或风控验证。保留 CC-20261009-004 / 005 的历史适用范围。
 - 2026-10-09 提交补记：本轮修复、18 个原生压缩样本、回归脚本与验证记录已保存为本地提交 `3b9b984f9432e4eb1218f9f884d521064de8f173`，带 `Claude-Change-ID: CC-20261009-006`。提交中的 41 个实现 / 样本 / 复现输入文件与最终固定快照 SHA-256 一致，采用 Go 1.27.0 依赖。CC-20261009-007 的并行升级仍单独保留，未纳入本提交；未推送、合并或部署。
+
+
+## CC-20261009-007：修复后端 Go / HTTP/2 安全扫描告警
+
+- 基线：上游 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`，release `b4430850844263e3fd3d2d180f514099bffad04e`；在工作分支 `codex/claude-managed-recovery` 的 `37289d73e35fb6d356c163244ed830087344c4c3` 及已有暂存改动上修复，不同步上游或改写历史。
+- 原因 / 依据：[backend-security 失败日志](https://github.com/skingford/sub2api/actions/runs/37888055342/job/113682424457) 报告 12 个代码可达漏洞编号；`pluginapi.Serve → plugin.Serve → http2.Framer.WriteContinuation` 是 [GO-2026-6617 / CVE-2026-97032](https://pkg.go.dev/vuln/GO-2026-6617) 的示例调用链，根因是 HTTP/2 服务端 HPACK 编码器并发修改可能导致崩溃。官方 [Go 漏洞数据库](https://vuln.go.dev/ID/GO-2026-6617.json) 指定 Go 1.27.2 与 `golang.org/x/net v0.60.0` 为当前版本分支的修复下限。
+- 版本 / 范围：Go 1.27.0 → 1.27.2，`x/net` 0.58.0 → 0.60.0；通过 `go get` / `go mod tidy` 同步其最低版本依赖 `x/crypto`、`x/mod`、`x/sync`、`x/sys`、`x/term`、`x/text`、`x/tools`。Claude CLI 2.1.292 / SDK 0.128.0 的现有兼容目标保持不变；本条升级共用工具链和网络依赖，并迁移 HTTP/2 客户端保活配置；没有新增 Claude 请求、认证或协议实现。
+- 工具兼容性：首轮 unit / integration 的 `TestAuthIdentityFoundationSchemas` 失败，原因是 `x/tools v0.49.0` 不能读取 Go 1.27.2 的 V5 导出数据。依据官方 [V5 读取器修复](https://github.com/golang/tools/commit/89ed5c340cb6d4a9437f801cfc718ac5980c938d)，将 `x/tools` 固定为 v0.51.0 后该测试通过；CI 同步升级为含 V5 读取器的 golangci-lint v2.14.0，避免 v2.13 系列内置 v0.49.0 的兼容问题。未删除或弱化 schema 测试。
+- HTTP/2 兼容：`x/net v0.60.0` 将旧配置 API 标记为弃用。客户端保活改用 `http.Transport.Protocols` / `HTTP2Config`，保留两种模式原有 PING 超时、代理和 HTTP/1.1 回退，并补充真实 TLS 回退回归。服务端仍使用已修补的兼容适配器，原因是标准库单一 `Server.IdleTimeout` 无法保留当前 HTTP/1 与 H2C 分别配置的空闲超时；该调用和旧 `GoAwayError` 兼容判断仅按位置豁免 SA1019 并注明理由，未关闭安全扫描或全局弃用检查。
+- 文件：`backend/go.mod` / `go.sum`、三个 Dockerfile、backend-ci / security-scan / release 工作流的 Go 校验、CI 的 golangci-lint 版本、开发指南、三份 README 和 `.github/claude-validation/README.md` 中现行验证命令；`http_upstream.go` / HTTP2 keepalive 测试、server `http.go` / ingress 测试、Codex models service 及其错误兼容测试。历史实验报告中的 Go 版本和结果保留。
+- 最终安全验证：Go 1.27.2、govulncheck v1.8.0，`GOOS=linux GOARCH=amd64 govulncheck ./...` 退出 0：代码可达漏洞 0、导入包漏洞 0；仍有 7 个依赖模块级提示，扫描未发现调用路径，不宣称整个依赖树不存在漏洞。此前 macOS 扫描也通过；GitHub 原失败运行未重跑，最终修复尚未推送。
+- 最终工程验证：`GOTOOLCHAIN=go1.27.2 go test -p 2 -tags=unit ./...` 58 个包通过；`GOTOOLCHAIN=go1.27.2 CI=true go test -p 1 -tags=integration ./...` 52 个包通过（使用真实本地 PostgreSQL / Redis 测试容器）。HTTP/2 / 旧错误兼容针对性测试 3 个包通过；最终补充弃用注释后 server unit 再次通过。官方 golangci-lint v2.14.0 二进制经 SHA-256 核验，使用独立缓存及 `--allow-parallel-runners --concurrency=2 --timeout=30m ./...` 完整检查 0 issues；首次进程锁冲突、旧工具导出格式问题和弃用告警均保留为检查过程记录。
+- 构建配置验证：`go mod verify`、`go mod tidy -diff`、`git diff --check` 通过；官方 `golang:1.27.2-alpine` 标签存在，workflow 校验、go.mod 与三个构建镜像版本一致。未执行完整 Docker 镜像构建或真实上游请求。
+- 提交 / PR：本条工作区修复尚未提交或推送；后续提交应使用 `Claude-Change-ID: CC-20261009-007` 并补记哈希与 PR。并行 gzip 任务已自行提交为 `3b9b984f` / `4dbbd949`；本条没有将其改动纳入安全修复提交，最终验证针对包含这些提交的工作区。未部署；本地测试不代表真实 Claude 上游接受、订阅或计费验证。
+
+- 2026-10-09 交付授权：维护者要求提交全部当前改动、推送并合入 `release`，随后删除本次开发分支。安全修复随 [PR #5](https://github.com/skingford/sub2api/pull/5) 交付，使用 merge commit 保留各项实现与证据提交的原始引用；最终提交后补记哈希。

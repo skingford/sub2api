@@ -136,12 +136,14 @@ func ProvideHTTPServer(cfg *config.Config, router *gin.Engine) *http.Server {
 	// 根据配置决定是否启用 H2C
 	if cfg.Server.H2C.Enabled {
 		h2cConfig := cfg.Server.H2C
-		if err := http2.ConfigureServer(server, &http2.Server{
-			MaxConcurrentStreams:         h2cConfig.MaxConcurrentStreams,
-			IdleTimeout:                  time.Duration(h2cConfig.IdleTimeout) * time.Second,
-			MaxReadFrameSize:             uint32(h2cConfig.MaxReadFrameSize),
-			MaxUploadBufferPerConnection: int32(h2cConfig.MaxUploadBufferPerConnection),
-			MaxUploadBufferPerStream:     int32(h2cConfig.MaxUploadBufferPerStream),
+		// 保留兼容适配器以支持独立的 HTTP/1 与 H2C IdleTimeout；
+		// 标准库 http.Server.IdleTimeout 会同时影响两种协议。
+		if err := http2.ConfigureServer(server, &http2.Server{ //nolint:staticcheck // SA1019: preserve distinct HTTP/1 and H2C idle timeouts.
+			MaxConcurrentStreams:         h2cConfig.MaxConcurrentStreams,                     //nolint:staticcheck // SA1019: configuration for the H2C compatibility adapter above.
+			IdleTimeout:                  time.Duration(h2cConfig.IdleTimeout) * time.Second, //nolint:staticcheck // SA1019: preserve the separate H2C idle timeout.
+			MaxReadFrameSize:             uint32(h2cConfig.MaxReadFrameSize),                 //nolint:staticcheck // SA1019: configuration for the H2C compatibility adapter above.
+			MaxUploadBufferPerConnection: int32(h2cConfig.MaxUploadBufferPerConnection),      //nolint:staticcheck // SA1019: configuration for the H2C compatibility adapter above.
+			MaxUploadBufferPerStream:     int32(h2cConfig.MaxUploadBufferPerStream),          //nolint:staticcheck // SA1019: configuration for the H2C compatibility adapter above.
 		}); err != nil {
 			log.Printf("Failed to configure HTTP/2 Cleartext (h2c): %v", err)
 		} else {

@@ -55,7 +55,7 @@ TLS profile、新原生配置，以及新配置的 HTTP / HTTPS CONNECT / SOCKS5
 transport_results_dir=$(mktemp -d)
 (
   cd backend
-  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOTOOLCHAIN=go1.27.0 \
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOTOOLCHAIN=go1.27.2 \
     go build -o "$capture_build_dir/transport-probe" \
     ./internal/repository/testdata/claude_capture_probe.go
 )
@@ -94,7 +94,7 @@ messages 和三条 count_tokens 的握手也匹配此摘要。
 
 ```bash
 cd backend
-GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service \
+GOTOOLCHAIN=go1.27.2 go test -tags=unit ./internal/service \
   -run 'TestClaudeCode2292|TestSyncBillingHeaderVersion|TestAnthropicClientRequestID' -count=1
 ```
 
@@ -128,7 +128,7 @@ docker run --rm --network none \
   --mount "type=bind,src=$PWD/.github/claude-validation/verify_cch_capture.py,dst=/opt/verify_cch_capture.py,readonly" \
   --entrypoint python3 sub2api-claude-validation:2.1.292 /opt/verify_cch_capture.py
 
-(cd backend && GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/pkg/claude ./internal/service \
+(cd backend && GOTOOLCHAIN=go1.27.2 go test -tags=unit ./internal/pkg/claude ./internal/service \
   -run 'TestCCH2292|TestClaudeNative|TestClaudeCode2292' -count=1)
 ```
 
@@ -174,7 +174,7 @@ PY
   cd backend
   CLAUDE_EXTENDED_AUDIT_INPUT="$audit_output" \
   CLAUDE_EXTENDED_AUDIT_OUTPUT="$audit_output/analysis/production-audit.json" \
-  GOTOOLCHAIN=go1.27.0 go test -overlay="$audit_output/overlay.json" -tags=unit \
+  GOTOOLCHAIN=go1.27.2 go test -overlay="$audit_output/overlay.json" -tags=unit \
     ./internal/service -run '^TestExtendedNative' -count=1 -v
 )
 ```
@@ -190,7 +190,7 @@ overlay 不改生产源码。审查测试采集差异，PASS 不等于没有差�
 检查 49 条报文 × 4 个转发配置，并验证托管历史、模型配置和能力策略。执行：
 
 ```bash
-(cd backend && GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service -run '^TestClaudeAlignment' -count=1)
+(cd backend && GOTOOLCHAIN=go1.27.2 go test -tags=unit ./internal/service -run '^TestClaudeAlignment' -count=1)
 ```
 
 实时 CLI 联调使用生产恢复 / Forward 服务和测试存储 / 上游。它覆盖 Sonnet 4.6、Sonnet / Opus 5.5，
@@ -202,7 +202,7 @@ alignment_repo="$PWD"
 alignment_output=$(mktemp -d)
 (
   cd backend
-  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOTOOLCHAIN=go1.27.0 \
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOTOOLCHAIN=go1.27.2 \
     go test -tags=unit -c -o "$alignment_output/service-alignment.test" ./internal/service
 )
 mkdir "$alignment_output/results"
@@ -228,7 +228,7 @@ metadata 和 billing；不能省略这一步后把误分类导致的头变化当
 `CLAUDE_REQUEST_RECHECK_OUTPUT` 为新 JSON 输出路径，执行：
 
 ```bash
-GOTOOLCHAIN=go1.27.0 go test -overlay=/absolute/path/to/overlay.json -tags=unit \
+GOTOOLCHAIN=go1.27.2 go test -overlay=/absolute/path/to/overlay.json -tags=unit \
   ./internal/service -run '^TestNativeRequestRecheck$' -count=1 -json
 ```
 

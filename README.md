@@ -107,19 +107,19 @@ docker compose -f docker-compose.local.yml -f docker-compose.override.yml logs -
 
 ## 开发与验证
 
-后端使用 Go **1.27.0**；前端使用仓库锁定的 pnpm 依赖。集成测试需要 Docker。
+后端使用 Go **1.27.2**；前端使用仓库锁定的 pnpm 依赖。集成测试需要 Docker。
 
 ```bash
 cd backend
-GOTOOLCHAIN=go1.27.0 go test -tags=unit ./...
-GOTOOLCHAIN=go1.27.0 go test -tags=integration ./...
+GOTOOLCHAIN=go1.27.2 go test -tags=unit ./...
+GOTOOLCHAIN=go1.27.2 go test -tags=integration ./...
 golangci-lint run --timeout=30m ./...
 ```
 
 Claude 请求回归可单独运行：
 
 ```bash
-GOTOOLCHAIN=go1.27.0 go test -tags=unit ./internal/service \
+GOTOOLCHAIN=go1.27.2 go test -tags=unit ./internal/service \
   -run 'TestClaudeCode2286|TestClaudeCode229[12]|TestAnthropicClientRequestID' -count=1
 ```
 
