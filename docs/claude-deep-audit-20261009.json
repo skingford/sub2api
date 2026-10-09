@@ -1,0 +1,458 @@
+{
+  "change_id": "CC-20261009-008",
+  "audited_commit": "9833384c65ddb574b2054d3c9e0a7dd83d359f5c",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "toolchain": "go1.27.2",
+  "cli": "2.1.292",
+  "sdk": "0.128.0",
+  "cli_platform": "Linux x64",
+  "cli_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+  "docker_image": "sha256:eb7d83c374af3c3a113387e520f7f0247719f733e4a8ed0e9da73c98a69a91b4",
+  "evidence_root": "/Users/kingford/claude-capture/deep-audit-20261009-o0w0wdwu",
+  "summary": {
+    "native_scenarios": 85,
+    "native_requests": 139,
+    "native_gzip_requests": 44,
+    "forwarding_combinations": 556,
+    "logical_body_equal": 556,
+    "wire_body_equal": 552,
+    "same_auth_combinations": 278,
+    "same_auth_headers_equal": 274,
+    "cch_algorithm_vectors": 593,
+    "cch_existing_golden_hashes_checked": 81,
+    "cch_new_seed_vectors": 256,
+    "fingerprint_unique_vectors": 394,
+    "fingerprint_executions_with_padding": 400,
+    "transport_combinations": 112,
+    "trace_combinations": 56,
+    "policy_combinations": 108,
+    "policy_runtime_oracle_requests": 20,
+    "policy_first_party_wire_requests": 16,
+    "policy_first_party_cch_mismatches": 12,
+    "native_conversations": 12,
+    "native_messages": 96,
+    "native_counts": 24,
+    "cross_session_leaks": 0,
+    "service_pass_events": 548,
+    "service_skipped_lab_entries": 2,
+    "repository_top_level_tests": 19,
+    "repository_pass_events": 51,
+    "native_error_replay_scenarios": 13,
+    "native_error_replay_requests": 27,
+    "native_error_replay_gzip_requests": 20,
+    "total_unmodified_cli_scenarios": 98,
+    "total_unmodified_cli_requests": 166,
+    "total_unmodified_cli_gzip_requests": 64,
+    "additional_contract_pass_events": 38,
+    "error_signal_observer_pass_events": 16,
+    "final_policy_recheck_combinations": 108,
+    "success_response_header_policy_observers": 1
+  },
+  "production_unchanged": true,
+  "source_manifest_files": 3188,
+  "source_anchors": [
+    {
+      "module": "chunk-hy08191v.js",
+      "binary_offset": 209400178,
+      "size": 10403,
+      "sha256": "64d6e6c6172e3dba5e07f7cc7c8d94ab1c3a9dfbe26fef924a584ea9e2a09402"
+    },
+    {
+      "module": "chunk-47d8fnm7.js",
+      "binary_offset": 207221829,
+      "size": 9408,
+      "sha256": "0bfe82c8210f3f477a7e651910e9d5ea744cf914a9e4da1f64495bb3358c8043"
+    },
+    {
+      "module": "chunk-9yn9h839.js",
+      "binary_offset": 209661529,
+      "size": 936192,
+      "sha256": "14f68808b28960aa01cb7dc43c6e876964df322deda0242f744ef02b81b55f86"
+    }
+  ],
+  "runtime_probe_provenance": {
+    "official_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "instrumented_sha256": "45c93b87e02c65141beea2f03918f2c63fc7e0bef4484cd5bebddc14b3c10aa8",
+    "entry_source_offset": 203235669,
+    "entry_source_length": 23769,
+    "bytecode_record_offset": 251247633,
+    "payload_offset": 89120776,
+    "native_prefix_unchanged": true,
+    "native_prefix_sha256": "3a10b78a33bf6b5f74850bf9eb91a2292128254af12c0364986e375c4dacbcf5",
+    "probe_script_sha256": "a3e1e26b5aeac6621a7652cf4df0f41278ce5ffb74f8afb9af72560ef1299d85"
+  },
+  "fingerprint_provenance": {
+    "source_function_sha256": "e9b2d2489c08a912106b578e884b9217427545f38efdd0722b8a526332bc94b9",
+    "script_sha256": "6ad4536514d46c3bc8e00756a214e6877b5bf5bffc5d954f4cfaa5b6bfb983fb",
+    "unique_vectors": 394,
+    "node": "v24.12.0",
+    "method": "Exact extracted original JS function under Node; not an unmodified CLI capture."
+  },
+  "findings": [
+    {
+      "id": "CC-20261009-008-F1",
+      "priority": 2,
+      "file": "backend/internal/service/gateway_claude_native.go",
+      "lines": [
+        115,
+        123
+      ],
+      "description": "Leaving the known branch can send decoded native gzip JSON with its original cch=00000 sentinel; logical-body SHA equality does not prove encoding-dependent CCH validity.",
+      "first_party_wire_mismatches": [
+        "blocks-apikey-normal-native-off",
+        "blocks-apikey-normal-ua-custom",
+        "blocks-apikey-normal-ua-newer",
+        "blocks-apikey-passthrough-native-off",
+        "blocks-apikey-passthrough-ua-custom",
+        "blocks-apikey-passthrough-ua-newer",
+        "runtime-apikey-normal-native-off",
+        "runtime-apikey-normal-ua-custom",
+        "runtime-apikey-normal-ua-newer",
+        "runtime-apikey-passthrough-native-off",
+        "runtime-apikey-passthrough-ua-custom",
+        "runtime-apikey-passthrough-ua-newer"
+      ],
+      "native_custom_ua_forwarding_differences": [
+        {
+          "account": "apikey",
+          "auth_kind_correct": true,
+          "body_equal": true,
+          "calls": 1,
+          "case": "capture-deep--gzip-ua-override",
+          "content_length_equal": true,
+          "get_body_equal": true,
+          "handler_validated_native": true,
+          "header_differences": [
+            {
+              "forwarded": "",
+              "header": "content-encoding",
+              "native": "gzip"
+            }
+          ],
+          "index": 2,
+          "ingress_decoded_equal": true,
+          "input_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "method_equal": true,
+          "native_cch_recomputed_equal": false,
+          "output_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "passthrough": false,
+          "path_query_equal": true,
+          "profile": "",
+          "same_auth_kind": true,
+          "status": 200,
+          "target": "https://api.anthropic.com/v1/messages?beta=true",
+          "wire_body_equal": false,
+          "wire_compressed": true
+        },
+        {
+          "account": "apikey",
+          "auth_kind_correct": true,
+          "body_equal": true,
+          "calls": 1,
+          "case": "capture-deep--gzip-ua-override",
+          "content_length_equal": true,
+          "get_body_equal": true,
+          "handler_validated_native": true,
+          "header_differences": [
+            {
+              "forwarded": "",
+              "header": "content-encoding",
+              "native": "gzip"
+            }
+          ],
+          "index": 2,
+          "ingress_decoded_equal": true,
+          "input_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "method_equal": true,
+          "native_cch_recomputed_equal": false,
+          "output_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "passthrough": true,
+          "path_query_equal": true,
+          "profile": "",
+          "same_auth_kind": true,
+          "status": 200,
+          "target": "https://api.anthropic.com/v1/messages?beta=true",
+          "wire_body_equal": false,
+          "wire_compressed": true
+        },
+        {
+          "account": "oauth",
+          "auth_kind_correct": true,
+          "body_equal": true,
+          "calls": 1,
+          "case": "capture-deep--gzip-ua-override",
+          "content_length_equal": true,
+          "get_body_equal": true,
+          "handler_validated_native": true,
+          "header_differences": [
+            {
+              "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+              "header": "anthropic-beta",
+              "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+            },
+            {
+              "forwarded": "",
+              "header": "content-encoding",
+              "native": "gzip"
+            }
+          ],
+          "index": 2,
+          "ingress_decoded_equal": true,
+          "input_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "method_equal": true,
+          "native_cch_recomputed_equal": false,
+          "output_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "passthrough": false,
+          "path_query_equal": true,
+          "profile": "",
+          "same_auth_kind": false,
+          "status": 200,
+          "target": "https://api.anthropic.com/v1/messages?beta=true",
+          "wire_body_equal": false,
+          "wire_compressed": true
+        },
+        {
+          "account": "oauth",
+          "auth_kind_correct": true,
+          "body_equal": true,
+          "calls": 1,
+          "case": "capture-deep--gzip-ua-override",
+          "content_length_equal": true,
+          "get_body_equal": true,
+          "handler_validated_native": true,
+          "header_differences": [
+            {
+              "forwarded": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07",
+              "header": "anthropic-beta",
+              "native": "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-binding-controls-2026-08-01,cache-diagnosis-2026-04-07"
+            },
+            {
+              "forwarded": "",
+              "header": "content-encoding",
+              "native": "gzip"
+            }
+          ],
+          "index": 2,
+          "ingress_decoded_equal": true,
+          "input_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "method_equal": true,
+          "native_cch_recomputed_equal": false,
+          "output_sha256": "82eaa9ccd99a66e3d6674bad27959fc2ea35785352b88179363bfa34d8fbc386",
+          "passthrough": true,
+          "path_query_equal": true,
+          "profile": "",
+          "same_auth_kind": false,
+          "status": 200,
+          "target": "https://api.anthropic.com/v1/messages?beta=true",
+          "wire_body_equal": false,
+          "wire_compressed": true
+        }
+      ],
+      "real_provider_rejection_verified": false,
+      "fix_applied": false
+    },
+    {
+      "id": "CC-20261009-008-F2",
+      "priority": 2,
+      "file": "backend/internal/service/gateway_claude_compatibility.go",
+      "lines": [
+        180,
+        184
+      ],
+      "description": "The error response copier drops cf-ray. The native compression fallback interprets a marker-less 403 as a non-Anthropic rejection, changing downstream retry decisions.",
+      "replay_request_counts": {
+        "cf-ray": {
+          "original": 1,
+          "gateway_normalized": 3,
+          "lab_header_restored": 1
+        },
+        "request-id": {
+          "original": 1,
+          "gateway_normalized": 1
+        },
+        "no_marker": {
+          "original": 3,
+          "gateway_normalized": 3
+        }
+      },
+      "ordinary_sdk_retries": 0,
+      "response_status": 403,
+      "scope": "Production error-finalizer outputs replayed verbatim to the unmodified native CLI; sustained fixed 403, not a complete live gateway deployment. Restored marker is a lab-only causal control.",
+      "fix_applied": false,
+      "live_provider_verified": false
+    },
+    {
+      "id": "CC-20261009-008-F3",
+      "priority": 2,
+      "file": "backend/internal/service/gateway_claude_compatibility.go",
+      "lines": [
+        171,
+        174
+      ],
+      "related_file": "backend/internal/service/gateway_upstream_response.go",
+      "related_lines": [
+        294,
+        311
+      ],
+      "description": "Error extraction does not retain alternate native bad_json object/plaintext forms. Rebuilding them as a generic api_error removes a native compression-recovery signal.",
+      "replay": {
+        "bad-json-object": {
+          "original_requests": 3,
+          "original_exit": 0,
+          "normalized_requests": 1,
+          "normalized_exit": 1
+        },
+        "bad-json-text": {
+          "original_requests": 3,
+          "original_exit": 0,
+          "normalized_requests": 1,
+          "normalized_exit": 1
+        },
+        "standard-anthropic-control": {
+          "original_requests": 3,
+          "original_exit": 0,
+          "normalized_requests": 3,
+          "normalized_exit": 0
+        }
+      },
+      "scope": "Production response-finalizer export plus unmodified CLI replay; synthetic upstream rejects gzip and accepts plaintext; request-id preserved, SDK retries=0.",
+      "fix_applied": false,
+      "live_provider_verified": false
+    }
+  ],
+  "expected_boundaries": {
+    "empty_protocol_header_filled": 2,
+    "oauth_legacy_session_rewrite_rejected": [
+      "runtime-oauth-normal-native-off",
+      "runtime-oauth-passthrough-native-off",
+      "blocks-oauth-normal-native-off",
+      "blocks-oauth-passthrough-native-off"
+    ],
+    "custom_origin_plain_cch_observations": 4,
+    "ordinary_api_vs_late_extra_body_or_verbose_different_cases": 8,
+    "success_header_filter": {
+      "default": {
+        "Content-Type": [
+          "application/json"
+        ],
+        "X-Request-Id": [
+          "local_generic_id"
+        ]
+      },
+      "explicit-additional": {
+        "Anthropic-Ratelimit-Requests-Remaining": [
+          "99"
+        ],
+        "Content-Type": [
+          "application/json"
+        ],
+        "Request-Id": [
+          "req_local_success"
+        ],
+        "X-Request-Id": [
+          "local_generic_id"
+        ]
+      }
+    },
+    "success_header_impact": "Default configurable policy drops request-id and tested anthropic rate-limit header. Source ne() uses request-id after compression fallback; cross-process persistence impact is an inference and was not exercised."
+  },
+  "experiments": {
+    "deep_cases": "deep_native_lab.py (22) + comprehensive_lab.py (51) + gzip_fix_lab.py (12)",
+    "algorithm_seed": 2026100908,
+    "runtime_input_scope": "337 prior vectors plus 256 new; 20 policy recomputations separate. Native executable prefix unchanged, JS entrypoint replaced in local-only oracle.",
+    "fingerprint_scope": "Exact extracted JS function executed under Node, compared to current Go implementation; 138 prior + 256 new, final batch padded to ten.",
+    "transport_scope": "Production Forward verified body/headers/length/GetBody/profile, followed by real transport replay of those equal native bytes and header values; four routes, logs off/on.",
+    "session_scope": "Test persistence/upstream in CLI service lab; PostgreSQL transactional tests separate.",
+    "full_unit_integration_lint_rerun": false,
+    "first_policy_capture_drops": {
+      "oracle": 203,
+      "go_wire": 79
+    },
+    "final_policy_capture_drops": {
+      "oracle": 0,
+      "go_wire": 0
+    },
+    "corrections": [
+      "Initial runtime-oracle preparation used a relative path from snapshot/backend and failed before execution; rerun with absolute repository path.",
+      "Host bind-mount packet flushing dropped burst plaintext packets; original failed captures retained. Repeated oracle and Go sender capture on container tmpfs, then exported and independently verified all PCAP bytes."
+    ],
+    "error_replay": "Export production returnClaudeUpstreamError output; replay original/normalized persistent 403 to unmodified CLI, SDK retries=0, blocks=2, 600k system chars. Then restore only cf-ray in the lab response as a causal control.",
+    "final_observer_recheck": "After extending the observer with error-signal export, recompiled it and verified all 108 policy observations unchanged.",
+    "error_body_recovery": "Three body forms, two sides each; gzip requests receive 400, plaintext receives valid SSE. Standard Anthropic format is the positive control."
+  },
+  "artifact_sha256": {
+    "analysis/baseline.json": "a1cc378af4933f8046de480b7e2efc26f161b0244c4eaa6cb4e46b87b6ec3353",
+    "analysis/source-manifest.json": "11469971bf62455121c143a3d42f19a553550aabcb0b2bff4ed5d198ec245f1c",
+    "analysis/source-anchors.json": "42b592e78978b3fb659fb0c6948b1611318001ad6887cc407c105622fbc94f31",
+    "analysis/pcap-capture-baseline.json": "ee5323f4d92840acab6da1eea5297ed4c54182053541843d8f4274e3db7e6e42",
+    "analysis/pcap-capture-gzip.json": "eab9a9565f4046259d166b5d55e3c4e25dcb34a5ccc7166034aa4d87b5167e7d",
+    "analysis/pcap-capture-deep.json": "780562650e662fd6d9c4d824725c18213f9cf833027cabd4987dbc0db3a1f79b",
+    "analysis/forwarding.json": "00d89e8c482ce6bf64686502e54e7907a19e82dc86dad683e2097ed07c8d879a",
+    "analysis/generic.json": "96ed0dc2cd6743a7f95d616d7d6abbc144d312277635ef91b8dd93b4e5e2470b",
+    "analysis/service-audit.log": "7be90af86eb58840c78fa499529c07a1eaff4c52eaa71ffd48e6eb61b510df1e",
+    "analysis/transport-input-provenance.json": "f655715f8be8c6d6eedacfe27004ecb53b91caeebd5d359b3bf90cae29c422f8",
+    "analysis/transport-verification.json": "677ed1096c1a66df062a616acfe95339cf31bf053bac1204e684bd4086253351",
+    "analysis/repository-integration.jsonl": "ee74b3702ae8ae0dab1a6374480bdf55034e1bb93959d33268d73ae847084b35",
+    "analysis/native-service.log": "00218e875a2a927f40a08317a1d90923d2325cd11a33c922b37ed2f0bdfa4f83",
+    "analysis/cch-comparison.log": "55a195880c26abc5ca3a05d4a3d18a0345b78287f79b2fc21dd75d57405c4d09",
+    "analysis/fingerprint.log": "5f9e0cfa2e946c8c7817ad18fd1fc680cfb5d8885ce607d6c8445eaebf395291",
+    "fingerprint/provenance.json": "4eaf057f6da77ac96ee86f966284e68b720e15350fa3e3e2c570774c13aa5fdd",
+    "fingerprint/vectors.json": "60046a449ef0c3e4fd6bfeabbc89297913d7c73a998888871313bafcc0ab256a",
+    "cch-probe/cases.json": "c08d02ba2dca88f21733f240224e149e1f5e33b5446eb40616897825509972ff",
+    "cch-probe/records.json": "e29779692ac660801704040ff89f7cd8a38748f99de67bf3cf298144d82fef22",
+    "cch-probe/pcap-verification.json": "be97ac4885af5a3b508cee80540dba3b1271c2a52c8c082448de8c8de9342d45",
+    "cch-probe/runtime-probe-provenance.json": "995841369e7c807ab2a7ee35e17cd88d01aad27a11bbd3ab1b54adc5ff975681",
+    "policy/results.json": "35f1be05bcc5eba7549d19c61458a13745580847f140d9a5bf7cbecc26ed07ea",
+    "policy-oracle-v2/cases.json": "de16dfe514dec482b6908a2c58dc585b91921de62db996dd86acf28dbdd9b5b1",
+    "policy-oracle-v2/records.json": "719f388e8d1092163f761615f32ac8f2dd09fb91e8ea19931bb87b3d28211c03",
+    "policy-oracle-v2/pcap-verification.json": "ee5159e55f7ac1c5c035067aeff34dacf1cc0c7dc030b6cd70a414b272f4fa3d",
+    "policy-wire-v2/records.json": "b8393de44c3c1b6388977478ad1662b20616e22407f86aaccfc8b6ae916159a1",
+    "policy-wire-v2/pcap-verification.json": "d7e2a6eaeb019230f5495723534ad04cbc4ac1d53b1169a657750277908ada47",
+    "analysis/error-signals.log": "806aacd19f6eb49c205aebd73e8a00d293208cef87f1893575c194c52af34511",
+    "analysis/service-contracts.log": "831b556859fc79dc7f635e0788d68ff6ae7b4182e3219c88f9b705057601ca0a",
+    "analysis/policy-final.log": "35ef3a5f7a74c157de088fe4930513c1ac97cd477c9b04e0a55c4dfe3aa52c87",
+    "analysis/error-replay-pcap.json": "8154445e38371e24cbcb2c282260d3d0715e40f169d736bfe5c7637a9ea4d1a0",
+    "analysis/error-restored-pcap.json": "6cffed70313af1cc34ab587b19a600b9f6736f82e47da47328de59b357213728",
+    "error-replay/summary.json": "ea47914c1250a5daa1efa5333457d120dc15f312ac94488516dfdd22ef8024ce",
+    "error-restored/summary.json": "1ee662ed84f2bd15f8b0db5103991051aee486f4e314b6eb2fb81701b2233216",
+    "error-responses/cf-ray.json": "aefce0c1ad411ad933fd0d535d476a42031c9b46f1ffd02f9dc5673d0fd1f43c",
+    "error-responses/request-id.json": "f9f5a62f33fdbda02ad2e339e5ab3676eb11683b0e2f95367afbb5b32d58fdaf",
+    "error-responses/none.json": "f17b3c03d318918f8f42543f1868d5a8833479d3fdcb092e0dd8274f4546d235",
+    "analysis/error-export-bad-json-object.log": "f0b0df20fad06394e17704f01ec1dc57ac987c4f119710429a4ceb2b17aa7a0d",
+    "analysis/error-body-bad-json-object.log": "fb3168cbfc0be052fb085d7c10c536ee74d95025948b8886b68766ba056718f7",
+    "analysis/pcap-bad-json-object.json": "d94c563d89343baf499581127f65a30e3d4aa3bbfc91d685c18d2b440aaf99df",
+    "error-body-bad-json-object/summary.json": "9fe24fbc445713db3cb283e68d378b06a605a9564aa227a5f556c525ec2f5f98",
+    "error-bodies/bad-json-object/request-id.json": "af84ab5c4441c24ccf09bcfec3ea4d3633135b4c5db6e1aa2f7128a3901cf750",
+    "analysis/error-export-bad-json-text.log": "35f68a14e81fc66e8d34212aeab455915103c605ce2f577977fbd36793447e76",
+    "analysis/error-body-bad-json-text.log": "fb3168cbfc0be052fb085d7c10c536ee74d95025948b8886b68766ba056718f7",
+    "analysis/pcap-bad-json-text.json": "d94c563d89343baf499581127f65a30e3d4aa3bbfc91d685c18d2b440aaf99df",
+    "error-body-bad-json-text/summary.json": "9fe24fbc445713db3cb283e68d378b06a605a9564aa227a5f556c525ec2f5f98",
+    "error-bodies/bad-json-text/request-id.json": "ab43fc79441d3e73f531ce9afe9e1fa1a930e0d78741eeb30e2568f730c2859a",
+    "analysis/error-export-bad-json-standard.log": "b839b4e29047be6420c21fe8880a89c625af083b3f2f684592694b611f761776",
+    "analysis/error-body-bad-json-standard.log": "67ef467fd29c9cfa15cdc95a71661c2ece7dc12b67cbae2e01626c0cb7e7d658",
+    "analysis/pcap-bad-json-standard.json": "722ca1956b54607a10d73210eede135008b6dfaa723178197a614f0cdac7b952",
+    "error-body-bad-json-standard/summary.json": "d5f8620c2a759b89284eb1f0e1292888dd81f8fa47461849d1288a155c87e496",
+    "error-bodies/bad-json-standard/request-id.json": "dfaf6ba25253a45a69679300be5d94993280219bfca68ba4c0c477297ecd9040",
+    "analysis/success-headers.json": "28bdf5c7cf9a80ce51459992fd2d63d602eae236c4163088a629991e93bb77bf",
+    "analysis/success-headers.log": "27c9197c32bc11271d300cd81714e2e54b00fa43c046704b683a7ca56f9cb42d"
+  },
+  "scope_limits": [
+    "Pinned Linux x64 messages/count_tokens path; not all versions, platforms or background CLI endpoints.",
+    "Native runtime oracle, extracted-function execution and unmodified CLI captures are distinct evidence types.",
+    "Network-none Docker, fake credentials, loopback synthetic upstream. No live entitlement, signature, billing or provider-acceptance claims."
+  ],
+  "commit_references": {
+    "audit": "pending; Claude-Change-ID: CC-20261009-008",
+    "new_pr": null,
+    "pushed": false
+  },
+  "audit_tool_sha256": {
+    ".github/claude-validation/deep_native_lab.py": "9f64f5f854a48d1ef97f4d76132e2b0457eac6fe9a31f451a98054269cde1aa0",
+    ".github/claude-validation/deep_policy_audit_test.go": "3805979415f0306bf8b73549f6533166bec5783275296f3835f61cbf6fe188f3",
+    ".github/claude-validation/deep_policy_wire_lab.py": "ecb2df41fa92fea41c4da70310c97f30cab5efd7b0905b9ee8ea9d08847690c0",
+    ".github/claude-validation/deep_error_replay_lab.py": "a1a1d52f2642f68e250b8a3ab0c32eb0aee24a5db2b06f1064b947c04930c1ad",
+    ".github/claude-validation/verify_deep_runtime.py": "79c71989e52b2472aeb82d1ec8758f55a5cb3a663029291a443410d831e99a0d",
+    ".github/claude-validation/ram_capture.py": "b01f00d261924b492f2a6467b78c396cb88acb26ff691c35830771d6ded39617",
+    ".github/claude-validation/deep_response_header_audit_test.go": "d47b09aebddaa9a4c8c572c1d5f463c48623f7cfe5126564a64bff54c90fcd36"
+  }
+}

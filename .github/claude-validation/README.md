@@ -343,3 +343,41 @@ python3 /opt/verify_post_trace.py RESULTS NATIVE_BASELINES OUTPUT_JSON --strict-
 编码策略 overlay 会断言旧 Content-Encoding 配置被过滤；实际网络仍用 encoding_policy_lab
 与 verify_encoding_policy 复验，不能以 getter 或 mock 返回码替代。修复记录见
 [gzip 完整修复](../../docs/claude-gzip-complete-fix-20261009.md)。
+
+## release 合入后的深入审查
+
+先对当前提交执行 `git archive` 保存不可变快照，并记录 go.mod / go.sum 与源码哈希。
+`deep_native_lab.py` 和 comprehensive / extended / post_alignment 一同挂载到 `/opt`，在新的空
+`/work` 与 network-none 中运行；另跑 comprehensive 51 场景和 gzip_fix 12 场景。新增 22 场景覆盖
+字符 / 字节门槛、Unicode、分块降级 / 拒绝、压缩级别及自定义头。
+
+将 `deep_policy_audit_test.go`、`request_recheck_test.go`、`comprehensive_audit_test.go` 用 overlay
+映射到快照的 service 包，固定 `GOTOOLCHAIN=go1.27.2` 编译 Linux 测试二进制。
+`CLAUDE_DEEP_POLICY_OUTPUT` 指向空结果目录，执行 `TestDeepClaudePolicyBoundaries`，得到
+108 个策略观察和生产请求导出。PASS 只表示采集完成；需读取 CCH、编码、错误及发送次数。
+
+`deep_policy_wire_lab.py` 将第一方明文导出通过真实 transport 发送，与 `/oracle/records.json`
+中独立原生运行时的重算结果比较；它固定返回本地 200，不模拟官方拒绝。
+对压缩来源正文，独立 oracle 的输入先仅将原 cch 值恢复为 00000，其他原字节保持不变。
+用 `verify_deep_runtime.py ROOT` 核对算法 oracle 的 PCAP；新随机向量不要求预存黄金值，
+已有 `expected_body_sha256` 则仍必须校验，二者分别计数。
+
+大明文连续发送时，使用 Docker `--tmpfs /work:rw,size=256m`、将空宿主输出目录挂到 `/output`，
+可选把输入案例挂到 `/seed/cases.json`。以 `python3 /opt/ram_capture.py /opt/cch_runtime_lab.py`
+或 `/opt/deep_policy_wire_lab.py` 启动，结束后导出全部材料；原始丢包采集保留，不能算作字节复验成功。
+实际传输仍用 `verify_post_trace.py --strict-order` 和 `verify_encoding_policy.py` 独立核对。
+
+结果见 [深入审查](../../docs/claude-deep-audit-20261009.md)。
+
+`TestDeepClaudeErrorOriginSignals` 使用生产错误转换器，将三种来源标记（cf-ray / request-id / 无标记）的
+原始与转换后响应导出到 `CLAUDE_DEEP_ERROR_OUTPUT`。把导出目录挂到 `/error-inputs`，在新的 tmpfs
+实验目录运行 `deep_error_replay_lab.py`，观察未修改 CLI 收到持续 403 时的真实请求次数与编码变化。
+普通 SDK 重试固定为 0；`cf-ray-restored` 仅在实验响应里补回 cf-ray，作为单变量因果对照，不是生产修复。
+全量运行 7 场景，也可传入场景名；仍需用 verify_comprehensive 核对 PCAP 和零丢包。
+
+错误体恢复分支可设置 `CLAUDE_DEEP_ERROR_KIND=bad-json-object|bad-json-text|bad-json-standard`
+分别导出三组 400。回放时设置 `CLAUDE_LAB_PLAIN_SUCCESS=1`，并选择 request-id-upstream /
+request-id-downstream：gzip 始终返回导出的错误，明文由既有 SSE 模拟器返回成功，比较实际 CLI 是否恢复。
+标准 Anthropic 格式是对照，所有结果仍需 PCAP 核验；不代表真实官方接受。
+`deep_response_header_audit_test.go` 可通过 overlay 放入 util/responseheaders 包，设
+`CLAUDE_HEADER_POLICY_OUTPUT`，观察默认和显式 additional_allowed 下的成功响应头过滤。
