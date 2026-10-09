@@ -1,0 +1,32 @@
+{
+  "method": "POST",
+  "path": "/v1/messages/count_tokens?beta=true",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "claude-cli/2.1.292 (external, sdk-cli)",
+    "X-Claude-Code-Session-Id": "e37ab9a1-a1a7-46f6-8251-08946a7ed87b",
+    "X-Stainless-Arch": "x64",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-OS": "Linux",
+    "X-Stainless-Package-Version": "0.128.0",
+    "X-Stainless-Retry-Count": "0",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v26.3.0",
+    "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01",
+    "anthropic-dangerous-direct-browser-access": "true",
+    "anthropic-version": "2023-06-01",
+    "x-api-key": "local-container-key-not-a-real-credential",
+    "x-app": "cli",
+    "x-claude-code-request-class": "auxiliary",
+    "x-client-request-id": "dcbfacd8-d49c-435a-adbd-0f8d50113302",
+    "Content-Encoding": "gzip",
+    "Connection": "keep-alive",
+    "Host": "api.anthropic.com",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Content-Length": "288"
+  },
+  "wire_body_base64": "H4sIAAAAAAAA/+3NQWrDMBAF0LV6ikHrpKvShc/QG5QsgqO2AccqsQItIXcvxDbZ9gBPIKSZeV+65lM9lCF3uR/2l0PZTnUcS9u+bF/zJp/KNO0/y5S792s+16HkLl+mcs6b3NexlbHlLr/Vfj/E9Du2r9KOfXyfa6t9HeLj+NMu5/IcBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQ/xP5ttvkVusw5e59d3tKESlSSpEi0nzOdaTlNq+IuTPD+yTiMVyLWOernQP39PrcgiMe/cUs+L7XP+fUHycl87MqdgAA",
+  "decoded_sha256": "adc31f086070a4717f988a9c2cfcf11e46ebfa262c1bc56f1989aedb3d07024f",
+  "application_encoding": false
+}

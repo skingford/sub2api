@@ -21,7 +21,8 @@ subprocess.run(['openssl', 'req', '-x509', '-newkey', 'rsa:2048', '-sha256', '-n
                 '-addext', 'subjectAltName=DNS:api.anthropic.com,IP:127.0.0.1'],
                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 results = []
-for case in ['plain', 'gzip-runtime', 'gzip-blocks', 'gzip-unicode']:
+for input_path in sorted(Path('/inputs').glob('*.json')):
+    case = input_path.stem
     for tracing in [False, True]:
         for mode in ['auto', 'auto-http-proxy', 'auto-https-proxy', 'auto-socks5-proxy']:
             folder = ROOT / (case + '-' + ('trace' if tracing else 'plain') + '-' + mode)

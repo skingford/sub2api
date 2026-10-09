@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/requesttrace"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint"
 	"github.com/Wei-Shaw/sub2api/internal/repository"
@@ -62,6 +63,7 @@ func main() {
 		wire, err = base64.StdEncoding.DecodeString(captured.Wire)
 		must(err)
 	}
+	ctx = claude.WithGzipHeaderOrder2292(ctx, wire)
 	req, err := http.NewRequestWithContext(ctx, captured.Method, "https://api.anthropic.com"+captured.Path, bytes.NewReader(wire))
 	must(err)
 	for key, value := range captured.Headers {

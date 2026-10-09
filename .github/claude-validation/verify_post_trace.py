@@ -29,7 +29,8 @@ def wire_bodies(command, uri):
 
 
 def main():
-    root, inputs, output = map(Path, sys.argv[1:])
+    strict_order = "--strict-order" in sys.argv
+    root, inputs, output = map(Path, [arg for arg in sys.argv[1:] if arg != "--strict-order"])
     results = []
     for scenario in json.loads((root / 'summary.json').read_text()):
         folder = root / scenario['folder']
@@ -75,6 +76,8 @@ def main():
     for row in results:
         assert all(row[k] for k in ['wire_bytes_equal', 'logical_body_equal', 'header_values_equal',
                                     'normalized_hello_equal', 'zero_drops']), row
+        if strict_order:
+            assert row['header_order_equal'], row
         if row['tracing']:
             assert all(row[k] for k in ['trace_body_matches_wire', 'trace_digest_matches',
                                         'trace_body_complete', 'trace_credentials_redacted']), row

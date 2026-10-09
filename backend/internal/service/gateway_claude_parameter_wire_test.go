@@ -122,13 +122,19 @@ func (u *claudeGzipWireUpstream) DoWithTLS(req *http.Request, p string, id int64
 
 func nativeGzipRequest(t *testing.T) (*gin.Context, []byte, []byte) {
 	t.Helper()
+	return nativeGzipFixtureRequest(t, "testdata/claude_code_2_1_292/parameter_alignment/native-gzip.json")
+}
+
+func nativeGzipFixtureRequest(t *testing.T, path string) (*gin.Context, []byte, []byte) {
+	t.Helper()
 	var fixture struct {
 		Path    string            `json:"path"`
 		Headers map[string]string `json:"headers"`
 		Raw     string            `json:"raw_body_utf8"`
 		Wire    string            `json:"wire_body_base64"`
+		Digest  string            `json:"decoded_sha256"`
 	}
-	data, e := os.ReadFile("testdata/claude_code_2_1_292/parameter_alignment/native-gzip.json")
+	data, e := os.ReadFile(path)
 	require.NoError(t, e)
 	require.NoError(t, json.Unmarshal(data, &fixture))
 	wire, e := base64.StdEncoding.DecodeString(fixture.Wire)
@@ -140,7 +146,11 @@ func nativeGzipRequest(t *testing.T) (*gin.Context, []byte, []byte) {
 	}
 	body, e := requestbody.ReadRequestBodyWithPrealloc(c.Request)
 	require.NoError(t, e)
-	require.Equal(t, fixture.Raw, string(body))
+	if fixture.Digest != "" {
+		require.Equal(t, fixture.Digest, recoveryHash(body))
+	} else {
+		require.Equal(t, fixture.Raw, string(body))
+	}
 	// The group model allowlist prereads and resets the body before the handler.
 	c.Request.Body = requestbody.NewPrereadBody(body)
 	decoded, e := requestbody.ReadRequestBodyWithPrealloc(c.Request)
@@ -218,7 +228,7 @@ func TestClaudeNativeGzipNeverRestoresChangedBody(t *testing.T) {
 }
 
 func TestClaudeNativeGzipHonorsScopeAndHeaderPolicy(t *testing.T) {
-	for _, scenario := range []string{"custom-origin", "unknown-version", "disabled-preservation", "identity-override"} {
+	for _, scenario := range []string{"custom-origin", "unknown-version", "disabled-preservation"} {
 		t.Run(scenario, func(t *testing.T) {
 			c, body, _ := nativeGzipRequest(t)
 			a := newClaude2292Account(AccountTypeOAuth)
@@ -235,8 +245,6 @@ func TestClaudeNativeGzipHonorsScopeAndHeaderPolicy(t *testing.T) {
 				req.Header.Set("User-Agent", "claude-cli/9.9.9 (external, sdk-cli)")
 			case "disabled-preservation":
 				a.Extra["claude_native_passthrough"] = false
-			case "identity-override":
-				req.Header.Set("Content-Encoding", "identity")
 			}
 			out, e := finalizeNativeClaudeRequest(req, c, a, body)
 			require.NoError(t, e)

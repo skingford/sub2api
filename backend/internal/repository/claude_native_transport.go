@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/requesttrace"
 	fhttp "github.com/bogdanfinn/fhttp"
 )
@@ -75,6 +76,7 @@ func (t *nativeClaudeHTTP1Transport) RoundTrip(req *http.Request) (*http.Respons
 // the captures: credentials, request IDs and body length remain request-specific.
 func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	h := make(fhttp.Header, len(req.Header)+4)
+	applicationEncoding := claude.GzipUsesApplicationHeader2292(req.Context())
 	for key, values := range req.Header {
 		lower := strings.ToLower(key)
 		if lower == "host" || lower == "content-length" || lower == "connection" ||
@@ -97,7 +99,11 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	var keys []string
 	for key := range h {
 		switch strings.ToLower(key) {
-		case "content-encoding", "connection", "host", "accept-encoding", "content-length":
+		case "content-encoding":
+			if !applicationEncoding {
+				continue
+			}
+		case "connection", "host", "accept-encoding", "content-length":
 			continue
 		}
 		keys = append(keys, key)
@@ -106,9 +112,9 @@ func nativeClaudeHeaders(req *http.Request) fhttp.Header {
 	for _, key := range keys {
 		h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], strings.ToLower(key))
 	}
-	// Bun adds request compression after sorting application headers. The
-	// native gzip capture places Content-Encoding immediately before Connection.
-	if _, exists := h["Content-Encoding"]; exists {
+	// Runtime gzip appends this field; CLI precompressed blocks set it before
+	// fetch, making it part of the sorted application headers instead.
+	if _, exists := h["Content-Encoding"]; exists && !applicationEncoding {
 		h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], "content-encoding")
 	}
 	h[fhttp.HeaderOrderKey] = append(h[fhttp.HeaderOrderKey], "connection", "host", "accept-encoding", "content-length")

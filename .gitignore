@@ -190,3 +190,5 @@ request-traces/
 /deploy/tests/__pycache__/
 !docs/request-tracing.md
 !docs/request-tracing-validation.json
+!docs/claude-gzip-complete-fix-20261009.md
+!docs/claude-gzip-complete-fix-20261009.json

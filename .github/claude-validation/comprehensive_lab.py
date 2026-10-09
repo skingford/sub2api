@@ -132,6 +132,7 @@ def main():
         if selected and case['name'] not in selected:
             continue
         CURRENT = case
+        audit.TURN_PAUSE_SECONDS = case.get('turn_pause_seconds', 0)
         os.environ['CLAUDE_AUDIT_MODEL'] = case.get('model', MODELS[0])
         result = audit.run_case(case['base'])
         folder = ROOT / case['base']

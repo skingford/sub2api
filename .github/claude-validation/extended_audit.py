@@ -19,6 +19,7 @@ import validation
 
 ROOT = Path('/work')
 STATE = validation.STATE
+TURN_PAUSE_SECONDS = 0
 CASES = ['parallel-read', 'image-read', 'thinking-tool', 'compact', 'resume',
          'alias-sonnet', 'extra-metadata', 'structured-output', 'api-json', 'oauth-json', 'oauth-stream',
          'api-arg', 'oauth-arg', 'api-stdin', 'count-context', 'oauth-count-context', 'multi-turn']
@@ -187,6 +188,8 @@ def run_case(name):
                     event = json.loads(line)
                     # Slash commands can finish with a result or a local system message.
                     if isinstance(event, dict) and event.get('type') == 'result' and remaining:
+                        if TURN_PAUSE_SECONDS:
+                            time.sleep(TURN_PAUSE_SECONDS)
                         send(remaining.pop(0))
                         if not remaining:
                             p.stdin.close()

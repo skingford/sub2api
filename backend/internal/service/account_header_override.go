@@ -26,6 +26,7 @@ const (
 //   - 连接控制/逐跳头：由 HTTP 栈管理，覆写会破坏请求传输；
 //   - host/content-length：由 Go 的 Request.Host / ContentLength 字段管理，header 覆写不生效或产生冲突；
 //   - content-type：承载报文框架信息（multipart boundary 为每请求随机值），静态覆写必然与 body 不匹配；
+//   - content-encoding：必须与最终发送正文的实际编码一致，由正文构建器管理；
 //   - authorization/x-api-key/cookie 等：上游认证头由账号凭据统一注入，禁止通过覆写篡改或重新引入；
 //   - accept-encoding：强制压缩会破坏网关对上游流式响应（SSE/usage）的解析；
 //   - sec-websocket-*：WebSocket 握手头由拨号器管理（OpenAI WS 模式）；
@@ -35,6 +36,7 @@ var headerOverrideBlockedNames = map[string]struct{}{
 	"host":                     {},
 	"content-length":           {},
 	"content-type":             {},
+	"content-encoding":         {},
 	"transfer-encoding":        {},
 	"connection":               {},
 	"keep-alive":               {},
@@ -182,15 +184,8 @@ func (a *Account) ApplyHeaderOverrides(h http.Header) {
 		return
 	}
 	// 覆写名两两不同（大小写不敏感）且各自只操作同名键，应用顺序不影响结果。
-	// 全量 EqualFold 扫描兜底删除任意 casing 的既有键：透传链路可能保留客户端
-	// 原始 casing，非 canonical/wire casing 的键 deleteHeaderAllForms 覆盖不到。
 	for name, value := range overrides {
-		for existing := range h {
-			if strings.EqualFold(existing, name) {
-				delete(h, existing)
-			}
-		}
-		h[resolveWireCasing(name)] = []string{value}
+		setHeaderRaw(h, resolveWireCasing(name), value)
 	}
 }
 

@@ -321,3 +321,25 @@ python3 /opt/verify_gzip_wire.py /evidence/transport-final /baseline.json /evide
 核对全部发送字节。后者需要同目录的 `verify_post_trace.py` 和 `verify_native_hello.py`。
 
 结果及失败实验边界见 [对齐后综合复核](../../docs/claude-post-alignment-audit-20261009.md)。
+
+## gzip 完整修复复验
+
+`gzip_fix_lab.py` 复用 post_alignment / comprehensive / extended 采集器，运行 12 个新场景；
+与三个依赖一同挂载到 `/opt`。mode 1 / 2 分别覆盖压缩级别 1、6、9 的两轮输入，轮间等待两秒，
+让 mode 1 的异步分块缓存完成构建。所有捕获仍需 `verify_comprehensive.py` 核对 PCAP。
+
+`TestClaudeNativeGzipVariants` 是永久回归，读取 `gzip_alignment/*.json` 的独立捕获，覆盖
+API Key / OAuth 及 passthrough 配置，检查原字节、长度、重试正文和请求上下文中的头序选择。
+设置 `CLAUDE_GZIP_FIX_EXPORT` 可导出实际生产构建器请求。原生完整 JSON 由捕获 gzip 解出，
+另核对 decoded_sha256；application_encoding 的预期来自原始头序，不由 Go 算法生成。
+
+`post_trace_transport_lab.py` 现在遍历 `/inputs/*.json`，每个输入跑四条路径 × 日志开关。
+传入生产导出；另以独立原生捕获的头 / 正文作为核对基线。修复验收必须用严格头序模式：
+
+```bash
+python3 /opt/verify_post_trace.py RESULTS NATIVE_BASELINES OUTPUT_JSON --strict-order
+```
+
+编码策略 overlay 会断言旧 Content-Encoding 配置被过滤；实际网络仍用 encoding_policy_lab
+与 verify_encoding_policy 复验，不能以 getter 或 mock 返回码替代。修复记录见
+[gzip 完整修复](../../docs/claude-gzip-complete-fix-20261009.md)。

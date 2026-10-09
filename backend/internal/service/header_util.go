@@ -36,6 +36,7 @@ var headerWireCasing = map[string]string{
 	"accept-language":                           "accept-language",
 	"sec-fetch-mode":                            "sec-fetch-mode",
 	"accept-encoding":                           "Accept-Encoding",
+	"content-encoding":                          "Content-Encoding",
 	"authorization":                             "authorization",
 
 	// Claude Code 2.1.87+ 新增 header
@@ -109,14 +110,9 @@ func resolveWireCasing(key string) string {
 // setHeaderRaw sets a header bypassing Go's canonical-case normalization.
 // The key is stored exactly as provided, preserving original casing.
 //
-// It first removes any existing value under the canonical key, the wire casing key,
-// and the exact raw key, preventing duplicates from any source.
+// It first removes every case-insensitive variant, including legacy raw keys.
 func setHeaderRaw(h http.Header, key, value string) {
-	h.Del(key) // remove canonical form (e.g. "Anthropic-Beta")
-	if wk := resolveWireCasing(key); wk != key {
-		delete(h, wk) // remove wire casing form if different
-	}
-	delete(h, key) // remove exact raw key if it differs from canonical
+	deleteHeaderAllForms(h, key)
 	h[key] = []string{value}
 }
 
@@ -125,17 +121,15 @@ func addHeaderRaw(h http.Header, key, value string) {
 	h[key] = append(h[key], value)
 }
 
-// deleteHeaderAllForms removes a header in all common key forms (raw, wire casing,
-// canonical) so subsequent setHeaderRaw will not coexist with a passthrough value
-// written under a different casing.
+// deleteHeaderAllForms removes every spelling of the case-insensitive name.
 func deleteHeaderAllForms(h http.Header, key string) {
 	if h == nil || key == "" {
 		return
 	}
-	h.Del(key) // canonical
-	delete(h, key)
-	if wk := resolveWireCasing(key); wk != key {
-		delete(h, wk)
+	for existing := range h {
+		if strings.EqualFold(existing, key) {
+			delete(h, existing)
+		}
 	}
 }
 
@@ -155,8 +149,21 @@ func getHeaderRaw(h http.Header, key string) string {
 			return vals[0]
 		}
 	}
-	// 3. canonical fallback
-	return h.Get(key)
+	// 3. canonical, then arbitrary raw casing. Resolve malformed duplicate raw
+	// keys deterministically; writers still must deduplicate with setHeaderRaw.
+	if vals := h[http.CanonicalHeaderKey(key)]; len(vals) > 0 {
+		return vals[0]
+	}
+	var selected string
+	for existing, vals := range h {
+		if len(vals) > 0 && strings.EqualFold(existing, key) && (selected == "" || existing < selected) {
+			selected = existing
+		}
+	}
+	if selected != "" {
+		return h[selected][0]
+	}
+	return ""
 }
 
 // sortHeadersByWireOrder 按照真实 Claude CLI 的 header 顺序返回排序后的 key 列表。

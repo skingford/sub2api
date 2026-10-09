@@ -35,7 +35,7 @@ func TestPostAlignmentEncodingPolicyAudit(t *testing.T) {
 			if override != "" {
 				account.Credentials[credKeyHeaderOverrideEnabled] = true
 				account.Credentials[credKeyHeaderOverrides] = map[string]any{"content-encoding": override}
-				require.Equal(t, override, account.GetHeaderOverrides()["content-encoding"])
+				require.NotContains(t, account.GetHeaderOverrides(), "content-encoding", "old stored overrides must be filtered")
 			}
 			parsed, err := ParseGatewayRequest(NewRequestBodyRef(body), PlatformAnthropic)
 			require.NoError(t, err)
