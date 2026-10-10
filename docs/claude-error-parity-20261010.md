@@ -61,3 +61,8 @@ Anthropic-Dangerous-Direct-Browser-Access。来源、凭据和鉴权策略保持
 命令、源码范围及证据哈希见本机 `validation-summary.json`。
 本轮未重跑数据库 integration、前端、真实浏览器、CLI / PCAP 或真实提供方验证。
 尚未提交、推送、合并或部署，GitHub 托管 CI 尚未运行。
+
+交付补记（2026-10-10）：实现、测试及 CI 清单已提交为
+[053e59b2b](https://github.com/skingford/sub2api/commit/053e59b2b3a2a60bc76c474eaf1942390b831c90)，
+并推送到 `origin/codex/claude-source-runtime-audit-20261009`。提交归档与最终验证清单一致；
+前文状态保留为验收快照。尚未合并或部署，推送后的 GitHub 托管 CI 结果尚未核验。
