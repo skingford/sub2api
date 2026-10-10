@@ -16,8 +16,17 @@ for path in sorted(root.glob('*/responses.json')):
         'tls.keylog_file:' + str(path.parent / 'server-reference.keys'),
         '-Y', 'http.response && http.content_type contains "text/event-stream"', '-T', 'json', '-x'],
         stderr=subprocess.DEVNULL))
-    actual = [hashlib.sha256(bytes.fromhex(p['_source']['layers']['http']['http.file_data_raw'][0])).hexdigest()
-              for p in packets]
+    actual = []
+    for packet in packets:
+        http = packet['_source']['layers']['http']
+        if 'http.file_data_raw' in http:
+            body = bytes.fromhex(http['http.file_data_raw'][0])
+        else:
+            # Wireshark omits file_data for an explicitly empty HTTP body.
+            # Missing data on a non-empty response must still fail validation.
+            assert http.get('http.content_length_header') == '0', http
+            body = b''
+        actual.append(hashlib.sha256(body).hexdigest())
     drops = int(re.search(r'(\d+) packets dropped by kernel', (path.parent / 'tcpdump.log').read_text()).group(1))
     result = {'case': path.parent.name, 'responses': len(expected), 'response_bytes_match': Counter(expected) == Counter(actual), 'kernel_drops': drops}
     rows.append(result)

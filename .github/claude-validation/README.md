@@ -25,6 +25,14 @@ OAuth 订阅资格、额度、计费或官方服务接受情况。
 
 ## 采集与复核
 
+结构与生命周期扩展使用 `sse_structure_lab.py`，隔离启动方式与终止场景相同。
+宿主运行 `verify_sse_structure.py /absolute/path/to/work` 对照固定的 32 场景 fixture；
+PCAP 仍使用 `verify_response_capture.py`。设置
+`CLAUDE_SSE_STRUCTURE_CAPTURE_ROOT=/absolute/path/to/work` 并运行
+`go test -tags=unit ./internal/service -run '^TestClaudeSSEStructureContract$' -count=1`
+可重放每个场景首份实际响应。原生应用重试及工具续轮另外核对，不由网关隐式执行。
+范围见 [结构复核报告](../../docs/claude-sse-structure-20261010.md)。
+
 SSE 结束 / 错误语义复核使用同样的隔离参数，将入口改为
 `python3 /scripts/sse_terminal_lab.py`。输出必须通过
 `python3 /scripts/verify_sse_terminal.py /work` 和上述 PCAP 响应验证器。

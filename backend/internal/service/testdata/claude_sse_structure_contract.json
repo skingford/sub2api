@@ -1,0 +1,543 @@
+{
+  "source": "Unmodified pinned Linux x64 CLI 2.1.292 and 2.1.295, Docker network none, synthetic responses. OpenAI tool arguments retain original wire strings; native application wraps malformed tool input separately.",
+  "cases": [
+    {
+      "name": "complete",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "error-before",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 0,
+      "cli_output_tokens": 0,
+      "body": "event: error\ndata: {\"type\": \"error\", \"error\": {\"type\": \"invalid_request_error\", \"message\": \"LOCAL_SYNTHETIC_STREAM_ERROR\"}}\n\n"
+    },
+    {
+      "name": "error-after",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: error\ndata: {\"type\": \"error\", \"error\": {\"type\": \"invalid_request_error\", \"message\": \"LOCAL_SYNTHETIC_STREAM_ERROR\"}}\n\n"
+    },
+    {
+      "name": "invalid-json",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {invalid\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "missing-stop",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\n"
+    },
+    {
+      "name": "missing-delta",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 0,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "partial-content",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\n"
+    },
+    {
+      "name": "unknown-event",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: local_future_event\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"SHOULD_BE_IGNORED\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "unknown-json",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: local_future_event\ndata: {invalid\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "negative-index",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": -1, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "delta-before-start",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "null-known",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: null\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "array-known",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: []\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "scalar-known",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: 42\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "empty-known",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "no-message-start",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 0,
+      "cli_output_tokens": 0,
+      "body": "event: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "null-message",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 0,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": null}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "null-block",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": null}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "null-delta",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": null}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "empty-stream",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 0,
+      "cli_output_tokens": 0,
+      "body": ""
+    },
+    {
+      "name": "start-only",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\n"
+    },
+    {
+      "name": "empty-complete",
+      "success": true,
+      "text": "",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        true
+      ],
+      "response_count": 2,
+      "cli_result": "",
+      "cli_input_tokens": 34,
+      "cli_output_tokens": 18,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "closed-content",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "response_count": 4,
+      "cli_result": "API Error: Connection lost mid-response. The response above may be incomplete.",
+      "cli_input_tokens": 68,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\n"
+    },
+    {
+      "name": "duplicate-message-start",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "duplicate-block-start",
+      "success": true,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true
+      ],
+      "response_count": 1,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 9,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "closed-then-delta",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "response_count": 4,
+      "cli_result": "API Error: The response stream was malformed. The response above may be incomplete.",
+      "cli_input_tokens": 68,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "wrong-delta-type",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"thinking_delta\", \"thinking\": \"UNEXPECTED_THOUGHT\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "gap-index",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 2, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "delta-no-index",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "stop-no-index",
+      "success": false,
+      "text": "LOCAL_TERMINAL_中文_🙂",
+      "tool_arguments": null,
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        false
+      ],
+      "response_count": 1,
+      "cli_result": "API Error: 400 LOCAL_NONSTREAM_FALLBACK_NOT_PROVIDED",
+      "cli_input_tokens": 17,
+      "cli_output_tokens": 0,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"LOCAL_TERMINAL_中文_🙂\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\"}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "valid-tool-json",
+      "success": true,
+      "text": "",
+      "tool_arguments": "{\"file_path\":\"/work/synthetic-unavailable\"}",
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        true
+      ],
+      "response_count": 2,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 34,
+      "cli_output_tokens": 18,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"tool_use\", \"id\": \"toolu_structure\", \"name\": \"Read\", \"input\": {}}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"input_json_delta\", \"partial_json\": \"{\\\"file_path\\\":\\\"/work/synthetic-unavailable\\\"}\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"tool_use\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "name": "truncated-tool-json",
+      "success": true,
+      "text": "",
+      "tool_arguments": "{\"file_path\":",
+      "input_tokens": 17,
+      "output_tokens": 9,
+      "request_stream_sequence": [
+        true,
+        true
+      ],
+      "response_count": 2,
+      "cli_result": "LOCAL_TERMINAL_中文_🙂",
+      "cli_input_tokens": 34,
+      "cli_output_tokens": 18,
+      "body": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_terminal\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-sonnet-4-6\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 17, \"output_tokens\": 0}}}\n\nevent: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"tool_use\", \"id\": \"toolu_structure\", \"name\": \"Read\", \"input\": {}}}\n\nevent: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"input_json_delta\", \"partial_json\": \"{\\\"file_path\\\":\"}}\n\nevent: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\nevent: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"tool_use\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 9}}\n\nevent: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    }
+  ]
+}

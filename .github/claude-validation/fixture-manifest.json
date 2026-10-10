@@ -160,6 +160,7 @@
     "backend/internal/service/testdata/claude_code_2_1_295/native-plain.json": "901b47a2cb738dd8b3585b1766075ef53ac7d5396cbca0ae37f0bbc1050055cb",
     "backend/internal/service/testdata/claude_code_2_1_295/provenance.json": "0813889cb54944d1fabd892a0936f7ea24c66a7522dc072a582d0015844bd5f7",
     "backend/internal/service/testdata/claude_content_contract.json": "58dc8fa217da30594dc3ca360ab24ae0c575243be20e16aa0ede86a01b8617cb",
+    "backend/internal/service/testdata/claude_sse_structure_contract.json": "95aeb1cee75945d0a683e2d6d103d2c03a347804f29520858c640d5607754c2f",
     "backend/internal/service/testdata/claude_summary_native_vectors.json": "20bd5e1c36520368ac4ebc3fbdaba93f747223774459901761d75c8e831d0ab3",
     "backend/internal/service/testdata/claude_summary_native_vectors_provenance.json": "e18e2b7352f0dc10eed6c9d090b9d1d3aa328d45054a01eb0530d021ab5f8946"
   },
@@ -202,7 +203,9 @@
       "TestAnthropicSSEReaderFraming",
       "TestAnthropicSSEReaderBoundsAndReadFailure",
       "TestClaudeSSEFramingReadErrors",
-      "TestClaudeSSETerminalContract"
+      "TestClaudeSSETerminalContract",
+      "TestClaudeSSEStructureContract",
+      "TestClaudeSSEDeclaredDeltaType"
     ],
     "./internal/server/middleware": [
       "TestCORS_ClaudeConversationPreflight"

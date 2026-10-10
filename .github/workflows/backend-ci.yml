@@ -110,7 +110,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Verify contract gate failure modes
-        run: python3 -m unittest discover -s .github/claude-validation -p test_contract_ci.py
+        run: python3 -m unittest discover -s .github/claude-validation -p 'test_*.py'
       - name: Verify pinned evidence and replay compatibility contract
         run: python3 .github/claude-validation/run_contract_ci.py --output "$RUNNER_TEMP/claude-contract"
       - name: Upload compatibility evidence

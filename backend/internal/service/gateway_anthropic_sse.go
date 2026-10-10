@@ -21,7 +21,8 @@ type anthropicSSEReader struct {
 	data     string
 	err      error
 	message  *apicompat.AnthropicStreamEvent
-	blocks   []bool
+	blocks   []anthropicSSEBlockState
+	started  bool
 	terminal bool
 }
 
