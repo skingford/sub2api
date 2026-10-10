@@ -4,6 +4,12 @@ package repository
 
 import (
 	"context"
+	"fmt"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"sync"
+	"sync/atomic"
 	"testing"
 
 	"github.com/Wei-Shaw/sub2api/internal/service"
@@ -160,4 +166,56 @@ func (s *SettingRepoSuite) TestSetMultiple_UpdateToEmpty() {
 	got, err = s.repo.GetValue(s.ctx, "clearable_key")
 	s.Require().NoError(err)
 	s.Require().Equal("", got, "value should be updated to empty string")
+}
+
+func (s *SettingRepoSuite) TestCompareAndSwap() {
+	changed, err := s.repo.CompareAndSwap(s.ctx, "cas-setting", "", "first")
+	s.Require().NoError(err)
+	s.Require().True(changed)
+	changed, err = s.repo.CompareAndSwap(s.ctx, "cas-setting", "", "stale")
+	s.Require().NoError(err)
+	s.Require().False(changed)
+	changed, err = s.repo.CompareAndSwap(s.ctx, "cas-setting", "first", "second")
+	s.Require().NoError(err)
+	s.Require().True(changed)
+	changed, err = s.repo.CompareAndSwap(s.ctx, "cas-setting", "first", "stale")
+	s.Require().NoError(err)
+	s.Require().False(changed)
+	value, err := s.repo.GetValue(s.ctx, "cas-setting")
+	s.Require().NoError(err)
+	s.Require().Equal("second", value)
+	changed, err = s.repo.CompareAndSwap(s.ctx, "cas-missing", "nonempty", "unexpected")
+	s.Require().NoError(err)
+	s.Require().False(changed)
+	_, err = s.repo.GetValue(s.ctx, "cas-missing")
+	s.Require().ErrorIs(err, service.ErrSettingNotFound)
+}
+
+func TestSettingCompareAndSwapConcurrentWriters(t *testing.T) {
+	repo := NewSettingRepository(testEntClient(t)).(*settingRepository)
+	key := "claude-cas-" + uuid.NewString()
+	t.Cleanup(func() { require.NoError(t, repo.Delete(context.Background(), key)) })
+	const workers = 16
+	run := func(old string) {
+		var wg sync.WaitGroup
+		var winners atomic.Int64
+		for i := range workers {
+			wg.Add(1)
+			go func(i int) {
+				defer wg.Done()
+				// Each instance has its own repository wrapper; synchronization is in SQL.
+				instance := NewSettingRepository(testEntClient(t)).(*settingRepository)
+				changed, err := instance.CompareAndSwap(context.Background(), key, old, fmt.Sprintf("%s-%d", old, i))
+				if assert.NoError(t, err) && changed {
+					winners.Add(1)
+				}
+			}(i)
+		}
+		wg.Wait()
+		require.EqualValues(t, 1, winners.Load())
+	}
+	run("")
+	old, err := repo.GetValue(context.Background(), key)
+	require.NoError(t, err)
+	run(old)
 }

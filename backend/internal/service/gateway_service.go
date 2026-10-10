@@ -921,7 +921,7 @@ func (s *GatewayService) GenerateSessionHash(parsed *ParsedRequest) string {
 	if parsed.MetadataUserID != "" {
 		uid := ParseMetadataUserID(parsed.MetadataUserID)
 		if uid != nil && uid.SessionID != "" {
-			id, err := uuid.Parse(uid.SessionID)
+			id, err := uuid.Parse(strings.TrimSpace(uid.SessionID))
 			if err != nil || id == uuid.Nil {
 				// A client-controlled string must not address internal cache
 				// namespaces used for conversation identity binding.
@@ -942,7 +942,7 @@ func (s *GatewayService) GenerateSessionHash(parsed *ParsedRequest) string {
 	}
 
 	if parsed.ClaudeSessionID != "" {
-		id, err := uuid.Parse(parsed.ClaudeSessionID)
+		id, err := uuid.Parse(strings.TrimSpace(parsed.ClaudeSessionID))
 		if err != nil || id == uuid.Nil {
 			return ""
 		}

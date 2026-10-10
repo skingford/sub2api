@@ -106,6 +106,13 @@ type SettingRepository interface {
 	Delete(ctx context.Context, key string) error
 }
 
+// SettingCompareAndSwapper atomically updates a value only if the stored value
+// still matches oldValue. An empty oldValue also permits creating a missing key.
+// Background discovery must not fall back to an unprotected read-then-write.
+type SettingCompareAndSwapper interface {
+	CompareAndSwap(ctx context.Context, key, oldValue, newValue string) (bool, error)
+}
+
 // DefaultSubscriptionGroupReader validates group references used by default subscriptions.
 type DefaultSubscriptionGroupReader interface {
 	GetByID(ctx context.Context, id int64) (*Group, error)

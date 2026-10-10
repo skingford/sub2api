@@ -35,6 +35,24 @@ func TestClaudeContinuityCanonicalSessionAcrossAdapters(t *testing.T) {
 	}
 }
 
+func TestClaudeContinuityMetadataWhitespaceKeepsRoutingOwner(t *testing.T) {
+	const session = "abcdef12-3456-4789-abcd-0123456789ab"
+	for _, value := range []string{session, " \t" + session + "\n", "\u00a0" + session + "\u00a0"} {
+		svc, _ := newClaudeContractGateway(t)
+		body := []byte(fmt.Sprintf(`{"model":"claude-sonnet-4-6","metadata":{"user_id":%q}}`, fmt.Sprintf(`{"device_id":"test","session_id":%q}`, value)))
+		parsed, err := ParseGatewayRequest(NewRequestBodyRef(body), PlatformAnthropic)
+		require.NoError(t, err)
+		require.NoError(t, svc.ValidateClaudeSessionRouting(context.Background(), nil, body, parsed))
+		require.Equal(t, session, parsed.ClaudeSessionID)
+		require.Equal(t, session, svc.GenerateSessionHash(parsed), "metadata routing must agree with validation")
+		_, err = svc.claudeSessionStore.ClaimClaudeSessionAccountID(context.Background(), session, 123)
+		require.NoError(t, err)
+		ctx, err := svc.withClaudeSessionOwner(context.Background(), svc.GenerateSessionHash(parsed))
+		require.NoError(t, err)
+		require.EqualValues(t, 123, claudeSessionOwner(ctx))
+	}
+}
+
 func TestClaudeContinuityRejectsConflictsBeforePublishingSession(t *testing.T) {
 	for name, values := range map[string][]string{
 		"conflict": {"abcdef12-3456-4789-abcd-0123456789ab", "12345678-1234-4234-8234-123456789abc"},

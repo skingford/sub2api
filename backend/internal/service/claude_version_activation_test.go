@@ -4,6 +4,9 @@ package service
 
 import (
 	"context"
+	"encoding/json"
+	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -74,4 +77,18 @@ func TestVerifiedCLIRegistryHasCompleteGatewayProfiles(t *testing.T) {
 			require.Equal(t, nativeClaudeTransportProfile(up.request.Header), profile)
 		})
 	}
+}
+
+func TestVerifiedCLIRegistryMatchesEvidenceManifest(t *testing.T) {
+	data, err := os.ReadFile(filepath.Join("..", "..", "..", ".github", "claude-validation", "fixture-manifest.json"))
+	require.NoError(t, err)
+	var manifest struct {
+		Versions map[string]json.RawMessage `json:"versions"`
+	}
+	require.NoError(t, json.Unmarshal(data, &manifest))
+	versions := make([]string, 0, len(manifest.Versions))
+	for version := range manifest.Versions {
+		versions = append(versions, version)
+	}
+	require.ElementsMatch(t, claude.VerifiedCLIVersions(), versions, "a newly activated version needs pinned evidence and CI coverage")
 }

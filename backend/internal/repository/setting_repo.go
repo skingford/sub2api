@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/Wei-Shaw/sub2api/ent"
@@ -51,6 +53,25 @@ func (r *settingRepository) Set(ctx context.Context, key, value string) error {
 		OnConflictColumns(setting.FieldKey).
 		UpdateNewValues().
 		Exec(ctx)
+}
+
+func (r *settingRepository) CompareAndSwap(ctx context.Context, key, oldValue, newValue string) (bool, error) {
+	n, err := r.client.Setting.Update().Where(setting.KeyEQ(key), setting.ValueEQ(oldValue)).
+		SetValue(newValue).SetUpdatedAt(time.Now()).Save(ctx)
+	if err != nil || n > 0 {
+		return n > 0, err
+	}
+	if oldValue != "" {
+		return false, nil
+	}
+	// The unique key constraint arbitrates concurrent first writers. Updating
+	// on conflict here would overwrite a winner that we have never observed.
+	id, err := r.client.Setting.Create().SetKey(key).SetValue(newValue).
+		OnConflictColumns(setting.FieldKey).DoNothing().ID(ctx)
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	}
+	return id != 0 && err == nil, err
 }
 
 func (r *settingRepository) GetMultiple(ctx context.Context, keys []string) (map[string]string, error) {

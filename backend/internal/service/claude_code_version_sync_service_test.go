@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -68,6 +69,25 @@ func (r *claudeCodeVersionSyncSettingRepoStub) Set(_ context.Context, key, value
 	r.values[key] = value
 	r.writes = append(r.writes, value)
 	return nil
+}
+
+func (r *claudeCodeVersionSyncSettingRepoStub) CompareAndSwap(ctx context.Context, key, oldValue, newValue string) (bool, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return false, err
+	}
+	if r.setErr != nil {
+		return false, r.setErr
+	}
+	if r.values[key] != oldValue {
+		return false, nil
+	}
+	r.values[key] = newValue
+	if key == SettingKeyClaudeCodeClientVersionSynced {
+		r.writes = append(r.writes, newValue)
+	}
+	return true, nil
 }
 
 func (r *claudeCodeVersionSyncSettingRepoStub) syncedWrites() []string {
@@ -385,4 +405,106 @@ func TestClaudeCodeVersionComparisonIsNumericNotLexical(t *testing.T) {
 	newClaudeCodeVersionSyncService(repo, github).runOnce()
 
 	require.Empty(t, repo.syncedWrites(), "更低的版本号不得写入")
+}
+
+func TestClaudeCodeVersionSyncUnchangedReleaseRecordsSuccessfulCheck(t *testing.T) {
+	repo := newClaudeCodeVersionSyncSettingRepoStub(map[string]string{SettingKeyClaudeCodeClientVersionSynced: "2.1.295"})
+	repo.updatedAt = time.Now().Add(-24 * time.Hour)
+	github := &claudeCodeVersionSyncGitHubStub{latest: &GitHubRelease{TagName: "v2.1.295"}}
+	newClaudeCodeVersionSyncService(repo, github).runOnce()
+	require.Empty(t, repo.syncedWrites())
+	checked, err := time.Parse(time.RFC3339Nano, repo.values[SettingKeyClaudeCodeVersionLastCheckedAt])
+	require.NoError(t, err)
+	require.WithinDuration(t, time.Now(), checked, time.Second)
+	restarted := newClaudeCodeVersionSyncService(repo, github)
+	restarted.runInitial()
+	require.Equal(t, 1, github.latestCalls)
+}
+
+func TestClaudeCodeVersionSyncFailureDoesNotRecordSuccess(t *testing.T) {
+	for _, persistFailure := range []bool{false, true} {
+		repo := newClaudeCodeVersionSyncSettingRepoStub(nil)
+		github := &claudeCodeVersionSyncGitHubStub{latestErr: errors.New("offline"), err: errors.New("offline")}
+		if persistFailure {
+			repo.setErr = errors.New("database offline")
+			github.latestErr = nil
+			github.latest = &GitHubRelease{TagName: "v2.1.295"}
+		}
+		newClaudeCodeVersionSyncService(repo, github).runOnce()
+		require.Empty(t, repo.values[SettingKeyClaudeCodeVersionLastCheckedAt])
+	}
+}
+
+type racingClaudeVersionRepo struct {
+	*claudeCodeVersionSyncSettingRepoStub
+	once sync.Once
+}
+
+func (r *racingClaudeVersionRepo) CompareAndSwap(ctx context.Context, key, old, next string) (bool, error) {
+	if key == SettingKeyClaudeCodeClientVersionSynced {
+		r.once.Do(func() { r.mu.Lock(); r.values[key] = "2.1.310"; r.mu.Unlock() })
+	}
+	return r.claudeCodeVersionSyncSettingRepoStub.CompareAndSwap(ctx, key, old, next)
+}
+func TestClaudeCodeVersionSyncConcurrentNewerDiscoveryWins(t *testing.T) {
+	repo := &racingClaudeVersionRepo{claudeCodeVersionSyncSettingRepoStub: newClaudeCodeVersionSyncSettingRepoStub(map[string]string{SettingKeyClaudeCodeClientVersionSynced: "2.1.292"})}
+	svc := newClaudeCodeVersionSyncService(repo, &claudeCodeVersionSyncGitHubStub{latest: &GitHubRelease{TagName: "v2.1.295"}})
+	svc.runOnce()
+	require.Equal(t, "2.1.310", repo.values[SettingKeyClaudeCodeClientVersionSynced])
+	require.Empty(t, repo.syncedWrites())
+	require.NotEmpty(t, repo.values[SettingKeyClaudeCodeVersionLastCheckedAt])
+}
+
+type blockingClaudeVersionGitHub struct {
+	GitHubReleaseClient
+	started   chan struct{}
+	calls     atomic.Int64
+	fallbacks atomic.Int64
+}
+
+func (c *blockingClaudeVersionGitHub) FetchLatestRelease(ctx context.Context, _ string) (*GitHubRelease, error) {
+	if c.calls.Add(1) == 1 {
+		close(c.started)
+	}
+	<-ctx.Done()
+	return nil, ctx.Err()
+}
+func (c *blockingClaudeVersionGitHub) FetchRecentReleases(context.Context, string, int) ([]*GitHubRelease, error) {
+	c.fallbacks.Add(1)
+	return nil, errors.New("unexpected fallback after cancellation")
+}
+func TestClaudeCodeVersionSyncStopCancelsAndStartIsIdempotent(t *testing.T) {
+	repo := newClaudeCodeVersionSyncSettingRepoStub(nil)
+	github := &blockingClaudeVersionGitHub{started: make(chan struct{})}
+	svc := newClaudeCodeVersionSyncService(repo, github)
+	var starters sync.WaitGroup
+	for range 16 {
+		starters.Add(1)
+		go func() { defer starters.Done(); svc.Start() }()
+	}
+	starters.Wait()
+	select {
+	case <-github.started:
+	case <-time.After(time.Second):
+		t.Fatal("sync not started")
+	}
+	stopped := make(chan struct{})
+	go func() { svc.Stop(); close(stopped) }()
+	select {
+	case <-stopped:
+	case <-time.After(time.Second):
+		t.Fatal("Stop did not cancel HTTP request")
+	}
+	svc.Start()
+	svc.Stop()
+	require.EqualValues(t, 1, github.calls.Load())
+	require.Zero(t, github.fallbacks.Load())
+	require.Empty(t, repo.values[SettingKeyClaudeCodeVersionLastCheckedAt])
+}
+
+func TestClaudeCodeVersionSyncRejectsInvalidCheckTimes(t *testing.T) {
+	for _, value := range []string{"invalid", time.Now().Add(time.Hour).Format(time.RFC3339Nano), time.Now().Add(-2 * time.Hour).Format(time.RFC3339Nano)} {
+		repo := newClaudeCodeVersionSyncSettingRepoStub(map[string]string{SettingKeyClaudeCodeVersionLastCheckedAt: value})
+		require.False(t, newClaudeCodeVersionSyncService(repo, &claudeCodeVersionSyncGitHubStub{}).syncedWithinInterval())
+	}
 }

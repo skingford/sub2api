@@ -720,6 +720,8 @@ const (
 	// SettingKeyClaudeCodeClientVersionSynced 自动同步任务写入的官方 Claude Code CLI 最新版本号。
 	// 由同步任务独占写入，面板只读展示；管理员覆写请用 SettingKeyClaudeCodeClientVersion。
 	SettingKeyClaudeCodeClientVersionSynced = "claude_code_client_version_synced"
+	// Last successful discovery check, independent of whether its version changed.
+	SettingKeyClaudeCodeVersionLastCheckedAt = "claude_code_version_last_checked_at"
 	// SettingKeyClaudeCodeVersionAutoSyncEnabled 是否启用 Claude Code 客户端版本号自动同步（默认 true）。
 	SettingKeyClaudeCodeVersionAutoSyncEnabled = "claude_code_version_auto_sync_enabled"
 	// SettingKeyOpenAIAllowClaudeCodeCodexPlugin 已废弃：历史全局开关只作为升级迁移输入读取。

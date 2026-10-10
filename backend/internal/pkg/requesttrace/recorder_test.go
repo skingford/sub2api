@@ -17,6 +17,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
 	"github.com/stretchr/testify/require"
@@ -255,4 +256,77 @@ func TestRequestTraceDiskFailuresRemainVisible(t *testing.T) {
 	require.Len(t, events, 1)
 	require.Equal(t, 1, events[0].Failures)
 	require.Equal(t, 2, events[0].Seq)
+}
+
+type traceEncodingSignal struct{ started chan struct{} }
+
+func (s traceEncodingSignal) MarshalJSON() ([]byte, error) {
+	close(s.started)
+	return []byte(`"encoded"`), nil
+}
+
+type firstBlockingTraceWriter struct {
+	memoryWriter
+	started chan struct{}
+	release chan struct{}
+	once    sync.Once
+}
+
+func (w *firstBlockingTraceWriter) Write(p []byte) (int, error) {
+	w.once.Do(func() { close(w.started); <-w.release })
+	return w.memoryWriter.Write(p)
+}
+func TestRequestTraceEncodesIndependentTracesOutsideDiskLock(t *testing.T) {
+	w := &firstBlockingTraceWriter{started: make(chan struct{}), release: make(chan struct{})}
+	var release sync.Once
+	t.Cleanup(func() { release.Do(func() { close(w.release) }) })
+	r := &Recorder{writer: w}
+	_, a := r.Start(t.Context())
+	_, b := r.Start(t.Context())
+	done := make(chan bool, 2)
+	go func() { done <- a.Event("first", nil) }()
+	select {
+	case <-w.started:
+	case <-time.After(time.Second):
+		t.Fatal("writer not started")
+	}
+	encoded := make(chan struct{})
+	go func() { done <- b.Event("second", map[string]any{"signal": traceEncodingSignal{encoded}}) }()
+	select {
+	case <-encoded:
+	case <-time.After(time.Second):
+		t.Fatal("unrelated trace encoding blocked by disk lock")
+	}
+	release.Do(func() { close(w.release) })
+	require.True(t, <-done)
+	require.True(t, <-done)
+	require.Len(t, readEvents(t, w.Bytes()), 2)
+	stats := r.Stats()
+	require.EqualValues(t, 2, stats.Events)
+	require.Zero(t, stats.Failures)
+	require.EqualValues(t, w.Len(), stats.Bytes)
+	require.Positive(t, stats.EncodeTime)
+	require.Positive(t, stats.WriteTime)
+}
+func TestRequestTraceSameTraceConcurrentSequenceAndStats(t *testing.T) {
+	w := &memoryWriter{}
+	r := &Recorder{writer: w}
+	_, trace := r.Start(t.Context())
+	var wg sync.WaitGroup
+	for range 32 {
+		wg.Add(1)
+		go func() { defer wg.Done(); trace.Event("concurrent", nil) }()
+	}
+	wg.Wait()
+	for i, e := range readEvents(t, w.Bytes()) {
+		require.Equal(t, i+1, e.Seq)
+	}
+	require.EqualValues(t, 32, r.Stats().Events)
+	require.Zero(t, r.Stats().Failures)
+	require.False(t, trace.Event("unserializable", map[string]any{"bad": make(chan int)}))
+	require.EqualValues(t, 1, r.Stats().Failures)
+	require.True(t, trace.Event("recovered", nil))
+	last := readEvents(t, w.Bytes())[32]
+	require.Equal(t, 34, last.Seq)
+	require.Equal(t, 1, last.Failures)
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"strings"
 	"sync"
@@ -38,8 +39,11 @@ type ClaudeCodeVersionSyncService struct {
 	settingService *SettingService
 	githubClient   GitHubReleaseClient
 	interval       time.Duration
-	stopCh         chan struct{}
-	stopOnce       sync.Once
+	lifecycleMu    sync.Mutex
+	started        bool
+	stopped        bool
+	ctx            context.Context
+	cancel         context.CancelFunc
 	wg             sync.WaitGroup
 }
 
@@ -49,12 +53,13 @@ func NewClaudeCodeVersionSyncService(
 	githubClient GitHubReleaseClient,
 	interval time.Duration,
 ) *ClaudeCodeVersionSyncService {
+	ctx, cancel := context.WithCancel(context.Background())
 	return &ClaudeCodeVersionSyncService{
 		settingRepo:    settingRepo,
 		settingService: settingService,
 		githubClient:   githubClient,
 		interval:       interval,
-		stopCh:         make(chan struct{}),
+		ctx:            ctx, cancel: cancel,
 	}
 }
 
@@ -62,18 +67,23 @@ func (s *ClaudeCodeVersionSyncService) Start() {
 	if s == nil || s.settingRepo == nil || s.githubClient == nil || s.interval <= 0 {
 		return
 	}
+	s.lifecycleMu.Lock()
+	defer s.lifecycleMu.Unlock()
+	if s.started || s.stopped {
+		return
+	}
+	s.started = true
 	s.wg.Add(1)
 	go func() {
 		defer s.wg.Done()
 		ticker := time.NewTicker(s.interval)
 		defer ticker.Stop()
-
 		s.runInitial()
 		for {
 			select {
 			case <-ticker.C:
 				s.runOnce()
-			case <-s.stopCh:
+			case <-s.ctx.Done():
 				return
 			}
 		}
@@ -84,13 +94,14 @@ func (s *ClaudeCodeVersionSyncService) Stop() {
 	if s == nil {
 		return
 	}
-	s.stopOnce.Do(func() {
-		close(s.stopCh)
-	})
+	s.lifecycleMu.Lock()
+	s.stopped = true
+	s.cancel()
+	s.lifecycleMu.Unlock()
 	s.wg.Wait()
 }
 
-// runInitial 执行启动时的首次同步。若同步值在一个同步周期内已被刷新过则跳过：
+// runInitial 执行启动时的首次同步。若一个同步周期内已有成功检查则跳过：
 // 频繁重启、滚动发布或崩溃重启会让「启动即同步」放大成对 GitHub 的连续请求，
 // 而同步间隔只有 1 小时，重启后没有立刻重新拉取的必要。
 func (s *ClaudeCodeVersionSyncService) runInitial() {
@@ -100,31 +111,36 @@ func (s *ClaudeCodeVersionSyncService) runInitial() {
 	s.runOnce()
 }
 
-// syncedWithinInterval 判断已同步值是否仍在一个同步周期内。
-// 借设置行自身的 UpdatedAt 判断，无需额外记录时间戳的设置项。
-// 读取失败或尚无有效同步值时返回 false，让启动同步照常执行。
+// Prefer the last successful check. Older installations fall back to the
+// discovery row timestamp until the first successful check writes the new key.
 func (s *ClaudeCodeVersionSyncService) syncedWithinInterval() bool {
 	if s.interval <= 0 {
 		return false
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), claudeCodeVersionSyncTimeout)
+	ctx, cancel := context.WithTimeout(s.ctx, claudeCodeVersionSyncTimeout)
 	defer cancel()
-
+	raw, err := s.settingRepo.GetValue(ctx, SettingKeyClaudeCodeVersionLastCheckedAt)
+	if err == nil && raw != "" {
+		checked, parseErr := time.Parse(time.RFC3339Nano, raw)
+		age := time.Since(checked)
+		return parseErr == nil && age >= 0 && age < s.interval
+	}
+	if err != nil && !errors.Is(err, ErrSettingNotFound) {
+		return false
+	}
 	setting, err := s.settingRepo.Get(ctx, SettingKeyClaudeCodeClientVersionSynced)
-	if err != nil || setting == nil || setting.UpdatedAt.IsZero() {
+	if err != nil || setting == nil || setting.UpdatedAt.IsZero() || NormalizeClaudeCodeClientVersion(setting.Value) == "" {
 		return false
 	}
-	if NormalizeClaudeCodeClientVersion(setting.Value) == "" {
-		return false
-	}
-	return time.Since(setting.UpdatedAt) < s.interval
+	age := time.Since(setting.UpdatedAt)
+	return age >= 0 && age < s.interval
 }
 
 func (s *ClaudeCodeVersionSyncService) runOnce() {
-	ctx, cancel := context.WithTimeout(context.Background(), claudeCodeVersionSyncTimeout)
+	ctx, cancel := context.WithTimeout(s.ctx, claudeCodeVersionSyncTimeout)
 	defer cancel()
 
-	if !s.autoSyncEnabled(ctx) {
+	if ctx.Err() != nil || !s.autoSyncEnabled(ctx) {
 		return
 	}
 
@@ -133,24 +149,55 @@ func (s *ClaudeCodeVersionSyncService) runOnce() {
 		return
 	}
 
-	current, err := s.settingRepo.GetValue(ctx, SettingKeyClaudeCodeClientVersionSynced)
-	if err != nil && !errors.Is(err, ErrSettingNotFound) {
-		// 无法确认已有版本时跳过写入，避免数据库短暂故障导致版本降级。
-		slog.Warn("claude_code_version_sync_current_read_failed", "error", err)
-		return
-	}
-	current = NormalizeClaudeCodeClientVersion(current)
-	// 只向前推进：上游偶发返回旧数据或重新发布历史 tag 时不把已同步的版本号降级。
-	if current != "" && CompareVersions(latest, current) <= 0 {
-		return
-	}
-	if err := s.settingRepo.Set(ctx, SettingKeyClaudeCodeClientVersionSynced, latest); err != nil {
+	// Conditional writes prevent an older concurrent instance from replacing a
+	// newer discovery. Missing atomic support is an error, never an unsafe fallback.
+	changed, err := s.advanceSetting(ctx, SettingKeyClaudeCodeClientVersionSynced, latest, func(current string) bool {
+		version := NormalizeClaudeCodeClientVersion(current)
+		return version == "" || CompareVersions(latest, version) > 0
+	})
+	if err != nil {
 		slog.Warn("claude_code_version_sync_persist_failed", "version", latest, "error", err)
 		return
 	}
-	s.settingService.InvalidateClaudeCodeClientVersionCache()
-	slog.Info("claude_code_version_synced", "previous", current, "version", latest,
-		"verified_automatic_candidate", claude.VerifiedCLIVersionAtOrBelow(latest))
+	if s.settingService != nil {
+		s.settingService.InvalidateClaudeCodeClientVersionCache()
+	}
+	checked := time.Now().UTC()
+	_, err = s.advanceSetting(ctx, SettingKeyClaudeCodeVersionLastCheckedAt, checked.Format(time.RFC3339Nano), func(current string) bool {
+		previous, e := time.Parse(time.RFC3339Nano, current)
+		return e != nil || previous.After(checked.Add(s.interval)) || previous.Before(checked)
+	})
+	if err != nil {
+		slog.Warn("claude_code_version_sync_check_time_failed", "error", err)
+	}
+	if changed {
+		slog.Info("claude_code_version_synced", "version", latest,
+			"verified_automatic_candidate", claude.VerifiedCLIVersionAtOrBelow(latest))
+	}
+}
+
+func (s *ClaudeCodeVersionSyncService) advanceSetting(ctx context.Context, key, next string, shouldAdvance func(string) bool) (bool, error) {
+	atomicRepo, ok := s.settingRepo.(SettingCompareAndSwapper)
+	if !ok {
+		return false, fmt.Errorf("settings repository does not support atomic discovery updates")
+	}
+	for range 8 {
+		current, err := s.settingRepo.GetValue(ctx, key)
+		if err != nil && !errors.Is(err, ErrSettingNotFound) {
+			return false, err
+		}
+		if !shouldAdvance(current) {
+			return false, nil
+		}
+		changed, err := atomicRepo.CompareAndSwap(ctx, key, current, next)
+		if err != nil || changed {
+			return changed, err
+		}
+		if err = ctx.Err(); err != nil {
+			return false, err
+		}
+	}
+	return false, fmt.Errorf("settings discovery update contention")
 }
 
 // fetchLatestStableVersion 取官方最新稳定版 CLI 版本号；取不到时返回空串，
@@ -167,6 +214,10 @@ func (s *ClaudeCodeVersionSyncService) fetchLatestStableVersion(ctx context.Cont
 		slog.Warn("claude_code_version_sync_latest_fetch_failed", "error", err)
 	} else if version := latestClaudeCodeStableReleaseVersion([]*GitHubRelease{release}); version != "" {
 		return version
+	}
+
+	if ctx.Err() != nil {
+		return ""
 	}
 
 	// 主路径没拿到可用版本（抓取失败，或 latest 未通过过滤）。

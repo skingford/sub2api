@@ -798,3 +798,20 @@ python3 .github/claude-validation/validate_cli_alignment_fix.py \
 对 007 原有真实记录运行必须退出 1；对修复后相同输入的观察与传输均应退出 0。
 它只声明所列合同成立；仍保留原比较报告的完整差异和显式回退策略，不扩大成完整 CLI
 应用状态、所有远程开关或真实订阅等价。详见[修复说明](../../docs/claude-cli-alignment-fix-20261010.md)。
+
+## 固定样本的 CI 检查（CC-20261010-011）
+
+backend-ci 的 `Claude pinned compatibility contract` 独立 job 校验
+`fixture-manifest.json` 并执行明确列出的永久回归，上传本次结果和日志。
+本地使用同一入口：
+
+```bash
+python3 -m unittest discover -s .github/claude-validation -p test_contract_ci.py
+python3 .github/claude-validation/run_contract_ci.py --output /tmp/claude-contract-results
+```
+
+只检查已有样本完整性可加 `--verify-only`；输出会标记 `tests_run=false`，不能当作协议回归。
+增加版本或更新样本前，先取得独立来源证据，再人工更新 manifest 的文件集合 / SHA-256、
+版本来源 pin 和强制测试名单，并在同一个 PR 更新 Claude 变更记录。禁止 CI 自动重建基准。
+该入口不运行新 CLI、PCAP 采集或真实模型请求；完整采集仍按本文其他实验步骤执行。
+详见[本轮维护说明](../../docs/claude-maintenance-hardening-20261010.md)。
