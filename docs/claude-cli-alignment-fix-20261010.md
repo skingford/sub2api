@@ -92,3 +92,8 @@ gateway:
 - 测试前后 3,352 个后端文件哈希一致，实验容器和集成代理已清理，原业务容器保持健康。
 
 详细分母和哈希见[结构化结果](claude-cli-alignment-fix-20261010.json)。代码尚未提交或部署。
+
+交付补记（2026-10-10）：上述修复与 006 / 007 材料已提交为
+[af2b8d854](https://github.com/skingford/sub2api/commit/af2b8d8549e90eb59dae28d5f22181a297878541)，
+并推送到 `origin/codex/claude-source-runtime-audit-20261009`。提交归档与已验证的 3,352
+文件快照一致；结构化报告保留验收当时的状态。尚未合并或部署。
