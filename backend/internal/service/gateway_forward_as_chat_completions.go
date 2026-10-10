@@ -163,6 +163,9 @@ func (s *GatewayService) ForwardAsChatCompletions(
 
 	// 12. Handle error response with failover
 	if resp.StatusCode >= 400 {
+		if claudeCallerOwnsRetries(ctx, c, account, forwardedBody) {
+			return nil, s.returnClaudeUpstreamErrorAs(ctx, c, account, resp, mappedModel, claudeErrorChat)
+		}
 		respBody, _ := s.readUpstreamErrorBody(resp)
 		_ = resp.Body.Close()
 		resp.Body = io.NopCloser(bytes.NewReader(respBody))
@@ -170,7 +173,7 @@ func (s *GatewayService) ForwardAsChatCompletions(
 		upstreamMsg := strings.TrimSpace(extractUpstreamErrorMessage(respBody))
 		upstreamMsg = sanitizeUpstreamErrorMessage(upstreamMsg)
 
-		if s.shouldFailoverUpstreamError(resp.StatusCode) && !claudeCallerOwnsRetries(ctx, c, account, forwardedBody) {
+		if s.shouldFailoverUpstreamError(resp.StatusCode) {
 			appendOpsUpstreamError(c, OpsUpstreamErrorEvent{
 				ProxyID:            opsUpstreamProxyID(account),
 				ProxyName:          opsUpstreamProxyName(account),
@@ -194,9 +197,6 @@ func (s *GatewayService) ForwardAsChatCompletions(
 		}
 
 		status := mapUpstreamStatusCode(resp.StatusCode)
-		if claudeCallerOwnsRetries(ctx, c, account, forwardedBody) {
-			status = resp.StatusCode
-		}
 		writeGatewayCCError(c, status, "server_error", upstreamMsg)
 		return nil, fmt.Errorf("upstream error: %d %s", resp.StatusCode, upstreamMsg)
 	}

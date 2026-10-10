@@ -56,6 +56,7 @@ func CORS(cfg config.CORSConfig) gin.HandlerFunc {
 		// Browser clients must be able to echo the conversation identifier on
 		// later turns and preserve an explicitly supplied prompt identifier.
 		"X-Sub2API-Session-Id", "X-Claude-Code-Session-Id", "X-Claude-Code-Prompt-Id",
+		"Anthropic-Version", "Anthropic-Beta", "Anthropic-Dangerous-Direct-Browser-Access",
 	}
 	// OpenAI Node SDK 会发送 x-stainless-* 请求头，需在 CORS 中显式放行。
 	openAIProperties := []string{

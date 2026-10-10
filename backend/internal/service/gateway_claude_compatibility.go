@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -167,17 +169,76 @@ func claudeCallerOwnsRetries(ctx context.Context, c *gin.Context, account *Accou
 }
 
 func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.Context, account *Account, resp *http.Response, model string) error {
-	body, err := s.readUpstreamErrorBody(resp)
-	if err != nil {
-		return fmt.Errorf("read Claude upstream error: %w", err)
+	return s.returnClaudeUpstreamErrorAs(ctx, c, account, resp, model, claudeErrorMessages)
+}
+
+type claudeErrorFormat uint8
+
+const (
+	claudeErrorMessages claudeErrorFormat = iota
+	claudeErrorChat
+	claudeErrorResponses
+	claudeErrorCountPassthrough
+)
+
+var errClaudeErrorBodyTooLarge = errors.New("claude error response exceeds the read limit")
+
+// Unlike a successful count_tokens response, an error body is diagnostic. Keep
+// its read bounded and do not mistake a truncated prefix for a complete error.
+func (s *GatewayService) readClaudeUpstreamErrorBody(resp *http.Response) ([]byte, error) {
+	if resp == nil || resp.Body == nil {
+		return nil, nil
+	}
+	limited := &io.LimitedReader{R: resp.Body, N: s.upstreamErrorBodyReadLimit()}
+	body, err := io.ReadAll(limited)
+	if err != nil || limited.N > 0 {
+		return body, err
+	}
+	var extra [1]byte
+	n, err := io.ReadFull(resp.Body, extra[:])
+	if n > 0 {
+		return body, errClaudeErrorBodyTooLarge
+	}
+	if err == io.EOF {
+		err = nil
+	}
+	return body, err
+}
+
+// All caller-owned Claude operations share status/header preservation and
+// accounting. Only the downstream JSON envelope differs between adapters.
+func (s *GatewayService) returnClaudeUpstreamErrorAs(ctx context.Context, c *gin.Context, account *Account, resp *http.Response, model string, format claudeErrorFormat) error {
+	body, readErr := s.readClaudeUpstreamErrorBody(resp)
+	detail, reason := "", ""
+	if readErr != nil {
+		// Account state may use the status and headers, but must not infer a
+		// model/entitlement/signature failure from a partial JSON body.
+		body = nil
+		reason = "error_body_read_failed"
+		detail = "Upstream error body could not be read completely; status and headers retained"
+		if errors.Is(readErr, errClaudeErrorBodyTooLarge) {
+			reason = "error_body_limit_exceeded"
+			detail = "Upstream error body exceeded the read limit; status and headers retained"
+		}
 	}
 	if s.rateLimitService != nil {
 		// Retain accounting/cooldown bookkeeping, without another attempt.
 		s.rateLimitService.HandleUpstreamError(ctx, account, resp.StatusCode, resp.Header, body, model)
 	}
+	forwardClaudeErrorHeaders(c, resp.Header)
+	// Keep the API-key count endpoint's existing local-estimation fallback. An
+	// incomplete body cannot establish that this is an unsupported endpoint.
+	if format == claudeErrorCountPassthrough && readErr == nil && isCountTokensUnsupported404(resp.StatusCode, body) {
+		MarkResponseCommitted(c)
+		s.countTokensError(c, http.StatusNotFound, "not_found_error", "count_tokens endpoint is not supported by upstream")
+		return nil
+	}
 	message := sanitizeUpstreamErrorMessage(strings.TrimSpace(extractUpstreamErrorMessage(body)))
 	if message == "" {
 		message = "Claude upstream rejected the request"
+	}
+	if readErr != nil {
+		message = "Claude upstream returned an incomplete error response"
 	}
 	errorType := gjson.GetBytes(body, "error.type").String()
 	if errorType == "" {
@@ -197,20 +258,44 @@ func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.C
 			message = "Upstream error: " + message
 		}
 	}
-	setOpsUpstreamError(c, resp.StatusCode, message, "")
+	requestID := resp.Header.Get("request-id")
+	if requestID == "" {
+		requestID = resp.Header.Get("x-request-id")
+	}
+	proxyID, proxyName := opsUpstreamProxyAttribution(account)
+	upstreamURL := ""
+	if resp.Request != nil && resp.Request.URL != nil {
+		upstreamURL = safeUpstreamURL(resp.Request.URL.String())
+	}
+	setOpsUpstreamError(c, resp.StatusCode, message, detail)
 	appendOpsUpstreamError(c, OpsUpstreamErrorEvent{
-		Platform: account.Platform, AccountID: account.ID, UpstreamStatusCode: resp.StatusCode,
-		UpstreamRequestID: resp.Header.Get("request-id"), Kind: "http_error", Message: message,
+		Platform: account.Platform, AccountID: account.ID, AccountName: account.Name, UpstreamStatusCode: resp.StatusCode,
+		ProxyID: proxyID, ProxyName: proxyName, UpstreamURL: upstreamURL, Passthrough: format == claudeErrorCountPassthrough,
+		UpstreamRequestID: requestID, Kind: "http_error", Message: message, Detail: detail, Reason: reason,
 	})
-	for _, key := range []string{"request-id", "retry-after", "retry-after-ms", "x-should-retry"} {
-		if value := resp.Header.Get(key); value != "" {
+	MarkResponseCommitted(c)
+	// Preserve status/retry signals while retaining gateway error redaction.
+	switch format {
+	case claudeErrorChat:
+		writeGatewayCCError(c, resp.StatusCode, "server_error", message)
+	case claudeErrorResponses:
+		writeResponsesError(c, resp.StatusCode, "server_error", message)
+	default:
+		c.JSON(resp.StatusCode, gin.H{"type": "error", "error": gin.H{"type": errorType, "message": message}})
+	}
+	return fmt.Errorf("claude upstream returned HTTP %d", resp.StatusCode)
+}
+
+func forwardClaudeErrorHeaders(c *gin.Context, headers http.Header) {
+	for _, key := range []string{"request-id", "x-request-id", "retry-after", "retry-after-ms", "x-should-retry"} {
+		if value := headers.Get(key); value != "" {
 			c.Header(key, value)
 			exposeClaudeResponseHeader(c.Writer.Header(), key)
 		}
 	}
 	// Native compression fallback uses presence (including an empty value) of
 	// cf-ray to distinguish an origin refusal from an intermediary's rejection.
-	for key, values := range resp.Header {
+	for key, values := range headers {
 		if strings.EqualFold(key, "cf-ray") && len(values) > 0 {
 			deleteHeaderAllForms(c.Writer.Header(), "cf-ray")
 			c.Writer.Header()["Cf-Ray"] = append([]string(nil), values...)
@@ -218,10 +303,6 @@ func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.C
 			break
 		}
 	}
-	MarkResponseCommitted(c)
-	// Preserve status/retry signals while retaining gateway error redaction.
-	c.JSON(resp.StatusCode, gin.H{"type": "error", "error": gin.H{"type": errorType, "message": message}})
-	return fmt.Errorf("claude upstream returned HTTP %d", resp.StatusCode)
 }
 
 // A known mismatch must not be sent with another account's credential. Empty

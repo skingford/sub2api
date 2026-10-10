@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 
@@ -191,6 +190,13 @@ func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context,
 		return fmt.Errorf("upstream request failed: %w", err)
 	}
 
+	// Preserve the received error status and retry headers even if its body is
+	// interrupted. The success-response reader may otherwise replace it with 502.
+	if resp.StatusCode >= 400 && claudeCallerOwnsRetries(ctx, c, account, body) {
+		defer func() { _ = resp.Body.Close() }()
+		return s.returnClaudeUpstreamError(ctx, c, account, resp, reqModel)
+	}
+
 	// 读取响应体
 	countTokensTooLarge := func(c *gin.Context) {
 		s.countTokensError(c, http.StatusBadGateway, "upstream_error", "Upstream response too large")
@@ -202,12 +208,6 @@ func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context,
 			s.countTokensError(c, http.StatusBadGateway, "upstream_error", "Failed to read response")
 		}
 		return err
-	}
-
-	if resp.StatusCode >= 400 && claudeCallerOwnsRetries(ctx, c, account, body) {
-		resp.Body = io.NopCloser(bytes.NewReader(respBody))
-		defer func() { _ = resp.Body.Close() }()
-		return s.returnClaudeUpstreamError(ctx, c, account, resp, reqModel)
 	}
 
 	// 检测 thinking block 签名错误（400）并重试一次（过滤 thinking blocks）
@@ -333,6 +333,14 @@ func (s *GatewayService) forwardCountTokensAnthropicAPIKeyPassthrough(ctx contex
 		})
 		s.countTokensError(c, http.StatusBadGateway, "upstream_error", "Request failed")
 		return fmt.Errorf("upstream request failed: %w", err)
+	}
+
+	if resp.StatusCode >= 400 && claudeCallerOwnsRetries(ctx, c, account, body) {
+		defer func() { _ = resp.Body.Close() }()
+		if resp.Request == nil {
+			resp.Request = upstreamReq
+		}
+		return s.returnClaudeUpstreamErrorAs(ctx, c, account, resp, gjson.GetBytes(body, "model").String(), claudeErrorCountPassthrough)
 	}
 
 	countTokensTooLarge := func(c *gin.Context) {

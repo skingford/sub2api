@@ -325,7 +325,7 @@ func TestCORS_ClaudeConversationPreflight(t *testing.T) {
 				req := httptest.NewRequest(http.MethodOptions, route, nil)
 				req.Header.Set("Origin", origin)
 				req.Header.Set("Access-Control-Request-Method", "POST")
-				requested := []string{"authorization", "content-type", "x-sub2api-session-id", "x-claude-code-session-id", "x-claude-code-prompt-id"}
+				requested := []string{"authorization", "content-type", "x-sub2api-session-id", "x-claude-code-session-id", "x-claude-code-prompt-id", "anthropic-version", "anthropic-beta", "anthropic-dangerous-direct-browser-access"}
 				req.Header.Set("Access-Control-Request-Headers", strings.Join(requested, ", "))
 				rec := httptest.NewRecorder()
 				router.ServeHTTP(rec, req)

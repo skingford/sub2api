@@ -354,11 +354,15 @@ func (s *GatewayService) readUpstreamErrorBody(resp *http.Response) ([]byte, err
 	if resp == nil || resp.Body == nil {
 		return nil, nil
 	}
+	return io.ReadAll(io.LimitReader(resp.Body, s.upstreamErrorBodyReadLimit()))
+}
+
+func (s *GatewayService) upstreamErrorBodyReadLimit() int64 {
 	limit := gatewayUpstreamErrorBodyReadLimit
 	if s != nil && s.cfg != nil && s.cfg.Gateway.LogUpstreamErrorBody && s.cfg.Gateway.LogUpstreamErrorBodyMaxBytes > int(limit) {
 		limit = int64(s.cfg.Gateway.LogUpstreamErrorBodyMaxBytes)
 	}
-	return io.ReadAll(io.LimitReader(resp.Body, limit))
+	return limit
 }
 
 func (s *GatewayService) handleErrorResponse(ctx context.Context, resp *http.Response, c *gin.Context, account *Account, requestedModel ...string) (*ForwardResult, error) {

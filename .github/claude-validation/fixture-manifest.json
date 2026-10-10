@@ -191,7 +191,16 @@
       "TestClaudeSummaryMatchesNativeUnicodeVectors",
       "TestClaudeNativeGzipWireParity",
       "TestVerifiedCLIRegistryHasCompleteGatewayProfiles",
-      "TestVerifiedCLIRegistryMatchesEvidenceManifest"
+      "TestVerifiedCLIRegistryMatchesEvidenceManifest",
+      "TestClaudeErrorParityAcrossEntrypoints",
+      "TestClaudeErrorParityIncompleteBodyCannotTriggerRecovery",
+      "TestClaudeErrorParityNativeAPIKeyReadFailure",
+      "TestClaudeErrorBodyReadLimitBounds",
+      "TestClaudeErrorParityPreservesNonNativeAPIKeyFailover",
+      "TestClaudeErrorParityNativeCountUnsupportedFallback"
+    ],
+    "./internal/server/middleware": [
+      "TestCORS_ClaudeConversationPreflight"
     ]
   }
 }
