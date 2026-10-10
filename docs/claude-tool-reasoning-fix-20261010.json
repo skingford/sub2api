@@ -1,0 +1,280 @@
+{
+  "change_id": "CC-20261010-003",
+  "date": "2026-10-10",
+  "base": "465ed3738afb317b08c68eb08da04af7ee58c2ef",
+  "upstream": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "source_files": 3341,
+  "source_matches_snapshot": true,
+  "evidence_root": "/Users/kingford/claude-capture/tool-fix-20261010-k99esgbp",
+  "fixed_findings": [
+    "F1 parallel tool constraints",
+    "F2 strict tools and required capability",
+    "F3 bounded manual reasoning and measured adaptive models",
+    "F4 legacy none disables thinking"
+  ],
+  "new_contract": {
+    "cases": 504,
+    "explicit_rejections": 52,
+    "failing_cases": 0,
+    "failure_counts": {
+      "parallel_false_lost": 0,
+      "parallel_true_lost": 0,
+      "strict_true_lost": 0,
+      "strict_capability_missing": 0,
+      "generated_budget_exceeds_cap": 0,
+      "none_enables_thinking": 0
+    },
+    "contract_passed": true
+  },
+  "old_contract": {
+    "entrypoint_observations": 102,
+    "summary_requests": 36,
+    "contract_passed": true
+  },
+  "wire": {
+    "new": {
+      "requests": 452,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    },
+    "old": {
+      "requests": 192,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    }
+  },
+  "forwarding": {
+    "comparisons": 2068,
+    "logical_equal": 2060,
+    "wire_equal": 2060,
+    "errors": 0,
+    "policy_exceptions": [
+      {
+        "suite": "forward-2.1.292-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "suite": "forward-2.1.292-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "suite": "forward-2.1.292-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "suite": "forward-2.1.292-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "suite": "forward-2.1.295-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "suite": "forward-2.1.295-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "suite": "forward-2.1.295-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "suite": "forward-2.1.295-postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false
+      }
+    ]
+  },
+  "recovery": {
+    "292": {
+      "model_auth_cases": 6,
+      "sessions": 12,
+      "generation": 96,
+      "count_tokens": 24,
+      "cross_session_leaks": 0
+    },
+    "295": {
+      "model_auth_cases": 8,
+      "sessions": 16,
+      "generation": 128,
+      "count_tokens": 32,
+      "cross_session_leaks": 0
+    }
+  },
+  "cch": {
+    "requests": 226,
+    "all_new_billing_bodies_match_independent_native_runtime": true,
+    "instrumented_not_unmodified_cli": true,
+    "pcap": {
+      "requests": 226,
+      "pcap_raw_bytes_equal": true,
+      "golden_vectors_checked": 0,
+      "kernel_drops": 0,
+      "new_vectors_use_independent_runtime_observations": true
+    },
+    "provenance": {
+      "original_cli": "2.1.295",
+      "original_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+      "probe_sha256": "b7493fb718106db884074d61f06e5ba7550899f8bf64eb4f9adbbfa252d27c38",
+      "native_prefix_unchanged": true,
+      "probe_kind": "Modified JavaScript entrypoint; native machine code unchanged; not an unmodified CLI"
+    }
+  },
+  "engineering": {
+    "unit_packages": 58,
+    "unit_failures": 0,
+    "unit_pass_events": 22994,
+    "lint": "0 issues",
+    "lint_version": "2.14.0",
+    "module_verify": true,
+    "tidy_diff_empty": true,
+    "integration_status": "passed",
+    "integration_packages_compiled": 52,
+    "integration_executed": true,
+    "integration_packages": 52,
+    "integration_failures": 0,
+    "integration_pass_events": 13735,
+    "integration_exit_code": 0,
+    "integration_uses_real_postgres_redis": true,
+    "integration_ipv4_proxy_removed": true
+  },
+  "new_rejection_policy": "Eight Haiku 4.5 high requests with cap <=1024 are explicitly rejected; original 504 inputs retained",
+  "live_provider_acceptance_verified": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "evidence_sha256": {
+    "analysis/source-manifest.json": "f159b5c2c6df5e983350026808287d8dbae628487f8f975458e2de918682bb97",
+    "analysis/full-unit.jsonl": "d5c269a566994e5b132c97c9e637e21034071e959883e55c430cdee8898b2e27",
+    "analysis/lint.log": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+    "analysis/new-contract/observations.json": "9a22957aa708195f6d8ddc81e9b1bc433c2e4e9ab9cc74c6f29a6072a99ed2aa",
+    "analysis/tool-contract.json": "a7411ec5d34f38014949aed989d63168081aa0ca158b1df50799715073c1af17",
+    "analysis/pre-fix-new-gate.json": "47e2db030924a2a8a6cdfc923ef2cd72962d1695100fdd483feb6b346543839a",
+    "analysis/entrypoint-controls.json": "48a2f53e7033473d8c662f0b300cea0c7e90f2ba58f2f20d99b02b22442253f2",
+    "analysis/summary-sequences-292.json": "1b9837ad17c947e415fd9a42e71aebf1895998e43384b6bd153b6d0466923b22",
+    "analysis/summary-sequences-295.json": "1b9837ad17c947e415fd9a42e71aebf1895998e43384b6bd153b6d0466923b22",
+    "analysis/cch-provenance.json": "61354dd5e477e0594775c9ba55004503294b6fd24d494ecb17e11236727cec79",
+    "cch-runtime/comparison.json": "b65b180ad792b7386c5c48f1d6fc972780040dab4110666150cb5a4a65ec8fe8",
+    "cch-runtime/pcap-verification.json": "9fa4324e6d6d56f4874e133922fee87d1420e99a61bec08e112cc95df433f3e2",
+    "analysis/forward-2.1.292-comprehensive.json": "c5e8d62da2d41ef09ceac40fcc3a88413ab9d1a8d8e41e7c419101c2c726066e",
+    "analysis/forward-2.1.295-thinking_limits.json": "86116e6553b9d85939d5a45327c93c32a13722949ab053faceaaa9674cb94d26",
+    "analysis/forward-2.1.292-summary_edges.json": "d1a91786611f1aebed77eac9904ac68c10ada869fd8344955b293b2e9912201c",
+    "analysis/forward-2.1.295-tool_constraints.json": "a8b6c061d8740dea3b159ddc1ed0e50970c71f4edf086203e44f51888398c326",
+    "analysis/forward-2.1.295-haiku295.json": "b307879ea271063e9975943f40fbe81333cc1043fda70b189aaf6e71848695c2",
+    "analysis/forward-2.1.292-gzip_fix.json": "ae0afd0c3373578f2739cb0ccced006403ec50e2dda827c774615019b1b73089",
+    "analysis/forward-2.1.295-postfix_edges.json": "ec86b0157ceb57aef567e11b21f2c62fe39c860d439e0191d9151c491f8da3a2",
+    "analysis/forward-2.1.295-gzip_fix.json": "466eaf2556de7caa9bcf652b76fd8ab0266ae8970a5b8d449d41d4c8ba730dc5",
+    "analysis/forward-2.1.292-token_limit.json": "0a5cd31e7563b6176f9a82a0cdfcf6101f1544619b986536e3fd414ef6439298",
+    "analysis/forward-2.1.295-deep_native.json": "324c83d54bb7b8305bd23ef5c5bee31706c8f69e661e194333c6d9beca742e96",
+    "analysis/forward-2.1.292-version_edges.json": "a4bebc65a36efa0545baba3a053fe234023b1675ec737a3723c49b18b3bf65d3",
+    "analysis/forward-2.1.295-summary_edges.json": "3615dc4e78d3639a6510c487dc514a36a84c594d673265c2b91ce95016450c6a",
+    "analysis/forward-2.1.295-comprehensive.json": "083fde57347bf484e151bd0ce55047d89782626e22c6bc050620a757a3fee994",
+    "analysis/forward-2.1.295-token_limit.json": "74f092c0956baa9de05f70956af9e6a44da7797c8ceddc32b7c906353c90e939",
+    "analysis/forward-2.1.292-deep_native.json": "73c748007ff3f3dce0ad7965c3b1c0adf2b3ecefa7ac413a7353fc04208acc45",
+    "analysis/forward-2.1.292-thinking_limits.json": "3a5b8c1d3dbd92372b266430b03095e36abecd9b91b429721618f3c7c6bd8608",
+    "analysis/forward-2.1.292-postfix_edges.json": "a4ef69fb012ff69d5cbf54685e69dbc919a6985712490f7dbcda4db9da852949",
+    "analysis/forward-2.1.292-tool_constraints.json": "34b92a07975b455033f92d1dd19788975b05d44e590cb20862272f6325c83484",
+    "analysis/forward-2.1.295-version_edges.json": "8cf74881cc0d6a91d93aebcac2877a51a97e3bfeb9ac977bd98f5d8377842021",
+    "wire-new/pcap-verification.json": "31f30450f7d7ad1a93987007825c1d8c594487e6bb79e7a3becadb34d5de3cb9",
+    "wire-old/pcap-verification.json": "1b56131c7d6bbe53fae2f29becce607b101c236974d48f85745c072a456266ec",
+    "analysis/integration-compile.json": "fe918560a6b14424225afb9b4d9548b09c93b4f562e5f3eaf667e9617ec6120c",
+    "analysis/restart-authorization.json": "3cf25bdb2974fa901f17e9e8ee6390c71572957c556abc31009b2d0d0e58a6de",
+    "analysis/docker-restart-steps.json": "ff992714adca23e93e31d5aaa073f8af00aa9b838ec26ecaf282cb63e7621e09",
+    "analysis/business-state-before-restart.txt": "cfc330ea0aff1ac2ccfeeb5186ee1b220d03a9fbbf174b373575f2f03052b142",
+    "analysis/business-state-final.json": "d0f4f8ae3b4423cdf5c977fa395e01ec602a93c9b8368cca8c7e5983013044d0",
+    "analysis/full-integration.jsonl": "e15ef84d413acc8d11adcae31f0f466696adf0a85b4812b93244013995d2a097",
+    "analysis/integration-exit.json": "100a1ca07e596faa76c8764d0649f81f15e8d49ab06a3ed975aa2ce11787f7d9",
+    "analysis/integration-result.json": "7fd593f850d46af58772622707c4c409fa6c3c4a51537111ec686c1dd7ca139e",
+    "analysis/integration-proxy.log": "eecd0ab757acf105189b812914b43ffa1bdb8c74768708cd1fe2606075c53ebd",
+    "analysis/post-restart-cleanup.json": "051404923146430bb32114985dd1502128140efb2ad9ed46e1e2dd3a70894a7d",
+    "analysis/final-cleanup.json": "eab7abf815648eabad7f3efbdc7550f807020547b4fa2c576c3dfd5e7514e285"
+  },
+  "environment": {
+    "docker_restart_authorization": "explicit user approval",
+    "business_containers_previously_running": [
+      "digital-human-postgres",
+      "picpak_postgres",
+      "picpak_redis"
+    ],
+    "business_restart_policies": "unless-stopped",
+    "docker_restarted": true,
+    "reused_task_owned_container": "hungry_ardinghelli",
+    "file_transfer": "docker exec standard streams; container-local copies; network none",
+    "restart_method": "Gracefully stopped original business containers, quit and relaunched Docker, restored the same container IDs",
+    "business_containers_restored_healthy": true,
+    "original_restart_policies_unchanged": true,
+    "docker_server_version": "20.10.8"
+  },
+  "cleanup": {
+    "remaining_experiment_containers": [],
+    "remaining_integration_containers": [],
+    "temporary_proxy_removed": true,
+    "original_business_containers": [
+      {
+        "name": "digital-human-postgres",
+        "id": "aeadec0fedebd58303dee3c4a10ed76a69d74b115bd26aa26b5c215ee5d7f9c0",
+        "running": true,
+        "health": "healthy",
+        "restart_policy": "unless-stopped"
+      },
+      {
+        "name": "picpak_postgres",
+        "id": "2c555fd76a42e7f9ad80ae5ad8e800ce246b6dc9c78df663fb7f233db982c658",
+        "running": true,
+        "health": "healthy",
+        "restart_policy": "unless-stopped"
+      },
+      {
+        "name": "picpak_redis",
+        "id": "630a94841727f8cca56b4be82e8b3164d282e427f2890fc58f4c409ff7064326",
+        "running": true,
+        "health": "healthy",
+        "restart_policy": "unless-stopped"
+      }
+    ]
+  },
+  "verification_follow_up": {
+    "authorization": "User approved Docker restart with 可以重启",
+    "date": "2026-10-10",
+    "initial_integration_status": "Compiled only, pending Docker recovery approval",
+    "final_integration_status": "All 52 integration packages passed after authorized graceful Docker restart"
+  }
+}

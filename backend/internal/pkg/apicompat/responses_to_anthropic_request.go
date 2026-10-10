@@ -58,6 +58,9 @@ func ResponsesToAnthropicRequest(req *ResponsesRequest) (*AnthropicRequest, erro
 
 	// Convert tools
 	if len(req.Tools) > 0 {
+		if err := validateAnthropicStrictTools(req.Tools); err != nil {
+			return nil, err
+		}
 		out.Tools = convertResponsesToAnthropicTools(req.Tools)
 	}
 
@@ -68,6 +71,12 @@ func ResponsesToAnthropicRequest(req *ResponsesRequest) (*AnthropicRequest, erro
 			return nil, fmt.Errorf("convert tool_choice: %w", err)
 		}
 		out.ToolChoice = tc
+	}
+	if req.ParallelToolCalls != nil && len(out.Tools) > 0 {
+		out.ToolChoice, err = anthropicParallelToolChoice(out.ToolChoice, *req.ParallelToolCalls)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// The 5.5 models reject manual thinking and forced tool use. Sonnet 5.5
@@ -123,17 +132,8 @@ func ResponsesToAnthropicRequest(req *ResponsesRequest) (*AnthropicRequest, erro
 		return out, nil
 	}
 
-	// reasoning.effort → output_config.effort + thinking
-	if req.Reasoning != nil && req.Reasoning.Effort != "" {
-		effort := mapResponsesEffortToAnthropic(req.Reasoning.Effort)
-		setAnthropicOutputEffort(out, effort)
-		// Enable thinking for non-low efforts
-		if effort != "low" {
-			out.Thinking = &AnthropicThinking{
-				Type:         "enabled",
-				BudgetTokens: defaultThinkingBudget(effort),
-			}
-		}
+	if err := applyAnthropicLegacyReasoning(req, out); err != nil {
+		return nil, err
 	}
 
 	return out, nil
@@ -725,13 +725,15 @@ func convertResponsesToAnthropicTools(tools []ResponsesTool) []AnthropicTool {
 			out = append(out, AnthropicTool{
 				Name:        t.Name,
 				Description: t.Description,
-				InputSchema: normalizeAnthropicInputSchema(t.Parameters),
+				InputSchema: anthropicToolInputSchema(t),
+				Strict:      t.Strict,
 			})
 		case "custom":
 			out = append(out, AnthropicTool{
 				Name:        t.Name,
 				Description: t.Description,
-				InputSchema: normalizeAnthropicInputSchema(t.Parameters),
+				InputSchema: anthropicToolInputSchema(t),
+				Strict:      t.Strict,
 			})
 		default:
 			// Pass through unknown tool types
@@ -739,7 +741,8 @@ func convertResponsesToAnthropicTools(tools []ResponsesTool) []AnthropicTool {
 				Type:        t.Type,
 				Name:        t.Name,
 				Description: t.Description,
-				InputSchema: normalizeAnthropicInputSchema(t.Parameters),
+				InputSchema: anthropicToolInputSchema(t),
+				Strict:      t.Strict,
 			})
 		}
 	}

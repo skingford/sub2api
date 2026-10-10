@@ -10,13 +10,21 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// An explicit schema opts a converted first-party request into its measured
+// An explicit schema or strict tool opts a first-party request into its measured
 // capability. Native requests retain their own feature declarations. A policy
 // or header override cannot silently disable a caller's required output format.
 func (s *GatewayService) claudeOutputFormatBeta(ctx context.Context, c *gin.Context, account *Account, body []byte, target, beta string, drop map[string]struct{}) (string, error) {
-	if account == nil || account.Platform != PlatformAnthropic ||
-		gjson.GetBytes(body, "output_config.format.type").String() != "json_schema" ||
-		preserveNativeClaudeRequest(ctx, c, account, body) {
+	if account == nil || account.Platform != PlatformAnthropic || preserveNativeClaudeRequest(ctx, c, account, body) {
+		return beta, nil
+	}
+	required := gjson.GetBytes(body, "output_config.format.type").String() == "json_schema"
+	if !required {
+		gjson.GetBytes(body, "tools").ForEach(func(_, tool gjson.Result) bool {
+			required = tool.Get("strict").Type == gjson.True
+			return !required
+		})
+	}
+	if !required {
 		return beta, nil
 	}
 	u, err := url.Parse(target)
@@ -28,7 +36,7 @@ func (s *GatewayService) claudeOutputFormatBeta(ctx context.Context, c *gin.Cont
 	_, filtered := policy.filterSet[token]
 	_, dropped := drop[token]
 	if policy.blockErr != nil || filtered || dropped {
-		return beta, claudeCompatibilityError(c, "JSON Schema output is disabled by the account beta policy")
+		return beta, claudeCompatibilityError(c, "Structured output constraints are disabled by the account beta policy")
 	}
 	if containsBetaToken(beta, token) {
 		return beta, nil

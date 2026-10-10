@@ -572,3 +572,53 @@ Schema 与 effort 叠加、无效参数、模型映射优先级、策略冲突�
 
 不要在完整工程检查运行时继续改被测源码。先冻结快照及哈希，再运行 unit / integration /
 lint；最终校验工作区与快照一致。新增范围必须先补合同和来源证据，不能只沿用旧通过次数。
+
+## 工具约束与推理组合复核
+
+CC-20261010-002 固定已推送的 `465ed3738`，使用未修改 2.1.292 / 2.1.295 CLI
+重新采集，并将工具控制加入三入口 / 两账号 / 六模型的组合审查。
+
+- `tool_constraints_lab.py`：36 个显式工具 / 格式 / token 组合，通过 EXTRA_BODY
+  观察原生序列化；该入口不能证明上游模型接受这些组合。
+- `thinking_limits_lab.py`：18 个在构建请求前生效的 CLI token / effort 控制，
+  区分原生最低预算与 EXTRA_BODY 后期覆盖；小于等于 1,024 的 Haiku 预算边界单列。
+- `tool_constraint_audit_test.go`：通过 Go overlay 加入 service 测试包；设置
+  `CLAUDE_TOOL_CONSTRAINT_AUDIT=/output/tools`，运行 `TestClaudeToolConstraintAudit`。
+  它输出完整的 504 个观察、显式 400 和成功请求导出，测试进程 PASS 不代表约束相同。
+- `tool_constraint_wire_lab.py`：将成功请求导出挂到 `/inputs`，将生产 transport 探针
+  挂到 `/opt/trace-transport-probe`，沿用 network-none / tmpfs / ram_capture 工作流。
+  接收端保存最终工具与推理字段，再用 `verify_encoding_policy.py` 检查 PCAP。
+
+运行独立判定器：
+
+```bash
+python3 .github/claude-validation/validate_tool_constraints.py \
+  /absolute/path/to/tools/observations.json /absolute/path/to/tool-constraint-result.json
+```
+
+矩阵不完整、意外报错、既有 schema / cap 回归或新约束不满足都会失败。当前审查基线因
+并行限制、工具 strict、预算与 none 推理转换的缺口返回 1；不能将这个失败抹成通过。
+既有 `validate_constraint_contract.py` 的通过结果与这个新增范围的失败结果同时保留。
+完整结果见 [本轮报告](../../docs/claude-tool-reasoning-audit-20261010.md)。
+
+## 工具与推理约束修复验收
+
+[CC-20261010-003](../../docs/claude-tool-reasoning-fix-20261010.md)将 504 组审查转为永久
+`TestClaudeToolConstraintContract`，新增 strict 能力策略、Schema 不被改写、none、并行开关
+以及预算临界值测试。使用新的空输出目录运行：
+
+```bash
+cd backend
+CLAUDE_TOOL_CONSTRAINT_EXPORT=/absolute/path/to/new-output \
+  go test -tags=unit ./internal/service \
+  -run '^TestClaudeToolConstraintContract$|^TestClaudeStrictToolCannotLoseCapability$' -count=1
+```
+
+保留同一 504 分母，八个无法同时满足 high 思考最低预算与低上限的 Haiku 4.5 转换请求现在
+明确 400；合计 52 个拒绝、452 个成功导出。判定器还检查 true 开关、strict 能力头和精确的
+none / adaptive 行为；旧 002 证据仍失败。不是删除场景或把问题改成无条件通过。
+
+实际发送 `exports/` 时，在 `tool_constraint_wire_lab.py` 的隔离环境中设置
+`CLAUDE_TOOL_WIRE_REQUIRE_CONTRACT=1`。接收端将按独立 contract 字段检查 max_tokens、
+并行限制、strict 及能力头、工具 / 输出 Schema、thinking 类型和预算，再核对 PCAP。
+旧 192 约束、102 入口和 36 摘要请求合同继续单独执行。

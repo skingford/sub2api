@@ -1,0 +1,1875 @@
+{
+  "change_id": "CC-20261010-002",
+  "date": "2026-10-10",
+  "base": "465ed3738afb317b08c68eb08da04af7ee58c2ef",
+  "runtime_commit": "7e924048b9e67953dbec015bb535bb846cd2972b",
+  "upstream": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "evidence_root": "/Users/kingford/claude-capture/full-recheck-20261010-cgpjnej3",
+  "source_modules": {
+    "2.1.292": 2260,
+    "2.1.295": 2340
+  },
+  "working_source_matches_snapshot": true,
+  "source_files": 3338,
+  "native_captures": [
+    {
+      "version": "2.1.292",
+      "suite": "comprehensive",
+      "cases": 51,
+      "requests": 89,
+      "gzip": 2
+    },
+    {
+      "version": "2.1.292",
+      "suite": "deep_native",
+      "cases": 22,
+      "requests": 30,
+      "gzip": 24
+    },
+    {
+      "version": "2.1.292",
+      "suite": "gzip_fix",
+      "cases": 12,
+      "requests": 20,
+      "gzip": 18
+    },
+    {
+      "version": "2.1.292",
+      "suite": "version_edges",
+      "cases": 10,
+      "requests": 10,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "postfix_edges",
+      "cases": 18,
+      "requests": 24,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "token_limit",
+      "cases": 3,
+      "requests": 3,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "summary_edges",
+      "cases": 3,
+      "requests": 18,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "tool_constraints",
+      "cases": 36,
+      "requests": 36,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "thinking_limits",
+      "cases": 18,
+      "requests": 18,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "comprehensive",
+      "cases": 51,
+      "requests": 89,
+      "gzip": 2
+    },
+    {
+      "version": "2.1.295",
+      "suite": "deep_native",
+      "cases": 22,
+      "requests": 30,
+      "gzip": 24
+    },
+    {
+      "version": "2.1.295",
+      "suite": "gzip_fix",
+      "cases": 12,
+      "requests": 20,
+      "gzip": 18
+    },
+    {
+      "version": "2.1.295",
+      "suite": "version_edges",
+      "cases": 10,
+      "requests": 10,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "postfix_edges",
+      "cases": 18,
+      "requests": 24,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "token_limit",
+      "cases": 3,
+      "requests": 3,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "summary_edges",
+      "cases": 3,
+      "requests": 18,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "tool_constraints",
+      "cases": 36,
+      "requests": 36,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "thinking_limits",
+      "cases": 18,
+      "requests": 18,
+      "gzip": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "haiku295",
+      "cases": 11,
+      "requests": 21,
+      "gzip": 0
+    }
+  ],
+  "error_replays": [
+    {
+      "version": "2.1.292",
+      "kind": "origin",
+      "cases": 6,
+      "requests": 10,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "none",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-object",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-text",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-standard",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-escaped",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "origin",
+      "cases": 6,
+      "requests": 10,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "none",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-object",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-text",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-standard",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-escaped",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "native_total": {
+    "scenarios": 401,
+    "requests": 633,
+    "all_pcap_match": true,
+    "kernel_drops": 0
+  },
+  "forwarding": {
+    "comparisons": 2068,
+    "logical_equal": 2060,
+    "wire_equal": 2060,
+    "errors": 0,
+    "exceptions": [
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      },
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      },
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      },
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "body_equal": false,
+        "wire_body_equal": false,
+        "error": null
+      }
+    ],
+    "same_auth_combinations": 1034,
+    "same_auth_headers_equal": 1030
+  },
+  "existing_contract": {
+    "entrypoint_observations": 102,
+    "summary_requests": 36,
+    "contract_passed": true
+  },
+  "tool_contract": {
+    "cases": 504,
+    "explicit_rejections": 44,
+    "failing_cases": 132,
+    "failure_counts": {
+      "parallel_false_lost": 72,
+      "strict_true_lost": 48,
+      "generated_budget_exceeds_cap": 24,
+      "none_enables_thinking": 12
+    },
+    "contract_passed": false
+  },
+  "actual_wire": {
+    "constraints": {
+      "requests": 192,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    },
+    "tools": {
+      "requests": 388,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    },
+    "limits": {
+      "requests": 72,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    }
+  },
+  "transport": {
+    "combinations": 48,
+    "body_headers_order_hello_all_equal": true,
+    "trace_cases": 24,
+    "kernel_drops": 0,
+    "count_auth_harness_corrected": true,
+    "both_synthetic_credentials_redacted": true
+  },
+  "nested_cch": {
+    "cases": 3,
+    "independent_native_cch_matches": true,
+    "runtime_binary_sha256": "b7493fb718106db884074d61f06e5ba7550899f8bf64eb4f9adbbfa252d27c38",
+    "instrumented_entrypoint_not_unmodified_cli": true,
+    "native_prefix_unchanged": true,
+    "native_prefix_sha256": "b9ffcbf2acf0687927765d3adc9383a87dd051a81631a23226f86580dda66744"
+  },
+  "recovery": {
+    "2.1.292": {
+      "model_auth_cases": 6,
+      "sessions": 12,
+      "cross_session_leaks": 0,
+      "generation": 96,
+      "count_tokens": 24
+    },
+    "2.1.295": {
+      "model_auth_cases": 8,
+      "sessions": 16,
+      "cross_session_leaks": 0,
+      "generation": 128,
+      "count_tokens": 32
+    }
+  },
+  "engineering": {
+    "components": {
+      "packages": 5,
+      "test_pass_events": 813
+    },
+    "cch": {
+      "packages": 1,
+      "test_pass_events": 606
+    },
+    "service": {
+      "top_level_passes": 620,
+      "test_pass_events": 2286,
+      "skipped_top_level": 4
+    }
+  },
+  "full_unit_integration_lint_rerun": false,
+  "production_modified": false,
+  "live_provider_acceptance_verified": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P2",
+      "description": "Chat/Responses parallel_tool_calls=false is lost",
+      "cases": 72,
+      "file": "backend/internal/pkg/apicompat/responses_to_anthropic_request.go",
+      "line": 64
+    },
+    {
+      "id": "F2",
+      "severity": "P2",
+      "description": "Tool-level strict=true is lost by Chat/Responses conversion",
+      "cases": 48,
+      "file": "backend/internal/pkg/apicompat/responses_to_anthropic_request.go",
+      "line": 724
+    },
+    {
+      "id": "F3",
+      "severity": "P2",
+      "description": "Legacy high reasoning generates 10240 budget at 1025/4096 output cap",
+      "cases": 24,
+      "file": "backend/internal/pkg/apicompat/responses_to_anthropic_request.go",
+      "line": 127
+    },
+    {
+      "id": "F4",
+      "severity": "P2",
+      "description": "Legacy reasoning none enables thinking instead of disabling or rejecting",
+      "cases": 12,
+      "file": "backend/internal/pkg/apicompat/responses_to_anthropic_request.go",
+      "line": 131
+    }
+  ],
+  "known_policies": {
+    "display_beta_fallback": 8,
+    "why_eight_instead_of_four": "Same four forwarding configurations now captured under both CLI versions",
+    "empty_anthropic_version_defaults_same_auth_cases": 4,
+    "only_display_and_cch_change_verified": true
+  },
+  "policy_observations": 108,
+  "examples": [
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "parallel-false-auto",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": null,
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 4095,
+          "display": "omitted",
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "disable_parallel_tool_use": true,
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "tool_choice": {
+          "disable_parallel_tool_use": true,
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/messages",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "parallel-false-auto",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": null,
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 4095,
+          "display": "omitted",
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "parallel_tool_calls": false,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Local inert audit tool",
+              "name": "audit_tool",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "parallel-false-auto",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": null,
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 4095,
+          "display": "omitted",
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "input": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+        "max_output_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "parallel_tool_calls": false,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "name": "audit_tool",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/responses",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "strict-true",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": null,
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 4095,
+          "display": "omitted",
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool",
+            "strict": true
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool",
+            "strict": true
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/messages",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "strict-true",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": null,
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 4095,
+          "display": "omitted",
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Local inert audit tool",
+              "name": "audit_tool",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ],
+                "type": "object"
+              },
+              "strict": true
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "strict-true",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": null,
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 4095,
+          "display": "omitted",
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "input": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+        "max_output_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "name": "audit_tool",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "strict": true,
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/responses",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "max4096-high",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "high"
+        },
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 4095,
+          "display": "omitted",
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "high"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/messages",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "max4096-high",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "high"
+        },
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 10240,
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "reasoning_effort": "high",
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Local inert audit tool",
+              "name": "audit_tool",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "max4096-high",
+      "fields": {
+        "max_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "high"
+        },
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 10240,
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "input": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+        "max_output_tokens": 4096,
+        "model": "claude-haiku-4-5-20251001",
+        "reasoning": {
+          "effort": "high"
+        },
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "name": "audit_tool",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/responses",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "max64-none",
+      "fields": {
+        "max_tokens": 64,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "none"
+        },
+        "temperature": null,
+        "thinking": null,
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 64,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "none"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/messages",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "max64-none",
+      "fields": {
+        "max_tokens": 64,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "none"
+        },
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 10240,
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "max_tokens": 64,
+        "messages": [
+          {
+            "content": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5-20251001",
+        "reasoning_effort": "none",
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Local inert audit tool",
+              "name": "audit_tool",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "account": "oauth",
+      "beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,claude-code-20250219,thinking-binding-controls-2026-08-01,extended-cache-ttl-2025-04-11",
+      "calls": 1,
+      "control": "max64-none",
+      "fields": {
+        "max_tokens": 64,
+        "model": "claude-haiku-4-5-20251001",
+        "output_config": {
+          "effort": "none"
+        },
+        "temperature": null,
+        "thinking": {
+          "budget_tokens": 10240,
+          "type": "enabled"
+        },
+        "tool_choice": {
+          "type": "auto"
+        },
+        "tools": [
+          {
+            "cache_control": {
+              "ttl": "5m",
+              "type": "ephemeral"
+            },
+            "description": "Local inert audit tool",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "name": "audit_tool"
+          }
+        ],
+        "top_p": null
+      },
+      "input": {
+        "input": "LOCAL_TOOL_CONSTRAINT_AUDIT",
+        "max_output_tokens": 64,
+        "model": "claude-haiku-4-5-20251001",
+        "reasoning": {
+          "effort": "none"
+        },
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Local inert audit tool",
+            "name": "audit_tool",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "route": "/v1/responses",
+      "status": 200
+    }
+  ],
+  "typed_field_inventory": {
+    "ResponsesRequest": [
+      "prompt_cache_options",
+      "model",
+      "instructions",
+      "input",
+      "max_output_tokens",
+      "temperature",
+      "top_p",
+      "stream",
+      "tools",
+      "include",
+      "store",
+      "parallel_tool_calls",
+      "reasoning",
+      "text",
+      "tool_choice",
+      "service_tier",
+      "prompt_cache_key",
+      "previous_response_id"
+    ],
+    "ChatCompletionsRequest": [
+      "prompt_cache_options",
+      "model",
+      "messages",
+      "instructions",
+      "max_tokens",
+      "max_completion_tokens",
+      "temperature",
+      "top_p",
+      "stream",
+      "stream_options",
+      "tools",
+      "parallel_tool_calls",
+      "tool_choice",
+      "reasoning_effort",
+      "service_tier",
+      "stop",
+      "response_format",
+      "functions",
+      "function_call"
+    ],
+    "AnthropicRequest": [
+      "model",
+      "max_tokens",
+      "system",
+      "messages",
+      "tools",
+      "stream",
+      "temperature",
+      "top_p",
+      "stop_sequences",
+      "thinking",
+      "tool_choice",
+      "metadata",
+      "output_config"
+    ]
+  },
+  "environment": {
+    "bind_mount_listing_timeout_seconds": 15,
+    "archive_copy_timeout_seconds": 25,
+    "new_container_start_timeout_seconds": 120,
+    "recovery": "Container-local copies transferred through docker exec stdin/stdout; same network-none namespace, pinned binaries and unchanged assertions",
+    "global_docker_restarted": false,
+    "business_containers_modified": false,
+    "preparation_corrections": [
+      "292 extraction retried on host Python with Zstd support",
+      "Transport probe profile spelling corrected",
+      "OAuth count transport synthetic_auth explicitly set and 16 paths reverified",
+      "Reused verifier namespace given loopback host alias before native capture",
+      "Policy-only hash check first used an incorrect overlay path, then omitted restoring cch=00000; preparation mistakes preserved, corrected check passed for all eight outputs"
+    ],
+    "cleanup_complete": false
+  },
+  "evidence_sha256": {
+    "analysis/source-manifest.json": "554e24c87cc5fc2a22b9ae36bb325432d0874ce399d60677c3e2145006bb7ac6",
+    "analysis/source-anchors.json": "84d2fe3e9ff8721c10d08f245691e9e7cc7b885d4de98896a36550de27de29b3",
+    "source-292/manifest.json": "34c3daaa62b8f95ed9d540aee01ee04b7c4a48aadf9adecc5219124ced75caf3",
+    "source-295/manifest.json": "96facb2c3968f697053e09db985237f9c5a5ebc9f27bbbce89bc496432341b13",
+    "analysis/tools-expanded/observations.json": "23d6d958a13e44133317cc7e835a2be3d4afd6c17294ac8e439d84dc41884fbf",
+    "analysis/tool-constraint-gate.json": "2600a1f5273a00f4903b22deeaaf0aed6b18073c7e091d57ab3e063be8338864",
+    "analysis/contract-gate.log": "3fa8eb6182ff90a64a85f7cae467f9a8b9625dabc9272ac5efa38846679bbe88",
+    "analysis/entrypoint-controls.json": "84ae8b24f5d9768540fa15b9eda653aa9d76d0dcdd31dd93ddb26984255658b4",
+    "analysis/summary-sequences-292.json": "1b9837ad17c947e415fd9a42e71aebf1895998e43384b6bd153b6d0466923b22",
+    "analysis/summary-sequences-295.json": "1b9837ad17c947e415fd9a42e71aebf1895998e43384b6bd153b6d0466923b22",
+    "analysis/components.jsonl": "b7b61d6c86b584b5ef5f4c3dbf7ad956ef424a0bcd3f31d0fd2ca990419c2bf3",
+    "analysis/cch.jsonl": "c4844b1a0f8989ab0bef1dc20c798184ecfc2052cce0aef90e94291ddd9cf040",
+    "analysis/service-regressions.log": "4e5e44aedbf25a2963dc40111079702cfd9cd9eaed96be4b66923268173343e3",
+    "transport/verification.json": "4936a88b3fd24ea9b1ddff5f9f5510af1f34082656964ca5d4bc77c04048ba9e",
+    "transport-count-corrected/verification.json": "d8aded5543e698fe07e7e6e5ba408b99fd7a23fd901e4bee37e92659934e4916",
+    "nested-cch/comparison.json": "9a79ab2add7a8d71bc7459a16576e19f9a83cebcb3aae69e6c5a6b0420f4803d",
+    "capture-2.1.295-token_limit/pcap-verification.json": "c28f4b102ea934bf9f08f8bf68768b658b1114bcdf92dfac637d84ed5583e7f8",
+    "capture-2.1.292-comprehensive/pcap-verification.json": "ee5323f4d92840acab6da1eea5297ed4c54182053541843d8f4274e3db7e6e42",
+    "capture-2.1.292-gzip_fix/pcap-verification.json": "eab9a9565f4046259d166b5d55e3c4e25dcb34a5ccc7166034aa4d87b5167e7d",
+    "capture-2.1.295-comprehensive/pcap-verification.json": "ee5323f4d92840acab6da1eea5297ed4c54182053541843d8f4274e3db7e6e42",
+    "capture-2.1.295-gzip_fix/pcap-verification.json": "eab9a9565f4046259d166b5d55e3c4e25dcb34a5ccc7166034aa4d87b5167e7d",
+    "capture-2.1.295-deep_native/pcap-verification.json": "780562650e662fd6d9c4d824725c18213f9cf833027cabd4987dbc0db3a1f79b",
+    "capture-2.1.295-thinking_limits/pcap-verification.json": "3160cd6353779e15f656ab4c45a2ac11d88a71df043dc10734e66d1a1a481e17",
+    "capture-2.1.295-summary_edges/pcap-verification.json": "118ad5ea1edceb3f8efa9b62d0b1cbef812910369ccef0c993f611a51ecfe51e",
+    "capture-2.1.292-tool_constraints/pcap-verification.json": "e2fd33d697e4f19c9613f0e8fbab724e8c0b7f92bbb7aece441703b4828b6f09",
+    "capture-2.1.292-summary_edges/pcap-verification.json": "118ad5ea1edceb3f8efa9b62d0b1cbef812910369ccef0c993f611a51ecfe51e",
+    "capture-2.1.292-thinking_limits/pcap-verification.json": "3160cd6353779e15f656ab4c45a2ac11d88a71df043dc10734e66d1a1a481e17",
+    "capture-2.1.295-haiku295/pcap-verification.json": "e0a7706b27d1aacbe13acc5dd9ae9faaeb578515035642e05a2796b9453fadde",
+    "capture-2.1.292-postfix_edges/pcap-verification.json": "f21b5f8e2d42726c8bb791770338b3b048740955bfccc2e3e6726fae8bd84382",
+    "capture-2.1.295-tool_constraints/pcap-verification.json": "e2fd33d697e4f19c9613f0e8fbab724e8c0b7f92bbb7aece441703b4828b6f09",
+    "capture-2.1.295-postfix_edges/pcap-verification.json": "f21b5f8e2d42726c8bb791770338b3b048740955bfccc2e3e6726fae8bd84382",
+    "capture-2.1.292-deep_native/pcap-verification.json": "780562650e662fd6d9c4d824725c18213f9cf833027cabd4987dbc0db3a1f79b",
+    "capture-2.1.292-version_edges/pcap-verification.json": "d91791d7346dd29b08bde89484956c07e04f07bbd12dc77f987b4a358c8b6d8c",
+    "capture-2.1.295-version_edges/pcap-verification.json": "d91791d7346dd29b08bde89484956c07e04f07bbd12dc77f987b4a358c8b6d8c",
+    "capture-2.1.292-token_limit/pcap-verification.json": "c28f4b102ea934bf9f08f8bf68768b658b1114bcdf92dfac637d84ed5583e7f8",
+    "error-replay-2.1.292-bad-json-escaped/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-origin/pcap-verification.json": "7439776e95d14f17951233e4c3112b62850212700b5bde1d9bfe79005e6caebf",
+    "error-replay-2.1.292-bad-json-text/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.292-bad-json-object/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.292-origin/pcap-verification.json": "7439776e95d14f17951233e4c3112b62850212700b5bde1d9bfe79005e6caebf",
+    "error-replay-2.1.295-bad-json-object/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.292-bad-json-standard/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-bad-json-text/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-bad-json-standard/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-bad-json-escaped/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "analysis/forward-2.1.292-comprehensive.json": "c5e8d62da2d41ef09ceac40fcc3a88413ab9d1a8d8e41e7c419101c2c726066e",
+    "analysis/forward-2.1.295-thinking_limits.json": "86116e6553b9d85939d5a45327c93c32a13722949ab053faceaaa9674cb94d26",
+    "analysis/forward-2.1.292-summary_edges.json": "d1a91786611f1aebed77eac9904ac68c10ada869fd8344955b293b2e9912201c",
+    "analysis/forward-2.1.295-tool_constraints.json": "a8b6c061d8740dea3b159ddc1ed0e50970c71f4edf086203e44f51888398c326",
+    "analysis/forward-2.1.295-haiku295.json": "b307879ea271063e9975943f40fbe81333cc1043fda70b189aaf6e71848695c2",
+    "analysis/forward-2.1.292-gzip_fix.json": "ae0afd0c3373578f2739cb0ccced006403ec50e2dda827c774615019b1b73089",
+    "analysis/forward-2.1.295-postfix_edges.json": "ec86b0157ceb57aef567e11b21f2c62fe39c860d439e0191d9151c491f8da3a2",
+    "analysis/forward-2.1.295-gzip_fix.json": "466eaf2556de7caa9bcf652b76fd8ab0266ae8970a5b8d449d41d4c8ba730dc5",
+    "analysis/forward-2.1.292-token_limit.json": "0a5cd31e7563b6176f9a82a0cdfcf6101f1544619b986536e3fd414ef6439298",
+    "analysis/forward-2.1.295-deep_native.json": "324c83d54bb7b8305bd23ef5c5bee31706c8f69e661e194333c6d9beca742e96",
+    "analysis/forward-2.1.292-version_edges.json": "a4bebc65a36efa0545baba3a053fe234023b1675ec737a3723c49b18b3bf65d3",
+    "analysis/forward-2.1.295-summary_edges.json": "3615dc4e78d3639a6510c487dc514a36a84c594d673265c2b91ce95016450c6a",
+    "analysis/forward-2.1.295-comprehensive.json": "083fde57347bf484e151bd0ce55047d89782626e22c6bc050620a757a3fee994",
+    "analysis/forward-2.1.295-token_limit.json": "74f092c0956baa9de05f70956af9e6a44da7797c8ceddc32b7c906353c90e939",
+    "analysis/forward-2.1.292-deep_native.json": "73c748007ff3f3dce0ad7965c3b1c0adf2b3ecefa7ac413a7353fc04208acc45",
+    "analysis/forward-2.1.292-thinking_limits.json": "3a5b8c1d3dbd92372b266430b03095e36abecd9b91b429721618f3c7c6bd8608",
+    "analysis/forward-2.1.292-postfix_edges.json": "a4ef69fb012ff69d5cbf54685e69dbc919a6985712490f7dbcda4db9da852949",
+    "analysis/forward-2.1.292-tool_constraints.json": "34b92a07975b455033f92d1dd19788975b05d44e590cb20862272f6325c83484",
+    "analysis/forward-2.1.295-version_edges.json": "8cf74881cc0d6a91d93aebcac2877a51a97e3bfeb9ac977bd98f5d8377842021",
+    "wire-tools/pcap-verification.json": "01ba8826e624efcae8772ba942e341ee180c4a2980672724f2243349eb3b4908",
+    "wire-constraints/pcap-verification.json": "1b56131c7d6bbe53fae2f29becce607b101c236974d48f85745c072a456266ec",
+    "wire-limits/pcap-verification.json": "59e362836e049d766bd0f247fa99633a33162dcf0209e190a9709060b94ecfea",
+    "analysis/policy-body-cases.json": "e203f58cb967f165eadb128dfbb7b35946b3a981c736dc2368f5606160f5569b",
+    "analysis/policy-body-verification.jsonl": "bfd4864ef3b85b5bb3ca172c66b9ba7ec5019dd638c54ce7a4241353a2116a24",
+    "scripts/policy_body_audit_test.go": "ec881ac792c6002a9672ff92459e32ebb21545c4cc70b6232876e66a3e6425b2"
+  },
+  "cleanup": {
+    "timeout_seconds": 20,
+    "stdout": "",
+    "stderr": "",
+    "remaining": [
+      "hungry_ardinghelli Up 14 minutes",
+      "reverent_einstein Up 15 minutes",
+      "mystifying_rosalind Up 15 minutes",
+      "serene_neumann Up 15 minutes"
+    ],
+    "local_worker_copies_removed": true
+  }
+}

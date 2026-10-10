@@ -205,3 +205,7 @@ request-traces/
 !docs/claude-validation-contract.md
 !docs/claude-constraint-contract-20261010.md
 !docs/claude-constraint-contract-20261010.json
+!docs/claude-tool-reasoning-audit-20261010.md
+!docs/claude-tool-reasoning-audit-20261010.json
+!docs/claude-tool-reasoning-fix-20261010.md
+!docs/claude-tool-reasoning-fix-20261010.json
