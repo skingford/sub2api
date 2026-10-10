@@ -1,0 +1,120 @@
+{
+  "change_id": "CC-20261010-007",
+  "baseline_commit": "a426396d8",
+  "includes_uncommitted_change": "CC-20261010-006",
+  "backend_source_files_unchanged": 3350,
+  "platform": "Linux x64, HTTP/1.1, Docker network none",
+  "source_modules": 4600,
+  "sources": [
+    {
+      "version": "2.1.292",
+      "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+      "modules": 2260,
+      "all_binary_regions_and_decoded_modules_match": true
+    },
+    {
+      "version": "2.1.295",
+      "binary_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+      "modules": 2340,
+      "all_binary_regions_and_decoded_modules_match": true
+    }
+  ],
+  "cli_scenarios": 22,
+  "cli_generation_and_count_requests": 62,
+  "observation_summary": {
+    "observations": 256,
+    "native_observations": 124,
+    "native_logical_bytes_equal": 124,
+    "errors": 0,
+    "sub2api_header_leaks": 0,
+    "generic_full_bodies_equal": 36
+  },
+  "wire": {
+    "requests": 256,
+    "requests_by_path": {
+      "/v1/messages/count_tokens?beta=true": 144,
+      "/v1/messages?beta=true": 112
+    },
+    "pcap_bytes_match": true,
+    "kernel_drops": 0,
+    "client_hellos": 256,
+    "normalized_hello_matches_existing_linux_pin": 256,
+    "native_header_cases": 124,
+    "native_header_values_equal": 124,
+    "native_header_order_equal": 124,
+    "sub2api_header_leaks": []
+  },
+  "count_policy_comparison": {
+    "legacy": {
+      "cases": 36,
+      "body_equal": 36,
+      "system_changed": 0
+    },
+    "preserve": {
+      "cases": 36,
+      "body_equal": 0,
+      "system_changed": 36
+    }
+  },
+  "mcp_tool_name_comparison": {
+    "legacy": {
+      "requests": 6,
+      "names": 36,
+      "mcp_names_retained": 0
+    },
+    "preserve": {
+      "requests": 6,
+      "names": 36,
+      "mcp_names_retained": 36
+    }
+  },
+  "chat_implicit_strict_cases": [
+    {
+      "case": "2.1.292-oauth-custom-mcp-2-chat",
+      "preserve_caller": false,
+      "tools_with_synthesized_false": 6
+    },
+    {
+      "case": "2.1.292-oauth-custom-mcp-2-chat",
+      "preserve_caller": true,
+      "tools_with_synthesized_false": 6
+    },
+    {
+      "case": "2.1.295-oauth-custom-mcp-2-chat",
+      "preserve_caller": false,
+      "tools_with_synthesized_false": 6
+    },
+    {
+      "case": "2.1.295-oauth-custom-mcp-2-chat",
+      "preserve_caller": true,
+      "tools_with_synthesized_false": 6
+    }
+  ],
+  "profile_test_groups": 5,
+  "profile_test_pass_events": 24,
+  "full_unit_integration_lint_rerun": false,
+  "live_provider_acceptance_verified": false,
+  "live_subscription_verified": false,
+  "production_configuration_inspected": false,
+  "committed": false,
+  "deployed": false,
+  "evidence_root": "/Users/kingford/claude-capture/cli-alignment-recheck-20261010-zOECmb",
+  "evidence_sha256": {
+    "source-verification.json": "f41effe63f429ec472d291bb7caa5c75d9325009ebf5b0e8855941b1359c022c",
+    "inputs.json": "18c92b09dfcea0611d32061d89ea413d42701ca8d9bb50d42b9a883110af2c4f",
+    "references.json": "74cb2559d7df537de73a29a3c4c51a64e2c1b2a5365ac2e30af1078b78465cd2",
+    "comparison.json": "777746da2e9de40d1639113a4faa8106c67501e25286d362913aa84403921315",
+    "gateway/observations.json": "14b8bde9053426ea78e7101c2ce5b5a75390d1a1883a95f97ef6190d8abcf74d",
+    "wire/alignment-verification.json": "336453f838e8c6719032ef8ff6f47d18a20e2cf080546e64bc73091e6e1d6b22",
+    "wire/records-with-headers.json": "365277d3a4d1da0ff896a64e83dadc12961a734bf626e6b39d1f7475d644c9b3",
+    "analysis/profile-tests-fixed.log": "1484317b46d0f210851bd32c25bab3e6500defc67f7aa9cb18c313156d54191a"
+  },
+  "tool_sha256": {
+    "caller_cli_alignment_lab.py": "adc366aee11083feb3b02ab816b20558a217b9c2cef59a08fe6fb9ec410f90f2",
+    "interactive_cli_alignment_lab.py": "0bd4d615af9bcc63caaa7447e4ca382b5c0ea400f1a15e5812bcf71f3c1940ac",
+    "verify_caller_cli_alignment.py": "e98e9f4ca3d3f070276f4a2fcb45d2494abd73df484644b0c397d2bca3ece9f3",
+    "verify_alignment_wire.py": "69f3afdfc596aee9a3e91d510e93a9d69e4b152d80696287cdb064a5f485c82d",
+    "caller_cli_alignment_audit_test.go": "2a3d4679683581bcef31dd39c12fd20d535a5302d2a36447a515f1ae809f5632",
+    "caller_alignment_wire_lab.py": "48ed2fac8b860877a7cfb251c85fc17187c3785335bc0e62e9e03ab1c7fe5c86"
+  }
+}

@@ -16,6 +16,14 @@ import (
 )
 
 func TestClaudeContentContract(t *testing.T) {
+	runClaudeContentContract(t, false)
+}
+
+func TestClaudeCallerContentContract(t *testing.T) {
+	runClaudeContentContract(t, true)
+}
+
+func runClaudeContentContract(t *testing.T, preserveCaller bool) {
 	inputPath, output := "testdata/claude_content_contract.json", os.Getenv("CLAUDE_CONTENT_CONTRACT_EXPORT")
 	data, err := os.ReadFile(inputPath)
 	require.NoError(t, err)
@@ -51,9 +59,10 @@ func TestClaudeContentContract(t *testing.T) {
 					payload, e := json.Marshal(body)
 					require.NoError(t, e)
 					svc, up := newClaudeContractGateway(t)
+					svc.cfg.Gateway.ClaudeOAuthPreserveCaller = preserveCaller
 					_, rec, callErr := callClaudeContract(t, svc, newClaude2292Account(kind), payload, nil, route)
-					assertClaudeContentContract(t, model, kind, route, tc.Name, tc.Expected, rec.Code, up.calls, callErr, up.body)
-					row := map[string]any{"model": model, "account": kind, "route": route, "control": tc.Name, "input": json.RawMessage(payload), "expected": tc.Expected, "status": rec.Code, "calls": up.calls}
+					assertClaudeContentContract(t, model, kind, route, tc.Name, tc.Expected, rec.Code, up.calls, callErr, up.body, preserveCaller)
+					row := map[string]any{"preserve_caller": preserveCaller, "model": model, "account": kind, "route": route, "control": tc.Name, "input": json.RawMessage(payload), "expected": tc.Expected, "status": rec.Code, "calls": up.calls}
 					if callErr != nil {
 						row["error"] = callErr.Error()
 					}
@@ -115,7 +124,7 @@ func contentContractContains(objects []map[string]any, expected map[string]any) 
 	}
 	return false
 }
-func assertClaudeContentContract(t *testing.T, model, kind, route, control string, expectJSON []byte, status, calls int, callErr error, body []byte) {
+func assertClaudeContentContract(t *testing.T, model, kind, route, control string, expectJSON []byte, status, calls int, callErr error, body []byte, preserveCaller bool) {
 	t.Helper()
 	label := model + "/" + kind + route + "/" + control
 	var expected map[string]any
@@ -134,7 +143,7 @@ func assertClaudeContentContract(t *testing.T, model, kind, route, control strin
 	require.NoError(t, json.Unmarshal(body, &actual), label)
 	objects := contentContractObjects(actual["messages"])
 	if text, ok := expected["system_text"].(string); ok {
-		if kind == AccountTypeOAuth {
+		if kind == AccountTypeOAuth && !preserveCaller {
 			require.True(t, contentContractContains(objects, map[string]any{"type": "text", "text": "[System Instructions]\n" + text}), label)
 			require.True(t, contentContractContains(objects, map[string]any{"role": "assistant", "content": []any{map[string]any{"type": "text", "text": "Understood. I will follow these instructions."}}}), label)
 		} else {

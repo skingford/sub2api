@@ -45,6 +45,7 @@ type claudeOAuthNormalizeOptions struct {
 	metadataUserID        string
 	countTokens           bool
 	replaceOpaqueMetadata bool
+	preserveSystemText    bool
 }
 
 // sanitizeSystemText rewrites only the fixed OpenCode identity sentence (if present).
@@ -229,9 +230,11 @@ func normalizeClaudeOAuthRequestBody(body []byte, modelID string, opts claudeOAu
 	out := body
 	modified := false
 
-	if next, changed := normalizeClaudeOAuthSystemBody(out); changed {
-		out = next
-		modified = true
+	if !opts.preserveSystemText {
+		if next, changed := normalizeClaudeOAuthSystemBody(out); changed {
+			out = next
+			modified = true
+		}
 	}
 
 	rawModel := gjson.GetBytes(out, "model")
@@ -370,25 +373,9 @@ func (s *GatewayService) buildOAuthMetadataUserID(parsed *ParsedRequest, account
 	return FormatMetadataUserID(userID, accountUUID, sessionID, uaVersion)
 }
 
-// applyClaudeCodeOAuthMimicryToBody 将"非 Claude Code 客户端 + Claude OAuth 账号"
-// 路径上原本只在 /v1/messages 里做的完整伪装应用到任意 body 上。
-//
-// 这是 /v1/messages 主路径上 rewriteSystemForNonClaudeCode +
-// normalizeClaudeOAuthRequestBody 流程的通用版，供 OpenAI 协议兼容层
-// (ForwardAsChatCompletions / ForwardAsResponses) 复用。
-//
-// 未抽离之前，OpenAI 协议兼容层仅做 injectClaudeCodePrompt（前置追加），
-// 而仓内 /v1/messages 路径自己的注释明确说过"仅前置追加无法通过 Anthropic
-// 第三方检测"；那条注释就是本函数存在的根因。
-//
-// 参数：
-//   - ctx / c：用于读取指纹和 gateway settings；c 可为 nil（如 count_tokens）。
-//   - account：必须是 OAuth 账号，且调用方已判断不是 Claude Code 客户端。
-//   - body：已经 marshal 成 Anthropic /v1/messages 格式的请求体。
-//   - systemRaw：body 中原始 system 字段（用于判断是否需要 rewrite）。
-//   - model：最终会发给上游的模型 ID（用于模型规范化 + metadata 版本选择）。
-//
-// 返回：改写后的 body。即使中间任何一步失败，也会退化成原 body（不会 panic）。
+// applyClaudeCodeOAuthMimicryToBody applies the selected API-to-OAuth body
+// policy to an Anthropic-format request produced by the OpenAI adapters.
+// Compatibility shaping does not establish client identity or entitlement.
 func (s *GatewayService) applyClaudeCodeOAuthMimicryToBody(
 	ctx context.Context,
 	c *gin.Context,
@@ -396,18 +383,18 @@ func (s *GatewayService) applyClaudeCodeOAuthMimicryToBody(
 	body []byte,
 	systemRaw any,
 	model string,
-) []byte {
+) ([]byte, error) {
 	if account == nil || !account.IsOAuth() || len(body) == 0 {
-		return body
+		return body, nil
 	}
 
-	systemPromptInjectionEnabled, systemPrompt, systemPromptBlocks := s.claudeOAuthSystemPromptInjectionSettings(ctx)
-	if systemPromptInjectionEnabled {
-		systemPromptBlocks = claudeOAuthSystemPromptBlocksForModel(model, systemPromptBlocks)
-		body = rewriteSystemForNonClaudeCodeWithPromptBlocks(body, normalizeSystemParam(systemRaw), systemPrompt, systemPromptBlocks)
+	var err error
+	body, err = s.rewriteClaudeOAuthSystem(ctx, c, body, normalizeSystemParam(systemRaw), model)
+	if err != nil {
+		return nil, err
 	}
 
-	normalizeOpts := claudeOAuthNormalizeOptions{replaceOpaqueMetadata: claudeCompatibilityFromContext(ctx) != nil}
+	normalizeOpts := claudeOAuthNormalizeOptions{replaceOpaqueMetadata: claudeCompatibilityFromContext(ctx) != nil, preserveSystemText: s.preserveClaudeOAuthCaller()}
 
 	if s.identityService != nil && c != nil && c.Request != nil {
 		if fp, err := s.identityService.GetOrCreateFingerprint(ctx, account.ID, c.Request.Header); err == nil && fp != nil {
@@ -426,23 +413,8 @@ func (s *GatewayService) applyClaudeCodeOAuthMimicryToBody(
 
 	body, _ = normalizeClaudeOAuthRequestBody(body, model, normalizeOpts)
 
-	// Phase D+E+F: messages cache 策略 + 工具名混淆 + tools[-1] 断点
-	// 对齐 Parrot transform_request 里剩余的字段级改写。顺序有语义约束：
-	//   1) messages cache：仅在配置开启时清除客户端断点并注入代理断点
-	//   2) tool rewrite：最后改 tools[*].name / tool_choice.name 并在 tools[-1]
-	//      上打断点；mapping 存入 gin.Context 供响应侧 bytes.Replace 还原。
-	body = s.rewriteMessageCacheControlIfEnabled(ctx, body)
-
-	if rw := buildToolNameRewriteFromBody(body); rw != nil {
-		body = applyToolNameRewriteToBody(body, rw)
-		if c != nil {
-			c.Set(toolNameRewriteKey, rw)
-		}
-	} else {
-		body = applyToolsLastCacheBreakpoint(body)
-	}
-
-	return body
+	body = s.applyClaudeOAuthToolPolicy(ctx, c, body)
+	return body, nil
 }
 
 // buildOAuthMetadataUserIDFromBody 是 buildOAuthMetadataUserID 的变体，

@@ -217,6 +217,11 @@ security:
 # 网关配置
 # =============================================================================
 gateway:
+  # API → OAuth: retain caller system blocks, tool names and cache breakpoints.
+  # 新模式不注入固定确认对话或通用扩充提示词；默认开启，false 回退旧策略，切换后新建会话。
+  # 仅表示保留策略，不代表官方接受、订阅资格或完整 CLI 行为一致。
+  # See docs/claude-caller-preservation.md for precedence and rollback.
+  claude_oauth_preserve_caller: true
   # Private, unsampled HTTP request/response evidence; see docs/request-tracing.md.
   # 完整网关 HTTP 日志包含对话、工具、附件和模型回复；认证头和 Cookie 脱敏。
   request_trace:

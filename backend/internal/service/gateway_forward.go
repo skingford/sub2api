@@ -230,6 +230,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 
 	shouldMimicClaudeCode := account.IsOAuth() && !isClaudeCode
 	preserveNative := !shouldMimicClaudeCode && preserveNativeClaudeRequest(ctx, c, account, body)
+	preserveCaller := shouldMimicClaudeCode && s.preserveClaudeOAuthCaller()
 
 	if shouldMimicClaudeCode {
 		ctx, err = prepareClaudeCompatibility(ctx, c, body, parsed)
@@ -237,20 +238,18 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 			return nil, err
 		}
 		parsed.ClaudeSessionID = claudeCompatibilityFromContext(ctx).SessionID
-		// 与 Parrot 对齐：OAuth 账号无条件重写 system（即使客户端已发了 Claude Code
-		// 风格的 system prompt）。原因：第三方工具（opencode 等）会发 "You are Claude
-		// Code..." system prompt 但缺少 billing attribution block，导致 Anthropic
-		// 检测到"有 CC prompt 但无 billing block"的不一致而判为 third-party。
-		// Parrot 的 transform_request 从不检查客户端 system 内容，直接覆盖。
 		systemRaw, _ := parsed.SystemValue()
-		systemPromptInjectionEnabled, systemPrompt, systemPromptBlocks := s.claudeOAuthSystemPromptInjectionSettings(ctx)
-		if systemPromptInjectionEnabled {
-			if err := replaceBody(rewriteSystemForNonClaudeCodeWithPromptBlocks(body, systemRaw, systemPrompt, systemPromptBlocks)); err != nil {
-				return nil, err
-			}
+		// Keep the legacy Messages prompt policy; model-specific legacy blocks
+		// are selected by the OpenAI adapters as before.
+		rewritten, rewriteErr := s.rewriteClaudeOAuthSystem(ctx, c, body, systemRaw, "")
+		if rewriteErr != nil {
+			return nil, rewriteErr
+		}
+		if err := replaceBody(rewritten); err != nil {
+			return nil, err
 		}
 
-		normalizeOpts := claudeOAuthNormalizeOptions{replaceOpaqueMetadata: true}
+		normalizeOpts := claudeOAuthNormalizeOptions{replaceOpaqueMetadata: true, preserveSystemText: preserveCaller}
 		if s.identityService != nil && c != nil {
 			fp, err := s.identityService.GetOrCreateFingerprint(ctx, account.ID, c.Request.Header)
 			if err == nil && fp != nil {
@@ -271,29 +270,14 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 			return nil, err
 		}
 
-		// D/E/F: 可选 messages cache 策略 + 工具名混淆 + tools[-1] 断点
-		// 与 forward_as_chat_completions / forward_as_responses 路径对齐，
-		// 原生 /v1/messages 路径也走同一套可配置字段级改写。
-		if err := replaceBody(s.rewriteMessageCacheControlIfEnabled(ctx, body)); err != nil {
+		if err := replaceBody(s.applyClaudeOAuthToolPolicy(ctx, c, body)); err != nil {
 			return nil, err
-		}
-		if rw := buildToolNameRewriteFromBody(body); rw != nil {
-			if err := replaceBody(applyToolNameRewriteToBody(body, rw)); err != nil {
-				return nil, err
-			}
-			if c != nil {
-				c.Set(toolNameRewriteKey, rw)
-			}
-		} else {
-			if err := replaceBody(applyToolsLastCacheBreakpoint(body)); err != nil {
-				return nil, err
-			}
 		}
 	}
 
 	// Dateline normalization belongs to the legacy conversion policy. Native
 	// content may participate in opaque attribution and must remain untouched.
-	if !preserveNative {
+	if !preserveNative && !preserveCaller {
 		if next, ok := s.normalizeClientDatelineIfEnabled(ctx, account, body); ok {
 			if err := replaceBody(next); err != nil {
 				return nil, err
@@ -303,7 +287,11 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 
 	// 强制执行 cache_control 块数量限制（最多 4 个）
 	if !preserveNative {
-		if err := replaceBody(enforceCacheControlLimit(body)); err != nil {
+		limited, limitErr := enforceClaudeCallerCachePolicy(c, body, preserveCaller)
+		if limitErr != nil {
+			return nil, limitErr
+		}
+		if err := replaceBody(limited); err != nil {
 			return nil, err
 		}
 	}
@@ -348,7 +336,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 		logger.LegacyPrintf("service.gateway", "Model mapping applied: %s -> %s (account: %s, source=%s)", originalModel, mappedModel, account.Name, mappingSource)
 	}
 
-	if !preserveNative && s.shouldInjectAnthropicCacheTTL1h(ctx, account) {
+	if !preserveNative && !preserveCaller && s.shouldInjectAnthropicCacheTTL1h(ctx, account) {
 		if err := replaceBody(injectAnthropicCacheControlTTL1h(body)); err != nil {
 			return nil, err
 		}

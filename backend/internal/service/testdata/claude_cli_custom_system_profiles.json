@@ -1,0 +1,94 @@
+[
+  {
+    "version": "2.1.292",
+    "mode": "replace",
+    "caller_system": "LOCAL_ALIGNMENT_INSTRUCTION: preserve this instruction as system text.",
+    "expected_system_after_attribution": [
+      {
+        "type": "text",
+        "text": "You are Claude Code, Anthropic's official CLI for Claude.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      },
+      {
+        "type": "text",
+        "text": "LOCAL_ALIGNMENT_INSTRUCTION: preserve this instruction as system text.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      }
+    ],
+    "user_agent": "claude-cli/2.1.292 (external, cli)",
+    "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "capture_logical_sha256": "4833552f0e4014bce520141b8354a4a568aa48ff6d66bc4408fa92c96292815f",
+    "source": "unmodified interactive CLI, synthetic OAuth, custom system, Linux x64, network none"
+  },
+  {
+    "version": "2.1.292",
+    "mode": "empty",
+    "caller_system": "",
+    "expected_system_after_attribution": [
+      {
+        "type": "text",
+        "text": "You are Claude Code, Anthropic's official CLI for Claude.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      }
+    ],
+    "user_agent": "claude-cli/2.1.292 (external, cli)",
+    "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+    "capture_logical_sha256": "cd44234fb0a433458f013868b18dd15f18ae36baae16082950b2ef6c6fe799c8",
+    "source": "unmodified interactive CLI, synthetic OAuth, custom system, Linux x64, network none"
+  },
+  {
+    "version": "2.1.295",
+    "mode": "replace",
+    "caller_system": "LOCAL_ALIGNMENT_INSTRUCTION: preserve this instruction as system text.",
+    "expected_system_after_attribution": [
+      {
+        "type": "text",
+        "text": "You are Claude Code, Anthropic's official CLI for Claude.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      },
+      {
+        "type": "text",
+        "text": "LOCAL_ALIGNMENT_INSTRUCTION: preserve this instruction as system text.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      }
+    ],
+    "user_agent": "claude-cli/2.1.295 (external, cli)",
+    "binary_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+    "capture_logical_sha256": "0437195f33f10492c73c0e963f1a1a555be86a38f4b8365b1497331d9071e5c0",
+    "source": "unmodified interactive CLI, synthetic OAuth, custom system, Linux x64, network none"
+  },
+  {
+    "version": "2.1.295",
+    "mode": "empty",
+    "caller_system": "",
+    "expected_system_after_attribution": [
+      {
+        "type": "text",
+        "text": "You are Claude Code, Anthropic's official CLI for Claude.",
+        "cache_control": {
+          "type": "ephemeral",
+          "ttl": "1h"
+        }
+      }
+    ],
+    "user_agent": "claude-cli/2.1.295 (external, cli)",
+    "binary_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+    "capture_logical_sha256": "784441904889930d7b2b23eaa64b6ef05c8926339fbe476c81d5128d2a47e6fe",
+    "source": "unmodified interactive CLI, synthetic OAuth, custom system, Linux x64, network none"
+  }
+]

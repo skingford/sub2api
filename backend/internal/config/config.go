@@ -1116,6 +1116,10 @@ type GatewayConfig struct {
 	// TLSFingerprint: TLS指纹伪装配置
 	TLSFingerprint TLSFingerprintConfig `mapstructure:"tls_fingerprint"`
 
+	// ClaudeOAuthPreserveCaller keeps caller system blocks, tool names and cache
+	// breakpoints in API-to-OAuth conversion. Default on; false selects legacy policy.
+	ClaudeOAuthPreserveCaller bool `mapstructure:"claude_oauth_preserve_caller"`
+
 	// UsageRecord: 使用量记录异步队列配置（有界队列 + 固定 worker）
 	UsageRecord GatewayUsageRecordConfig `mapstructure:"usage_record"`
 
@@ -2614,6 +2618,7 @@ func setDefaults() {
 	viper.SetDefault("gateway.user_message_queue.cleanup_interval_seconds", 60)
 
 	viper.SetDefault("gateway.tls_fingerprint.enabled", true)
+	viper.SetDefault("gateway.claude_oauth_preserve_caller", true)
 	viper.SetDefault("concurrency.ping_interval", 10)
 
 	// TokenRefresh

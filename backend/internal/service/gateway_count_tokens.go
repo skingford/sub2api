@@ -99,29 +99,23 @@ func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context,
 			return prepareErr
 		}
 		parsed.ClaudeSessionID = claudeCompatibilityFromContext(ctx).SessionID
+		preserveCaller := s.preserveClaudeOAuthCaller()
+		// CLI count requests include component probes, not just complete turns.
+		// Count the supplied system; never add generation attribution or identity.
 		var normalizedBody []byte
-		normalizedBody, reqModel = normalizeClaudeOAuthRequestBody(body, reqModel, claudeOAuthNormalizeOptions{countTokens: true})
+		normalizedBody, reqModel = normalizeClaudeOAuthRequestBody(body, reqModel, claudeOAuthNormalizeOptions{countTokens: true, preserveSystemText: preserveCaller})
 		if err := replaceBody(normalizedBody); err != nil {
 			return err
 		}
 
-		if err := replaceBody(s.rewriteMessageCacheControlIfEnabled(ctx, body)); err != nil {
+		if err := replaceBody(s.applyClaudeOAuthToolPolicy(ctx, nil, body)); err != nil {
 			return err
 		}
-		if rw := buildToolNameRewriteFromBody(body); rw != nil {
-			if err := replaceBody(applyToolNameRewriteToBody(body, rw)); err != nil {
-				return err
-			}
-		} else {
-			if err := replaceBody(applyToolsLastCacheBreakpoint(body)); err != nil {
-				return err
-			}
+		limited, limitErr := enforceClaudeCallerCachePolicy(c, body, preserveCaller)
+		if limitErr != nil {
+			return limitErr
 		}
-
-		// 4 块上限的兜底：其余四条出口都在自己的转发路径上调过一次，只有这里没有。
-		// 不再剥离客户端 system 断点之后，「客户端 system + 客户端 messages +
-		// 上面刚注入的 tools[-1]」可以直接顶到 5 块，而上游对超限是 400。
-		if err := replaceBody(enforceCacheControlLimit(body)); err != nil {
+		if err := replaceBody(limited); err != nil {
 			return err
 		}
 	}

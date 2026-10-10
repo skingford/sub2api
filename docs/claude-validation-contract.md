@@ -117,3 +117,40 @@ OAuth system / developer 包装的 36 个差异单独记录，判定器必须检
 应全部通过。Chat 客户端需保留新返回的 `anthropic_content` 字符串；流式在结束前收取一次。
 字段损坏、正文 / 工具历史冲突或目标协议不符必须明确报错。该字段承载历史，不证明签名
 有效，也不能把任意 OpenAI ciphertext 当作 Anthropic 历史。
+
+## 2026-10-10 可选调用方内容保留策略
+
+CC-20261010-006 增加 `gateway.claude_oauth_preserve_caller`，默认关闭。启用后，API 转
+OAuth 的 system / developer 应保留在 system；不得再添加固定确认对话、通用扩充提示词、
+工具别名或自动缓存断点。既有归因 / 身份前缀仍受总 system 注入开关控制。
+
+`TestClaudeCallerContentContract` 在同一 540 输入上验证新策略，原
+`TestClaudeContentContract` 继续验证旧策略。旧模式的 36 个包装差异不再适用于新模式；
+新模式中的 instruction 降级必须判失败。非法缓存断点应明确 400，不静默删除。
+
+这是一项内容保留策略，不是新的 CLI 等价声明。版本和传输验证范围不扩大，真实服务
+接受性仍未验证；部署、设置优先级与会话切换边界见
+[调用方内容保留说明](claude-caller-preservation.md)。
+
+## 2026-10-10 CLI 实际构造对照补记
+
+CC-20261010-007 用两版未修改 CLI 的 print / PTY 场景及本地 MCP，补验 006 的政策
+边界。内容合同通过不能代替 CLI 对照：新模式在 36 个原生计数探针作为 API 输入时
+均补入额外 system；Chat 的省略 strict 变成显式 false；两种模式仍有 system / 缓存
+布局差异。这些发现尚未修复，不能把 006 的 540 项通过扩大为 CLI 等价。
+
+新增 62 条 CLI 捕获的 124 组原生转发保持正文和完整头序，256 组实际 TLS 发送经
+包含生成 / 计数两路径的 PCAP 判定通过。具体分母、模式差异与未测范围见
+[CLI 对齐复核](claude-cli-alignment-audit-20261010.md)。
+
+## 2026-10-10 已确认差异的修复合同
+
+CC-20261010-008 保留原 128 输入 / 256 观察，要求普通计数输入不注入生成前缀、
+Anthropic 目标的 Chat strict 省略不补 false、默认对齐模式不混淆工具名。
+普通 API 明确映射 CLI 自定义 system，而不是完整默认 / append 应用模板；身份和自定义
+文本的 1h 缓存布局来自新增两版真实 TTY 捕获。多块 / 显式缓存是调用方扩展，保留优先。
+
+新增 `validate_cli_alignment_fix.py` 的固定分母为原生 124、普通计数 72、工具 strict
+省略 24、自定义 system 布局 30、六组 MCP 名称。修复前实际传输记录必须失败，修复后
+观察和真实传输记录均须通过。完整原始差异报告继续保留，不能把这个范围内通过写成
+所有请求、所有入口模式或真实服务全部等价。新配置默认 true，显式 false 为旧策略回退。

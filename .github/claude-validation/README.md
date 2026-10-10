@@ -717,3 +717,84 @@ Chat 的 `anthropic_content` 是一个字符串扩展。非流式随 assistant m
 在 finish chunk 之前只发送一次字符串增量。客户端下一轮应将它与原 content / tool_calls
 原样回传。若客户端删除这个字段，普通文本不能恢复签名；完整协议和兼容边界见修复报告。
 永久测试还覆盖大整数参数、旧式同名函数 ID、历史冲突、分片签名、工具名还原和模型别名。
+
+## 可选的调用方内容保留模式
+
+CC-20261010-006 增加 `gateway.claude_oauth_preserve_caller`。在同一 540 内容输入上运行
+新模式，必须另用输出目录，不能覆盖旧模式证据：
+
+```bash
+# 在 backend 执行；测试自行开启新模式，不读取生产账号配置。
+CLAUDE_CONTENT_CONTRACT_EXPORT=/absolute/path/to/caller-preservation \
+  go test -tags=unit ./internal/service -run '^TestClaudeCaller' -count=1
+
+# 回到仓库根目录执行独立内容判定。
+python3 .github/claude-validation/validate_content_contract.py \
+  /absolute/path/to/caller-preservation/observations.json \
+  /absolute/path/to/caller-preservation/validation.json
+```
+
+新观察记录标记 `preserve_caller=true`，system 指令降级不再享有旧包装豁免。
+原生保留、工具名、缓存超限拒绝、计数与单次拒绝转发另由 `TestClaudeCallerPolicy*`
+验证。启用方式、旧设置优先级和新会话要求见
+[调用方保留说明](../../docs/claude-caller-preservation.md)。这些合成回归不验证真实订阅或提供方接受。
+
+## CLI 实际模式与保留策略对照
+
+CC-20261010-007 的采集器不修改二进制，也不使用 EXTRA_BODY 覆盖本轮待比较字段：
+
+- `caller_cli_alignment_lab.py`：10 个 print 场景，默认 / 替换 / 追加 system、本地 MCP、
+  内置工具、续聊、恢复、503 重试与计数。`--mcp-server` 是同一脚本的无副作用 stdio 服务。
+- `interactive_cli_alignment_lab.py`：真实 PTY、无 `-p`、默认 system、关闭工具；隔离测试
+  HOME 预写 onboarding / 目录信任状态，回复后主动停止。143 是受控退出，不是登录成功。
+
+使用上文相同的 `--network none`、官方域名回环、固定二进制哈希、`ram_capture.py`
+和新的空输出目录。镜像内默认 292；295 只挂载经 pin 核对的二进制。每个版本的两份输出
+命名为 `capture-<版本>-caller_cli_alignment` 和 `capture-<版本>-interactive_cli_alignment`，
+放入同一个审查根目录。四份捕获都用 `verify_comprehensive.py` 校验 PCAP。
+
+```bash
+python3 .github/claude-validation/verify_caller_cli_alignment.py prepare /absolute/audit-root
+```
+
+把 `caller_cli_alignment_audit_test.go` 通过 Go overlay 放到 service 包，设置
+`CLAUDE_ALIGNMENT_INPUT=/absolute/audit-root/inputs.json`、
+`CLAUDE_ALIGNMENT_OUTPUT=/absolute/audit-root/gateway` 后运行
+`TestCallerCLIAlignmentObserve`。它仅导出生产路径的观察；然后独立判断：
+
+```bash
+python3 .github/claude-validation/verify_caller_cli_alignment.py verify /absolute/audit-root
+```
+
+将 `gateway/exports` 挂载到 `/inputs`，当前源码编译的生产传输探针挂载到
+`/opt/trace-transport-probe`，通过 `ram_capture.py` 执行 `caller_alignment_wire_lab.py`。
+它复用 `tool_constraint_wire_lab.py` 并保存接收端完整头序到
+`wire/records-with-headers.json` 的 `headers_ordered`。用 `verify_alignment_wire.py` 在
+镜像内检查包含两个路径的 PCAP、头序和已有归一化握手 pin；不能使用仅选 messages 的
+旧编码判定器后丢弃 count 请求。完整边界与已发现差异见
+[CLI 对齐复核](../../docs/claude-cli-alignment-audit-20261010.md)。
+
+## 007 差异的固定修复验收
+
+CC-20261010-008 保留原 128 输入 / 256 观察。新配置默认启用对齐模式，普通 API 映射
+交互式 CLI 的 custom system，旧模板只在显式 false 时回退。TTY 采集器增加环境变量
+`CLAUDE_ALIGNMENT_SYSTEM_MODE=replace|empty|append`；每次使用新的空目录，未指定时
+保持 007 原场景。两个版本的 custom 身份 / 缓存样本放在
+`backend/internal/service/testdata/claude_cli_custom_system_profiles.json`，带原文与二进制哈希。
+
+```bash
+python3 .github/claude-validation/validate_cli_alignment_fix.py \
+  /absolute/audit-root \
+  backend/internal/service/testdata/claude_cli_custom_system_profiles.json \
+  /absolute/audit-root/fix-validation.json
+
+# 同一 checker 读取真实 TLS 接收端正文与头部。
+python3 .github/claude-validation/validate_cli_alignment_fix.py \
+  /absolute/audit-root \
+  backend/internal/service/testdata/claude_cli_custom_system_profiles.json \
+  /absolute/audit-root/fix-wire-validation.json --wire
+```
+
+对 007 原有真实记录运行必须退出 1；对修复后相同输入的观察与传输均应退出 0。
+它只声明所列合同成立；仍保留原比较报告的完整差异和显式回退策略，不扩大成完整 CLI
+应用状态、所有远程开关或真实订阅等价。详见[修复说明](../../docs/claude-cli-alignment-fix-20261010.md)。

@@ -213,3 +213,9 @@ request-traces/
 !docs/claude-content-stream-audit-20261010.json
 !docs/claude-content-stream-fix-20261010.md
 !docs/claude-content-stream-fix-20261010.json
+
+!docs/claude-caller-preservation.md
+!docs/claude-cli-alignment-audit-20261010.md
+!docs/claude-cli-alignment-audit-20261010.json
+!docs/claude-cli-alignment-fix-20261010.md
+!docs/claude-cli-alignment-fix-20261010.json

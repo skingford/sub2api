@@ -1,0 +1,105 @@
+{
+  "change_id": "CC-20261010-008",
+  "baseline_commit": "a426396d8",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "includes_prior_uncommitted_changes": [
+    "CC-20261010-006",
+    "CC-20261010-007"
+  ],
+  "versions": [
+    "2.1.292",
+    "2.1.295"
+  ],
+  "platform": "Linux x64",
+  "sdk": "0.128.0",
+  "runtime": "v26.3.0",
+  "default_profile": "interactive CLI custom system; absent system means explicit empty custom system",
+  "default_preserve_caller": true,
+  "legacy_rollback_available": true,
+  "source_files": 3352,
+  "source_unchanged_after_tests": true,
+  "new_cli_scenarios": 6,
+  "new_cli_requests": 12,
+  "new_cli_pcap_all_match": true,
+  "unit": {
+    "exit_code": 0,
+    "passed_packages": 58,
+    "passed_test_events": 23089,
+    "failed_events": 0
+  },
+  "integration": {
+    "exit_code": 0,
+    "passed_packages": 52,
+    "passed_test_events": 13764,
+    "failed_events": 0
+  },
+  "lint": {
+    "version": "2.14.0",
+    "exit_code": 0,
+    "issues": 0
+  },
+  "fixed_contract": {
+    "observations": 256,
+    "wire_checked": true,
+    "checked": {
+      "native": 124,
+      "count": 72,
+      "strict_omission": 24,
+      "custom_system": 30,
+      "tool_names": 6
+    },
+    "failed_cases": 0,
+    "passed": true,
+    "scope": "count, tool omission/names, native preservation and interactive custom-system profile; legacy/default/append application differences retained"
+  },
+  "negative_control": {
+    "failed_cases": 68,
+    "exit_code": 1
+  },
+  "wire": {
+    "requests": 256,
+    "requests_by_path": {
+      "/v1/messages/count_tokens?beta=true": 144,
+      "/v1/messages?beta=true": 112
+    },
+    "pcap_bytes_match": true,
+    "kernel_drops": 0,
+    "client_hellos": 256,
+    "normalized_hello_matches_existing_linux_pin": 256,
+    "native_header_cases": 124,
+    "native_header_values_equal": 124,
+    "native_header_order_equal": 124,
+    "sub2api_header_leaks": []
+  },
+  "cch": {
+    "cases": 112,
+    "independent_native_cch_matches": true,
+    "instrumented_entrypoint_not_unmodified_cli": true
+  },
+  "live_provider_acceptance_verified": false,
+  "live_subscription_verified": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "evidence_root": "/Users/kingford/claude-capture/cli-alignment-fix-20261010-VHHR1K",
+  "evidence_sha256": {
+    "source-manifest.json": "4b59b6a83a90a6f95abb9b98a2a673edcaec87b58f401608f508d082d04edb0c",
+    "analysis/unit.jsonl": "eff58ae505f99ef6a53762f584168cd787ace59a49fb49b6b54059b8c59a155d",
+    "analysis/full-integration.jsonl": "07f7a7d0f08016538aa6a034fb15713e260cdfd849a045a14d5538e934a5bf83",
+    "analysis/lint.log": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+    "analysis/focused.log": "184cb8c44d0fab23e79377bc184ae542ddbc895b46d78de8c4b753ec4bcb96e5",
+    "analysis/fixed-contract.json": "205b5dd0416070821ad103d32cf793be855a120105f7e53e9fef9433347f0349",
+    "analysis/fixed-wire-contract.json": "671e1fa8c1074cacd632b1f1261f381459b86182e4715e9700c1c40f6a479ca9",
+    "analysis/negative-final.json": "30d3786243c6d6d4ecd3891839eff75d6855685d6b7254d16d14138a5a3ae8c0",
+    "wire/alignment-verification.json": "336453f838e8c6719032ef8ff6f47d18a20e2cf080546e64bc73091e6e1d6b22",
+    "cch/comparison.json": "7b302f64760ec5427555113ffaa4fab598127b994cf8ecf4beb351af1a61ee65",
+    "cch-probe/runtime-probe-provenance.json": "d4398ff391b1aa9a2e119f84b3236282fa95688f33fa4369f4a2667ccfa2777b"
+  },
+  "tool_sha256": {
+    "interactive_cli_alignment_lab.py": "48bfe36011dd77a1bb1dee9baf13d8c006bb02e09e18e9e9a305593fd870f9cc",
+    "caller_cli_alignment_audit_test.go": "2a3d4679683581bcef31dd39c12fd20d535a5302d2a36447a515f1ae809f5632",
+    "validate_cli_alignment_fix.py": "c65a79cda1488f000a04672eaee245bf08996ce5f90a46f92a7debecf25c87dc",
+    "verify_alignment_wire.py": "69f3afdfc596aee9a3e91d510e93a9d69e4b152d80696287cdb064a5f485c82d",
+    "caller_alignment_wire_lab.py": "48ed2fac8b860877a7cfb251c85fc17187c3785335bc0e62e9e03ab1c7fe5c86"
+  }
+}

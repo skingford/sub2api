@@ -374,10 +374,11 @@ func TestApplyClaudeCodeOAuthMimicryToBody_HaikuRewritesSystem(t *testing.T) {
 	body := []byte(`{"model":"claude-haiku-4-5","system":"Pi project instructions","messages":[{"role":"user","content":"hello"}]}`)
 	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 
-	out := svc.applyClaudeCodeOAuthMimicryToBody(
+	out, err := svc.applyClaudeCodeOAuthMimicryToBody(
 		context.Background(), nil, account, body, "Pi project instructions", "claude-haiku-4-5",
 	)
 
+	require.NoError(t, err)
 	system := gjson.GetBytes(out, "system").Array()
 	require.Len(t, system, 3)
 	require.Contains(t, system[0].Get("text").String(), "x-anthropic-billing-header:")
@@ -391,10 +392,11 @@ func TestApplyClaudeCodeOAuthMimicryToBody_FableOmitsRefusedExpansion(t *testing
 	body := []byte(`{"model":"claude-fable-5","system":"Project instructions","messages":[{"role":"user","content":"hello"}]}`)
 	svc := &GatewayService{claudeSessionStore: &memoryClaudeSessionStore{}, cfg: &config.Config{}}
 
-	out := svc.applyClaudeCodeOAuthMimicryToBody(
+	out, err := svc.applyClaudeCodeOAuthMimicryToBody(
 		context.Background(), nil, account, body, "Project instructions", "claude-fable-5",
 	)
 
+	require.NoError(t, err)
 	system := gjson.GetBytes(out, "system").Array()
 	require.Len(t, system, 2)
 	require.Contains(t, system[0].Get("text").String(), "x-anthropic-billing-header:")

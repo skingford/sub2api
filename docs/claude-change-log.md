@@ -520,3 +520,45 @@
 - 提交 / 限制：本轮七项修复已完成，当前代码及审查材料未提交、推送、合并或部署。后续提交使用 `Claude-Change-ID: CC-20261010-005`（004 审查材料同交付时同时关联）并补记哈希。所有模型交互为隔离假凭据 / 合成响应，未验证真实官方接受、签名有效性、订阅或计费；已有政策、未测平台、HTTP/2 和未列协议字段不扩大为完全等价。
 
 - 2026-10-10 提交 / 推送补记：维护者授权“提交 推送”；CC-20261010-004 审查材料与本条七项修复、永久回归和最终验证记录共同提交为 [6f654aa1d52dd4249ff270df80897d67c4963ec6](https://github.com/skingford/sub2api/commit/6f654aa1d52dd4249ff270df80897d67c4963ec6)，携带两个对应的 `Claude-Change-ID` trailer。已推送至 `origin/codex/claude-source-runtime-audit-20261009`，远端完整提交引用核对一致。通过提交归档再次核验，3,347 个后端源码 / SQL / 模块 / 回归 JSON 文件与最终通过验证的快照逐文件 SHA-256 相同，记录保存在本轮最终证据目录的 `analysis/commit-source-verification.json`；此前 58 包 unit、52 包 integration、0 issues lint、540 项内容合同、3,284 次响应比较、176 次 Chat 处理器往返及 1,324 次 TLS 发送验证对应本提交源码，不重复计作新测试。004 的未修复状态及两份报告中的未提交 / 未推送字段保留为历史快照，当前修复和交付状态以本条及补记为准。Chat 客户端仍须原样回传 `anthropic_content` 才能保留签名历史。本次后续提交仅补充追溯记录，没有新建 PR、合并或部署；隔离验证不代表真实官方接受、签名有效性、订阅或计费验收。
+
+## CC-20261010-006：可选保留 API 调用方内容的 OAuth 转换策略
+
+- 授权 / 基线：维护者要求降低“官方订阅号通过 sub2api 转成 API”路径中网关额外引入的特征，并明确要求开始处理。沿用当前工作分支 `codex/claude-source-runtime-audit-20261009`，代码基线 `a426396d8`；Claude 集成上游基线仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。没有合并 main 或改写历史。
+- 版本 / 证据：沿用既有 Linux x64 CLI 2.1.292 / 2.1.295、SDK 0.128.0、runtime v26.3.0 的兼容边界。依据本地生产源码中的固定 system→messages 包装、确认语、工具名映射和缓存重写，以及 004 / 005 的原始内容合同；本轮不新增官方 CLI 抓包或官方行为等价声明。
+- 改动：新增默认关闭的 `gateway.claude_oauth_preserve_caller`，环境变量 `GATEWAY_CLAUDE_OAUTH_PRESERVE_CALLER`。启用后调用方 system 原文 / 块顺序 / 缓存属性留在 system，不生成固定确认对话或通用扩充，不替换 OpenCode 身份句，不混淆工具名、不补工具缓存断点、不覆盖已有 messages 断点或 TTL，不做旧日期规范化。总 system 注入开关开启时仍保留既有 billing / 身份前缀，不声称它们是提供方必需条件。
+- 范围 / 拒绝：Messages、Chat、Responses 及 count_tokens 使用一致的保留策略；超限缓存及 thinking 上的断点明确 400，不静默删除。原生请求与 API Key 路径不启用该策略。已有参数、能力、会话归属、签名历史与单次拒绝转发规则继续执行。旧自定义 system / 缓存设置在新模式下的优先级及新会话要求见[操作说明](claude-caller-preservation.md)。
+- 合同：新增策略测试并在新模式复用 540 个输入；旧模式保留原 540 预期。独立内容判定器读取 `preserve_caller` 标志，新模式不能沿用旧 OAuth 包装豁免；不删除历史失败证据。配置测试覆盖 YAML、环境变量及回退，四种 Compose 增加变量透传。
+- 初轮验证：配置及内容场景执行后，新增原生样本断言发现测试侧把具名 JSON 字节类型与 `[]byte` 直接比较；已改成显式 `[]byte` 的逐字节断言，未放宽内容预期。系统 PATH 中 lint 二进制由 Go 1.26 构建，无法检查 Go 1.27.2 项目，改用此前已验证的 golangci-lint 2.14.0。初轮日志保留在本机证据目录，最终结果后补。
+- 文件 / 证据：生产配置、统一调用方策略、四入口和 OAuth normalizer；对应 unit / 内容合同、独立判定器、四种 Compose、配置示例、固定合同与操作说明。本机证据：`/Users/kingford/claude-capture/caller-preservation-20261010-j2kAol/`。
+- 提交 / 边界：尚未提交、推送、合并或部署，未来提交使用 `Claude-Change-ID: CC-20261010-006` 并补记提交 / PR 引用。全部请求和响应验证使用本地合成数据；没有真实提供方接受、签名有效性、OAuth 订阅或计费验证，也不承诺不可识别。
+
+- 专项验证补记：新模式 540 个输入完整保留，504 个成功 dispatch、36 个既有非法工具参数 / 模型采样拒绝，独立内容判定器差异 0、退出 0。把其中 36 个 system / developer 场景故意改回旧包装后，独立判定器退出 1，36 个均为未豁免失败，已保存负向样本；这不是官方请求样本。系统块、六工具名称与历史、四断点、count_tokens、注入关闭、缓存非法请求发送前拒绝和 403 只发送一次的专项通过，12 份原生样本正文逐字节保持。配置默认 / YAML / 环境变量 / 回退及四种 Compose 变量透传通过。后端 3,350 个源码 / SQL / 模块 / 回归 JSON 文件已冻结并核对无变动，工程检查继续在该源码上运行。
+
+- 最终工程补记：冻结源码上 `GOTOOLCHAIN=go1.27.2 go test -tags=unit -json ./...` 退出 0，58 包、23,068 个通过事件、失败 0；golangci-lint 2.14.0 全量检查退出 0，0 issues。`CI=true go test -p 2 -tags=integration -json ./...` 退出 0，52 包、失败 0，使用新建 PostgreSQL / Redis 测试容器和只为 testcontainers 绑定本机 IPv4 的临时 Docker API 代理；既有业务容器未重启或修改。代理已停止，socket 已删除。完成后 3,350 个后端文件 SHA-256 与冻结清单一致，摘要、日志哈希和命令保存在本机 `validation-summary.json`。本次没有实际官方请求、没有新增传输等价声明，未提交、推送、合并或部署。
+
+## CC-20261010-007：两版 CLI 实际模式与调用方保留政策复核
+
+- 授权 / 基线：维护者明确以编译产物提取源码和 Docker 运行对齐官方 CLI，并要求开始验证。审查 `a426396d8` 加本工作区未提交的 006；上游 Claude 集成基线仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`。未修改后端，3,350 个源码 / SQL / 模块 / fixture 与 006 冻结哈希一致；不合并 main，不改写 006 的历史结果。
+- 来源：Linux x64 CLI 2.1.292 / 2.1.295，SDK 0.128.0、runtime v26.3.0；二进制 SHA-256 分别为 `a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3` 和 `4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358`。逐一核对二进制中 2,260 / 2,340 个 JS 模块的压缩区间哈希、解码哈希和已有提取文件，4,600 个全同；不称为原始 TypeScript，也未修改 CLI 二进制。
+- 新捕获：两版本 × 10 个 print 场景加两版各一个真实 PTY 场景，共 22 场景、62 条生成 / count 请求，接收字节与 PCAP 全同、零丢包。覆盖默认 / 替换 / 追加 system、默认工具、真实注册的本地 MCP、续聊、恢复、503 重试和 /context。PTY 使用隔离测试 HOME、预写 onboarding / trust、假 OAuth 环境令牌，收到回复后主动 SIGTERM（143）；明确不是真实订阅登录或自然退出成功。
+- 模式发现：print 自动标记 sdk-cli，交互入口为 cli；默认、替换与追加 system 的身份 / 缓存布局有实际差异。普通转换的 cli UA 可对应交互入口，不能与 print 样本混成一份默认模板。两版默认四块 system 内容已有差异，旧固定 1,541 字符扩充块的“2.1.x 一致”注释不构成版本依据。
+- 006 差异：36 个原生 count 探针作为普通 API 输入时，旧模式 36 / 36 JSON 内容相同，开启 006 后 36 / 36 system 改变。计数路径无条件加前缀不是 CLI 对齐证据；没有实际 token 值差额测量。新模式继续默认关闭，操作文档添加链接跟进，未在本次修改生产策略。
+- 工具差异：六条 MCP 转换请求的 36 个原名，旧模式全部改写、新模式全部保留；Chat 的两版本 × 两模式共四条请求中，24 个原先省略 strict 的工具出现 false。归因至 Chat→Responses 的 `defaultStrictFalse` 与后续 Anthropic 转换；不能为修复这个目标而全局破坏 OpenAI Responses 默认语义。条件 diagnostics / beta 及缓存布局差异另列，不将随机 ID、显式实验超时或未请求流式视作缺陷。
+- 转发 / 传输：128 个派生输入 × 两种模式产生 256 个观察，全部发送且无运行错误；其中 62 个原生请求 × 两模式的 124 组，逻辑正文原字节、实际出站头值 / 头序全部一致，凭据值单列替换。当前源码编译的生产 HTTPUpstream 发送全部 256 组（112 生成 / 144 计数），PCAP 全同、零丢包；256 个 ClientHello 均匹配已有归一化 Linux pin。输入标记未泄漏为出站 X-Sub2API-* 头。
+- 验证 / 限制：已有五组 profile / 版本专项通过，共 24 个通过事件。初轮观察 overlay 闭合括号、fixture 工作目录和仅覆盖 messages 的旧 PCAP 判定器问题已纠正，日志保留；新判定器保留全部 count 样本。未重跑全仓 unit / integration / lint；未读取线上配置，未扩大到其他平台、HTTP/2、TLS 恢复、全部远程开关、真实签名、订阅或计费。
+- 文件 / 证据：新增两类 CLI 采集器、Go 观察 overlay、两个独立判定器，更新验证 README、固定合同、006 操作说明、.gitignore；[报告](claude-cli-alignment-audit-20261010.md)与[结构化摘要](claude-cli-alignment-audit-20261010.json)保存分母和哈希。本机材料：`/Users/kingford/claude-capture/cli-alignment-recheck-20261010-zOECmb/`。实验容器已清理，原三业务容器保持同一 ID 且 healthy，未重启 Docker。
+- 提交 / 状态：本轮新发现尚未修复，尚未提交、推送、合并或部署；后续提交使用 `Claude-Change-ID: CC-20261010-007` 并补记引用。006 的内容保留合同通过与本轮 CLI 差异同时保留，不以任一结论覆盖另一份证据。
+
+## CC-20261010-008：修复计数 / strict 差异并确立 CLI 自定义 system 基线
+
+- 授权 / 基线：维护者要求修复 007 已确认差异。继续当前分支 `codex/claude-source-runtime-audit-20261009`，基于 `a426396d8` 加尚未提交的 006 / 007；上游 Claude 集成仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`，未同步 main，未改写旧记录。
+- 来源 / 版本：沿用 007 已核验的 Linux x64 CLI 2.1.292 / 2.1.295、SDK 0.128.0、runtime v26.3.0 和二进制 pin。新增两版真实 PTY 的 replace / empty / append 三种 system 选项，使用隔离 HOME、假 OAuth、断网 Docker 与合成响应；按原捕获工具校验 PCAP。两版 custom 分支的身份和原文块均为 1h 缓存，空 custom 仅身份块缓存，append 仍为完整默认四块。006 的计数一致性假设不再沿用。
+- 修复：count_tokens 删除生成前缀包装，保留调用方计数正文；Chat→Anthropic 保留工具 strict 的省略 / false / true，Chat→真正 OpenAI Responses 继续原默认策略。普通 API 对齐模式以交互式 CLI 的自定义 system 分支为基线，默认 / append / SDK 的原生请求继续透传；不复制依赖 CLI 工具环境的完整默认提示词到任意 API 调用。
+- 缓存 / 工具：字符串或单一无显式缓存文本块采用实测身份 / 自定义文本的 1h 断点；多块或显式缓存按调用方保留，自动默认不挤占已有断点，超限仍明确拒绝。对齐模式不执行工具名混淆及工具断点注入。配置与四种 Compose 默认改为 true，已有显式 false 保留旧策略回退，切换后新建会话；未修改线上环境或账号。
+- 固定验收：保留 007 的 128 输入 / 256 观察，新增独立 `validate_cli_alignment_fix.py`；固定检查原生 124、普通计数 72、Chat 工具 strict 省略 24、自定义 system 布局 30、MCP 名称六组。独立 CLI fixture 只保存本地自定义文本、身份 / 缓存、UA 与捕获哈希，不从网关输出生成预期。修复前真实 TLS 记录检出 68 个失败案例；修复后构造层相同分母全部通过，完整原比较仍记录默认 / append 应用状态等差异，不声称全请求等价。
+- 工程 / 文件：修改计数路径、目的端 strict 默认处理、自定义 system 布局与配置默认；增加 strict 三态 / 目标隔离测试和原生 custom fixture / 三入口布局回归，保留已有内容合同。扩展 TTY 采集器，新增独立修复判定器，更新部署示例、README、固定合同及操作文档。[修复说明](claude-cli-alignment-fix-20261010.md)记录策略优先级、回退与边界；后端 3,352 个源码 / SQL / 模块 / 回归 JSON 文件已冻结，完整工程与真实传输结果后补。
+- 证据 / 状态：本机 `/Users/kingford/claude-capture/cli-alignment-fix-20261010-VHHR1K/`。007 原 TTY 采集器源码已按其原 SHA-256 保存，旧数据与失败记录保留。尚未提交、推送、合并或部署；后续提交使用 `Claude-Change-ID: CC-20261010-008`。不声称真实签名、OAuth 订阅、计费或官方接受验证。
+
+- 最终验证补记：新增 6 个 TTY 场景 / 12 条生成请求的 PCAP 全匹配、零丢包；同一 128 输入 / 256 观察及真实 TLS 记录均通过固定修复判定器，失败 0，修复前记录仍检出 68 个失败。72 个普通计数保持输入，24 个 Chat 工具 strict 省略正确，30 个自定义 system 布局与新增 CLI fixture 相符，六组 MCP 共 36 个工具名保留；显式 false 回退模式的其他已知差异仍保留在原比较中。
+- 传输 / CCH：256 次实际生产 HTTPUpstream 发送（112 生成 / 144 计数）与 PCAP 全同、零丢包，256 个归一化 ClientHello 匹配原 Linux pin；124 个原生转发正文、完整头值 / 头序仍一致，无 X-Sub2API-* 泄漏。112 个带 CCH 正文与新建的独立 295 原生运行时探针完整字节相同，PCAP 校验通过；探针只替换入口，原生前缀一致，明确不计作未修改 CLI。
+- 工程 / 交付状态：冻结的 3,352 文件源码上，完整 unit 58 包 / 23,089 通过事件、integration 52 包 / 13,764 通过事件，均失败 0、退出 0；golangci-lint 2.14.0 全量 0 issues。配置、strict 三态 / 两目标、三入口 custom 布局及四种 Compose 检查通过。测试后源码 SHA-256 与冻结清单全同，临时集成代理 / socket 和实验容器已清理，原三个业务容器同 ID 且 healthy。[结构化结果](claude-cli-alignment-fix-20261010.json)保存分母与证据哈希。本轮没有提交、推送、合并或部署；普通 API 采用明确的 custom 分支，不宣称完整默认 / append 应用状态、所有远程开关或真实提供方接受等价。

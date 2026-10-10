@@ -72,7 +72,7 @@ def main():
         reasons = check(row)
         if reasons:
             policy = None
-            if row["account"] == "oauth" and row["control"] in ("system", "developer"):
+            if not row.get("preserve_caller", False) and row["account"] == "oauth" and row["control"] in ("system", "developer"):
                 messages = row.get("body", {}).get("messages", [])
                 marker = "[System Instructions]\n" + row["expected"]["system_text"]
                 # A correctly converted Chat developer now takes this same

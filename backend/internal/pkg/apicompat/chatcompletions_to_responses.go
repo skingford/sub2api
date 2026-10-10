@@ -90,7 +90,7 @@ func chatCompletionsToResponses(req *ChatCompletionsRequest, anthropicTarget boo
 
 	// tools[] and legacy functions[] → ResponsesTool[]
 	if len(req.Tools) > 0 || len(req.Functions) > 0 {
-		out.Tools = convertChatToolsToResponses(req.Tools, req.Functions)
+		out.Tools = convertChatToolsToResponses(req.Tools, req.Functions, anthropicTarget)
 	}
 
 	// tool_choice: already compatible format — pass through directly.
@@ -488,8 +488,14 @@ func stringPtr(s string) *string {
 
 // convertChatToolsToResponses maps Chat Completions tool definitions and legacy
 // function definitions to Responses API tool definitions.
-func convertChatToolsToResponses(tools []ChatTool, functions []ChatFunction) []ResponsesTool {
+func convertChatToolsToResponses(tools []ChatTool, functions []ChatFunction, anthropicTarget bool) []ResponsesTool {
 	var out []ResponsesTool
+	strict := func(value *bool) *bool {
+		if anthropicTarget {
+			return value // omission and explicit false are distinct on this wire.
+		}
+		return defaultStrictFalse(value)
+	}
 
 	for _, t := range tools {
 		toolType := strings.ToLower(strings.TrimSpace(t.Type))
@@ -517,7 +523,7 @@ func convertChatToolsToResponses(tools []ChatTool, functions []ChatFunction) []R
 			Name:        t.Function.Name,
 			Description: t.Function.Description,
 			Parameters:  t.Function.Parameters,
-			Strict:      defaultStrictFalse(t.Function.Strict),
+			Strict:      strict(t.Function.Strict),
 		}
 		out = append(out, rt)
 	}
@@ -529,7 +535,7 @@ func convertChatToolsToResponses(tools []ChatTool, functions []ChatFunction) []R
 			Name:        f.Name,
 			Description: f.Description,
 			Parameters:  f.Parameters,
-			Strict:      defaultStrictFalse(f.Strict),
+			Strict:      strict(f.Strict),
 		}
 		out = append(out, rt)
 	}
