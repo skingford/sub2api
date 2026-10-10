@@ -197,7 +197,11 @@
       "TestClaudeErrorParityNativeAPIKeyReadFailure",
       "TestClaudeErrorBodyReadLimitBounds",
       "TestClaudeErrorParityPreservesNonNativeAPIKeyFailover",
-      "TestClaudeErrorParityNativeCountUnsupportedFallback"
+      "TestClaudeErrorParityNativeCountUnsupportedFallback",
+      "TestClaudeSSEFramingHandlers",
+      "TestAnthropicSSEReaderFraming",
+      "TestAnthropicSSEReaderBoundsAndReadFailure",
+      "TestClaudeSSEFramingReadErrors"
     ],
     "./internal/server/middleware": [
       "TestCORS_ClaudeConversationPreflight"

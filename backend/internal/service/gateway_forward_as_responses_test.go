@@ -462,7 +462,7 @@ func TestParseAnthropicSSEField(t *testing.T) {
 			name:      "field with multiple spaces after colon",
 			line:      "event:  message_delta",
 			field:     "event",
-			wantValue: "message_delta",
+			wantValue: " message_delta",
 			wantOK:    true,
 		},
 		{

@@ -8,6 +8,21 @@
 脚本启动前检查接口、路由和域名解析；不挂载宿主机登录目录。模拟响应不能证明真实
 OAuth 订阅资格、额度、计费或官方服务接受情况。
 
+## SSE 事件边界补充（2.1.292 / 2.1.295）
+
+`sse_framing_lab.py` 使用与下文相同的 network-none 容器、固定官方二进制与回环 TLS
+模拟器，覆盖标准、注释、data 在前、多行 JSON、CRLF、CR、逐字节写入七种响应。
+将本目录只读挂载至 `/scripts`，以 `python3 /scripts/sse_framing_lab.py` 启动；
+使用 295 时显式设置 `CLAUDE_LAB_CLI_VERSION=2.1.295`，并将对应已核验二进制挂载至
+`/opt/claude`。每次使用新的空 `/work`；脚本核对二进制 SHA-256 后才执行 CLI。
+
+脚本必须断言七场景的请求次数、退出状态、完整 Unicode 正文与输入 / 输出用量；
+再用 `verify_response_capture.py /work /work/response-verification.json` 核对 PCAP。
+宿主机设置 `CLAUDE_SSE_CAPTURE_ROOT=/absolute/path/to/work` 并运行
+`go test -tags=unit ./internal/service -run '^TestClaudeSSEFramingHandlers$' -count=1`
+可把同一批实际响应送进四个生产转换处理器。结果及策略边界见
+[SSE 对齐报告](../../docs/claude-sse-framing-20261010.md)。
+
 ## 采集与复核
 
 从仓库根目录执行。镜像构建需要下载 Debian 工具包，但不会执行 CLI。
