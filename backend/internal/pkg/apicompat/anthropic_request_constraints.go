@@ -10,7 +10,7 @@ import (
 // and lack of stop must not change a Chat caller's explicit generation limits.
 // Callers resolve the final model before invoking this converter.
 func ChatCompletionsToAnthropicRequest(req *ChatCompletionsRequest) (*AnthropicRequest, error) {
-	converted, err := ChatCompletionsToResponses(req)
+	converted, err := chatCompletionsToResponses(req, true)
 	if err != nil {
 		return nil, err
 	}

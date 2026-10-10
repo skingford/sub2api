@@ -125,14 +125,13 @@ func TestResponsesToAnthropic_InputFileDataURIBecomesDocument(t *testing.T) {
 	require.Contains(t, string(messages[0].Content), `"data":"JVBERi0="`)
 }
 
-// 只有 file_id、没有 data URI 的 input_file 仍然无法转换，整条消息丢掉。
-func TestResponsesToAnthropic_UserMessageWithOnlyUnknownPartsIsDropped(t *testing.T) {
-	messages := responsesToAnthropicMessages(t, `[
+// A provider-specific file ID has no resolvable Anthropic data. Reject it
+// explicitly rather than silently discarding the caller's document.
+func TestResponsesToAnthropic_FileIDWithoutDataIsRejected(t *testing.T) {
+	_, err := ResponsesToAnthropicRequest(&ResponsesRequest{Model: "claude-sonnet-4-6", Input: json.RawMessage(`[
 		{"type":"message","role":"user","content":[{"type":"input_file","file_id":"file_1"}]}
-	]`)
-
-	requireAnthropicMessagesAreSendable(t, messages)
-	require.Empty(t, messages)
+	]`)})
+	require.ErrorContains(t, err, "unsupported file source")
 }
 
 // assistant 侧同理：以前会退化成单个空 text 块，Anthropic 同样拒收。

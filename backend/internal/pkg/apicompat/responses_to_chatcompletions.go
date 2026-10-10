@@ -33,8 +33,10 @@ func ResponsesToChatCompletions(resp *ResponsesResponse, model string) *ChatComp
 	var contentText string
 	var reasoningText string
 	var toolCalls []ChatToolCall
+	var anthropicContent []AnthropicContentBlock
 
 	for _, item := range resp.Output {
+		anthropicContent = append(anthropicContent, responsesOutputAnthropicBlocks(item)...)
 		switch item.Type {
 		case "message":
 			for _, part := range item.Content {
@@ -63,6 +65,9 @@ func ResponsesToChatCompletions(resp *ResponsesResponse, model string) *ChatComp
 	}
 
 	msg := ChatMessage{Role: "assistant"}
+	if hasOpaqueAnthropicThinking(anthropicContent) {
+		msg.AnthropicContent = encodeAnthropicHistory(anthropicContent)
+	}
 	if len(toolCalls) > 0 {
 		msg.ToolCalls = toolCalls
 	}
@@ -116,19 +121,22 @@ func responsesStatusToChatFinishReason(status string, details *ResponsesIncomple
 // ResponsesEventToChatState tracks state for converting a sequence of Responses
 // SSE events into Chat Completions SSE chunks.
 type ResponsesEventToChatState struct {
-	ID                     string
-	Model                  string
-	Created                int64
-	ServiceTier            string // upstream tier observed on response events; echoed on chunks
-	SentRole               bool
-	SawToolCall            bool
-	SawText                bool
-	Finalized              bool        // true after finish chunk has been emitted
-	NextToolCallIndex      int         // next sequential tool_call index to assign
-	OutputIndexToToolIndex map[int]int // Responses output_index → Chat tool_calls index
-	OutputIndexToArguments map[int]string
-	IncludeUsage           bool
-	Usage                  *ChatUsage
+	AnthropicContent        []AnthropicContentBlock
+	AnthropicHistoryStarted bool
+	AnthropicOutputDone     map[int]bool
+	ID                      string
+	Model                   string
+	Created                 int64
+	ServiceTier             string // upstream tier observed on response events; echoed on chunks
+	SentRole                bool
+	SawToolCall             bool
+	SawText                 bool
+	Finalized               bool        // true after finish chunk has been emitted
+	NextToolCallIndex       int         // next sequential tool_call index to assign
+	OutputIndexToToolIndex  map[int]int // Responses output_index → Chat tool_calls index
+	OutputIndexToArguments  map[int]string
+	IncludeUsage            bool
+	Usage                   *ChatUsage
 }
 
 // NewResponsesEventToChatState returns an initialised stream state.
@@ -138,6 +146,7 @@ func NewResponsesEventToChatState() *ResponsesEventToChatState {
 		Created:                time.Now().Unix(),
 		OutputIndexToToolIndex: make(map[int]int),
 		OutputIndexToArguments: make(map[int]string),
+		AnthropicOutputDone:    make(map[int]bool),
 	}
 }
 
@@ -151,6 +160,8 @@ func ResponsesEventToChatChunks(evt *ResponsesStreamEvent, state *ResponsesEvent
 		return resToChatHandleTextDelta(evt, state)
 	case "response.output_item.added":
 		return resToChatHandleOutputItemAdded(evt, state)
+	case "response.output_item.done":
+		return resToChatHandleAnthropicItem(evt.OutputIndex, evt.Item, state)
 	case "response.function_call_arguments.delta",
 		// custom/freeform 工具（如新版 apply_patch）的输入增量与 function_call 参数增量同形，
 		// 均按 OutputIndex 累加到对应工具调用。
@@ -189,7 +200,8 @@ func FinalizeResponsesChatStream(state *ResponsesEventToChatState) []ChatComplet
 		finishReason = "tool_calls"
 	}
 
-	chunks := []ChatCompletionsChunk{makeChatFinishChunk(state, finishReason)}
+	chunks := emitAnthropicChatHistory(state)
+	chunks = append(chunks, makeChatFinishChunk(state, finishReason))
 
 	if state.IncludeUsage && state.Usage != nil {
 		chunks = append(chunks, ChatCompletionsChunk{
@@ -363,6 +375,12 @@ func resToChatHandleCompleted(evt *ResponsesStreamEvent, state *ResponsesEventTo
 	}
 
 	var chunks []ChatCompletionsChunk
+	if evt.Response != nil {
+		for i := range evt.Response.Output {
+			chunks = append(chunks, resToChatHandleAnthropicItem(i, &evt.Response.Output[i], state)...)
+		}
+	}
+	chunks = append(chunks, emitAnthropicChatHistory(state)...)
 	chunks = append(chunks, makeChatFinishChunk(state, finishReason))
 
 	if state.IncludeUsage && state.Usage != nil {

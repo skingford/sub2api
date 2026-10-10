@@ -1,0 +1,2011 @@
+{
+  "change_id": "CC-20261010-004",
+  "date": "2026-10-10",
+  "base": "1004275707dc5b6b9b17ecf8dee27346696fe23d",
+  "runtime_commit": "fd4d400090fcfdb55dc89700bb7d4332991b232c",
+  "upstream": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "evidence_root": "/Users/kingford/claude-capture/post-tool-audit-20261010-ku0u3z0l",
+  "source_modules": {
+    "292": {
+      "modules": 2260,
+      "binary_sha256": "a967e7b1d8b4e47ee421d5433027880347952b0c0857abf880e2c942a4ec93b3",
+      "fresh_extraction_identical": true
+    },
+    "295": {
+      "modules": 2340,
+      "binary_sha256": "4503bfe11a6c7fcc1e0b39b5e0d347c04248f750b03b0977b3ad6b531fe6f358",
+      "fresh_extraction_identical": true
+    }
+  },
+  "source_files": 3341,
+  "working_source_matches_snapshot": true,
+  "native_captures": [
+    {
+      "version": "2.1.292",
+      "suite": "comprehensive",
+      "cases": 51,
+      "requests": 89,
+      "compressed_requests": 2
+    },
+    {
+      "version": "2.1.292",
+      "suite": "content_edges",
+      "cases": 90,
+      "requests": 90,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "deep_native",
+      "cases": 22,
+      "requests": 30,
+      "compressed_requests": 24
+    },
+    {
+      "version": "2.1.292",
+      "suite": "gzip_fix",
+      "cases": 12,
+      "requests": 20,
+      "compressed_requests": 18
+    },
+    {
+      "version": "2.1.292",
+      "suite": "postfix_edges",
+      "cases": 18,
+      "requests": 24,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "response_edges",
+      "cases": 48,
+      "requests": 84,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "response_plain_order",
+      "cases": 6,
+      "requests": 12,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "summary_edges",
+      "cases": 3,
+      "requests": 18,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "thinking_limits",
+      "cases": 18,
+      "requests": 18,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "token_limit",
+      "cases": 3,
+      "requests": 3,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "tool_constraints",
+      "cases": 36,
+      "requests": 36,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.292",
+      "suite": "version_edges",
+      "cases": 10,
+      "requests": 10,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "comprehensive",
+      "cases": 51,
+      "requests": 89,
+      "compressed_requests": 2
+    },
+    {
+      "version": "2.1.295",
+      "suite": "content_edges",
+      "cases": 90,
+      "requests": 90,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "deep_native",
+      "cases": 22,
+      "requests": 30,
+      "compressed_requests": 24
+    },
+    {
+      "version": "2.1.295",
+      "suite": "gzip_fix",
+      "cases": 12,
+      "requests": 20,
+      "compressed_requests": 18
+    },
+    {
+      "version": "2.1.295",
+      "suite": "haiku295",
+      "cases": 11,
+      "requests": 21,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "postfix_edges",
+      "cases": 18,
+      "requests": 24,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "response_edges",
+      "cases": 48,
+      "requests": 84,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "response_plain_order",
+      "cases": 6,
+      "requests": 12,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "summary_edges",
+      "cases": 3,
+      "requests": 18,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "thinking_limits",
+      "cases": 18,
+      "requests": 18,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "token_limit",
+      "cases": 3,
+      "requests": 3,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "tool_constraints",
+      "cases": 36,
+      "requests": 36,
+      "compressed_requests": 0
+    },
+    {
+      "version": "2.1.295",
+      "suite": "version_edges",
+      "cases": 10,
+      "requests": 10,
+      "compressed_requests": 0
+    }
+  ],
+  "error_replays": [
+    {
+      "version": "2.1.292",
+      "kind": "origin",
+      "cases": 6,
+      "requests": 10,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "none",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-object",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-text",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-standard",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.292",
+      "kind": "bad-json-escaped",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "origin",
+      "cases": 6,
+      "requests": 10,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 1,
+          "encoding": [
+            "gzip"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "none",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 1,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-object",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-text",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-standard",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "2.1.295",
+      "kind": "bad-json-escaped",
+      "cases": 4,
+      "requests": 12,
+      "pairs": [
+        {
+          "marker": "cf-ray",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "marker": "request-id",
+          "requests": 3,
+          "encoding": [
+            "gzip",
+            "gzip",
+            "identity"
+          ],
+          "outcomes": [
+            {
+              "exit_code": 0,
+              "timed_out": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "native_total": {
+    "scenarios": 689,
+    "requests": 1005,
+    "all_request_pcap_match": true,
+    "kernel_drops": 0
+  },
+  "forwarding": {
+    "comparisons": 3556,
+    "logical_equal": 3532,
+    "wire_equal": 3532,
+    "explicit_policy_rejections": 16,
+    "exceptions": [
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.292",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-temperature-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default temperature",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "content_edges",
+        "case": "claude-sonnet-5-5-top-p-zero",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "status": 400,
+        "error": "claude-sonnet-5-5 does not support non-default top_p",
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": false,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "apikey",
+        "passthrough": true,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": false,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      },
+      {
+        "version": "2.1.295",
+        "suite": "postfix_edges",
+        "case": "haiku55-updates-low",
+        "index": 2,
+        "account": "oauth",
+        "passthrough": true,
+        "status": 200,
+        "error": null,
+        "body_equal": false,
+        "wire_body_equal": false
+      }
+    ],
+    "same_auth_combinations": 1770,
+    "same_auth_headers_equal": 1766
+  },
+  "existing_contract": {
+    "entrypoint_observations": 102,
+    "summary_requests": 36,
+    "contract_passed": true
+  },
+  "tool_contract": {
+    "cases": 504,
+    "explicit_rejections": 52,
+    "failing_cases": 0,
+    "failure_counts": {
+      "parallel_false_lost": 0,
+      "parallel_true_lost": 0,
+      "strict_true_lost": 0,
+      "strict_capability_missing": 0,
+      "generated_budget_exceeds_cap": 0,
+      "none_enables_thinking": 0
+    },
+    "contract_passed": true
+  },
+  "content_contract": {
+    "cases": 540,
+    "successful_dispatches": 528,
+    "explicit_rejections": 12,
+    "failed_cases": 153,
+    "failures_by_control": {
+      "developer": 24,
+      "image-url": 24,
+      "tool-image-url": 24,
+      "legacy-function": 12,
+      "invalid-tool-arguments": 24,
+      "tool-document-inline": 12,
+      "signed-thinking": 6,
+      "redacted-thinking": 9,
+      "system": 18
+    },
+    "known_policy_differences": 33,
+    "unresolved_content_differences": 120,
+    "raw_equal": false,
+    "contract_passed": false
+  },
+  "content_wire_contract": {
+    "cases": 540,
+    "successful_dispatches": 528,
+    "explicit_rejections": 12,
+    "failed_cases": 153,
+    "failures_by_control": {
+      "developer": 24,
+      "image-url": 24,
+      "tool-image-url": 24,
+      "legacy-function": 12,
+      "invalid-tool-arguments": 24,
+      "tool-document-inline": 12,
+      "signed-thinking": 6,
+      "redacted-thinking": 9,
+      "system": 18
+    },
+    "known_policy_differences": 33,
+    "unresolved_content_differences": 120,
+    "raw_equal": false,
+    "contract_passed": false
+  },
+  "response_contract": {
+    "source_responses": 797,
+    "conversion_comparisons": 3188,
+    "failed_comparisons": 88,
+    "contract_passed": false,
+    "failures_by_reason": {
+      "opaque thinking/signature changed": 88,
+      "text/tool order or content changed": 24,
+      "block order/type changed": 48
+    },
+    "stop_mappings": [
+      {
+        "source": "end_turn",
+        "target": "completed",
+        "count": 2796
+      },
+      {
+        "source": "max_tokens",
+        "target": "incomplete",
+        "count": 48
+      },
+      {
+        "source": "model_context_window_exceeded",
+        "target": "completed",
+        "count": 48
+      },
+      {
+        "source": "pause_turn",
+        "target": "completed",
+        "count": 48
+      },
+      {
+        "source": "refusal",
+        "target": "completed",
+        "count": 48
+      },
+      {
+        "source": "tool_use",
+        "target": "completed",
+        "count": 200
+      }
+    ]
+  },
+  "plain_order_contract": {
+    "source_responses": 24,
+    "conversion_comparisons": 96,
+    "failed_comparisons": 12,
+    "contract_passed": false,
+    "failures_by_reason": {
+      "text/tool order or content changed": 12,
+      "block order/type changed": 12
+    },
+    "stop_mappings": [
+      {
+        "source": "end_turn",
+        "target": "completed",
+        "count": 48
+      },
+      {
+        "source": "tool_use",
+        "target": "completed",
+        "count": 48
+      }
+    ]
+  },
+  "chat_opaque_contract": {
+    "cases": 44,
+    "opaque_round_trip_failures": 44,
+    "affected_models": [
+      "claude-haiku-4-5-20251001",
+      "claude-haiku-5-5",
+      "claude-opus-4-6",
+      "claude-opus-5-5",
+      "claude-sonnet-4-6",
+      "claude-sonnet-5-5"
+    ],
+    "conversion_errors": 0,
+    "component_round_trip_not_live_provider": true,
+    "failures": [
+      {
+        "name": "capture-2.1.292-comprehensive/thinking-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-postfix_edges/haiku-5-5-thinking-tool/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-postfix_edges/opus-5-5-thinking-tool/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-postfix_edges/sonnet-4-6-thinking-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-haiku-4-5-20251001-text-redacted-tool/0",
+        "model": "claude-haiku-4-5-20251001",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-haiku-4-5-20251001-text-thinking-text/0",
+        "model": "claude-haiku-4-5-20251001",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-haiku-4-5-20251001-text-thinking-tool/0",
+        "model": "claude-haiku-4-5-20251001",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-haiku-5-5-text-redacted-tool/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-haiku-5-5-text-thinking-text/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-haiku-5-5-text-thinking-tool/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-opus-4-6-text-redacted-tool/0",
+        "model": "claude-opus-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-opus-4-6-text-thinking-text/0",
+        "model": "claude-opus-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-opus-4-6-text-thinking-tool/0",
+        "model": "claude-opus-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-opus-5-5-text-redacted-tool/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-opus-5-5-text-thinking-text/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-opus-5-5-text-thinking-tool/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-sonnet-4-6-text-redacted-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-sonnet-4-6-text-thinking-text/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-sonnet-4-6-text-thinking-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-sonnet-5-5-text-redacted-tool/0",
+        "model": "claude-sonnet-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-sonnet-5-5-text-thinking-text/0",
+        "model": "claude-sonnet-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.292-response_edges/claude-sonnet-5-5-text-thinking-tool/0",
+        "model": "claude-sonnet-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-comprehensive/thinking-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-postfix_edges/haiku-5-5-thinking-tool/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-postfix_edges/opus-5-5-thinking-tool/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-postfix_edges/sonnet-4-6-thinking-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-haiku-4-5-20251001-text-redacted-tool/0",
+        "model": "claude-haiku-4-5-20251001",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-haiku-4-5-20251001-text-thinking-text/0",
+        "model": "claude-haiku-4-5-20251001",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-haiku-4-5-20251001-text-thinking-tool/0",
+        "model": "claude-haiku-4-5-20251001",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-haiku-5-5-text-redacted-tool/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-haiku-5-5-text-thinking-text/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-haiku-5-5-text-thinking-tool/0",
+        "model": "claude-haiku-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-opus-4-6-text-redacted-tool/0",
+        "model": "claude-opus-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-opus-4-6-text-thinking-text/0",
+        "model": "claude-opus-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-opus-4-6-text-thinking-tool/0",
+        "model": "claude-opus-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-opus-5-5-text-redacted-tool/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-opus-5-5-text-thinking-text/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-opus-5-5-text-thinking-tool/0",
+        "model": "claude-opus-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-sonnet-4-6-text-redacted-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-sonnet-4-6-text-thinking-text/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-sonnet-4-6-text-thinking-tool/0",
+        "model": "claude-sonnet-4-6",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-sonnet-5-5-text-redacted-tool/0",
+        "model": "claude-sonnet-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-sonnet-5-5-text-thinking-text/0",
+        "model": "claude-sonnet-5-5",
+        "blocks": 1
+      },
+      {
+        "name": "capture-2.1.295-response_edges/claude-sonnet-5-5-text-thinking-tool/0",
+        "model": "claude-sonnet-5-5",
+        "blocks": 1
+      }
+    ]
+  },
+  "native_response_pcap": [
+    {
+      "capture": "capture-2.1.292-response_edges",
+      "cases": 48,
+      "responses": 84
+    },
+    {
+      "capture": "capture-2.1.292-response_plain_order",
+      "cases": 6,
+      "responses": 12
+    },
+    {
+      "capture": "capture-2.1.295-response_edges",
+      "cases": 48,
+      "responses": 84
+    },
+    {
+      "capture": "capture-2.1.295-response_plain_order",
+      "cases": 6,
+      "responses": 12
+    }
+  ],
+  "wire": {
+    "constraints": {
+      "requests": 192,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    },
+    "tools": {
+      "requests": 452,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    },
+    "content": {
+      "requests": 528,
+      "pcap_bytes_match": true,
+      "kernel_drops": 0
+    }
+  },
+  "transport": {
+    "combinations": 48,
+    "body_headers_order_hello_equal": true,
+    "trace_cases": 24,
+    "both_synthetic_credentials_redacted": true,
+    "kernel_drops": 0
+  },
+  "cch": {
+    "cases": 264,
+    "independent_native_cch_matches": true,
+    "runtime_binary_sha256": "b7493fb718106db884074d61f06e5ba7550899f8bf64eb4f9adbbfa252d27c38",
+    "instrumented_entrypoint_not_unmodified_cli": true
+  },
+  "recovery": {
+    "2.1.292": {
+      "model_auth_cases": 6,
+      "sessions": 12,
+      "cross_session_leaks": 0,
+      "generation": 96,
+      "count_tokens": 24
+    },
+    "2.1.295": {
+      "model_auth_cases": 8,
+      "sessions": 16,
+      "cross_session_leaks": 0,
+      "generation": 128,
+      "count_tokens": 32
+    }
+  },
+  "engineering": {
+    "components": {
+      "packages": 4,
+      "test_pass_events": 1840
+    },
+    "service": {
+      "top_level_passes": 827,
+      "test_pass_events": 2563,
+      "skipped_top_level": [
+        "--- SKIP: TestClaudeRecoveryNativeCLILab (0.00s)",
+        "--- SKIP: TestClaudeAlignmentNativeCLILab (0.01s)",
+        "--- SKIP: TestClaudeContentAudit (0.01s)",
+        "--- SKIP: TestDeepClaudePolicyBoundaries (0.00s)",
+        "--- SKIP: TestDeepClaudeErrorOriginSignals (0.00s)",
+        "--- SKIP: TestClaudeResponseContentAudit (0.00s)"
+      ]
+    }
+  },
+  "full_unit_integration_lint_rerun": false,
+  "production_modified": false,
+  "live_provider_acceptance_verified": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "environment": {
+    "containers": [
+      {
+        "name": "digital-human-postgres",
+        "id": "aeadec0fedebd58303dee3c4a10ed76a69d74b115bd26aa26b5c215ee5d7f9c0",
+        "running": true,
+        "health": "healthy",
+        "restart_policy": "unless-stopped"
+      },
+      {
+        "name": "picpak_postgres",
+        "id": "2c555fd76a42e7f9ad80ae5ad8e800ce246b6dc9c78df663fb7f233db982c658",
+        "running": true,
+        "health": "healthy",
+        "restart_policy": "unless-stopped"
+      },
+      {
+        "name": "picpak_redis",
+        "id": "630a94841727f8cca56b4be82e8b3164d282e427f2890fc58f4c409ff7064326",
+        "running": true,
+        "health": "healthy",
+        "restart_policy": "unless-stopped"
+      }
+    ],
+    "task_containers_remaining": 0,
+    "docker_restarted_this_audit": false,
+    "business_containers_modified_this_audit": false
+  },
+  "response_totals": {
+    "source_responses": 821,
+    "comparisons": 3284,
+    "failed_comparisons": 100,
+    "opaque_differences": 88,
+    "text_tool_order_differences": 36,
+    "failure_reasons_overlap": true
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "title": "Chat developer role becomes user",
+      "content_cases": 12,
+      "file": "backend/internal/pkg/apicompat/chatcompletions_to_responses.go",
+      "function": "chatMessageToResponsesItems",
+      "fixed": false,
+      "introduced_by_previous_tool_reasoning_fix": false
+    },
+    {
+      "id": "F2",
+      "title": "URL images disappear",
+      "content_cases": 48,
+      "file": "backend/internal/pkg/apicompat/responses_to_anthropic_request.go",
+      "function": "dataURIToAnthropicImageSource",
+      "fixed": false,
+      "introduced_by_previous_tool_reasoning_fix": false
+    },
+    {
+      "id": "F3",
+      "title": "Legacy Chat function history disappears",
+      "content_cases": 12,
+      "file": "backend/internal/pkg/apicompat/chatcompletions_to_responses.go",
+      "function": "chatAssistantToResponses",
+      "fixed": false,
+      "introduced_by_previous_tool_reasoning_fix": false
+    },
+    {
+      "id": "F4",
+      "title": "Invalid tool JSON becomes null content and is dispatched",
+      "content_cases": 24,
+      "file": "backend/internal/pkg/apicompat/responses_to_anthropic_request.go",
+      "function": "convertResponsesInputToAnthropic",
+      "fixed": false,
+      "introduced_by_previous_tool_reasoning_fix": false
+    },
+    {
+      "id": "F5",
+      "title": "Responses tool-result documents disappear",
+      "content_cases": 12,
+      "file": "backend/internal/pkg/apicompat/responses_to_anthropic_request.go",
+      "function": "responsesFunctionOutputToAnthropicContent",
+      "fixed": false,
+      "introduced_by_previous_tool_reasoning_fix": false
+    },
+    {
+      "id": "F6",
+      "title": "Opaque history loses signatures: legacy Responses and all six Chat models",
+      "content_cases": 12,
+      "file": "backend/internal/pkg/apicompat/anthropic_to_responses_response.go",
+      "function": "RequiresSignedThinking gate and Chat encrypted_content omission",
+      "fixed": false,
+      "introduced_by_previous_tool_reasoning_fix": false,
+      "responses_output_differences": 88,
+      "chat_round_trip_failures": 44,
+      "corrects_scope_of": "CC-20261009-012"
+    },
+    {
+      "id": "F7",
+      "title": "Legacy buffered responses move text after tool calls",
+      "content_cases": 0,
+      "file": "backend/internal/pkg/apicompat/anthropic_to_responses_response.go",
+      "function": "AnthropicToResponsesResponse",
+      "fixed": false,
+      "introduced_by_previous_tool_reasoning_fix": false,
+      "minimal_order_comparisons_failed": 12,
+      "all_text_tool_order_comparisons_failed": 36
+    }
+  ],
+  "known_policies": {
+    "content_raw_differences": 153,
+    "oauth_system_wrapper_differences": 30,
+    "legacy_oauth_redacted_prefilter_differences": 3,
+    "empty_tool_output_substitutions": 24,
+    "sonnet55_sampling_rejections": 12,
+    "native_forward_sampling_rejections": 16,
+    "native_display_beta_fallbacks": 8,
+    "native_empty_version_header_defaults": 4,
+    "stop_reason_mappings_fully_equivalent": false
+  },
+  "native_content": {
+    "requests": 180,
+    "explicit_content_fields_equal": true,
+    "extra_body_serialization_not_provider_acceptance": true
+  },
+  "native_tool_echo": {
+    "scope": "response_edges only",
+    "cases": 36,
+    "unchanged_block_order": 24,
+    "native_tool_text_reordering": 12
+  },
+  "examples": {
+    "F1": {
+      "model": "claude-sonnet-4-6",
+      "account": "apikey",
+      "route": "/v1/chat/completions",
+      "control": "developer",
+      "input": {
+        "messages": [
+          {
+            "content": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON",
+            "role": "developer"
+          },
+          {
+            "content": "LOCAL_CONTENT_AUDIT: 中文 😀",
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-6"
+      },
+      "status": 200,
+      "calls": 1,
+      "outgoing_messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "text": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON",
+              "type": "text"
+            },
+            {
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀",
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "outgoing_system": null
+    },
+    "F2": {
+      "model": "claude-sonnet-4-6",
+      "account": "apikey",
+      "route": "/v1/responses",
+      "control": "image-url",
+      "input": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "LOCAL_CONTENT_AUDIT: 中文 😀",
+                "type": "input_text"
+              },
+              {
+                "image_url": "https://content-audit.invalid/synthetic.png",
+                "type": "input_image"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-6"
+      },
+      "status": 200,
+      "calls": 1,
+      "outgoing_messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀",
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "outgoing_system": null
+    },
+    "F3": {
+      "model": "claude-sonnet-4-6",
+      "account": "apikey",
+      "route": "/v1/chat/completions",
+      "control": "legacy-function",
+      "input": {
+        "functions": [
+          {
+            "name": "audit_tool",
+            "parameters": {
+              "properties": {},
+              "type": "object"
+            }
+          }
+        ],
+        "messages": [
+          {
+            "content": "LOCAL_CONTENT_AUDIT: 中文 😀",
+            "role": "user"
+          },
+          {
+            "function_call": {
+              "arguments": "{\"value\":\"中文\"}",
+              "name": "audit_tool"
+            },
+            "role": "assistant"
+          },
+          {
+            "content": "LOCAL_TOOL_RESULT",
+            "name": "audit_tool",
+            "role": "function"
+          }
+        ],
+        "model": "claude-sonnet-4-6"
+      },
+      "status": 200,
+      "calls": 1,
+      "outgoing_messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀",
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "outgoing_system": null
+    },
+    "F4": {
+      "model": "claude-sonnet-4-6",
+      "account": "apikey",
+      "route": "/v1/responses",
+      "control": "invalid-tool-arguments",
+      "input": {
+        "input": [
+          {
+            "content": "LOCAL_CONTENT_AUDIT: 中文 😀",
+            "role": "user"
+          },
+          {
+            "arguments": "{\"value\":",
+            "call_id": "toolu_content",
+            "name": "audit_tool",
+            "type": "function_call"
+          },
+          {
+            "call_id": "toolu_content",
+            "output": "LOCAL_TOOL_RESULT",
+            "type": "function_call_output"
+          }
+        ],
+        "model": "claude-sonnet-4-6",
+        "tools": [
+          {
+            "name": "audit_tool",
+            "parameters": {
+              "properties": {},
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "status": 200,
+      "calls": 1,
+      "outgoing_messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": null
+        }
+      ],
+      "outgoing_system": null
+    },
+    "F5": {
+      "model": "claude-sonnet-4-6",
+      "account": "apikey",
+      "route": "/v1/responses",
+      "control": "tool-document-inline",
+      "input": {
+        "input": [
+          {
+            "content": "LOCAL_CONTENT_AUDIT: 中文 😀",
+            "role": "user"
+          },
+          {
+            "arguments": "{\"value\":\"中文\"}",
+            "call_id": "toolu_content",
+            "name": "audit_tool",
+            "type": "function_call"
+          },
+          {
+            "call_id": "toolu_content",
+            "output": [
+              {
+                "text": "LOCAL_TOOL_RESULT",
+                "type": "input_text"
+              },
+              {
+                "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK",
+                "filename": "local.pdf",
+                "type": "input_file"
+              }
+            ],
+            "type": "function_call_output"
+          }
+        ],
+        "model": "claude-sonnet-4-6",
+        "tools": [
+          {
+            "name": "audit_tool",
+            "parameters": {
+              "properties": {},
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "status": 200,
+      "calls": 1,
+      "outgoing_messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": [
+                {
+                  "text": "LOCAL_TOOL_RESULT",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "outgoing_system": null
+    },
+    "F6": {
+      "model": "claude-sonnet-4-6",
+      "account": "apikey",
+      "route": "/v1/responses",
+      "control": "signed-thinking",
+      "input": {
+        "input": [
+          {
+            "content": "LOCAL_CONTENT_AUDIT: 中文 😀",
+            "role": "user"
+          },
+          {
+            "encrypted_content": "anthropic-thinking-v1:eyJ0eXBlIjogInRoaW5raW5nIiwgInRoaW5raW5nIjogIkxPQ0FMX1NZTlRIRVRJQ19USE9VR0hUIiwgInNpZ25hdHVyZSI6ICJMT0NBTF9TWU5USEVUSUNfU0lHTkFUVVJFIn0",
+            "type": "reasoning"
+          },
+          {
+            "arguments": "{\"value\":\"中文\"}",
+            "call_id": "toolu_content",
+            "name": "audit_tool",
+            "type": "function_call"
+          },
+          {
+            "call_id": "toolu_content",
+            "output": "LOCAL_TOOL_RESULT",
+            "type": "function_call_output"
+          }
+        ],
+        "model": "claude-sonnet-4-6",
+        "tools": [
+          {
+            "name": "audit_tool",
+            "parameters": {
+              "properties": {},
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "status": 200,
+      "calls": 1,
+      "outgoing_messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": "LOCAL_TOOL_RESULT"
+            }
+          ]
+        }
+      ],
+      "outgoing_system": null
+    },
+    "F7": {
+      "name": "capture-2.1.292-response_plain_order/claude-sonnet-4-6-text-tool/0",
+      "source_content": [
+        {
+          "text": "LOCAL_BEFORE",
+          "type": "text"
+        },
+        {
+          "type": "tool_use",
+          "id": "toolu_response_order",
+          "name": "Read",
+          "input": {
+            "file_path": "/work/thinking-tool/fixture.txt"
+          }
+        }
+      ],
+      "buffered_output": [
+        {
+          "type": "function_call",
+          "id": "item_0ad1f18397059666bc8aae21",
+          "status": "completed",
+          "call_id": "toolu_response_order",
+          "name": "Read",
+          "arguments": "{\"file_path\": \"/work/thinking-tool/fixture.txt\"}"
+        },
+        {
+          "type": "message",
+          "id": "item_d649d14af26fc6f6b72cc3f2",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "LOCAL_BEFORE"
+            }
+          ],
+          "status": "completed"
+        }
+      ],
+      "stream_output": [
+        {
+          "type": "message",
+          "id": "item_d131be31b3d0bc2692b246eb",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "LOCAL_BEFORE"
+            }
+          ],
+          "status": "completed"
+        },
+        {
+          "type": "function_call",
+          "id": "item_a7c3c9666fa3363d62cc42d6",
+          "status": "completed",
+          "call_id": "toolu_response_order",
+          "name": "Read",
+          "arguments": "{\"file_path\": \"/work/thinking-tool/fixture.txt\"}"
+        }
+      ]
+    }
+  },
+  "evidence_sha256": {
+    "analysis/baseline.json": "1481107affdfadc13044943a3fc826b1bc74678d1a5aeabe2b152e73a21d6501",
+    "analysis/chat-opaque-contract.json": "0dbb41b9101de767956128663b21cf26e4643856813df47c4c4aa25309e2fa52",
+    "analysis/chat-opaque-observations.json": "d9280b4233495635601dbfae5f425f776482a31c37ea9067c52fc95b0574322d",
+    "analysis/components.jsonl": "25fe353eea7f4f6e0553ff383184edfd60761e94ba2db3e5f1f1a25d775b809a",
+    "analysis/content/observations.json": "3d202269b60a407f5e9c0f00bb8ae0ff9a633cd31ac7d2da198b06a8699d44e1",
+    "analysis/content-classified.json": "f733e43ba5c6faa0a7ee116a6b74855aa9361024ab30f1dedde07b05c2759c21",
+    "analysis/content-fixtures.json": "58dc8fa217da30594dc3ca360ab24ae0c575243be20e16aa0ede86a01b8617cb",
+    "analysis/content-wire-contract.json": "f733e43ba5c6faa0a7ee116a6b74855aa9361024ab30f1dedde07b05c2759c21",
+    "analysis/contract-gate.log": "3fa8eb6182ff90a64a85f7cae467f9a8b9625dabc9272ac5efa38846679bbe88",
+    "analysis/entrypoint-controls.json": "5990e6cabf9f78b4106fb37138fd2e5660195158f0fa31af3457709c263a1c80",
+    "analysis/final-environment.json": "0dc3d1eb603d23e10ea128ef0426b6a8811bccbcb942063abaa2a25724b21e38",
+    "analysis/final-summary.json": "46e74cdbe1dfc93a4295e9b8e186f0bc37e5ace31804317cebcd49f1d9e587d4",
+    "analysis/forward-2.1.292-comprehensive.json": "08a066aa3836a2e4181466c8fe533571c633ffb8b4a3b2c5ee1c3e80fb36d438",
+    "analysis/forward-2.1.292-content_edges.json": "2461922d97b3f616a7a0b6e460f668b48efa7f989b094e58e09a118cf01baa35",
+    "analysis/forward-2.1.292-deep_native.json": "604dc14b3a4290e4b9e252a7ca8d995c472fb7dbbe5dcfd2089965e541cb06de",
+    "analysis/forward-2.1.292-gzip_fix.json": "a48310b5b2690c664725372fc1f879ee7761290a035b69773ad4b1f724ad5fa5",
+    "analysis/forward-2.1.292-postfix_edges.json": "b24858b74f6e2fa4e0ebc222fd4ea834e2aab595711edefa9b9add892252e06e",
+    "analysis/forward-2.1.292-response_edges.json": "4a93ce73b06481306c3e8fa5a1d4ae9dd19ff5c0bf46d21d437eab4db8ce77b7",
+    "analysis/forward-2.1.292-response_plain_order.json": "19dac5c6e57ebbc6d0f1091cce73638ad8777345797cc97d79944569c56338a7",
+    "analysis/forward-2.1.292-summary_edges.json": "df5956cb01d758f437a1d7300d582dcebf4382ea0990d22f1c1b6bace5ea32e2",
+    "analysis/forward-2.1.292-thinking_limits.json": "17846b2553cc5ebf91194e7ae7b1f5fe47153efb7eac5e1bbe0ce3da4261f5bb",
+    "analysis/forward-2.1.292-token_limit.json": "82bdc4d9601098831f117a0fc900d41ffa41875c7d047d42d95f2b37f5a54f38",
+    "analysis/forward-2.1.292-tool_constraints.json": "3fc4c899233596cf9595a48bc9b764d17dfe953026783bb48b73ba2c9f76756a",
+    "analysis/forward-2.1.292-version_edges.json": "a99aac69d2c8d3c0659497d1b35410494e88e01638b24f6607016d39d6731701",
+    "analysis/forward-2.1.295-comprehensive.json": "6b786ee7a9938ee38e1a03f03599538f45453e1c890c0318dc6083d5af5b1ecf",
+    "analysis/forward-2.1.295-content_edges.json": "5aab9fc9c6df3df7ebfbfcb4d91d11f722dba804a03eb524382c827f0ae7d16e",
+    "analysis/forward-2.1.295-deep_native.json": "2095826e895f91acd6bdb761bc5b8ddd714097129da4cc9bc52c1d3105469531",
+    "analysis/forward-2.1.295-gzip_fix.json": "ccdd57db9214ac549e0f5845b2d10a17dd4dc2b6f3d6eb9e06c6f135fc20c8f6",
+    "analysis/forward-2.1.295-haiku295.json": "8b3c80a53233458508e8a99fa489d94a65114149a5fda1806741a86ba7241ff2",
+    "analysis/forward-2.1.295-postfix_edges.json": "8db547008257a402bf2997d6594ededf20ee4a64e435b7d442c25b99a110ab91",
+    "analysis/forward-2.1.295-response_edges.json": "70410dce5109c94a7b35039b699707df0db35eb7a558fc95e10f0506cdc01570",
+    "analysis/forward-2.1.295-response_plain_order.json": "73ddc3bd022c549b03914522bd46cfd6491eb570b5afa88febeb1d020c810780",
+    "analysis/forward-2.1.295-summary_edges.json": "cdc748f1ed73cb0b2de0d089e389b32b7af2c075546d371c298475aed25d029d",
+    "analysis/forward-2.1.295-thinking_limits.json": "aaf4cce3b4e355281afb7953693b8dd8622dab9ba1f93e752fd28d21759b8a0b",
+    "analysis/forward-2.1.295-token_limit.json": "1ce26b219bc85be486407a4b57f673e3f0ae88462f515c68507ee891262ec9f3",
+    "analysis/forward-2.1.295-tool_constraints.json": "7f42b1a75f0cf95541f558a6a2f344e8850e8e5671e23ca4e325df9c65352508",
+    "analysis/forward-2.1.295-version_edges.json": "c99473f62a1a5b010ef7c4dd7055f083b228e6db8519fa6b1f1342c9d3991295",
+    "analysis/gate-controls.json": "f35ac27af273d1bc53c8feeac2f7b76fa3dacac04c389fc2fe9d883f6429db88",
+    "analysis/implementation-provenance.json": "6a2424652d75e701ed754c62045823d33ce3048c2840ae734abbad56574b31cf",
+    "analysis/native-content-contract.json": "8abebf91f1a24ae11d800b85abbffd05557bd7a5fc42d4d4ea945aeda4e5fe97",
+    "analysis/native-response-echo.json": "8db70dc3b29d239e7f9a6800e8e038e2f659d797dc2a1b0a853dab28c0a157a6",
+    "analysis/prior-tool-incomplete-matrix.log": "5fbaa5c24b69ea87369a233d752118897a186fcce3e7e82feccd0216e9fc80a6",
+    "analysis/prior-tool-negative.json": "47e2db030924a2a8a6cdfc923ef2cd72962d1695100fdd483feb6b346543839a",
+    "analysis/recovery-2.1.292/claude-opus-5-5/apikey/native-managed-recovery.json": "c283c6f38b0ac90af03f3f8834a649da5be240cc9e7f5836f8be7bb9e045e4c8",
+    "analysis/recovery-2.1.292/claude-opus-5-5/oauth/native-managed-recovery.json": "3a028fca5d39bd40f908d7d0fb0420f0b4387c33a47276351cc6017eb017e2e4",
+    "analysis/recovery-2.1.292/claude-sonnet-4-6/apikey/native-managed-recovery.json": "cbfe26838179a6ba0ee3ffcc1c8df9daea922e686d8c486225017b5acd7e6941",
+    "analysis/recovery-2.1.292/claude-sonnet-4-6/oauth/native-managed-recovery.json": "52199316708d47d28572fc9834b6f0fcadf6322659d388c2bb026ac1ea91bde8",
+    "analysis/recovery-2.1.292/claude-sonnet-5-5/apikey/native-managed-recovery.json": "ddb1db9e1f765a770acebda96efa1916535264d513a42ca846f4b1eb76feeaa3",
+    "analysis/recovery-2.1.292/claude-sonnet-5-5/oauth/native-managed-recovery.json": "87a01b2d79405d883fe4909b796f0d3d7cf21e70d3848ef01c572c0fb5c0be4c",
+    "analysis/recovery-2.1.295/claude-haiku-5-5/apikey/native-managed-recovery.json": "a4f7dc2f0c5af2441a2bc8ad7b6fe0d0570cc3e99945003ad121dda2aa1d38d5",
+    "analysis/recovery-2.1.295/claude-haiku-5-5/oauth/native-managed-recovery.json": "131734c7dd5989e780bdc82786a3d051440376dc4d89880db91dca1473740c93",
+    "analysis/recovery-2.1.295/claude-opus-5-5/apikey/native-managed-recovery.json": "5515fa1a0667ae6bad19833e8f900a68493b932b9a6988284f981ac404692a76",
+    "analysis/recovery-2.1.295/claude-opus-5-5/oauth/native-managed-recovery.json": "d1c8b0221c53cae461671953e78077caf6a4efac65100dc4ac59574cfc8ef3a3",
+    "analysis/recovery-2.1.295/claude-sonnet-4-6/apikey/native-managed-recovery.json": "ad45493614361947310ed75b54b93e650dfbae468175d3adedc7efb3ed0efbb8",
+    "analysis/recovery-2.1.295/claude-sonnet-4-6/oauth/native-managed-recovery.json": "5faa1c1019f8fb09f631ea7c72b68753ef45ade2224e036568ebe7aaae33e8f7",
+    "analysis/recovery-2.1.295/claude-sonnet-5-5/apikey/native-managed-recovery.json": "6e47bc9e01dc79e4f6c356dfda7b8fa3aeadcc285ac88d542a2e057e97c9b5e7",
+    "analysis/recovery-2.1.295/claude-sonnet-5-5/oauth/native-managed-recovery.json": "39811fef235573c2718d27bf7123fb824a1fd6c89ecd273abb537f25ed800742",
+    "analysis/response-contract.json": "143289971adafed3f4d60127d7eb026825898056e71044842986269736384134",
+    "analysis/response-fixtures.json": "3079405b058f0d1911f7c4da73fcb12241c21d073b3b5b13814ba2db3a0fbf7f",
+    "analysis/response-observations.json": "37ee6fb11a8bd2b0ec8ac44286ce3af342c338efa5d90d3234d6b5f7f04ec10a",
+    "analysis/response-plain-contract.json": "ea01c9148ce43ca208bc84e9c76810fafecb287968ba1d3a0263b066bc7a7958",
+    "analysis/response-plain-fixtures.json": "ac6d26de47b893da30d21d5259ec506fe9a98d3f0665a4d45a4149d273ea2534",
+    "analysis/response-plain-observations.json": "f564b2b79edd14cda3dbba2445fd475bd8ccae9e933196fe681185c30b514a51",
+    "analysis/service-regressions.log": "4011f2bec1b6bb47b849ac12705a0b1b150050cd73994ee0d62784fe06da44cd",
+    "analysis/source-manifest.json": "d32f85b08f804eb903ad203de767a224d1b805072ddee3008e1ded9822cda775",
+    "analysis/source-verification.json": "c0a43c6755841a8865137718e29980005348494348be4801577ca1f373882406",
+    "analysis/summary-sequences-292.json": "1b9837ad17c947e415fd9a42e71aebf1895998e43384b6bd153b6d0466923b22",
+    "analysis/summary-sequences-295.json": "1b9837ad17c947e415fd9a42e71aebf1895998e43384b6bd153b6d0466923b22",
+    "analysis/tool-contract.json": "a7411ec5d34f38014949aed989d63168081aa0ca158b1df50799715073c1af17",
+    "capture-2.1.292-comprehensive/pcap-verification.json": "ee5323f4d92840acab6da1eea5297ed4c54182053541843d8f4274e3db7e6e42",
+    "capture-2.1.292-content_edges/pcap-verification.json": "b8b95036407af4b500cc95d4e57685b468e6f26372199285fee0f65003796250",
+    "capture-2.1.292-deep_native/pcap-verification.json": "780562650e662fd6d9c4d824725c18213f9cf833027cabd4987dbc0db3a1f79b",
+    "capture-2.1.292-gzip_fix/pcap-verification.json": "eab9a9565f4046259d166b5d55e3c4e25dcb34a5ccc7166034aa4d87b5167e7d",
+    "capture-2.1.292-postfix_edges/pcap-verification.json": "f21b5f8e2d42726c8bb791770338b3b048740955bfccc2e3e6726fae8bd84382",
+    "capture-2.1.292-response_edges/pcap-verification.json": "45902674eaf4f4e9cbee3414b841a7c24dd7dc2596d96d98206b6f378f3a12e5",
+    "capture-2.1.292-response_edges/response-pcap-verification.json": "de95661b6842489733fe18e96d506a81ae4ec36bd49dd57b21e935d194f9e0ff",
+    "capture-2.1.292-response_plain_order/pcap-verification.json": "c1211118a303d60444eeb595b4501260865e2bfbf010063577498511771202ca",
+    "capture-2.1.292-response_plain_order/response-pcap-verification.json": "2b239f28ad7f84586d6b6bbafcb8c15b6148e7b3ef154397beb7f12ef3335add",
+    "capture-2.1.292-summary_edges/pcap-verification.json": "118ad5ea1edceb3f8efa9b62d0b1cbef812910369ccef0c993f611a51ecfe51e",
+    "capture-2.1.292-thinking_limits/pcap-verification.json": "3160cd6353779e15f656ab4c45a2ac11d88a71df043dc10734e66d1a1a481e17",
+    "capture-2.1.292-token_limit/pcap-verification.json": "c28f4b102ea934bf9f08f8bf68768b658b1114bcdf92dfac637d84ed5583e7f8",
+    "capture-2.1.292-tool_constraints/pcap-verification.json": "e2fd33d697e4f19c9613f0e8fbab724e8c0b7f92bbb7aece441703b4828b6f09",
+    "capture-2.1.292-version_edges/pcap-verification.json": "d91791d7346dd29b08bde89484956c07e04f07bbd12dc77f987b4a358c8b6d8c",
+    "capture-2.1.295-comprehensive/pcap-verification.json": "ee5323f4d92840acab6da1eea5297ed4c54182053541843d8f4274e3db7e6e42",
+    "capture-2.1.295-content_edges/pcap-verification.json": "b8b95036407af4b500cc95d4e57685b468e6f26372199285fee0f65003796250",
+    "capture-2.1.295-deep_native/pcap-verification.json": "780562650e662fd6d9c4d824725c18213f9cf833027cabd4987dbc0db3a1f79b",
+    "capture-2.1.295-gzip_fix/pcap-verification.json": "eab9a9565f4046259d166b5d55e3c4e25dcb34a5ccc7166034aa4d87b5167e7d",
+    "capture-2.1.295-haiku295/pcap-verification.json": "e0a7706b27d1aacbe13acc5dd9ae9faaeb578515035642e05a2796b9453fadde",
+    "capture-2.1.295-postfix_edges/pcap-verification.json": "f21b5f8e2d42726c8bb791770338b3b048740955bfccc2e3e6726fae8bd84382",
+    "capture-2.1.295-response_edges/pcap-verification.json": "45902674eaf4f4e9cbee3414b841a7c24dd7dc2596d96d98206b6f378f3a12e5",
+    "capture-2.1.295-response_edges/response-pcap-verification.json": "de95661b6842489733fe18e96d506a81ae4ec36bd49dd57b21e935d194f9e0ff",
+    "capture-2.1.295-response_plain_order/pcap-verification.json": "c1211118a303d60444eeb595b4501260865e2bfbf010063577498511771202ca",
+    "capture-2.1.295-response_plain_order/response-pcap-verification.json": "2b239f28ad7f84586d6b6bbafcb8c15b6148e7b3ef154397beb7f12ef3335add",
+    "capture-2.1.295-summary_edges/pcap-verification.json": "118ad5ea1edceb3f8efa9b62d0b1cbef812910369ccef0c993f611a51ecfe51e",
+    "capture-2.1.295-thinking_limits/pcap-verification.json": "3160cd6353779e15f656ab4c45a2ac11d88a71df043dc10734e66d1a1a481e17",
+    "capture-2.1.295-token_limit/pcap-verification.json": "c28f4b102ea934bf9f08f8bf68768b658b1114bcdf92dfac637d84ed5583e7f8",
+    "capture-2.1.295-tool_constraints/pcap-verification.json": "e2fd33d697e4f19c9613f0e8fbab724e8c0b7f92bbb7aece441703b4828b6f09",
+    "capture-2.1.295-version_edges/pcap-verification.json": "d91791d7346dd29b08bde89484956c07e04f07bbd12dc77f987b4a358c8b6d8c",
+    "cch-probe/runtime-probe-provenance.json": "d4398ff391b1aa9a2e119f84b3236282fa95688f33fa4369f4a2667ccfa2777b",
+    "content-cch/comparison.json": "868c03d70102f134516f50865c0c7f8680d0764ddb7d67bba5474009b8cefbc1",
+    "content-cch/pcap-verification.json": "0a70708498cdf9ce4acf07d59dbfef5b6f37a5377c070a1b5e5d34ca2967849d",
+    "error-replay-2.1.292-bad-json-escaped/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.292-bad-json-object/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.292-bad-json-standard/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.292-bad-json-text/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.292-origin/pcap-verification.json": "7439776e95d14f17951233e4c3112b62850212700b5bde1d9bfe79005e6caebf",
+    "error-replay-2.1.295-bad-json-escaped/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-bad-json-object/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-bad-json-standard/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-bad-json-text/pcap-verification.json": "cadbd59126a556cd19437ef5f052719a54904ba14ced41a22f4fa10286f815ec",
+    "error-replay-2.1.295-origin/pcap-verification.json": "7439776e95d14f17951233e4c3112b62850212700b5bde1d9bfe79005e6caebf",
+    "transport/verification.json": "a898e3ad18b25e59367c310f931c6eb3e642616363ebd6aa7b3c8e2a0c6c8454",
+    "wire-constraints/pcap-verification.json": "1b56131c7d6bbe53fae2f29becce607b101c236974d48f85745c072a456266ec",
+    "wire-content/pcap-verification.json": "9bf61b16e84d74477b58a3005d7ebefe64bd4c0092477304dfd07624bdf5aafd",
+    "wire-tools/pcap-verification.json": "31f30450f7d7ad1a93987007825c1d8c594487e6bb79e7a3becadb34d5de3cb9"
+  },
+  "audit_tool_sha256": {
+    ".github/claude-validation/content_edges_lab.py": "ba61cbd43cbc189a39b7700fbeb50e5c4b9b04c7681478cb118c29488e8ff4ba",
+    ".github/claude-validation/response_edges_lab.py": "f46221f28c4f155099e1d48f33c236598170668749fec2cabba1ef86fba1149d",
+    ".github/claude-validation/response_plain_order_lab.py": "03fd494518cf0929efa242373f55cafc3e8291c0a2e9f740f79cf6f51caaac54",
+    ".github/claude-validation/content_audit_test.go": "a32a3e277c3e4cade1e8675d4c95a1d2c94a7f85081925c0b339e65564061318",
+    ".github/claude-validation/response_audit_test.go": "b929caff20e041fdfc3e1ea8770cb1d7f6e6fd05896d6f14488d8690dc126daa",
+    ".github/claude-validation/chat_opaque_audit.go": "05a49f3d5457c29c635c467ef98779a30692488293f9e7b5c92e8727f0360cee",
+    ".github/claude-validation/validate_content_contract.py": "c7c540675def22c3daab45fa541887a0f07111ec6f4b9c34599a91f4c2581361",
+    ".github/claude-validation/validate_response_content.py": "8815f955355adbdcf08fb67b37ea1cc79e0fc4ca48e42e2953a902c84875d8cb",
+    ".github/claude-validation/validate_chat_opaque.py": "33946847dae0566089ea8ccca21bc889c0ad9b7e0eb278acdf28d5c29e18e140",
+    ".github/claude-validation/verify_response_capture.py": "839fca4e534da0d4d60f3da7c2e431fd5e95076c168c35acfbf847f4dd546f49",
+    ".github/claude-validation/tool_constraint_wire_lab.py": "1160c8d8023ba0c7e19af8dd9bf4cb60636fbf0a7406aef05efb382ed915559c"
+  }
+}

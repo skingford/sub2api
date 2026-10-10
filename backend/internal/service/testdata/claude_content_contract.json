@@ -1,0 +1,1403 @@
+[
+  {
+    "name": "system",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "system": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+        },
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "system",
+          "content": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+        },
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ]
+    },
+    "expected": {
+      "control": "system",
+      "system_text": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+    }
+  },
+  {
+    "name": "developer",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "system": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "developer",
+          "content": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+        },
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "developer",
+          "content": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+        },
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ]
+    },
+    "expected": {
+      "control": "developer",
+      "system_text": "LOCAL_DEVELOPER_INSTRUCTION: answer in JSON"
+    }
+  },
+  {
+    "name": "image-inline",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "image",
+              "source": {
+                "type": "base64",
+                "media_type": "image/png",
+                "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "input_image",
+              "image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+            }
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "control": "image-inline",
+      "block_type": "image",
+      "source": {
+        "type": "base64",
+        "media_type": "image/png",
+        "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+      }
+    }
+  },
+  {
+    "name": "image-url",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "image",
+              "source": {
+                "type": "url",
+                "url": "https://content-audit.invalid/synthetic.png"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "https://content-audit.invalid/synthetic.png"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "input_image",
+              "image_url": "https://content-audit.invalid/synthetic.png"
+            }
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "control": "image-url",
+      "block_type": "image",
+      "source": {
+        "type": "url",
+        "url": "https://content-audit.invalid/synthetic.png"
+      }
+    }
+  },
+  {
+    "name": "document-inline",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "document",
+              "source": {
+                "type": "base64",
+                "media_type": "application/pdf",
+                "data": "JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "file",
+              "file": {
+                "filename": "local.pdf",
+                "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "LOCAL_CONTENT_AUDIT: 中文 😀"
+            },
+            {
+              "type": "input_file",
+              "filename": "local.pdf",
+              "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+            }
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "control": "document-inline",
+      "block_type": "document",
+      "source": {
+        "type": "base64",
+        "media_type": "application/pdf",
+        "data": "JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+      }
+    }
+  },
+  {
+    "name": "tool-text",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": "LOCAL_TOOL_RESULT"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "toolu_content",
+              "type": "function",
+              "function": {
+                "name": "audit_tool",
+                "arguments": "{\"value\":\"中文\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_content",
+          "content": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "audit_tool",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "tool-text"
+    }
+  },
+  {
+    "name": "tool-image-inline",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "LOCAL_TOOL_RESULT"
+                },
+                {
+                  "type": "image",
+                  "source": {
+                    "type": "base64",
+                    "media_type": "image/png",
+                    "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "toolu_content",
+              "type": "function",
+              "function": {
+                "name": "audit_tool",
+                "arguments": "{\"value\":\"中文\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_content",
+          "content": "LOCAL_TOOL_RESULT"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+              }
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "audit_tool",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "LOCAL_TOOL_RESULT"
+            },
+            {
+              "type": "input_image",
+              "image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "tool-image-inline",
+      "block_type": "image",
+      "source": {
+        "type": "base64",
+        "media_type": "image/png",
+        "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP9sAAAAASUVORK5CYII="
+      },
+      "tool_media": true
+    }
+  },
+  {
+    "name": "tool-image-url",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "LOCAL_TOOL_RESULT"
+                },
+                {
+                  "type": "image",
+                  "source": {
+                    "type": "url",
+                    "url": "https://content-audit.invalid/synthetic.png"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "toolu_content",
+              "type": "function",
+              "function": {
+                "name": "audit_tool",
+                "arguments": "{\"value\":\"中文\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_content",
+          "content": "LOCAL_TOOL_RESULT"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "https://content-audit.invalid/synthetic.png"
+              }
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "audit_tool",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "LOCAL_TOOL_RESULT"
+            },
+            {
+              "type": "input_image",
+              "image_url": "https://content-audit.invalid/synthetic.png"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "tool-image-url",
+      "block_type": "image",
+      "source": {
+        "type": "url",
+        "url": "https://content-audit.invalid/synthetic.png"
+      },
+      "tool_media": true
+    }
+  },
+  {
+    "name": "tool-document-inline",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "LOCAL_TOOL_RESULT"
+                },
+                {
+                  "type": "document",
+                  "source": {
+                    "type": "base64",
+                    "media_type": "application/pdf",
+                    "data": "JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "toolu_content",
+              "type": "function",
+              "function": {
+                "name": "audit_tool",
+                "arguments": "{\"value\":\"中文\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_content",
+          "content": "LOCAL_TOOL_RESULT"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "file",
+              "file": {
+                "filename": "local.pdf",
+                "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+              }
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "audit_tool",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "LOCAL_TOOL_RESULT"
+            },
+            {
+              "type": "input_file",
+              "filename": "local.pdf",
+              "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "tool-document-inline",
+      "block_type": "document",
+      "source": {
+        "type": "base64",
+        "media_type": "application/pdf",
+        "data": "JVBERi0xLjQKJSBMb2NhbCBpbmVydCBjb250ZW50IGZpeHR1cmUKJSVFT0YK"
+      },
+      "tool_media": true
+    }
+  },
+  {
+    "name": "tool-empty",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": ""
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "toolu_content",
+              "type": "function",
+              "function": {
+                "name": "audit_tool",
+                "arguments": "{\"value\":\"中文\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_content",
+          "content": ""
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "audit_tool",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": ""
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "tool-empty",
+      "known_policy": "empty tool output becomes (empty) in converters"
+    }
+  },
+  {
+    "name": "legacy-function",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": "LOCAL_TOOL_RESULT"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "function_call": {
+            "name": "audit_tool",
+            "arguments": "{\"value\":\"中文\"}"
+          }
+        },
+        {
+          "role": "function",
+          "name": "audit_tool",
+          "content": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "functions": [
+        {
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "legacy-function",
+      "tool_round_trip": true
+    }
+  },
+  {
+    "name": "temperature-zero",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "temperature": 0
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "temperature": 0
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "temperature": 0
+    },
+    "expected": {
+      "control": "temperature-zero",
+      "sampling_key": "temperature",
+      "sampling_value": 0
+    }
+  },
+  {
+    "name": "top-p-zero",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "top_p": 0
+    },
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "top_p": 0
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        }
+      ],
+      "top_p": 0
+    },
+    "expected": {
+      "control": "top-p-zero",
+      "sampling_key": "top_p",
+      "sampling_value": 0
+    }
+  },
+  {
+    "name": "signed-thinking",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "thinking",
+              "thinking": "LOCAL_SYNTHETIC_THOUGHT",
+              "signature": "LOCAL_SYNTHETIC_SIGNATURE"
+            },
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": "LOCAL_TOOL_RESULT"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": null,
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "reasoning",
+          "encrypted_content": "anthropic-thinking-v1:eyJ0eXBlIjogInRoaW5raW5nIiwgInRoaW5raW5nIjogIkxPQ0FMX1NZTlRIRVRJQ19USE9VR0hUIiwgInNpZ25hdHVyZSI6ICJMT0NBTF9TWU5USEVUSUNfU0lHTkFUVVJFIn0"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "signed-thinking",
+      "thinking_block": {
+        "type": "thinking",
+        "thinking": "LOCAL_SYNTHETIC_THOUGHT",
+        "signature": "LOCAL_SYNTHETIC_SIGNATURE"
+      }
+    }
+  },
+  {
+    "name": "redacted-thinking",
+    "messages": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "redacted_thinking",
+              "data": "LOCAL_SYNTHETIC_REDACTED"
+            },
+            {
+              "type": "tool_use",
+              "id": "toolu_content",
+              "name": "audit_tool",
+              "input": {
+                "value": "中文"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_content",
+              "content": "LOCAL_TOOL_RESULT"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "audit_tool",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "chat": null,
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "reasoning",
+          "encrypted_content": "anthropic-thinking-v1:eyJ0eXBlIjogInJlZGFjdGVkX3RoaW5raW5nIiwgImRhdGEiOiAiTE9DQUxfU1lOVEhFVElDX1JFREFDVEVEIn0"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":\"中文\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "redacted-thinking",
+      "thinking_block": {
+        "type": "redacted_thinking",
+        "data": "LOCAL_SYNTHETIC_REDACTED"
+      }
+    }
+  },
+  {
+    "name": "invalid-tool-arguments",
+    "messages": null,
+    "chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "toolu_content",
+              "type": "function",
+              "function": {
+                "name": "audit_tool",
+                "arguments": "{\"value\":"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_content",
+          "content": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "audit_tool",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    "responses": {
+      "input": [
+        {
+          "role": "user",
+          "content": "LOCAL_CONTENT_AUDIT: 中文 😀"
+        },
+        {
+          "type": "function_call",
+          "call_id": "toolu_content",
+          "name": "audit_tool",
+          "arguments": "{\"value\":"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "toolu_content",
+          "output": "LOCAL_TOOL_RESULT"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "name": "audit_tool",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "control": "invalid-tool-arguments",
+      "reject_invalid_arguments": true
+    }
+  }
+]

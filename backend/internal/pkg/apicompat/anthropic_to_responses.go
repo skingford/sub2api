@@ -356,6 +356,9 @@ func fromResponsesCallID(id string) string {
 // anthropicImageToDataURI converts an AnthropicImageSource to a data URI string.
 // Returns "" if the source is nil or has no data.
 func anthropicImageToDataURI(src *AnthropicImageSource) string {
+	if src != nil && src.Type == "url" {
+		return src.URL
+	}
 	if src == nil || src.Data == "" {
 		return ""
 	}

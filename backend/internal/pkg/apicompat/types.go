@@ -108,9 +108,10 @@ func (b AnthropicContentBlock) MarshalJSON() ([]byte, error) {
 
 // AnthropicImageSource describes the source data for an image content block.
 type AnthropicImageSource struct {
-	Type      string `json:"type"` // "base64"
-	MediaType string `json:"media_type"`
-	Data      string `json:"data"`
+	Type      string `json:"type"` // "base64" or "url"
+	MediaType string `json:"media_type,omitempty"`
+	Data      string `json:"data,omitempty"`
+	URL       string `json:"url,omitempty"`
 }
 
 // AnthropicTool describes a tool available to the model.
@@ -691,6 +692,9 @@ type ChatStreamOptions struct {
 
 // ChatMessage is a single message in the Chat Completions conversation.
 type ChatMessage struct {
+	// AnthropicContent is an optional bridge extension for lossless signed
+	// history. Clients echo this alongside content/tool_calls on the next turn.
+	AnthropicContent string          `json:"anthropic_content,omitempty"`
 	Role             string          `json:"role"` // "system" | "user" | "assistant" | "tool" | "function"
 	Content          json.RawMessage `json:"content,omitempty"`
 	ReasoningContent string          `json:"reasoning_content,omitempty"`
@@ -831,6 +835,8 @@ type ChatChunkChoice struct {
 
 // ChatDelta carries incremental content in a streaming chunk.
 type ChatDelta struct {
+	// A single opaque history value is emitted before the finish chunk.
+	AnthropicContent *string        `json:"anthropic_content,omitempty"`
 	Role             string         `json:"role,omitempty"`
 	Content          *string        `json:"content,omitempty"` // pointer: omit when not present, null vs "" matters
 	ReasoningContent *string        `json:"reasoning_content,omitempty"`

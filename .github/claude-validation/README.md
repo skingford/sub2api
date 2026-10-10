@@ -622,3 +622,98 @@ none / adaptive 行为；旧 002 证据仍失败。不是删除场景或把问�
 `CLAUDE_TOOL_WIRE_REQUIRE_CONTRACT=1`。接收端将按独立 contract 字段检查 max_tokens、
 并行限制、strict 及能力头、工具 / 输出 Schema、thinking 类型和预算，再核对 PCAP。
 旧 192 约束、102 入口和 36 摘要请求合同继续单独执行。
+
+## 消息内容与响应顺序审查
+
+CC-20261010-004 固定提交 `100427570`，继续复跑旧合同，并将此前未覆盖的消息角色、
+媒体、旧式函数历史、非法参数和有签名历史加入独立审查。完整结果见
+[内容与响应报告](../../docs/claude-content-stream-audit-20261010.md)。
+
+- `content_edges_lab.py`：两版固定 CLI 各 90 个 EXTRA_BODY 内容场景；显式字段的
+  序列化与模拟服务接收相同不代表真实服务接受、URL 下载或签名有效。
+- `response_edges_lab.py`：两版各 48 个合成 SSE 内容顺序 / stop reason 场景；Read
+  只访问实验容器中的惯用测试文件，签名和文档均为合成材料。
+- `response_plain_order_lab.py`：两版各六个不含 thinking 的最小 text → tool 对照，
+  排除签名缺失对响应顺序结论的干扰。
+- `content_audit_test.go`：以 overlay 加入 `backend/internal/service/`，运行
+  `TestClaudeContentAudit`，覆盖六模型 / 两账号 / 三入口的 540 个适用输入。
+- `response_audit_test.go`：同样以 overlay 加入 service，运行
+  `TestClaudeResponseContentAudit`，对独立组装的捕获响应同时检查转换器及网关实际的
+  流式 / 非流式处理器。不能把组件回放写成一次完整外部部署。
+
+原生采集沿用上文 `--network none`、固定二进制哈希、`ram_capture.py`、tmpfs 和
+`verify_comprehensive.py` 的零丢包工作流，结果目录使用 `capture-<version>-<suite>`。
+生成相同的网关输入并验证：
+
+```bash
+python3 .github/claude-validation/content_edges_lab.py --fixtures /absolute/path/to/fixtures.json
+# overlay 将 content_audit_test.go / response_audit_test.go 映射到 service 测试目录。
+# 在 backend 执行，CLAUDE_CONTENT_OUTPUT 必须是本轮新目录。
+CLAUDE_CONTENT_FIXTURES=/absolute/path/to/fixtures.json \
+CLAUDE_CONTENT_OUTPUT=/absolute/path/to/content \
+  go test -tags=unit -overlay=/absolute/path/to/overlay.json ./internal/service \
+  -run '^TestClaudeContentAudit$' -count=1
+python3 .github/claude-validation/validate_content_contract.py \
+  /absolute/path/to/content/observations.json /absolute/path/to/content-result.json
+```
+
+540 个输入保留 12 个 Sonnet 5.5 非默认采样参数拒绝，528 个成功导出通过已有
+`tool_constraint_wire_lab.py` 实际发送；该观察模式不要设置工具合同的专用环境变量。
+接收端现在也记录 messages / system / temperature / top_p，再用相同内容判定器检查，
+并用 `verify_encoding_policy.py` 核对 PCAP。已观察到的转换差异不能因模拟 200 而忽略。
+内容判定器分别输出原始差异、33 个既有 OAuth 策略差异和其余未解决差异；已知策略
+仍保留在原分母和明细中。
+
+响应回放先由 Python 根据原始 SSE 独立组装响应，再交给生产 Go 实现：
+
+```bash
+python3 .github/claude-validation/validate_response_content.py --assemble \
+  /absolute/path/to/audit-root /absolute/path/to/responses.json
+# 在 backend 执行上述 overlay。
+CLAUDE_RESPONSE_FIXTURES=/absolute/path/to/responses.json \
+CLAUDE_RESPONSE_OUTPUT=/absolute/path/to/response-observations.json \
+  go test -tags=unit -overlay=/absolute/path/to/overlay.json ./internal/service \
+  -run '^TestClaudeResponseContentAudit$' -count=1
+python3 .github/claude-validation/validate_response_content.py --validate \
+  /absolute/path/to/response-observations.json /absolute/path/to/response-result.json
+```
+
+两个 Go 入口只是观察工具；最终结论来自独立判定器、实际接收字段及 PCAP。
+原生 CLI 自身对 tool_use / text 的续聊排序、OAuth 普通请求改写、显式模型拒绝、
+Responses 的停止原因映射都必须单列，不能混成传输故障或官方服务拒绝。
+
+`verify_response_capture.py CAPTURE_ROOT OUTPUT_JSON` 单独将响应专项记录的 SSE 与 PCAP
+返回正文逐字节比较；请求 PCAP 通过并不自动表示响应方向也已核验。
+
+`chat_opaque_audit.go` 通过 overlay 放在
+`backend/internal/repository/testdata/claude_capture_probe.go` 后，使用 `go run -overlay=...`
+运行该路径，并传入上述 responses.json 和一个新的输出 JSON 路径；程序将捕获响应转换为
+Chat，再将完整 assistant / tool 历史送回生产 Anthropic 转换器。运行
+`validate_chat_opaque.py OBSERVATIONS OUTPUT_JSON` 检查不透明块结构，不以签名字符串
+出现在普通文本中当作保留。该组件往返也不能代替真实模型接受性验证。
+
+## 内容与响应修复验收
+
+[CC-20261010-005](../../docs/claude-content-stream-fix-20261010.md)修复 004 的七类缺口。
+`TestClaudeContentContract` 读取已提交的 `testdata/claude_content_contract.json`，保留同一
+540 个输入；可设置 `CLAUDE_CONTENT_CONTRACT_EXPORT` 导出观察及实际发送输入。
+504 个合法输入发送、36 个明确拒绝。新判定器仅在确有 system 包装和确认消息时将 OAuth
+差异归为已知政策，不再豁免旧模型 redacted 丢失，也不会接受旧 Chat developer 的裸 user 文本。
+
+```bash
+# 在 backend 执行；输出目录必须是本轮新目录。
+CLAUDE_CONTENT_CONTRACT_EXPORT=/absolute/path/to/new-content \
+  go test -tags=unit ./internal/service \
+  -run '^TestClaudeContentContract$|^TestClaudeChatHistoryGatewayRoundTrip$|^TestClaudeChatInvalidHistoryRejectedBeforeDispatch$' -count=1
+```
+
+`chat_gateway_history_audit_test.go` 以 overlay 加入 service，复用原 44 个带不透明块的
+捕获响应，经过实际 Chat buffered / streaming 处理器，再通过两个账号类型的生产请求
+入口发送，共 176 个往返。设置 `CLAUDE_RESPONSE_FIXTURES` 与
+`CLAUDE_CHAT_HISTORY_OUTPUT` 后运行 `TestClaudeChatGatewayHistoryAudit`。
+用 `validate_chat_opaque.py` 检查 observations.json，并通过 wire 工具发送 exports/。
+
+Chat 的 `anthropic_content` 是一个字符串扩展。非流式随 assistant message 返回；流式
+在 finish chunk 之前只发送一次字符串增量。客户端下一轮应将它与原 content / tool_calls
+原样回传。若客户端删除这个字段，普通文本不能恢复签名；完整协议和兼容边界见修复报告。
+永久测试还覆盖大整数参数、旧式同名函数 ID、历史冲突、分片签名、工具名还原和模型别名。

@@ -1471,7 +1471,7 @@ func filterThinkingBlocksInternal(body []byte, alwaysThinking bool) []byte {
 				// When thinking is enabled and this is an assistant message,
 				// only keep thinking blocks with valid signatures
 				if thinkingEnabled && role == "assistant" {
-					if alwaysThinking && blockType == "redacted_thinking" {
+					if blockType == "redacted_thinking" {
 						if data, ok := blockMap["data"].(string); ok && data != "" {
 							newContent = append(newContent, block)
 							continue

@@ -1,9 +1,9 @@
 package apicompat
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
@@ -17,7 +17,7 @@ func ResponsesToAnthropicRequest(req *ResponsesRequest) (*AnthropicRequest, erro
 	isSigned55 := claude.RequiresSignedThinking(req.Model)
 	isSonnet55 := claude.IsSonnet55(req.Model)
 	isHaiku55 := claude.IsHaiku55(req.Model)
-	system, messages, err := convertResponsesInputToAnthropic(req.Instructions, req.Input, isSigned55)
+	system, messages, err := convertResponsesInputToAnthropic(req.Instructions, req.Input, true)
 	if err != nil {
 		return nil, err
 	}
@@ -210,13 +210,19 @@ func convertResponsesInputToAnthropic(instructions string, inputRaw json.RawMess
 			if item.Arguments != "" {
 				input = json.RawMessage(item.Arguments)
 			}
+			if object, ok := rawJSONObject(input); !ok || object == nil {
+				return nil, nil, fmt.Errorf("tool %q arguments must be a JSON object", item.Name)
+			}
 			block := AnthropicContentBlock{
 				Type:  "tool_use",
 				ID:    fromResponsesCallIDToAnthropic(item.CallID),
 				Name:  item.Name,
 				Input: input,
 			}
-			blockJSON, _ := json.Marshal([]AnthropicContentBlock{block})
+			blockJSON, err := json.Marshal([]AnthropicContentBlock{block})
+			if err != nil {
+				return nil, nil, fmt.Errorf("encode tool %q: %w", item.Name, err)
+			}
 			messages = append(messages, AnthropicMessage{
 				Role:    "assistant",
 				Content: blockJSON,
@@ -224,7 +230,10 @@ func convertResponsesInputToAnthropic(instructions string, inputRaw json.RawMess
 
 		case item.Type == "function_call_output":
 			// function_call_output → user message with tool_result block
-			contentJSON := responsesFunctionOutputToAnthropicContent(item)
+			contentJSON, err := responsesFunctionOutputToAnthropicContent(item)
+			if err != nil {
+				return nil, nil, err
+			}
 			block := AnthropicContentBlock{
 				Type:      "tool_result",
 				ToolUseID: fromResponsesCallIDToAnthropic(item.CallID),
@@ -240,16 +249,9 @@ func convertResponsesInputToAnthropic(instructions string, inputRaw json.RawMess
 			// Only decode marked Anthropic bridge envelopes, not arbitrary
 			// OpenAI ciphertext. The upstream remains responsible for signature validation.
 			if preserveThinking && strings.HasPrefix(item.EncryptedContent, anthropicThinkingEnvelopePrefix) {
-				raw, err := base64.RawStdEncoding.DecodeString(strings.TrimPrefix(item.EncryptedContent, anthropicThinkingEnvelopePrefix))
+				block, err := decodeAnthropicThinking(item.EncryptedContent)
 				if err != nil {
-					return nil, nil, fmt.Errorf("invalid Anthropic thinking envelope: %w", err)
-				}
-				var block AnthropicContentBlock
-				if err := json.Unmarshal(raw, &block); err != nil {
-					return nil, nil, fmt.Errorf("invalid Anthropic thinking block: %w", err)
-				}
-				if (block.Type != "thinking" || block.Signature == "") && (block.Type != "redacted_thinking" || block.Data == "") {
-					return nil, nil, fmt.Errorf("invalid Anthropic signed thinking block")
+					return nil, nil, err
 				}
 				content, err := json.Marshal([]AnthropicContentBlock{block})
 				if err != nil {
@@ -328,14 +330,14 @@ func convertResponsesInputToAnthropic(instructions string, inputRaw json.RawMess
 	return system, messages, nil
 }
 
-func responsesFunctionOutputToAnthropicContent(item ResponsesInputItem) json.RawMessage {
+func responsesFunctionOutputToAnthropicContent(item ResponsesInputItem) (json.RawMessage, error) {
 	if len(item.outputRaw) == 0 {
 		output := item.Output
 		if output == "" {
 			output = "(empty)"
 		}
 		content, _ := json.Marshal(output)
-		return content
+		return content, nil
 	}
 
 	var parts []ResponsesContentPart
@@ -350,21 +352,29 @@ func responsesFunctionOutputToAnthropicContent(item ResponsesInputItem) json.Raw
 			case "input_image":
 				if source := dataURIToAnthropicImageSource(part.ImageURL); source != nil {
 					blocks = append(blocks, AnthropicContentBlock{Type: "image", Source: source})
+				} else {
+					return nil, fmt.Errorf("unsupported tool output image source")
+				}
+			case "input_file":
+				if source := dataURIToAnthropicFileSource(part.FileData); source != nil {
+					blocks = append(blocks, AnthropicContentBlock{Type: "document", Source: source})
+				} else {
+					return nil, fmt.Errorf("unsupported tool output file source; provide file_data")
 				}
 			}
 		}
 		if len(blocks) > 0 {
 			content, _ := json.Marshal(blocks)
-			return content
+			return content, nil
 		}
 		if len(parts) == 0 {
 			content, _ := json.Marshal("(empty)")
-			return content
+			return content, nil
 		}
 	}
 
 	content, _ := json.Marshal(item.Output)
-	return content
+	return content, nil
 }
 
 // normalizeAnthropicToolPairing rebuilds the message sequence so it satisfies
@@ -570,6 +580,8 @@ func convertResponsesUserToAnthropicContent(raw json.RawMessage) (json.RawMessag
 					Type:   "image",
 					Source: src,
 				})
+			} else {
+				return nil, fmt.Errorf("unsupported image source; use an HTTP(S) URL or base64 data URI")
 			}
 		case "input_file":
 			src := dataURIToAnthropicFileSource(p.FileData)
@@ -578,6 +590,8 @@ func convertResponsesUserToAnthropicContent(raw json.RawMessage) (json.RawMessag
 					Type:   "document",
 					Source: src,
 				})
+			} else {
+				return nil, fmt.Errorf("unsupported file source; provide file_data")
 			}
 		}
 	}
@@ -642,9 +656,14 @@ func fromResponsesCallIDToAnthropic(id string) string {
 	return id
 }
 
-// dataURIToAnthropicImageSource parses a data URI into an AnthropicImageSource.
+// dataURIToAnthropicImageSource preserves supported data and HTTP(S) URL sources.
 func dataURIToAnthropicImageSource(dataURI string) *AnthropicImageSource {
 	if !strings.HasPrefix(dataURI, "data:") {
+		parsed, err := url.Parse(dataURI)
+		if err == nil && (parsed.Scheme == "https" || parsed.Scheme == "http") && parsed.Hostname() != "" && parsed.User == nil {
+			// The provider resolves this URL; the gateway does not fetch it.
+			return &AnthropicImageSource{Type: "url", URL: dataURI}
+		}
 		return nil
 	}
 	// Format: data:<media_type>;base64,<data>
@@ -659,6 +678,9 @@ func dataURIToAnthropicImageSource(dataURI string) *AnthropicImageSource {
 		return nil
 	}
 	data := strings.TrimPrefix(rest, "base64,")
+	if mediaType == "" || data == "" {
+		return nil
+	}
 	return &AnthropicImageSource{
 		Type:      "base64",
 		MediaType: mediaType,
@@ -667,7 +689,7 @@ func dataURIToAnthropicImageSource(dataURI string) *AnthropicImageSource {
 }
 
 // dataURIToAnthropicFileSource parses a data URI into a document source.
-// file_id-only parts are not convertible here and stay dropped.
+// Callers explicitly reject file_id-only parts, which are provider-specific.
 func dataURIToAnthropicFileSource(fileData string) *AnthropicImageSource {
 	return dataURIToAnthropicImageSource(fileData)
 }

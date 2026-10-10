@@ -561,7 +561,6 @@ func (s *GatewayService) handleResponsesStreamingResponse(
 
 	state := apicompat.NewAnthropicEventToResponsesState()
 	state.Model = originalModel
-	state.PreserveThinkingSignatures = isClaude55SignedThinkingModel(mappedModel)
 	clientToolRestorer := apicompat.NewResponsesClientToolStreamRestorer(clientToolMapping)
 	var usage ClaudeUsage
 	var firstTokenMs *int

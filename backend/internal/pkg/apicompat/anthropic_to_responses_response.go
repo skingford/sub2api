@@ -8,8 +8,6 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
-	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 )
 
 // ---------------------------------------------------------------------------
@@ -49,11 +47,18 @@ func AnthropicToResponsesResponse(resp *AnthropicResponse) *ResponsesResponse {
 
 	var outputs []ResponsesOutput
 	var msgParts []ResponsesContentPart
+	flushText := func() {
+		if len(msgParts) > 0 {
+			outputs = append(outputs, ResponsesOutput{Type: "message", ID: generateItemID(), Role: "assistant", Status: "completed", Content: msgParts})
+			msgParts = nil
+		}
+	}
 
 	for _, block := range resp.Content {
 		switch block.Type {
 		case "thinking", "redacted_thinking":
-			if claude.RequiresSignedThinking(resp.Model) && (block.Signature != "" || block.Data != "") {
+			flushText()
+			if block.Signature != "" || block.Data != "" {
 				item := ResponsesOutput{Type: "reasoning", ID: generateItemID(), EncryptedContent: encodeAnthropicThinking(block)}
 				if block.Thinking != "" {
 					item.Summary = []ResponsesSummary{{Type: "summary_text", Text: block.Thinking}}
@@ -72,10 +77,6 @@ func AnthropicToResponsesResponse(resp *AnthropicResponse) *ResponsesResponse {
 				})
 			}
 		case "text":
-			if claude.RequiresSignedThinking(resp.Model) && block.Text != "" {
-				outputs = append(outputs, ResponsesOutput{Type: "message", ID: generateItemID(), Role: "assistant", Status: "completed", Content: []ResponsesContentPart{{Type: "output_text", Text: block.Text}}})
-				continue
-			}
 			if block.Text != "" {
 				msgParts = append(msgParts, ResponsesContentPart{
 					Type: "output_text",
@@ -83,6 +84,7 @@ func AnthropicToResponsesResponse(resp *AnthropicResponse) *ResponsesResponse {
 				})
 			}
 		case "tool_use":
+			flushText()
 			args := "{}"
 			if len(block.Input) > 0 {
 				args = string(block.Input)
@@ -98,16 +100,7 @@ func AnthropicToResponsesResponse(resp *AnthropicResponse) *ResponsesResponse {
 		}
 	}
 
-	// Assemble message output item from text parts
-	if len(msgParts) > 0 {
-		outputs = append(outputs, ResponsesOutput{
-			Type:    "message",
-			ID:      generateItemID(),
-			Role:    "assistant",
-			Content: msgParts,
-			Status:  "completed",
-		})
-	}
+	flushText()
 
 	if len(outputs) == 0 {
 		outputs = append(outputs, ResponsesOutput{
@@ -225,7 +218,7 @@ type AnthropicEventToResponsesState struct {
 // NewAnthropicEventToResponsesState returns an initialised stream state.
 func NewAnthropicEventToResponsesState() *AnthropicEventToResponsesState {
 	return &AnthropicEventToResponsesState{
-		Created: time.Now().Unix(),
+		Created: time.Now().Unix(), PreserveThinkingSignatures: true,
 	}
 }
 
@@ -285,7 +278,7 @@ func ResponsesEventToSSE(evt ResponsesStreamEvent) (string, error) {
 func anthToResHandleMessageStart(evt *AnthropicStreamEvent, state *AnthropicEventToResponsesState) []ResponsesStreamEvent {
 	if evt.Message != nil {
 		state.ResponseID = evt.Message.ID
-		state.PreserveThinkingSignatures = state.PreserveThinkingSignatures || claude.RequiresSignedThinking(evt.Message.Model)
+		state.PreserveThinkingSignatures = true
 		if state.Model == "" {
 			state.Model = evt.Message.Model
 		}

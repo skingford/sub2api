@@ -54,7 +54,7 @@ class Handler(lab.Handler):
         records.append({'case': current['audit_case'], 'path': self.path,
                         'wire_body_base64': base64.b64encode(wire).decode(),
                         'wire_sha256': hashlib.sha256(wire).hexdigest(),
-                        'fields': {k: body.get(k) for k in ['model', 'max_tokens', 'thinking', 'tools', 'tool_choice', 'output_config']},
+                        'fields': {k: body.get(k) for k in ['model', 'max_tokens', 'thinking', 'tools', 'tool_choice', 'output_config', 'messages', 'system', 'temperature', 'top_p']},
                         'beta': self.headers.get('anthropic-beta', '')})
         self.respond({'local_observation_only': True})
 

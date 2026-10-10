@@ -302,6 +302,8 @@ func (s *GatewayService) handleCCBufferedFromAnthropic(
 					finalResp.Content[idx].Text += event.Delta.Text
 				case "thinking_delta":
 					finalResp.Content[idx].Thinking += event.Delta.Thinking
+				case "signature_delta":
+					finalResp.Content[idx].Signature += event.Delta.Signature
 				case "input_json_delta":
 					finalResp.Content[idx].Input = appendRawJSON(finalResp.Content[idx].Input, event.Delta.PartialJSON)
 				}
@@ -349,7 +351,11 @@ func (s *GatewayService) handleCCBufferedFromAnthropic(
 	// Marshal then bytes-replace so tool name mapping is reversed at byte level
 	// (parity with Parrot non-stream flow that marshals → restore → emit).
 	if respBytes, err := json.Marshal(ccResp); err == nil {
-		respBytes = reverseToolNamesIfPresent(c, respBytes)
+		respBytes, err = restoreClaudeChatResponse(c, respBytes)
+		if err != nil {
+			writeGatewayCCError(c, http.StatusBadGateway, "server_error", "Could not restore Anthropic response history")
+			return nil, err
+		}
 		c.Data(http.StatusOK, "application/json; charset=utf-8", respBytes)
 	} else {
 		c.JSON(http.StatusOK, ccResp)
@@ -419,14 +425,14 @@ func (s *GatewayService) handleCCStreamingFromAnthropic(
 		}
 	}
 
+	var wireProjection claudeChatWireProjection
+	var conversionErr error
 	writeChunk := func(chunk apicompat.ChatCompletionsChunk) bool {
-		sse, err := apicompat.ChatChunkToSSE(chunk)
+		out, err := wireProjection.restore(c, chunk)
 		if err != nil {
-			return false
+			conversionErr = err
+			return true
 		}
-		// Reverse tool name mapping: fake → real, per-chunk bytes.Replace.
-		// c 可能持有请求侧注入的 ToolNameRewrite；无则仅做静态前缀还原。
-		out := string(reverseToolNamesIfPresent(c, []byte(sse)))
 		if _, err := fmt.Fprint(c.Writer, out); err != nil {
 			return true // client disconnected
 		}
@@ -502,7 +508,7 @@ func (s *GatewayService) handleCCStreamingFromAnthropic(
 		ccState.IncludeUsage = ccState.IncludeUsage || anthropicChatStreamHasUsage(&event, payload)
 
 		if processAnthropicEvent(&event) {
-			return resultWithUsage(), nil
+			return resultWithUsage(), conversionErr
 		}
 	}
 
@@ -526,6 +532,9 @@ func (s *GatewayService) handleCCStreamingFromAnthropic(
 	finalCCChunks := apicompat.FinalizeResponsesChatStream(ccState)
 	for _, chunk := range finalCCChunks {
 		writeChunk(chunk) //nolint:errcheck
+	}
+	if conversionErr != nil {
+		return resultWithUsage(), conversionErr
 	}
 
 	// Write [DONE] marker

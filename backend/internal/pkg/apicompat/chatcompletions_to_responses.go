@@ -3,6 +3,7 @@ package apicompat
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/openai"
@@ -18,10 +19,14 @@ type chatMessageContent struct {
 // true. store is always false and reasoning.encrypted_content is always
 // included so that the response translator has full context.
 func ChatCompletionsToResponses(req *ChatCompletionsRequest) (*ResponsesRequest, error) {
+	return chatCompletionsToResponses(req, false)
+}
+
+func chatCompletionsToResponses(req *ChatCompletionsRequest, anthropicTarget bool) (*ResponsesRequest, error) {
 	if err := openai.ValidateGPT61SolReasoningEffort(req.Model, req.ReasoningEffort); err != nil {
 		return nil, err
 	}
-	input, err := convertChatMessagesToResponsesInput(req.Messages)
+	input, err := convertChatMessagesToResponsesInputForTarget(req.Messages, anthropicTarget)
 	if err != nil {
 		return nil, err
 	}
@@ -105,12 +110,47 @@ func ChatCompletionsToResponses(req *ChatCompletionsRequest) (*ResponsesRequest,
 
 // convertChatMessagesToResponsesInput converts the Chat Completions messages
 // array into a Responses API input items array.
-func convertChatMessagesToResponsesInput(msgs []ChatMessage) ([]ResponsesInputItem, error) {
+func convertChatMessagesToResponsesInputForTarget(msgs []ChatMessage, anthropicTarget bool) ([]ResponsesInputItem, error) {
 	var out []ResponsesInputItem
+	used := make(map[string]bool)
+	for _, message := range msgs {
+		for _, call := range message.ToolCalls {
+			used[call.ID] = true
+			used[fromResponsesCallIDToAnthropic(call.ID)] = true
+		}
+	}
+	legacyIDs := make(map[string][]string)
+	sequence := 0
 	for _, m := range msgs {
+		if m.AnthropicContent != "" && !anthropicTarget {
+			return nil, fmt.Errorf("anthropic_content history requires an Anthropic target")
+		}
+		if m.AnthropicContent != "" && m.Role != "assistant" {
+			return nil, fmt.Errorf("anthropic_content is only valid on assistant messages")
+		}
 		items, err := chatMessageToResponsesItems(m)
 		if err != nil {
 			return nil, err
+		}
+		if m.Role == "assistant" && m.FunctionCall != nil && len(m.ToolCalls) == 0 {
+			var id string
+			for {
+				id = "call_legacy_" + strconv.Itoa(sequence)
+				sequence++
+				if !used[id] {
+					break
+				}
+			}
+			used[id] = true
+			legacyIDs[m.FunctionCall.Name] = append(legacyIDs[m.FunctionCall.Name], id)
+			for i := range items {
+				if items[i].Type == "function_call" {
+					items[i].CallID = id
+				}
+			}
+		} else if m.Role == "function" && len(legacyIDs[m.Name]) > 0 {
+			items[0].CallID = legacyIDs[m.Name][0]
+			legacyIDs[m.Name] = legacyIDs[m.Name][1:]
 		}
 		out = append(out, items...)
 	}
@@ -121,7 +161,7 @@ func convertChatMessagesToResponsesInput(msgs []ChatMessage) ([]ResponsesInputIt
 // ResponsesInputItem values.
 func chatMessageToResponsesItems(m ChatMessage) ([]ResponsesInputItem, error) {
 	switch m.Role {
-	case "system":
+	case "system", "developer":
 		return chatSystemToResponses(m)
 	case "user":
 		return chatUserToResponses(m)
@@ -146,7 +186,7 @@ func chatSystemToResponses(m ChatMessage) ([]ResponsesInputItem, error) {
 	if err != nil {
 		return nil, err
 	}
-	return []ResponsesInputItem{{Type: "message", Role: "system", Content: content}}, nil
+	return []ResponsesInputItem{{Type: "message", Role: m.Role, Content: content}}, nil
 }
 
 // chatUserToResponses converts a user message, handling both plain strings and
@@ -168,6 +208,9 @@ func chatUserToResponses(m ChatMessage) ([]ResponsesInputItem, error) {
 // first, then each tool_call becomes a function_call item. If the content is
 // empty/nil and there are tool_calls, only function_call items are emitted.
 func chatAssistantToResponses(m ChatMessage) ([]ResponsesInputItem, error) {
+	if len(m.AnthropicContent) > 0 {
+		return chatAnthropicHistoryToResponses(m)
+	}
 	var items []ResponsesInputItem
 	content := ""
 
@@ -210,6 +253,18 @@ func chatAssistantToResponses(m ChatMessage) ([]ResponsesInputItem, error) {
 			Name:      tc.Function.Name,
 			Arguments: args,
 		})
+	}
+	// Legacy results use the function name as their call ID. Keep the same ID
+	// on the assistant call so the Anthropic pairing pass can retain both.
+	if m.FunctionCall != nil && len(m.ToolCalls) == 0 {
+		if m.FunctionCall.Name == "" {
+			return nil, fmt.Errorf("legacy function_call requires a name")
+		}
+		args := m.FunctionCall.Arguments
+		if args == "" {
+			args = "{}"
+		}
+		items = append(items, ResponsesInputItem{Type: "function_call", CallID: m.FunctionCall.Name, Name: m.FunctionCall.Name, Arguments: args})
 	}
 
 	return items, nil
@@ -303,8 +358,8 @@ func chatToolToResponses(m ChatMessage) ([]ResponsesInputItem, error) {
 }
 
 // chatFunctionToResponses converts a legacy function result message
-// (role=function) into a function_call_output item. The Name field is used as
-// call_id since legacy function calls do not carry a separate call_id.
+// (role=function) into a function_call_output item. The enclosing message
+// walker pairs it with a unique legacy call ID; Name is an orphan fallback.
 func chatFunctionToResponses(m ChatMessage) ([]ResponsesInputItem, error) {
 	output, err := parseChatContent(m.Content)
 	if err != nil {
