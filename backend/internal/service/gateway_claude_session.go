@@ -24,12 +24,17 @@ type claudeOriginalSessionKey struct{}
 
 // ValidateClaudeSessionRouting rejects contradictory identifiers and unknown
 // gateway-issued resume IDs before scheduling can reserve a new owner.
-func (s *GatewayService) ValidateClaudeSessionRouting(ctx context.Context, c *gin.Context, body []byte) error {
+// When supplied, the parsed request receives the canonical routing identifier
+// so handlers do not re-read just the first raw header value after validation.
+func (s *GatewayService) ValidateClaudeSessionRouting(ctx context.Context, c *gin.Context, body []byte, requests ...*ParsedRequest) error {
 	session, err := claudeRequestSession(ctx, c, body)
 	if err != nil {
 		return claudeCompatibilityError(c, err.Error())
 	}
-	if session == "" || c == nil || c.GetHeader(claudeConversationHeader) == "" {
+	if len(requests) > 0 && requests[0] != nil {
+		requests[0].ClaudeSessionID = session
+	}
+	if session == "" || !hasClaudeConversationHeader(c) {
 		return nil
 	}
 	if s.claudeSessionStore == nil {
@@ -43,6 +48,22 @@ func (s *GatewayService) ValidateClaudeSessionRouting(ctx context.Context, c *gi
 		return claudeCompatibilityError(c, "Claude conversation is unknown; start a new conversation")
 	}
 	return nil
+}
+
+func hasClaudeConversationHeader(c *gin.Context) bool {
+	if c == nil || c.Request == nil {
+		return false
+	}
+	for name, values := range c.Request.Header {
+		if strings.EqualFold(name, claudeConversationHeader) {
+			for _, value := range values {
+				if strings.TrimSpace(value) != "" {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 func claudeSessionOwner(ctx context.Context) int64 {
@@ -180,7 +201,7 @@ func (s *GatewayService) bindClaudeConversation(ctx context.Context, c *gin.Cont
 	if s.claudeSessionStore == nil {
 		return unavailable()
 	}
-	if c != nil && c.GetHeader(claudeConversationHeader) != "" {
+	if hasClaudeConversationHeader(c) {
 		owner, err := s.claudeSessionStore.GetClaudeSessionAccountID(ctx, session)
 		if err != nil {
 			return unavailable()

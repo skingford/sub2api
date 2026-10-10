@@ -183,12 +183,8 @@ func (h *GatewayHandler) Responses(c *gin.Context) {
 		return
 	}
 	requestCtx = c.Request.Context()
-	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
+	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes(), parsedReq); err != nil {
 		return
-	}
-	parsedReq.ClaudeSessionID = c.GetHeader("X-Sub2API-Session-Id")
-	if parsedReq.ClaudeSessionID == "" {
-		parsedReq.ClaudeSessionID = c.GetHeader("X-Claude-Code-Session-Id")
 	}
 	parsedReq.SessionContext.NativeClaude = service.IsClaudeCodeClient(c.Request.Context())
 	parsedReq.GroupID = apiKey.GroupID

@@ -62,40 +62,24 @@ func prepareClaudeCompatibility(ctx context.Context, c *gin.Context, body []byte
 	if state := claudeCompatibilityFromContext(ctx); state != nil {
 		return ctx, nil
 	}
-	version := claude.EffectiveCLIVersion()
-	if !verifiedClaudeCompatibilityVersion(version) {
-		return ctx, claudeCompatibilityError(c, "unsupported Claude compatibility version; select a verified "+strings.Join(claude.VerifiedCLIVersions(), " or ")+" profile")
-	}
 	if c != nil {
 		if value, exists := c.Get(claudeCompatibilityGinKey); exists {
-			if state, ok := value.(*claudeCompatibilityState); ok {
+			if state, ok := value.(*claudeCompatibilityState); ok && state != nil {
 				return context.WithValue(ctx, claudeCompatibilityKey{}, state), nil
 			}
 		}
 	}
-	session := ""
-	if metadata := ParseMetadataUserID(gjson.GetBytes(body, "metadata.user_id").String()); metadata != nil {
-		session = metadata.SessionID
+	version := claude.EffectiveCLIVersion()
+	if !verifiedClaudeCompatibilityVersion(version) {
+		return ctx, claudeCompatibilityError(c, "unsupported Claude compatibility version; select a verified "+strings.Join(claude.VerifiedCLIVersions(), " or ")+" profile")
 	}
-	if c != nil && c.Request != nil {
-		for _, key := range []string{claudeConversationHeader, "X-Claude-Code-Session-Id"} {
-			value := strings.TrimSpace(c.GetHeader(key))
-			if value == "" {
-				continue
-			}
-			if session != "" && !strings.EqualFold(session, value) {
-				return ctx, claudeCompatibilityError(c, "conflicting Claude conversation identifiers")
-			}
-			session = value
-		}
+	// Use the routing validator's canonical UUID comparison and inspect every
+	// header value before publishing a conversation for the caller to resume.
+	session, err := claudeRequestSession(ctx, c, body)
+	if err != nil {
+		return ctx, claudeCompatibilityError(c, err.Error())
 	}
-	if session != "" {
-		parsed, err := uuid.Parse(session)
-		if err != nil || parsed == uuid.Nil {
-			return ctx, claudeCompatibilityError(c, "Claude conversation identifier must be a non-zero UUID")
-		}
-		session = parsed.String()
-	} else {
+	if session == "" {
 		session = uuid.NewString()
 	}
 	version = claudeCompatibilityModelVersion(version, gjson.GetBytes(body, "model").String())
@@ -116,17 +100,25 @@ func prepareClaudeCompatibility(ctx context.Context, c *gin.Context, body []byte
 		}
 	}
 	if c != nil {
-		state.Resumed = c.GetHeader(claudeConversationHeader) != ""
+		state.Resumed = hasClaudeConversationHeader(c)
 		c.Set(claudeCompatibilityGinKey, state)
 		c.Header(claudeConversationHeader, session)
-		exposed := c.Writer.Header().Get("Access-Control-Expose-Headers")
-		if exposed == "" {
-			c.Header("Access-Control-Expose-Headers", claudeConversationHeader)
-		} else if !strings.Contains(strings.ToLower(exposed), strings.ToLower(claudeConversationHeader)) {
-			c.Header("Access-Control-Expose-Headers", exposed+", "+claudeConversationHeader)
-		}
+		exposeClaudeResponseHeader(c.Writer.Header(), claudeConversationHeader)
 	}
 	return context.WithValue(ctx, claudeCompatibilityKey{}, state), nil
+}
+
+// Compare complete tokens across all field values, preserving middleware's
+// existing CORS declarations. A similarly named header does not expose this one.
+func exposeClaudeResponseHeader(headers http.Header, name string) {
+	for _, value := range headers.Values("Access-Control-Expose-Headers") {
+		for _, token := range strings.Split(value, ",") {
+			if strings.EqualFold(strings.TrimSpace(token), name) {
+				return
+			}
+		}
+	}
+	headers.Add("Access-Control-Expose-Headers", name)
 }
 
 func claudeConversationRoutingKey(apiKeyID int64, session string) string {
@@ -213,6 +205,7 @@ func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.C
 	for _, key := range []string{"request-id", "retry-after", "retry-after-ms", "x-should-retry"} {
 		if value := resp.Header.Get(key); value != "" {
 			c.Header(key, value)
+			exposeClaudeResponseHeader(c.Writer.Header(), key)
 		}
 	}
 	// Native compression fallback uses presence (including an empty value) of
@@ -221,6 +214,7 @@ func (s *GatewayService) returnClaudeUpstreamError(ctx context.Context, c *gin.C
 		if strings.EqualFold(key, "cf-ray") && len(values) > 0 {
 			deleteHeaderAllForms(c.Writer.Header(), "cf-ray")
 			c.Writer.Header()["Cf-Ray"] = append([]string(nil), values...)
+			exposeClaudeResponseHeader(c.Writer.Header(), "cf-ray")
 			break
 		}
 	}

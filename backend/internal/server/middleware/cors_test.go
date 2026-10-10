@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
@@ -307,5 +308,44 @@ func TestNormalizeOrigins(t *testing.T) {
 			result := normalizeOrigins(tt.input)
 			assert.Equal(t, tt.expect, result)
 		})
+	}
+}
+
+func TestCORS_ClaudeConversationPreflight(t *testing.T) {
+	for _, route := range []string{"/v1/messages", "/v1/messages/count_tokens", "/v1/chat/completions", "/v1/responses"} {
+		for _, allowed := range []bool{true, false} {
+			origin := "https://allowed.example.com"
+			if !allowed {
+				origin = "https://unlisted.example.com"
+			}
+			t.Run(route+"/"+origin, func(t *testing.T) {
+				router := gin.New()
+				router.Use(CORS(config.CORSConfig{AllowedOrigins: []string{"https://allowed.example.com"}, AllowCredentials: true}))
+				router.POST(route, func(c *gin.Context) { t.Error("preflight must not dispatch a model request") })
+				req := httptest.NewRequest(http.MethodOptions, route, nil)
+				req.Header.Set("Origin", origin)
+				req.Header.Set("Access-Control-Request-Method", "POST")
+				requested := []string{"authorization", "content-type", "x-sub2api-session-id", "x-claude-code-session-id", "x-claude-code-prompt-id"}
+				req.Header.Set("Access-Control-Request-Headers", strings.Join(requested, ", "))
+				rec := httptest.NewRecorder()
+				router.ServeHTTP(rec, req)
+				if !allowed {
+					assert.Equal(t, http.StatusForbidden, rec.Code)
+					assert.Empty(t, rec.Header().Get("Access-Control-Allow-Headers"))
+					assert.Empty(t, rec.Header().Get("Access-Control-Allow-Origin"))
+					return
+				}
+				assert.Equal(t, http.StatusNoContent, rec.Code)
+				assert.Equal(t, origin, rec.Header().Get("Access-Control-Allow-Origin"))
+				assert.Equal(t, "true", rec.Header().Get("Access-Control-Allow-Credentials"))
+				var names []string
+				for _, name := range strings.Split(rec.Header().Get("Access-Control-Allow-Headers"), ",") {
+					names = append(names, strings.ToLower(strings.TrimSpace(name)))
+				}
+				for _, name := range requested {
+					assert.Contains(t, names, name)
+				}
+			})
+		}
 	}
 }

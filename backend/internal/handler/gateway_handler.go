@@ -298,12 +298,8 @@ func (h *GatewayHandler) Messages(c *gin.Context) {
 	if !h.prepareClaudeRecovery(c, parsedReq, &body, "messages", false) {
 		return
 	}
-	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
+	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes(), parsedReq); err != nil {
 		return
-	}
-	parsedReq.ClaudeSessionID = c.GetHeader("X-Sub2API-Session-Id")
-	if parsedReq.ClaudeSessionID == "" {
-		parsedReq.ClaudeSessionID = c.GetHeader("X-Claude-Code-Session-Id")
 	}
 	parsedReq.SessionContext.NativeClaude = service.IsClaudeCodeClient(c.Request.Context())
 	parsedReq.GroupID = apiKey.GroupID
@@ -2230,12 +2226,8 @@ func (h *GatewayHandler) CountTokens(c *gin.Context) {
 	if !h.prepareClaudeRecovery(c, parsedReq, &body, "messages", true) {
 		return
 	}
-	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes()); err != nil {
+	if err := h.gatewayService.ValidateClaudeSessionRouting(c.Request.Context(), c, parsedReq.Body.Bytes(), parsedReq); err != nil {
 		return
-	}
-	parsedReq.ClaudeSessionID = c.GetHeader("X-Sub2API-Session-Id")
-	if parsedReq.ClaudeSessionID == "" {
-		parsedReq.ClaudeSessionID = c.GetHeader("X-Claude-Code-Session-Id")
 	}
 	parsedReq.SessionContext.NativeClaude = service.IsClaudeCodeClient(c.Request.Context())
 	parsedReq.GroupID = apiKey.GroupID

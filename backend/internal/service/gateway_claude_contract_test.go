@@ -206,7 +206,7 @@ func TestClaude2292ContractRejectsAccountConflict(t *testing.T) {
 }
 
 func TestClaude2292ContractCallerOwnsErrorRetries(t *testing.T) {
-	for _, status := range []int{403, 503, 529} {
+	for _, status := range []int{401, 403, 429, 503, 529} {
 		for _, route := range []string{"/v1/messages", "/v1/messages/count_tokens", "/v1/chat/completions", "/v1/responses"} {
 			t.Run(route+http.StatusText(status), func(t *testing.T) {
 				svc, up := newClaudeContractGateway(t)

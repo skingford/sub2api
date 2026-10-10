@@ -53,6 +53,9 @@ func CORS(cfg config.CORSConfig) gin.HandlerFunc {
 	allowHeaders := []string{
 		"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization",
 		"accept", "origin", "Cache-Control", "X-Requested-With", "X-API-Key", "X-Admin-UI-Request", "X-User-UI-Request",
+		// Browser clients must be able to echo the conversation identifier on
+		// later turns and preserve an explicitly supplied prompt identifier.
+		"X-Sub2API-Session-Id", "X-Claude-Code-Session-Id", "X-Claude-Code-Prompt-Id",
 	}
 	// OpenAI Node SDK 会发送 x-stainless-* 请求头，需在 CORS 中显式放行。
 	openAIProperties := []string{
