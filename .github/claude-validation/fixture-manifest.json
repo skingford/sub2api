@@ -201,7 +201,8 @@
       "TestClaudeSSEFramingHandlers",
       "TestAnthropicSSEReaderFraming",
       "TestAnthropicSSEReaderBoundsAndReadFailure",
-      "TestClaudeSSEFramingReadErrors"
+      "TestClaudeSSEFramingReadErrors",
+      "TestClaudeSSETerminalContract"
     ],
     "./internal/server/middleware": [
       "TestCORS_ClaudeConversationPreflight"

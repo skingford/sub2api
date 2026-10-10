@@ -256,13 +256,8 @@ func (s *GatewayService) handleCCBufferedFromAnthropic(
 	var finalResp *apicompat.AnthropicResponse
 	var usage ClaudeUsage
 
-	for scanner.Scan() {
-		payload := scanner.data
-
-		var event apicompat.AnthropicStreamEvent
-		if err := json.Unmarshal([]byte(payload), &event); err != nil {
-			continue
-		}
+	for scanner.ScanEvent() {
+		event := scanner.message
 
 		// message_start carries the initial response structure and cache usage
 		if event.Type == "message_start" && event.Message != nil {
@@ -306,7 +301,7 @@ func (s *GatewayService) handleCCBufferedFromAnthropic(
 				zap.String("request_id", requestID),
 			)
 		}
-		writeGatewayCCError(c, http.StatusBadGateway, "server_error", "Upstream stream could not be read")
+		writeConvertedAnthropicSSEError(c, err, claudeErrorChat, false)
 		return nil, fmt.Errorf("read upstream SSE: %w", err)
 	}
 
@@ -472,19 +467,14 @@ func (s *GatewayService) handleCCStreamingFromAnthropic(
 		return false
 	}
 
-	for scanner.Scan() {
-		payload := scanner.data
-
-		var event apicompat.AnthropicStreamEvent
-		if err := json.Unmarshal([]byte(payload), &event); err != nil {
-			continue
-		}
+	for scanner.ScanEvent() {
+		event := scanner.message
 
 		// Forward received usage regardless of the client stream_options.
 		// The intermediate Responses converter synthesizes usage even when absent.
-		ccState.IncludeUsage = ccState.IncludeUsage || anthropicChatStreamHasUsage(&event, payload)
+		ccState.IncludeUsage = ccState.IncludeUsage || anthropicChatStreamHasUsage(event, scanner.data)
 
-		if processAnthropicEvent(&event) {
+		if processAnthropicEvent(event) {
 			return resultWithUsage(), conversionErr
 		}
 	}
@@ -496,9 +486,7 @@ func (s *GatewayService) handleCCStreamingFromAnthropic(
 				zap.String("request_id", requestID),
 			)
 		}
-		MarkResponseCommitted(c)
-		_, _ = fmt.Fprint(c.Writer, "data: {\"error\":{\"type\":\"server_error\",\"message\":\"Upstream stream could not be read\"}}\n\n")
-		c.Writer.Flush()
+		writeConvertedAnthropicSSEError(c, err, claudeErrorChat, true)
 		return resultWithUsage(), fmt.Errorf("read upstream SSE: %w", err)
 	}
 

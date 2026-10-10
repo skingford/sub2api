@@ -25,6 +25,15 @@ OAuth 订阅资格、额度、计费或官方服务接受情况。
 
 ## 采集与复核
 
+SSE 结束 / 错误语义复核使用同样的隔离参数，将入口改为
+`python3 /scripts/sse_terminal_lab.py`。输出必须通过
+`python3 /scripts/verify_sse_terminal.py /work` 和上述 PCAP 响应验证器。
+失败场景的非流式回退被模拟器明确返回 400，不能当作真实上游状态。
+在宿主设置 `CLAUDE_SSE_TERMINAL_CAPTURE_ROOT=/absolute/path/to/work`，运行
+`go test -tags=unit ./internal/service -run '^TestClaudeSSETerminalContract$' -count=1`
+可重放 11 份实际 SSE 响应到四条生产转换路径。固定成功 / 失败分母及策略边界见
+[终止语义复核](../../docs/claude-sse-terminal-20261010.md)。
+
 从仓库根目录执行。镜像构建需要下载 Debian 工具包，但不会执行 CLI。
 二进制下载和模型请求是不同操作；真正运行 CLI 时必须使用下面的断网参数。
 

@@ -645,3 +645,14 @@
 - 证据 / 状态：本机完整材料与最终八个相关实现 / 测试 / CI 文件的冻结哈希在 `/Users/kingford/claude-capture/sse-framing-20261010-VQeu78/validation-summary.json`；实验容器已清理，原有三个业务容器健康。尚未提交、推送、合并或部署；未来提交使用 `Claude-Change-ID: CC-20261010-013` 并补充提交 / PR 引用。隔离模拟不代表订阅、签名、计费或官方服务接受验证。
 
 - 2026-10-10 提交 / 推送补记：维护者授权“提交推送”；本条实现、回归、采集器及验证文档已提交为 [891413778ea59d57c23ef376ffcba9f433e73173](https://github.com/skingford/sub2api/commit/891413778ea59d57c23ef376ffcba9f433e73173)，携带 `Claude-Change-ID: CC-20261010-013`，并推送至 `origin/codex/claude-source-runtime-audit-20261009`。直接读取提交中的八个实现 / 测试 / 采集器 / CI 清单文件，SHA-256 与最终验证快照全部一致，见本机证据目录 `commit-source-verification.json`。前述未提交 / 未推送状态及原验证摘要保留为验收时快照，当前交付状态以本条为准。此后仅补充追溯文档，没有新增测试执行声明；尚未核验推送后的托管 CI，未新建 PR、合并 release 或部署。
+
+## CC-20261010-014：SSE 错误、未知事件与未结束内容复核
+
+- 授权 / 基线：维护者要求再次对齐。基于已推送的 `a1037a33280c8199686681565b9457fdc4c642a0`，上游仍为 `3f1a2ea0a760730e3bc528105c00b4ee4f23e469`；沿用 Linux x64 CLI 2.1.292 / 2.1.295、SDK 0.128.0 / runtime v26.3.0。013 记录保留，本条补查其明确未覆盖的事件语义。
+- 来源：重新核对两版 SDK 所在内嵌模块哈希，与 013 一致；`fromSSEResponse` 对已知 event 解析 JSON 并在失败时抛错，error 事件抛出错误，未知事件忽略。两版未修改 CLI 的 11 场景各自运行于 network-none / 回环 TLS / 假凭据环境。
+- 独立结果：22 场景 / 34 条模型请求，10 个成功场景均保留预期正文和用量；12 个失败场景均由初始 stream:true 转入 stream:false 回退，无超时。模拟器明确拒绝回退并返回 400，因此最终错误文本是合成回退结果，不冒充原始 SSE HTTP 状态或真实提供方决定。22 份 SSE 响应经 PCAP 核对哈希相同、丢包 0；固定判定器通过，具体 11 种输入见 [报告](claude-sse-terminal-20261010.md)。
+- 差异：原转换器忽略主动 error 和非法已知 JSON、接受无终止信号且未关闭的内容、把未知 event 的伪装增量拼入答案；负索引在两个缓冲路径 panic，开始前 delta 被丢弃或错误消费。首次 44 组固定四路径测试失败 26 组，包含两项 panic；后续补强错误消息保留断言，未改变输入或放宽原断言。
+- 修复：共享事件分派 / JSON / 内容索引校验，核心 Messages 事件按 event 名解析、未知事件提前忽略；失败走统一 OpenAI 错误输出，缓冲 502、流式不再成功收尾并保留已知用量。完整上游错误 message 沿用既有脱敏；解析 / 传输错误不反射碎片。没有终止信号的打开内容块在 EOF 失败；原生实测可接受的缺 message_stop / message_delta 场景保留。
+- 边界：已见 stop_reason / message_stop 的既有兼容收尾和干净 EOF 缺末尾空行的旧容忍保留；不声明所有异常序列、其他 SDK 事件族或畸形结构等价。网关仍把重试交给调用方，不增加 CLI 应用层非流式回退或换号操作。原生 Messages 透传和 apicompat 的其他消费者未改动。
+- 文件 / 验证：新增 `gateway_anthropic_sse_events.go`、44 组永久回归、终止场景采集器和固定判定器，修改四个转换处理器及共享读取器状态；CI 必需测试由 32 增至 33，原 142 份证据及两版 pin 不变。最终源码完整 unit 58 包 / 23,287 个测试通过事件，失败 0、退出 0；golangci-lint 2.14.0 为 0 issues。固定 CI 的 33 项必需测试全部执行通过、三个校验器负例测试组通过；两版本轮实际响应重放 88 组、上一轮解帧捕获重放 56 组全部通过。未变包正常使用 Go 缓存，没有累计历史通过次数；未运行数据库 integration 或前端。
+- 证据 / 状态：本机材料、最终八个相关文件的冻结 SHA-256、验证日志和关键证据哈希保存在 `/Users/kingford/claude-capture/sse-terminal-20261010-OBCpwo/validation-summary.json`；gofmt 与 `git diff --check` 通过，实验容器已清理，原有三个业务容器健康。尚未提交、推送、合并或部署；未来提交使用 `Claude-Change-ID: CC-20261010-014` 并补充提交 / PR 引用。没有真实提供方、订阅、签名有效性或计费验证。

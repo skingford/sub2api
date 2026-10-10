@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/Wei-Shaw/sub2api/internal/pkg/apicompat"
 )
 
 // anthropicSSEReader assembles an event before protocol conversion. CLI SDK
@@ -13,11 +15,14 @@ import (
 // LF/CRLF/CR line endings. The bound applies to the whole frame, so many short
 // data (or ignored) lines cannot bypass the existing response size guard.
 type anthropicSSEReader struct {
-	scanner *bufio.Scanner
-	limit   int
-	event   string
-	data    string
-	err     error
+	scanner  *bufio.Scanner
+	limit    int
+	event    string
+	data     string
+	err      error
+	message  *apicompat.AnthropicStreamEvent
+	blocks   []bool
+	terminal bool
 }
 
 func newAnthropicSSEReader(r io.Reader, limit int) *anthropicSSEReader {

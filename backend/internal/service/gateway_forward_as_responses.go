@@ -400,18 +400,8 @@ func (s *GatewayService) handleResponsesBufferedStreamingResponse(
 	var finalResp *apicompat.AnthropicResponse
 	var usage ClaudeUsage
 
-	for scanner.Scan() {
-		eventType, payload := scanner.event, scanner.data
-
-		var event apicompat.AnthropicStreamEvent
-		if err := json.Unmarshal([]byte(payload), &event); err != nil {
-			logger.L().Warn("forward_as_responses buffered: failed to parse event",
-				zap.Error(err),
-				zap.String("request_id", requestID),
-				zap.String("event_type", eventType),
-			)
-			continue
-		}
+	for scanner.ScanEvent() {
+		event := scanner.message
 
 		// message_start carries the initial response structure
 		if event.Type == "message_start" && event.Message != nil {
@@ -457,7 +447,7 @@ func (s *GatewayService) handleResponsesBufferedStreamingResponse(
 				zap.String("request_id", requestID),
 			)
 		}
-		writeResponsesError(c, http.StatusBadGateway, "server_error", "Upstream stream could not be read")
+		writeConvertedAnthropicSSEError(c, err, claudeErrorResponses, false)
 		return nil, fmt.Errorf("read upstream SSE: %w", err)
 	}
 
@@ -639,20 +629,8 @@ func (s *GatewayService) handleResponsesStreamingResponse(
 	}
 
 	// Read Anthropic SSE events
-	for scanner.Scan() {
-		eventType, payload := scanner.event, scanner.data
-
-		var event apicompat.AnthropicStreamEvent
-		if err := json.Unmarshal([]byte(payload), &event); err != nil {
-			logger.L().Warn("forward_as_responses stream: failed to parse event",
-				zap.Error(err),
-				zap.String("request_id", requestID),
-				zap.String("event_type", eventType),
-			)
-			continue
-		}
-
-		if processEvent(&event) {
+	for scanner.ScanEvent() {
+		if processEvent(scanner.message) {
 			return resultWithUsage(), nil
 		}
 	}
@@ -664,9 +642,7 @@ func (s *GatewayService) handleResponsesStreamingResponse(
 				zap.String("request_id", requestID),
 			)
 		}
-		MarkResponseCommitted(c)
-		_, _ = fmt.Fprint(c.Writer, "event: error\ndata: {\"type\":\"error\",\"code\":\"server_error\",\"message\":\"Upstream stream could not be read\"}\n\n")
-		c.Writer.Flush()
+		writeConvertedAnthropicSSEError(c, err, claudeErrorResponses, true)
 		return resultWithUsage(), fmt.Errorf("read upstream SSE: %w", err)
 	}
 
