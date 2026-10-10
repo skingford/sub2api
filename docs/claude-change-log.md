@@ -595,3 +595,5 @@
 
 - 最终验收：`GOTOOLCHAIN=go1.27.2 go test -tags=unit -json ./...` 在最终源码上退出 0，58 包、23,155 个通过事件、失败 0；其中新会话 / 快照 / 错误可见性 / 网络中断测试为 7 个顶层组、34 个通过事件，CORS 预检为 1 个顶层组及八个入口 / 来源组合。已有 HTTP 单次发送合同扩至 401 / 403 / 429 / 503 / 529。golangci-lint 2.14.0 最终退出 0、0 issues，`git diff --check` 通过。
 - 证据范围：最终 3,356 个后端 Go / SQL / 模块 / JSON 文件与 `final-backend-manifest.json` 逐文件 SHA-256 相同；最终命令、分母、历史停止状态和日志哈希见本机证据目录 `validation-summary.json`。CORS 修改前的完整 unit 58 包结果保留为中间记录，最终完整命令复用未变包的 Go 缓存、重新验证受影响包，不把两次结果累计。此次未重跑数据库 integration、前端测试、真实浏览器或原生 CLI / TLS 抓包；没有将前轮结果表述为本轮执行。改动尚未提交、推送、合并或部署。
+
+- 2026-10-10 提交 / 推送补记：维护者授权“提交推送”；本条修复与回归提交为 [0c10bc9cd812a73eb0234940dcbdf4ca303ec8f8](https://github.com/skingford/sub2api/commit/0c10bc9cd812a73eb0234940dcbdf4ca303ec8f8)，携带 `Claude-Change-ID: CC-20261010-010`，已推送至 `origin/codex/claude-source-runtime-audit-20261009`，远端完整引用已核对一致。CC-20261010-009 的版本选择实现 `c156466b0443667a598ac49571ef651359f528df` 及引用补记 `e93e3fcd9` 同时随分支推送。提交归档中的 3,356 个后端文件与最终验证清单逐文件 SHA-256 一致，记录在本轮证据目录 `commit-source-verification.json`；本次不重复计作测试执行。旧的未提交 / 未推送状态保留为阶段快照，当前交付状态以本条为准。后续文档提交仅补充追溯引用；未新建 PR、合并或部署，没有新增真实提供方验证。
