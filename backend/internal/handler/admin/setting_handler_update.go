@@ -2359,6 +2359,8 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		OpenAICodexVersionAutoSyncEnabled:                      updatedSettings.OpenAICodexVersionAutoSyncEnabled,
 		ClaudeCodeClientVersion:                                updatedSettings.ClaudeCodeClientVersion,
 		ClaudeCodeClientVersionSynced:                          updatedSettings.ClaudeCodeClientVersionSynced,
+		ClaudeCodeClientVersionEffective:                       updatedSettings.ClaudeCodeClientVersionEffective,
+		ClaudeCodeClientVersionVerified:                        updatedSettings.ClaudeCodeClientVersionVerified,
 		ClaudeCodeVersionAutoSyncEnabled:                       updatedSettings.ClaudeCodeVersionAutoSyncEnabled,
 		MinCodexVersion:                                        updatedSettings.MinCodexVersion,
 		MaxCodexVersion:                                        updatedSettings.MaxCodexVersion,

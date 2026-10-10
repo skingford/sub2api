@@ -306,6 +306,8 @@ func (h *SettingHandler) GetSettings(c *gin.Context) {
 		OpenAICodexVersionAutoSyncEnabled:                      settings.OpenAICodexVersionAutoSyncEnabled,
 		ClaudeCodeClientVersion:                                settings.ClaudeCodeClientVersion,
 		ClaudeCodeClientVersionSynced:                          settings.ClaudeCodeClientVersionSynced,
+		ClaudeCodeClientVersionEffective:                       settings.ClaudeCodeClientVersionEffective,
+		ClaudeCodeClientVersionVerified:                        settings.ClaudeCodeClientVersionVerified,
 		ClaudeCodeVersionAutoSyncEnabled:                       settings.ClaudeCodeVersionAutoSyncEnabled,
 		MinCodexVersion:                                        settings.MinCodexVersion,
 		MaxCodexVersion:                                        settings.MaxCodexVersion,

@@ -148,6 +148,9 @@ vi.mock("@/utils/apiError", () => ({
 vi.mock("vue-i18n", async () => {
   const actual = await vi.importActual<typeof import("vue-i18n")>("vue-i18n");
   const translations: Record<string, string> = {
+    "admin.settings.gatewayForwarding.claudeCodeVersionSyncedValue": "最新发现版本：{version}",
+    "admin.settings.gatewayForwarding.claudeCodeVersionEffectiveValue": "当前基础版本：{version}",
+    "admin.settings.gatewayForwarding.claudeCodeVersionUnverified": "此配置尚未验证，普通 API 转换请求会被拒绝。",
     "admin.settings.wechatConnect.title": "微信登录",
     "admin.settings.wechatConnect.description": "用于微信开放平台或公众号/小程序的第三方登录配置。",
     "admin.settings.wechatConnect.enabledLabel": "启用微信登录",
@@ -1293,6 +1296,65 @@ describe("admin SettingsView payment visible method controls", () => {
         },
       },
     ]);
+  });
+
+  it("shows Claude discovery separately from the selected verified profile", async () => {
+    getSettings.mockResolvedValueOnce({
+      ...baseSettingsResponse,
+      claude_code_client_version_synced: "2.1.300",
+      claude_code_client_version_effective: "2.1.295",
+      claude_code_client_version_verified: true,
+    });
+    const wrapper = mountView();
+    await flushPromises();
+    await openGatewayTab(wrapper);
+    expect(wrapper.text()).toContain("最新发现版本：2.1.300");
+    expect(wrapper.get('[data-testid="claude-effective-version"]').text()).toContain("2.1.295");
+    expect(wrapper.find('[data-testid="claude-unverified-version"]').exists()).toBe(false);
+    await wrapper.find("form").trigger("submit.prevent");
+    await flushPromises();
+    const payload = updateSettings.mock.calls[0][0];
+    expect(payload).not.toHaveProperty("claude_code_client_version_effective");
+    expect(payload).not.toHaveProperty("claude_code_client_version_verified");
+    expect(payload).not.toHaveProperty("claude_code_client_version_synced");
+  });
+
+  it("warns about an explicitly selected unverified Claude profile", async () => {
+    getSettings.mockResolvedValueOnce({
+      ...baseSettingsResponse,
+      claude_code_client_version: "2.1.300",
+      claude_code_client_version_effective: "2.1.300",
+      claude_code_client_version_verified: false,
+    });
+    const wrapper = mountView();
+    await flushPromises();
+    await openGatewayTab(wrapper);
+    expect(wrapper.get('[data-testid="claude-unverified-version"]').text()).toContain("请求会被拒绝");
+  });
+
+  it("does not invent a Claude profile status for older servers", async () => {
+    const wrapper = mountView();
+    await flushPromises();
+    await openGatewayTab(wrapper);
+    expect(wrapper.find('[data-testid="claude-effective-version"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="claude-unverified-version"]').exists()).toBe(false);
+  });
+
+  it("clears stale Claude profile status when a save response omits it", async () => {
+    getSettings.mockResolvedValueOnce({
+      ...baseSettingsResponse,
+      claude_code_client_version_effective: "2.1.295",
+      claude_code_client_version_verified: true,
+    });
+    updateSettings.mockResolvedValueOnce({ ...baseSettingsResponse });
+    const wrapper = mountView();
+    await flushPromises();
+    await openGatewayTab(wrapper);
+    expect(wrapper.get('[data-testid="claude-effective-version"]').text()).toContain("2.1.295");
+    await wrapper.find("form").trigger("submit.prevent");
+    await flushPromises();
+    expect(wrapper.find('[data-testid="claude-effective-version"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="claude-unverified-version"]').exists()).toBe(false);
   });
 
   it("submits Antigravity user agent version gateway setting", async () => {

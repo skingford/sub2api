@@ -18,7 +18,7 @@ const claudeConversationHeader = "X-Sub2API-Session-Id"
 const claudeCompatibilityGinKey = "claudeCompatibilityState"
 
 func verifiedClaudeCompatibilityVersion(version string) bool {
-	return version == "2.1.292" || version == "2.1.295"
+	return claude.IsVerifiedCLIVersion(version)
 }
 
 // Haiku 5.5's measured defaults belong to 2.1.295. Keep other models on the
@@ -64,7 +64,7 @@ func prepareClaudeCompatibility(ctx context.Context, c *gin.Context, body []byte
 	}
 	version := claude.EffectiveCLIVersion()
 	if !verifiedClaudeCompatibilityVersion(version) {
-		return ctx, claudeCompatibilityError(c, "unsupported Claude compatibility version; select a verified 2.1.292 or 2.1.295 profile")
+		return ctx, claudeCompatibilityError(c, "unsupported Claude compatibility version; select a verified "+strings.Join(claude.VerifiedCLIVersions(), " or ")+" profile")
 	}
 	if c != nil {
 		if value, exists := c.Get(claudeCompatibilityGinKey); exists {

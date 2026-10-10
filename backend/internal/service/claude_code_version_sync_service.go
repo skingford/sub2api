@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 )
 
 const (
@@ -25,8 +27,9 @@ const (
 	claudeCodeVersionTagPrefix = "v"
 )
 
-// ClaudeCodeVersionSyncService 周期性把官方 Claude Code CLI 的最新稳定版版本号同步到设置，
-// 供出站规范身份使用，避免为了跟上游版本而发新版本。
+// ClaudeCodeVersionSyncService records the newest discovered stable release.
+// Discovery does not activate an unverified profile: runtime selection uses the
+// same curated registry as the gateway's conversion guard.
 //
 // 同步值写入 SettingKeyClaudeCodeClientVersionSynced（本服务独占写入）；管理员在面板填写的
 // SettingKeyClaudeCodeClientVersion 优先级更高，因此手工固定版本不会被同步覆盖。
@@ -146,7 +149,8 @@ func (s *ClaudeCodeVersionSyncService) runOnce() {
 		return
 	}
 	s.settingService.InvalidateClaudeCodeClientVersionCache()
-	slog.Info("claude_code_version_synced", "previous", current, "version", latest)
+	slog.Info("claude_code_version_synced", "previous", current, "version", latest,
+		"verified_automatic_candidate", claude.VerifiedCLIVersionAtOrBelow(latest))
 }
 
 // fetchLatestStableVersion 取官方最新稳定版 CLI 版本号；取不到时返回空串，

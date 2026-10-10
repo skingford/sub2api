@@ -5874,7 +5874,7 @@
                   v-model="form.claude_code_client_version"
                   type="text"
                   class="input w-full font-mono text-sm"
-                  placeholder="2.1.280"
+                  placeholder="2.1.292"
                 />
                 <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
                   {{
@@ -5909,6 +5909,22 @@
                     class="mt-0.5 text-xs text-gray-500 dark:text-gray-400"
                   >
                     {{ claudeSyncedVersionLabel }}
+                  </p>
+                  <p
+                    v-if="form.claude_code_client_version_effective"
+                    data-testid="claude-effective-version"
+                    class="mt-0.5 text-xs text-gray-500 dark:text-gray-400"
+                  >
+                    {{ t("admin.settings.gatewayForwarding.claudeCodeVersionEffectiveValue", {
+                      version: form.claude_code_client_version_effective,
+                    }) }}
+                  </p>
+                  <p
+                    v-if="form.claude_code_client_version_effective && form.claude_code_client_version_verified === false"
+                    data-testid="claude-unverified-version"
+                    class="mt-0.5 text-xs text-amber-600 dark:text-amber-400"
+                  >
+                    {{ t("admin.settings.gatewayForwarding.claudeCodeVersionUnverified") }}
                   </p>
                 </div>
                 <Toggle v-model="form.claude_code_version_auto_sync_enabled" />
@@ -10026,6 +10042,8 @@ const form = reactive<SettingsForm>({
   claude_code_client_version: "",
   // 只读展示：自动同步任务写入的官方最新稳定版，不参与提交（提交载荷按字段显式构造）
   claude_code_client_version_synced: "",
+  claude_code_client_version_effective: "",
+  claude_code_client_version_verified: undefined as boolean | undefined,
   claude_code_version_auto_sync_enabled: true,
   // codex_cli_only 加固
   min_codex_version: "",
@@ -11048,6 +11066,9 @@ async function loadSettings() {
         (form as Record<string, unknown>)[key] = value;
       }
     }
+    // Derived status belongs to this response, not a previous backend instance.
+    form.claude_code_client_version_effective = settings.claude_code_client_version_effective ?? "";
+    form.claude_code_client_version_verified = settings.claude_code_client_version_verified ?? undefined;
     // For this optional override, null explicitly selects per-account rates.
     if (settings.openai_oauth_scheduling_rate_multiplier === null) {
       form.openai_oauth_scheduling_rate_multiplier = null;
@@ -11844,6 +11865,8 @@ async function saveSettings() {
         (form as Record<string, unknown>)[key] = value;
       }
     }
+    form.claude_code_client_version_effective = updated.claude_code_client_version_effective ?? "";
+    form.claude_code_client_version_verified = updated.claude_code_client_version_verified ?? undefined;
     if (updated.openai_oauth_scheduling_rate_multiplier === null) {
       form.openai_oauth_scheduling_rate_multiplier = null;
     }

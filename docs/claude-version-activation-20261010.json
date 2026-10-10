@@ -1,0 +1,68 @@
+{
+  "change_id": "CC-20261010-009",
+  "base_commit": "f3d98866a8ec3ad96954edff356ff41305781098",
+  "upstream_base": "3f1a2ea0a760730e3bc528105c00b4ee4f23e469",
+  "verified_profiles": [
+    "2.1.292",
+    "2.1.295"
+  ],
+  "new_protocol_scope": false,
+  "automatic_examples": {
+    "2.1.300": "2.1.295",
+    "2.1.294": "2.1.292"
+  },
+  "discovery_value_preserved": true,
+  "manual_override_semantics_preserved": true,
+  "unit": {
+    "exit_code": 0,
+    "passed_packages": 58,
+    "passed_test_events": 23104,
+    "failed_events": 0
+  },
+  "integration": {
+    "exit_code": 0,
+    "passed_packages": 52,
+    "passed_test_events": 13766,
+    "failed_events": 0
+  },
+  "lint": {
+    "exit_code": 0,
+    "issues": 0,
+    "version": "2.14.0"
+  },
+  "frontend": {
+    "component_and_i18n_tests": 50,
+    "test_files": 2,
+    "tests_exit_code": 0,
+    "typecheck_exit_code": 0
+  },
+  "source_files": 3355,
+  "changed_frontend_files": 5,
+  "source_delta": {
+    "backend_changes_after_initial_run": [
+      "backend/internal/server/api_contract_test.go"
+    ],
+    "integration_compilation_inputs_unchanged": true,
+    "reason": "Only the unit-tagged API response expectations changed; production and integration test sources are identical.",
+    "default_lint_scope_excludes_unit_contract": true
+  },
+  "initial_failure": "Two unit-only admin-settings API response snapshots lacked the new read-only fields; exact expected fields were added and full unit checks passed. Frontend stale-status clearing was added and all frontend checks rerun.",
+  "integration_and_lint_compilation_inputs_unchanged_after_initial_freeze": true,
+  "real_cli_capture_rerun": false,
+  "live_provider_verified": false,
+  "committed": false,
+  "deployed": false,
+  "evidence_root": "/Users/kingford/claude-capture/version-activation-20261010-p8HC8o",
+  "evidence_sha256": {
+    "focused.log": "b3d1dac465395bd3016f20c9643a7c9274f6b1317aebe5ab887475f5a4fcaa01",
+    "analysis/unit.jsonl": "50d68012d9ba26e99e65b3a03055c6b5b2de7bd38a3fd0e443160d6c908d77ff",
+    "analysis/unit-final.jsonl": "37e23bad531a7f2aa712e1f556e8459f58762456a500a792322091482ca36420",
+    "analysis/full-integration.jsonl": "d64539c8d4a60937f4b11d307e4fe9539efecabbf822adeb21fe5802698a09d6",
+    "analysis/lint.log": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47",
+    "frontend-tests-final.log": "4ab2b20c5a31419345b31d0af762fa42ea28396d51878e9a834aed11afd70830",
+    "frontend-typecheck-final.log": "ee9d6ed708ec64a6acf169ef7e6fdde6dd77d5bc69017703f03e99da9c7da38e",
+    "final-backend-manifest.json": "e5445d13b5e896564e04e6ee82c8da9571b0faa1ce0ee70e9cd9955ad63ec9c5",
+    "final-frontend-manifest.json": "8b202d2c1cf84b8d7788fc35603c2111cc6fb3e93bb8cb154bb4d9938c90df2e",
+    "validation-source-delta.json": "6478fbb1fefc23c533d454f0f1723a0b4be77cdb1286fc4e50ee29cd7e7936a4"
+  }
+}

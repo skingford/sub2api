@@ -13,6 +13,7 @@ import (
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/antigravity"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 	infraerrors "github.com/Wei-Shaw/sub2api/internal/pkg/errors"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/openai"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/xai"
@@ -898,6 +899,8 @@ func (s *SettingService) parseSettings(settings map[string]string) *SystemSettin
 	}
 	result.ClaudeCodeClientVersion = NormalizeClaudeCodeClientVersion(settings[SettingKeyClaudeCodeClientVersion])
 	result.ClaudeCodeClientVersionSynced = NormalizeClaudeCodeClientVersion(settings[SettingKeyClaudeCodeClientVersionSynced])
+	result.ClaudeCodeClientVersionEffective = resolveClaudeCodeClientVersion(result.ClaudeCodeClientVersion, result.ClaudeCodeClientVersionSynced, claude.CLIVersion())
+	result.ClaudeCodeClientVersionVerified = claude.IsVerifiedCLIVersion(result.ClaudeCodeClientVersionEffective)
 	// 自动同步默认开启：缺失/空值一律视为开启，与 openai_codex_version_auto_sync_enabled 同一惯例。
 	if v, ok := settings[SettingKeyClaudeCodeVersionAutoSyncEnabled]; ok && v != "" {
 		result.ClaudeCodeVersionAutoSyncEnabled = v == "true"

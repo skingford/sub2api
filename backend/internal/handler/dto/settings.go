@@ -219,6 +219,8 @@ type SystemSettings struct {
 	OpenAICodexVersionAutoSyncEnabled      bool   `json:"openai_codex_version_auto_sync_enabled"`
 	ClaudeCodeClientVersion                string `json:"claude_code_client_version"`
 	ClaudeCodeClientVersionSynced          string `json:"claude_code_client_version_synced"`
+	ClaudeCodeClientVersionEffective       string `json:"claude_code_client_version_effective"`
+	ClaudeCodeClientVersionVerified        bool   `json:"claude_code_client_version_verified"`
 	ClaudeCodeVersionAutoSyncEnabled       bool   `json:"claude_code_version_auto_sync_enabled"`
 
 	// codex_cli_only 加固

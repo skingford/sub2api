@@ -251,8 +251,10 @@ type SystemSettings struct {
 	OpenAICodexClientVersion               string // 出站声明的 Codex 客户端版本号（管理员覆写）；空值跟随自动同步值
 	OpenAICodexClientVersionSynced         string // 自动同步到的官方最新稳定版版本号（只读展示）
 	OpenAICodexVersionAutoSyncEnabled      bool   // 是否启用 Codex 客户端版本号自动同步（默认 true）
-	ClaudeCodeClientVersion                string // 出站声明的 Claude Code CLI 客户端版本号（管理员覆写）；空值跟随自动同步值
-	ClaudeCodeClientVersionSynced          string // 自动同步到的官方最新版本号（只读展示）
+	ClaudeCodeClientVersion                string // 手动基础版本；空值从发现的版本中选择已验证配置
+	ClaudeCodeClientVersionSynced          string // 自动发现的官方最新版本，不等于运行版本
+	ClaudeCodeClientVersionEffective       string // 当前选用的基础版本（只读，不含模型级提升）
+	ClaudeCodeClientVersionVerified        bool   // 基础版本是否有完整已验证配置（只读）
 	ClaudeCodeVersionAutoSyncEnabled       bool   // 是否启用 Claude Code 客户端版本号自动同步（默认 true）
 	MinCodexVersion                        string // codex_cli_only 最低 Codex 引擎版本；空=不检查
 	MaxCodexVersion                        string // codex_cli_only 最高 Codex 引擎版本；空=不检查

@@ -419,15 +419,23 @@ func NormalizeClaudeCodeClientVersion(version string) string {
 	return normalized
 }
 
-// GetClaudeCodeClientVersion 返回出站声明的 Claude Code CLI 客户端版本号。
-// 优先级：管理员在面板覆写的版本 → 自动同步到的官方最新版本 → claude.CLIVersion()
-// （环境变量 SUB2API_CLAUDE_CLI_VERSION 覆盖 + 内置基线）。
-// 版本太旧会被 Anthropic 拒绝（HTTP 400 claude_code_version_too_old），故该值需保持跟随官方发布。
-//
-// ⚠️ 一致性约束：同一次请求里，拼 User-Agent（claude-cli/<版本>）的版本号和用于
-// billing attribution 的版本号必须是同一个值，否则 Anthropic 侧对不上、判为非正版客户端。
-// 因此调用点必须在一次请求内只取一次本函数并复用；本缓存的唯一主动变更点是
-// 同步任务写入后调用 InvalidateClaudeCodeClientVersionCache，60s TTL 不会在极短时间内抖动。
+// resolveClaudeCodeClientVersion separates release discovery from activation.
+// Manual/environment overrides retain their existing semantics: an unverified
+// explicit version is rejected by the conversion guard, never silently changed.
+func resolveClaudeCodeClientVersion(manual, discovered, fallback string) string {
+	if version := NormalizeClaudeCodeClientVersion(manual); version != "" {
+		return version
+	}
+	if version := claude.VerifiedCLIVersionAtOrBelow(NormalizeClaudeCodeClientVersion(discovered)); version != "" {
+		return version
+	}
+	return fallback
+}
+
+// GetClaudeCodeClientVersion returns the configured base version. Automatic
+// discovery selects only a complete measured profile. Manual override remains
+// first, then a verified automatic candidate, then environment/built-in fallback.
+// A request must freeze this result for its header and attribution construction.
 func (s *SettingService) GetClaudeCodeClientVersion(ctx context.Context) string {
 	fallback := claude.CLIVersion()
 	if s == nil || s.settingRepo == nil {
@@ -462,21 +470,12 @@ func (s *SettingService) GetClaudeCodeClientVersion(ctx context.Context) string 
 			})
 			return fallback, nil
 		}
-		version := NormalizeClaudeCodeClientVersion(values[SettingKeyClaudeCodeClientVersion])
-		if version == "" {
-			if raw := values[SettingKeyClaudeCodeClientVersion]; strings.TrimSpace(raw) != "" {
-				slog.Warn("ignoring invalid claude_code_client_version setting; falling back to the next layer",
-					"value", raw)
-			}
-			version = NormalizeClaudeCodeClientVersion(values[SettingKeyClaudeCodeClientVersionSynced])
-			if version == "" && strings.TrimSpace(values[SettingKeyClaudeCodeClientVersionSynced]) != "" {
-				slog.Warn("ignoring invalid claude_code_client_version_synced setting; falling back to the built-in pin",
-					"value", values[SettingKeyClaudeCodeClientVersionSynced])
+		for _, key := range []string{SettingKeyClaudeCodeClientVersion, SettingKeyClaudeCodeClientVersionSynced} {
+			if raw := values[key]; strings.TrimSpace(raw) != "" && NormalizeClaudeCodeClientVersion(raw) == "" {
+				slog.Warn("ignoring malformed Claude client version setting", "key", key, "value", raw)
 			}
 		}
-		if version == "" {
-			version = fallback
-		}
+		version := resolveClaudeCodeClientVersion(values[SettingKeyClaudeCodeClientVersion], values[SettingKeyClaudeCodeClientVersionSynced], fallback)
 		s.claudeCodeVersionCache.Store(&cachedClaudeCodeClientVersion{
 			version:   version,
 			expiresAt: time.Now().Add(claudeCodeClientVersionCacheTTL).UnixNano(),

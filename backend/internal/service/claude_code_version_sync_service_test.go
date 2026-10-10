@@ -44,6 +44,21 @@ func (r *claudeCodeVersionSyncSettingRepoStub) GetValue(_ context.Context, key s
 	return value, nil
 }
 
+func (r *claudeCodeVersionSyncSettingRepoStub) GetMultiple(_ context.Context, keys []string) (map[string]string, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	values := make(map[string]string, len(keys))
+	for _, key := range keys {
+		if r.getErr != nil && (r.getErrKey == "" || r.getErrKey == key) {
+			return nil, r.getErr
+		}
+		if value, ok := r.values[key]; ok {
+			values[key] = value
+		}
+	}
+	return values, nil
+}
+
 func (r *claudeCodeVersionSyncSettingRepoStub) Set(_ context.Context, key, value string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
