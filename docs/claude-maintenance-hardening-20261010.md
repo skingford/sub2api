@@ -101,3 +101,8 @@ Go 命令成功仍不足以通过：所有必需测试和包都必须有 pass �
 命令、分母、初轮失败、清理状态及证据哈希见本机 `validation-summary.json`。
 Go 正常复用未变包的测试缓存，不能把重跑统计累计为额外覆盖。
 尚未提交、推送、合并或部署，GitHub 托管 job 尚未运行；没有新 CLI 或真实提供方验证。
+
+交付补记（2026-10-10）：实现、回归、基准和 CI 配置已保存为
+[76b913703](https://github.com/skingford/sub2api/commit/76b9137034db76199b2626b89901d2f1c9263b3f)，
+并推送至 `origin/codex/claude-source-runtime-audit-20261009`。提交归档与验证清单一致；
+前文状态保留为验收快照。尚未合并或部署，推送后的 GitHub 托管 CI 结果尚未核验。
